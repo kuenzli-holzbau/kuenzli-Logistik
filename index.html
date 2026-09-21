@@ -5,7 +5,7 @@
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; form-action 'self'; img-src 'self' data: blob: https://*.supabase.co; connect-src 'self' https://*.supabase.co; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; font-src 'self' data:; media-src 'self' data: blob:; worker-src 'self' blob:; upgrade-insecure-requests">
 <!-- V406: Transporte direkt unter der Projekterfassung -->
-<title>Künzli Lagerverwaltung V345 · BV2026-1-156</title>
+<title>Künzli Lagerverwaltung V345 · BV2026-1-163</title>
 <style>
 :root{--g:#173f32;--bg:#f3f5f3;--line:#d8ded9;--mut:#6a746e;--red:#df3428}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:#17201c}button,input,select,textarea{font:inherit}
@@ -4184,7 +4184,7 @@ window.APP_RELEASE = {
 
 
 <style>
-/* BV2026-1-156 · Cloud/Benutzer/Rolle gehören zur Bereichsauswahl, nicht in die einzelnen Bereiche. */
+/* BV2026-1-163 · Cloud/Benutzer/Rolle gehören zur Bereichsauswahl, nicht in die einzelnen Bereiche. */
 .app > header #syncStatusBadge,
 .app > header #authHeaderBtn,
 .app > header #activeRoleBadge{display:none!important}
@@ -4208,7 +4208,7 @@ window.APP_RELEASE = {
 
 
 <style>
-/* BV2026-1-156 · kompakte Mehrfachauswahl für grosse Gerätebestände */
+/* BV2026-1-163 · kompakte Mehrfachauswahl für grosse Gerätebestände */
 .equipmentMultiV102{margin-top:10px!important}
 .equipmentMultiV102>.containerEnableV525,
 .equipmentMultiV102>.containerSelectLabelV526,
@@ -6053,13 +6053,13 @@ function inventoryCell(p,key,r,l){
  if(key==='qty')return esc(p.qty||'–');
  if(key==='project')return commissionBadgeV468(p.project);
  if(key==='packCode')return esc(p.packCode||'–');
- if(key==='usage')return esc((p.usage||[]).join(' / ')||'–');
+ if(key==='usage')return esc((Array.isArray(p.usage)?p.usage:[]).join(' / ')||'–');
  if(key==='status')return `<span class="statusbadge ${stClass(p.status)}">${esc(p.status||'–')}</span>`;
  if(key==='reservation'){let over=overReservedQty(p);return hasReservation(p)?`<span class="reserveBadge">frei ${esc(freeQty(p))} / reserviert ${esc(reservedQty(p))}</span>${over>0?`<span class="overBadge">ÜBERRESERVIERT +${esc(over)}</span>`:''}`:`frei ${esc(reservationTotalQty(p))} / reserviert 0`;}
  if(key==='location')return esc(r?.name||'–');
  if(key==='levelV467')return esc(l?.name||'–');
  if(key==='createdAt')return esc(formatDateTime(p.createdAt));
- if(key==='action')return `<details class="actionMenuV451 inventoryActionMenuV464"><summary title="Aktionen">⋮</summary><div class="actionMenuPanelV451 inventoryActionPanelV464"><button class="btn secondary" onclick="closeActionMenuV451(this);jump('${r.id}','${p.id}')">Zu Lagerort</button>${p.status!=='aufgebraucht'?`<button class="btn secondary" onclick="closeActionMenuV451(this);reservePackage('${p.id}')">Reservieren</button>`:''}<button class="btn" onclick="closeActionMenuV451(this);editPackage('${p.id}')">Bearbeiten</button>${p.status!=='aufgebraucht'?`<button class="btn secondary" onclick="event.preventDefault();event.stopPropagation();const _id='${p.id}';closeActionMenuV451(this);setTimeout(()=>openWarehouseTransferV550(_id),0)">↔ Umbuchen</button>`:''}<button class="btn secondary" onclick="closeActionMenuV451(this);showHistory('${p.id}')">Verlauf</button>${p.status==='aufgebraucht'?`<button class="btn" onclick="closeActionMenuV451(this);restorePackage('${p.id}')">Wieder aktivieren</button>`:`<button class="btn secondary" onclick="closeActionMenuV451(this);archivePackage('${p.id}')">Archiv</button>`}${st.settings?.allowMaterialDelete?`<button class="btn danger" onclick="closeActionMenuV451(this);deletePackage('${p.id}')">Löschen</button>`:''}</div></details>`;
+ if(key==='action')return `<details class="actionMenuV451 inventoryActionMenuV464"><summary title="Aktionen">⋮</summary><div class="actionMenuPanelV451 inventoryActionPanelV464"><button class="btn secondary" onclick="closeActionMenuV451(this);jump('${r?.id||p.rackId||''}','${p.id}')">Zu Lagerort</button>${p.status!=='aufgebraucht'?`<button class="btn secondary" onclick="closeActionMenuV451(this);reservePackage('${p.id}')">Reservieren</button>`:''}<button class="btn" onclick="closeActionMenuV451(this);editPackage('${p.id}')">Bearbeiten</button>${p.status!=='aufgebraucht'?`<button class="btn secondary" onclick="event.preventDefault();event.stopPropagation();const _id='${p.id}';closeActionMenuV451(this);setTimeout(()=>openWarehouseTransferV550(_id),0)">↔ Umbuchen</button>`:''}<button class="btn secondary" onclick="closeActionMenuV451(this);showHistory('${p.id}')">Verlauf</button>${p.status==='aufgebraucht'?`<button class="btn" onclick="closeActionMenuV451(this);restorePackage('${p.id}')">Wieder aktivieren</button>`:`<button class="btn secondary" onclick="closeActionMenuV451(this);archivePackage('${p.id}')">Archiv</button>`}${st.settings?.allowMaterialDelete?`<button class="btn danger" onclick="closeActionMenuV451(this);deletePackage('${p.id}')">Löschen</button>`:''}</div></details>`;
  return '';
 }
 function renderInventoryHead(){
@@ -9119,7 +9119,8 @@ function productionSchedule(p,commissionId=''){
  let logs=(p.dailyProduction||[]).filter(d=>{
    if(!d.date)return false;
    let hasEntries=(d.entries||[]).some(e=>ids.has(e.elementId));
-   let hasHours=d.actualHoursByCommission&&Object.prototype.hasOwnProperty.call(d.actualHoursByCommission,cid);
+   /* V157: Ein 0-h-Platzhalter ist kein erfasster Produktionstag. */
+   let hasHours=Number(d.actualHoursByCommission?.[cid]||0)>0;
    return hasEntries||hasHours;
  }).slice().sort((a,b)=>a.date.localeCompare(b.date));
  let lastActualDate=logs.length?logs.at(-1).date:'';
@@ -9482,7 +9483,10 @@ function productionCommissionSplitHtml(p){
        <td>0 m²</td>
        <td><b>${fmtNum(dayHours)} h</b></td>
        <td>–</td>
-       <td><button class="btn secondary small" type="button" onclick="editProductionStartDay('${d.date}')">Bearbeiten</button></td>
+       <td><div class="toolbar" style="margin:0;flex-wrap:nowrap">
+         <button class="btn secondary small" type="button" onclick="editProductionStartDay('${d.date}')">Bearbeiten</button>
+         <button class="btn danger small" type="button" onclick="deleteProductionStartDayV158('${d.date}')">Löschen</button>
+       </div></td>
      </tr>`);
      return;
    }
@@ -9519,6 +9523,54 @@ function productionCommissionSplitHtml(p){
 }
 
 
+
+function deleteProductionStartDayV158(dayDate){
+ let p=projectById(currentProjectId);if(!p)return;
+ let c=activeProjectCommission(p),cid=c?.id||'';
+ let day=(p.dailyProduction||[]).find(d=>d&&d.date===dayDate);
+ if(!day)return;
+
+ /* Sicherheitsregel: Löschen nur bei genau den Zeilen, für die der Button
+    angezeigt wird: in dieser Kommission wurden an diesem Tag keine Elemente fertiggestellt. */
+ let ids=new Set(commissionElements(p,cid).map(x=>x.id));
+ let commissionEntries=(day.entries||[]).filter(e=>e&&ids.has(e.elementId));
+ if(commissionEntries.length){
+   alert('Dieser Produktionstag enthält fertiggestellte Elemente und kann hier nicht gelöscht werden.');
+   return;
+ }
+
+ if(!confirm(`Anlauf-/Produktionstag ${localDateLabel(dayDate)||dayDate} löschen?\n\nEs werden nur die Ist-Daten dieser Kommission an diesem Tag entfernt. Andere Kommissionen und Produktionsdaten bleiben erhalten.`))return;
+
+ day.actualHoursByCommission=day.actualHoursByCommission||{};
+ day.productionTypeByCommission=day.productionTypeByCommission||{};
+ delete day.actualHoursByCommission[cid];
+ delete day.productionTypeByCommission[cid];
+
+ /* Falls dieser 0-Tag über die neuere Fortschrittserfassung entstanden ist,
+    auch nur die zugehörigen Batches dieser Kommission entfernen. */
+ if(Array.isArray(day.progressBatchesV547)){
+   day.progressBatchesV547=day.progressBatchesV547.filter(b=>!b||String(b.commissionId||'')!==String(cid));
+ }
+
+ day.actualHours=Object.values(day.actualHoursByCommission||{}).reduce((sum,v)=>sum+Math.max(0,Number(v)||0),0);
+ day.updatedAt=new Date().toISOString();
+
+ /* Tageshülle nur entfernen, wenn wirklich keinerlei andere Daten mehr darin liegen. */
+ let hasEntries=(day.entries||[]).length>0;
+ let hasHours=Object.prototype.hasOwnProperty.call(day.actualHoursByCommission||{},cid)
+   || Object.keys(day.actualHoursByCommission||{}).length>0;
+ let hasTypes=Object.keys(day.productionTypeByCommission||{}).length>0;
+ let hasBatches=(day.progressBatchesV547||[]).length>0;
+ let hasNote=String(day.note||'').trim().length>0;
+
+ if(!hasEntries&&!hasHours&&!hasTypes&&!hasBatches&&!hasNote){
+   p.dailyProduction=(p.dailyProduction||[]).filter(d=>d!==day);
+ }
+
+ p.updatedAt=new Date().toISOString();
+ saveProjects();
+ openCommissionArea(cid);
+}
 
 function editProductionStartDay(dayDate){
  let p=projectById(currentProjectId);if(!p)return;
@@ -10147,7 +10199,8 @@ function saveDailyProduction(){
      p.dailyProduction.push(hoursDay);
    }
    hoursDay.actualHoursByCommission=hoursDay.actualHoursByCommission||{};
-   hoursDay.actualHoursByCommission[cid]=actualHours;
+   if(actualHours>0)hoursDay.actualHoursByCommission[cid]=actualHours;
+   else delete hoursDay.actualHoursByCommission[cid];
    hoursDay.productionTypeByCommission=hoursDay.productionTypeByCommission||{};
    if(productionType)hoursDay.productionTypeByCommission[cid]=productionType;
    else delete hoursDay.productionTypeByCommission[cid];
@@ -17134,7 +17187,19 @@ function saveWarehouseTransferV545(e){
  persist();
  if(currentPage==='inventory')renderInv();
  if(currentPage==='transfers')renderTransfers();
- alert(`Umbuchung gespeichert.${full?'':' Neuer Materialeintrag: '+newElementId}\nWert: ${moneyCHF(priceQty*unitPrice)}`);
+
+ if(!full&&newPkg){
+   alert(`Umbuchung erfolgreich – Neues Paket: ${newElementId} · ${Number(count).toLocaleString('de-CH',{maximumFractionDigits:4})} Stk.\nRest im ursprünglichen Paket: ${Number(p.qty).toLocaleString('de-CH',{maximumFractionDigits:4})} Stk.\nWert: ${moneyCHF(priceQty*unitPrice)}`);
+   selectedPackage=newPkg.id;
+   showPage('inventory');
+   renderInv();
+   setTimeout(()=>{
+     let row=document.querySelector(`[data-pkg-id="${CSS.escape(String(newPkg.id))}"]`)||document.querySelector('.pkg.target');
+     if(row)row.scrollIntoView({behavior:'smooth',block:'center',inline:'center'});
+   },120);
+ }else{
+   alert(`Umbuchung erfolgreich – Paket ${p.elementId||'–'} vollständig nach ${to} umgebucht.\nWert: ${moneyCHF(priceQty*unitPrice)}`);
+ }
 }
 
 // ===== V82 Interne Materialumbuchungen =====
@@ -18700,20 +18765,20 @@ function sortInv(k){if(invSort.key===k)invSort.dir*=-1;else{invSort.key=k;invSor
 function renderInv(){
  ensureInventoryOrder();renderInventoryHead();
  if(E('formatEditV538'))E('formatEditV538').checked=inventoryFormatEditV538;
- let q=(E('search').value||'').toLowerCase(),af=E('areaFilter').value,cf=E('categoryFilterV471')?.value||'',ps=st.packages.filter(p=>{
-   let r=st.racks.find(x=>x.id===p.rackId),l=r?.levels[p.levelIndex],
-   h=[p.elementId,ID_CATS[p.idCategory],p.material,p.width,p.height,p.length,linearMeters(p).toFixed(2),horizontalArea(p).toFixed(2),p.qty,p.project,p.packCode,(p.usage||[]).join(' '),p.status,formatDateTime(p.createdAt),r?.name,areaName(r?.areaId),l?.name,...(p.reservations||[]).flatMap(x=>[x.project,x.who,x.note,x.qty])].join(' ').toLowerCase();
+ let q=(E('search')?.value||'').toLowerCase(),af=E('areaFilter')?.value||'',cf=E('categoryFilterV471')?.value||'',ps=(st.packages||[]).filter(Boolean).filter(p=>{
+   let r=st.racks.find(x=>x.id===p.rackId),l=r?.levels?.[p.levelIndex],
+   h=[p.elementId,ID_CATS[p.idCategory],p.material,p.width,p.height,p.length,linearMeters(p).toFixed(2),horizontalArea(p).toFixed(2),p.qty,p.project,p.packCode,(Array.isArray(p.usage)?p.usage:[]).join(' '),p.status,formatDateTime(p.createdAt),r?.name,areaName(r?.areaId),l?.name,...(Array.isArray(p.reservations)?p.reservations:[]).filter(Boolean).flatMap(x=>[x.project,x.who,x.note,x.qty])].join(' ').toLowerCase();
    let mode=E('archiveFilter')?.value||'active',archiveOk=mode==='all'||(mode==='archive'?p.status==='aufgebraucht':p.status!=='aufgebraucht');
    let categoryOk=!cf||String(p.idCategory||'')===cf;
    return(!q||h.includes(q))&&(!af||r?.areaId===af)&&categoryOk&&archiveOk
  });
  const V=(p,k)=>{
-   let r=st.racks.find(x=>x.id===p.rackId),l=r?.levels[p.levelIndex];
+   let r=st.racks.find(x=>x.id===p.rackId),l=r?.levels?.[p.levelIndex];
    if(k==='location')return String(r?.name||'').toLowerCase();
    if(k==='levelV467')return String(l?.name||'').toLowerCase();
    if(k==='formatV479')return String(p.format||'').toLowerCase();
    if(k==='woodTypeV474')return String(p.woodType||'').toLowerCase();
-   if(k==='usage')return (p.usage||[]).join(' ').toLowerCase();
+   if(k==='usage')return (Array.isArray(p.usage)?p.usage:[]).join(' ').toLowerCase();
    if(k==='elementId')return String(p.elementId||'').toLowerCase();
    if(k==='linearMeters')return linearMeters(p);
    if(k==='areaHorizontal')return horizontalArea(p);
@@ -18741,12 +18806,12 @@ function renderInv(){
        bodyV485.push(`<tr class="materialGroupV484"><td colspan="${st.inventoryColumnOrder.length}"><div><b>${esc(name)}</b><span>${group.length} ${group.length===1?'Paket':'Pakete'} · Menge ${Number.isInteger(qty)?qty:qty.toFixed(2)}</span></div></td></tr>`);
        last=key;
      }
-     let r=st.racks.find(x=>x.id===p.rackId),l=r?.levels[p.levelIndex];
+     let r=st.racks.find(x=>x.id===p.rackId),l=r?.levels?.[p.levelIndex];
      bodyV485.push(`<tr class="${hasReservation(p)?'reservedRow ':''}${inventorySelectedV466.has(p.id)?'inventorySelectedV497':''}">${st.inventoryColumnOrder.map(k=>`<td>${inventoryCell(p,k,r,l)}</td>`).join('')}</tr>`);
    });
  }else{
    ps.forEach(p=>{
-     let r=st.racks.find(x=>x.id===p.rackId),l=r?.levels[p.levelIndex];
+     let r=st.racks.find(x=>x.id===p.rackId),l=r?.levels?.[p.levelIndex];
      bodyV485.push(`<tr class="${hasReservation(p)?'reservedRow ':''}${inventorySelectedV466.has(p.id)?'inventorySelectedV497':''}">${st.inventoryColumnOrder.map(k=>`<td>${inventoryCell(p,k,r,l)}</td>`).join('')}</tr>`);
    });
  }
@@ -18759,13 +18824,15 @@ function renderInv(){
  if(E('sumLinear'))E('sumLinear').textContent=lsum.toFixed(2)+' m';
  if(E('sumVertical'))E('sumVertical').textContent=vsum.toFixed(2)+' m²';
  E('sPkg').textContent=st.packages.length;
- E('sRack').textContent=st.racks.length;
- E('sLvl').textContent=st.racks.reduce((n,r)=>n+r.levels.length,0);
- E('sMat').textContent=new Set(st.packages.map(p=>p.material.toLowerCase())).size
+ E('sRack').textContent=(st.racks||[]).filter(Boolean).length;
+ E('sLvl').textContent=(st.racks||[]).filter(Boolean).reduce((n,r)=>n+(Array.isArray(r.levels)?r.levels.length:0),0);
+ E('sMat').textContent=new Set((st.packages||[]).filter(Boolean).map(p=>String(p.material||'').trim().toLowerCase()).filter(Boolean)).size
 }
 function jump(rid,pid){
  if(typeof currentPermissions==='function' && currentPermissions().materialGoLocation!==true){alert('Für diese Aktion ist keine Berechtigung freigeschaltet.');return;}
- let r=st.racks.find(x=>x.id===rid),a=st.areas.find(x=>x.id===r?.areaId);
+ let r=(st.racks||[]).filter(Boolean).find(x=>x.id===rid);
+ if(!r){alert('Für dieses Paket ist aktuell kein gültiger Lagerort zugeordnet. Das Paket bleibt in der Materialübersicht sichtbar.');return;}
+ let a=(st.areas||[]).filter(Boolean).find(x=>x.id===r?.areaId);
  selectedPackage=pid;showPage(areaMapType(a)==='production'?'production':'map');renderAreas();openRack(rid);
  setTimeout(()=>{let t=document.querySelector('.pkg.target');if(t)t.scrollIntoView({behavior:'smooth',block:'center',inline:'center'})},80);
 }
@@ -18776,7 +18843,7 @@ function renderFilters(){
 function renderCategoryFilterV471(){
  let el=E('categoryFilterV471');if(!el)return;
  let current=el.value||'';
- let used=new Set((st.packages||[]).map(p=>String(p.idCategory||'').trim()).filter(Boolean));
+ let used=new Set((st.packages||[]).filter(Boolean).map(p=>String(p.idCategory||'').trim()).filter(Boolean));
  let keys=[...Object.keys(ID_CATS||{}),...used].filter((v,i,a)=>a.indexOf(v)===i);
  el.innerHTML='<option value="">Alle Kategorien</option>'+keys.map(k=>`<option value="${esc(k)}">${esc(ID_CATS[k]||k)}</option>`).join('');
  if([...el.options].some(o=>o.value===current))el.value=current;
@@ -18983,7 +19050,7 @@ function newFullControl(){
  if(activeControl()){alert('Es läuft bereits eine Lagerkontrolle. Bitte diese zuerst abschliessen.');return}
  let active=st.packages.filter(p=>p.status!=='aufgebraucht');if(!active.length){alert('Es sind keine aktiven Materialien erfasst.');return}
  let name=prompt('Name der Kontrolle:','Lagerkontrolle '+new Date().toLocaleDateString('de-CH'));if(name===null)return;
- let by=currentUserName(),items=active.map(p=>{let r=st.racks.find(x=>x.id===p.rackId),l=r?.levels[p.levelIndex];return {packageId:p.id,result:'',checkedAt:'',checkedBy:'',note:'',snapshot:{elementId:p.elementId||'',material:p.material||'',qty:p.qty||'',project:p.project||'',packCode:p.packCode||'',areaId:r?.areaId||'',area:areaName(r?.areaId),rack:r?.name||'',level:l?.name||'',rackId:r?.id||'',levelIndex:p.levelIndex}}});
+ let by=currentUserName(),items=active.map(p=>{let r=st.racks.find(x=>x.id===p.rackId),l=r?.levels?.[p.levelIndex];return {packageId:p.id,result:'',checkedAt:'',checkedBy:'',note:'',snapshot:{elementId:p.elementId||'',material:p.material||'',qty:p.qty||'',project:p.project||'',packCode:p.packCode||'',areaId:r?.areaId||'',area:areaName(r?.areaId),rack:r?.name||'',level:l?.name||'',rackId:r?.id||'',levelIndex:p.levelIndex}}});
  st.controls.unshift({id:'c'+Date.now(),name:name.trim()||'Lagerkontrolle',checkedBy:by,created:new Date().toISOString(),completed:'',items});persist();showPage('control')
 }
 function renderFullControl(){
@@ -19231,12 +19298,12 @@ function newControl(){
  if(activeControl()){alert('Es läuft bereits eine Lagerkontrolle. Bitte diese zuerst abschliessen.');return}
  let active=st.packages.filter(p=>p.status!=='aufgebraucht');if(!active.length){alert('Es sind keine aktiven Materialien erfasst.');return}
  let name=prompt('Name der Kontrolle:','Lagerkontrolle '+new Date().toLocaleDateString('de-CH'));if(name===null)return;
- let by=currentUserName(),items=active.map(p=>{let r=st.racks.find(x=>x.id===p.rackId),l=r?.levels[p.levelIndex];return {packageId:p.id,result:'',checkedAt:'',checkedBy:'',note:'',snapshot:{elementId:p.elementId||'',material:p.material||'',qty:p.qty||'',project:p.project||'',packCode:p.packCode||'',areaId:r?.areaId||'',area:areaName(r?.areaId),rack:r?.name||'',level:l?.name||'',rackId:r?.id||'',levelIndex:p.levelIndex}}});
+ let by=currentUserName(),items=active.map(p=>{let r=st.racks.find(x=>x.id===p.rackId),l=r?.levels?.[p.levelIndex];return {packageId:p.id,result:'',checkedAt:'',checkedBy:'',note:'',snapshot:{elementId:p.elementId||'',material:p.material||'',qty:p.qty||'',project:p.project||'',packCode:p.packCode||'',areaId:r?.areaId||'',area:areaName(r?.areaId),rack:r?.name||'',level:l?.name||'',rackId:r?.id||'',levelIndex:p.levelIndex}}});
  st.controls.unshift({id:'c'+Date.now(),name:name.trim()||'Lagerkontrolle',checkedBy:by,created:new Date().toISOString(),completed:'',items});persist();showPage('control')
 }
 function activeControl(){return (st.controls||[]).find(c=>!c.completed)}
 function attachFoundToControl(p){
- let c=activeControl();if(!c||!window.addingFoundForControl)return;window.addingFoundForControl=false;let now=new Date().toISOString(),by=currentUserName(),r=st.racks.find(x=>x.id===p.rackId),l=r?.levels[p.levelIndex];
+ let c=activeControl();if(!c||!window.addingFoundForControl)return;window.addingFoundForControl=false;let now=new Date().toISOString(),by=currentUserName(),r=st.racks.find(x=>x.id===p.rackId),l=r?.levels?.[p.levelIndex];
  c.items.push({packageId:p.id,result:'Neu gefunden',checkedAt:now,checkedBy:by,note:'',snapshot:{elementId:p.elementId||'',material:p.material||'',qty:p.qty||'',project:p.project||'',packCode:p.packCode||'',areaId:r?.areaId||'',area:areaName(r?.areaId),rack:r?.name||'',level:l?.name||'',rackId:r?.id||'',levelIndex:p.levelIndex}});
  p.lastCheckedAt=now;p.lastCheckedBy=by;addHistory(p,'Lagerkontrolle','Neu gefunden · kontrolliert von '+by);
 }
@@ -22630,7 +22697,7 @@ window.addEventListener('load',()=>setTimeout(runImportV481,1800));
 </style>
 
 <style>
-/* BV2026-1-156 · Transportstatus: gleiche Farben im geschlossenen Feld und in den Dropdown-Einträgen. */
+/* BV2026-1-163 · Transportstatus: gleiche Farben im geschlossenen Feld und in den Dropdown-Einträgen. */
 .platformTransportStatusInlineV523 option[value="Geplant"]{background:#fff3c8!important;color:#795600!important}
 .platformTransportStatusInlineV523 option[value="Bestätigt"]{background:#dcecff!important;color:#164f86!important}
 .platformTransportStatusInlineV523 option[value="Geliefert"]{background:#e3f4e7!important;color:#176b2c!important}
@@ -22638,7 +22705,7 @@ window.addEventListener('load',()=>setTimeout(runImportV481,1800));
 </style>
 
 
-<!-- BV2026-1-156 · offene Baustellen-Rungen unabhängig von der Pritsche anzeigen -->
+<!-- BV2026-1-163 · offene Baustellen-Rungen unabhängig von der Pritsche anzeigen -->
 <style>
 .platformOpenSiteRungsV89{margin:12px 0 4px;padding:14px 16px;border:1px solid #d8ded9;border-radius:12px;background:#f8faf8}
 .platformOpenSiteRungsV89 h4{margin:0 0 9px;font-size:16px;color:#173f32}
@@ -22685,11 +22752,11 @@ window.addEventListener('load',()=>setTimeout(runImportV481,1800));
 })();
 </script>
 
-<!-- BV2026-1-156: Anz. Kronen nur für Brühwiler-Mittelrungen; Wert wird mit der Rungenposition gespeichert. -->
+<!-- BV2026-1-163: Anz. Kronen nur für Brühwiler-Mittelrungen; Wert wird mit der Rungenposition gespeichert. -->
 
 
 <script>
-/* BV2026-1-156 · Brühwiler-Kronen werden unabhängig von Mittelrungen zurückgebucht. */
+/* BV2026-1-163 · Brühwiler-Kronen werden unabhängig von Mittelrungen zurückgebucht. */
 function platformQuickReturnCrownOptionsV94(){
   const rows=(platformStore.projectRungsOpen||[])
     .filter(r=>r.supplier==='Brühwiler' && r.kind!=='outer' && (Number(r.crownQty)||0)>0)
@@ -22735,7 +22802,7 @@ function returnPlatformCrownsToWarehouseV94(index){
 }
 </script>
 
-<!-- BV2026-1-156 · Fahrzeuge/Geräte mit optionalen Stammdaten und PDF -->
+<!-- BV2026-1-163 · Fahrzeuge/Geräte mit optionalen Stammdaten und PDF -->
 <style>
 .platformEquipmentFormV95{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:end}
 .platformEquipmentFormV95 label{font-size:12px;color:#59655f}.platformEquipmentFormV95 input{display:block;width:100%;margin-top:4px;padding:9px;border:1px solid var(--line);border-radius:8px;background:#fff}
@@ -22822,7 +22889,7 @@ function returnPlatformCrownsToWarehouseV94(index){
 
 
 <script>
-/* BV2026-1-156 · Direkter Sprung vom Lieferanten-Akkordeon zum Fahrzeuge/Geräte-Formular. */
+/* BV2026-1-163 · Direkter Sprung vom Lieferanten-Akkordeon zum Fahrzeuge/Geräte-Formular. */
 window.openPlatformEquipmentFormV98=function(supplier){
   selectedPlatformSupplier=supplier;
   updatePlatformStockSupplierFields();
@@ -22842,7 +22909,7 @@ window.openPlatformEquipmentFormV98=function(supplier){
 
 
 <script>
-/* BV2026-1-156 · Fahrzeuge/Geräte direkt im aufgeklappten Lieferantenbereich erfassen. */
+/* BV2026-1-163 · Fahrzeuge/Geräte direkt im aufgeklappten Lieferantenbereich erfassen. */
 function platformEquipmentKeyV99(s){return String(s||'').replace(/[^A-Za-z0-9]/g,'_');}
 window.togglePlatformEquipmentInlineV99=function(supplier,force){
   const box=E('platformEquipmentInlineV99_'+platformEquipmentKeyV99(supplier));
@@ -22894,7 +22961,7 @@ window.savePlatformEquipmentInlineV99=async function(supplier){
 
 
 <script>
-/* BV2026-1-156 · Fahrzeuge/Geräte in der Projekt-Reservierungsplanung */
+/* BV2026-1-163 · Fahrzeuge/Geräte in der Projekt-Reservierungsplanung */
 let platformReservationSelectedEquipmentV101=new Set();
 
 function platformEquipmentReservationsV101(x){
@@ -23022,7 +23089,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · mehrere Fahrzeuge/Geräte pro LKW bzw. Anhänger */
+/* BV2026-1-163 · mehrere Fahrzeuge/Geräte pro LKW bzw. Anhänger */
 .equipmentMultiV102{margin-top:12px}
 </style>
 <script>
@@ -23252,7 +23319,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · Container kompakt wie Fahrzeuge/Geräte */
+/* BV2026-1-163 · Container kompakt wie Fahrzeuge/Geräte */
 .containerCompactV104{margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .containerCompactSummaryV104{font-weight:750;color:var(--muted)}
 .containerDialogV104{position:fixed;inset:0;z-index:100001;background:rgba(0,0,0,.34);display:none;align-items:center;justify-content:center;padding:18px}
@@ -23338,7 +23405,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · mitgeführte Container/Geräte direkt am Fahrzeug anzeigen */
+/* BV2026-1-163 · mitgeführte Container/Geräte direkt am Fahrzeug anzeigen */
 .transportExtrasV105{margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#f7f9f8;font-size:14px;line-height:1.45}
 .transportExtrasV105 b{color:var(--green)}
 .transportExtrasV105 .extraRowV105+.extraRowV105{margin-top:4px}
@@ -23395,7 +23462,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · Zusatzladung eindeutig dem LKW bzw. Anhänger zuordnen */
+/* BV2026-1-163 · Zusatzladung eindeutig dem LKW bzw. Anhänger zuordnen */
 .transportExtrasV105{position:relative;margin-top:8px!important;padding:8px 10px!important}
 .transportExtrasV105::before{
  display:block;font-weight:900;font-size:13px;letter-spacing:.02em;
@@ -23436,7 +23503,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · Fahrzeuge/Geräte separat ins Lager zurückbuchen */
+/* BV2026-1-163 · Fahrzeuge/Geräte separat ins Lager zurückbuchen */
 .platformQuickReturnEquipmentV107{margin-top:0}
 </style>
 <script>
@@ -23511,7 +23578,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · Berechtigungen nach Hauptansicht und Bereich gruppiert */
+/* BV2026-1-163 · Berechtigungen nach Hauptansicht und Bereich gruppiert */
 .permissionGridV108{grid-template-columns:1fr!important}
 .permissionSectionV108{padding:0!important;border:0!important;background:transparent!important}
 .permissionGroupV108{border:1px solid var(--line);border-radius:14px;background:#fff;margin:12px 0;overflow:hidden}
@@ -23535,7 +23602,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Produktion: Projekt erstellen und Kommission separat */
+/* BV2026-1-163 · Produktion: Projekt erstellen und Kommission separat */
 (function(){
  function currentPermissionUserV109(){
    const name=(document.querySelector('#permissionEditor h2 + *')?.textContent||'').trim();
@@ -23587,7 +23654,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Produktionsanalyse als eigene Produktions-Berechtigung */
+/* BV2026-1-163 · Produktionsanalyse als eigene Produktions-Berechtigung */
 (function(){
  function userV110(){
    const name=(document.querySelector('#permissionEditor h2 + *')?.textContent||'').trim();
@@ -23627,7 +23694,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Kleinaufträge: Materialerstellung Künzli / Immer AG separat */
+/* BV2026-1-163 · Kleinaufträge: Materialerstellung Künzli / Immer AG separat */
 (function(){
  function userV111(){
    const name=(document.querySelector('#permissionEditor h2 + *')?.textContent||'').trim();
@@ -23672,7 +23739,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Löschen von Daten und Rapporten separat berechtigen */
+/* BV2026-1-163 · Löschen von Daten und Rapporten separat berechtigen */
 (function(){
  function userV112(){
    const name=(document.querySelector('#permissionEditor h2 + *')?.textContent||'').trim();
@@ -23725,7 +23792,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Detailberechtigungen Pritschenverwaltung / Logistik */
+/* BV2026-1-163 · Detailberechtigungen Pritschenverwaltung / Logistik */
 (function(){
  const defsV113={
    platformReturn:'permPlatformReturnV113',
@@ -23775,7 +23842,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · Detailberechtigungen Materiallager */
+/* BV2026-1-163 · Detailberechtigungen Materiallager */
 .permissionSubgroupV114{grid-column:1/-1;border-bottom:1px solid #edf0ee}
 .permissionSubHeadV114{font-weight:850!important;background:#f8faf9}
 .permissionSubchildrenV114{display:grid;grid-template-columns:repeat(2,minmax(180px,1fr));padding-left:22px;background:#fff}
@@ -23783,7 +23850,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 @media(max-width:650px){.permissionSubchildrenV114{grid-template-columns:1fr;padding-left:12px}}
 </style>
 <script>
-/* BV2026-1-156 · Materiallager-Rechte separat speichern */
+/* BV2026-1-163 · Materiallager-Rechte separat speichern */
 (function(){
  const defsV114={
    materialMasterData:'permMaterialMasterDataV114',
@@ -23833,7 +23900,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · Berechtigungen werden in der Oberfläche tatsächlich durchgesetzt */
+/* BV2026-1-163 · Berechtigungen werden in der Oberfläche tatsächlich durchgesetzt */
 .permHiddenV115{display:none!important}
 </style>
 <script>
@@ -24000,7 +24067,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · Abmelden direkt in der Bereichsauswahl */
+/* BV2026-1-163 · Abmelden direkt in der Bereichsauswahl */
 #areaLogoutV116{
   border:1px solid #e0caca;background:#fff5f5;color:#8d2929;
   border-radius:18px;padding:13px 22px;font-weight:850;font-size:16px;
@@ -24059,7 +24126,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Fix: Detailberechtigungen direkt an den zentralen Berechtigungsspeicher angebunden */
+/* BV2026-1-163 · Fix: Detailberechtigungen direkt an den zentralen Berechtigungsspeicher angebunden */
 (function(){
  function applyPermissionStateV117(){
    try{
@@ -24078,7 +24145,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Berechtigungen: deny-by-default + direkte Modul-Sperren */
+/* BV2026-1-163 · Berechtigungen: deny-by-default + direkte Modul-Sperren */
 (function(){
  function allowedV118(k){
    try{return currentPermissions()[k]===true}catch(e){return false}
@@ -24147,7 +24214,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Verwalten und Einstellungen separat freischaltbar */
+/* BV2026-1-163 · Verwalten und Einstellungen separat freischaltbar */
 (function(){
  function pV119(k){try{return currentPermissions()[k]===true}catch(e){return false}}
  function applyV119(){
@@ -24177,7 +24244,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · "Verwalten & Einstellungen" ist ein kompletter Hauptbereich */
+/* BV2026-1-163 · "Verwalten & Einstellungen" ist ein kompletter Hauptbereich */
 (function(){
  function canManageV120(){
    try{return currentPermissions().manage===true}catch(e){return false}
@@ -24212,7 +24279,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Reparatur Speichern-Button Berechtigungen */
+/* BV2026-1-163 · Reparatur Speichern-Button Berechtigungen */
 (function(){
  window.savePermissionEditorV121=function(ev){
    if(ev){ev.preventDefault();ev.stopPropagation();}
@@ -24284,7 +24351,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · To-do-Liste nur mit eigener Berechtigung sichtbar */
+/* BV2026-1-163 · To-do-Liste nur mit eigener Berechtigung sichtbar */
 (function(){
  function todoAllowedV122(){
    try{return currentPermissions().todo===true}catch(e){return false}
@@ -24316,7 +24383,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Rechte für Flächen/Gestelle/Ebenen + dauerhaftes Abmelden */
+/* BV2026-1-163 · Rechte für Flächen/Gestelle/Ebenen + dauerhaftes Abmelden */
 (function(){
  function allowedV123(k){
    try{return currentPermissions()[k]===true}catch(e){return false}
@@ -24456,7 +24523,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · "Fläche sperren / entsperren" ebenfalls nur mit Flächen-Berechtigung */
+/* BV2026-1-163 · "Fläche sperren / entsperren" ebenfalls nur mit Flächen-Berechtigung */
 (function(){
  function areaAllowedV124(){
    try{return currentPermissions().materialAreas===true}catch(e){return false}
@@ -24506,7 +24573,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Ohne Berechtigung dürfen keine Pakete erfasst werden */
+/* BV2026-1-163 · Ohne Berechtigung dürfen keine Pakete erfasst werden */
 (function(){
  function allowedV125(){
    try{return currentPermissions().materialPackageCreate===true}catch(e){return false}
@@ -24556,7 +24623,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Paket-Erfassung an den echten Funktionen gesperrt */
+/* BV2026-1-163 · Paket-Erfassung an den echten Funktionen gesperrt */
 (function(){
  function packageCreateAllowedV126(){
    try{return currentPermissions().materialPackageCreate===true}catch(e){return false}
@@ -24585,7 +24652,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Produktionshalle nur mit eigener Ansichtsberechtigung */
+/* BV2026-1-163 · Produktionshalle nur mit eigener Ansichtsberechtigung */
 (function(){
  function productionHallAllowedV127(){
    try{return currentPermissions().productionHall===true}catch(e){return false}
@@ -24619,7 +24686,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 .inventoryLocationReadOnlyV128{display:inline-block;padding:8px 0;color:inherit}
 </style>
 <script>
-/* BV2026-1-156 · Jede Lager-Aktion mit eigener Berechtigung */
+/* BV2026-1-163 · Jede Lager-Aktion mit eigener Berechtigung */
 (function(){
  const rules=[
    ['materialGoLocation',/^\s*Zu Lagerort\s*$/i],
@@ -24650,7 +24717,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Projektfreigaben zuverlässig öffnen */
+/* BV2026-1-163 · Projektfreigaben zuverlässig öffnen */
 (function(){
  window.openProjectAccessManagerV129=function(id,ev){
    if(ev){ev.preventDefault();ev.stopPropagation();}
@@ -24708,7 +24775,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Projektfreigaben: explizite Modal-Anzeige zurücksetzen */
+/* BV2026-1-163 · Projektfreigaben: explizite Modal-Anzeige zurücksetzen */
 (function(){
  const oldClose=window.closeM;
  if(typeof oldClose==='function'){
@@ -24737,7 +24804,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 #projectAccessDebugV131 .ok{color:#a9f5b4}.err{color:#ffb1b1}.info{color:#fff}
 </style>
 <script>
-/* BV2026-1-156 · Sichtbare Diagnose für "Mitarbeiter einladen / Freigaben" */
+/* BV2026-1-163 · Sichtbare Diagnose für "Mitarbeiter einladen / Freigaben" */
 (function(){
  function box(){
    let b=document.getElementById('projectAccessDebugV131');
@@ -24808,7 +24875,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · Projektfreigaben garantiert über der gesamten Anwendung */
+/* BV2026-1-163 · Projektfreigaben garantiert über der gesamten Anwendung */
 #projectAccessModal{
  position:fixed!important;
  inset:0!important;
@@ -24861,7 +24928,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Berechtigungen sofort in die Cloud und beim Benutzer zeitnah neu laden */
+/* BV2026-1-163 · Berechtigungen sofort in die Cloud und beim Benutzer zeitnah neu laden */
 (function(){
  /* Beim Speichern einer Berechtigung nicht nur den verzögerten Queue-Sync abwarten. */
  const oldSave=window.savePermissionEditorV121;
@@ -24908,7 +24975,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 #permDebugV134 button{background:#fff;color:#10352b;border:0;border-radius:8px;padding:6px 9px;font-weight:800}
 </style>
 <script>
-/* BV2026-1-156 · sichtbare Berechtigungsdiagnose */
+/* BV2026-1-163 · sichtbare Berechtigungsdiagnose */
 (function(){
  function dbg(msg){
    let b=document.getElementById('permDebugV134');
@@ -24959,7 +25026,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Bereichskarten werden ausschliesslich aus aktuellen Rechten gesteuert */
+/* BV2026-1-163 · Bereichskarten werden ausschliesslich aus aktuellen Rechten gesteuert */
 (function(){
  function applyAreaCardsV135(){
    let p={};
@@ -24999,7 +25066,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · Bereichskarten: Rechte direkt gegen alte CSS-Regeln durchsetzen */
+/* BV2026-1-163 · Bereichskarten: Rechte direkt gegen alte CSS-Regeln durchsetzen */
 #moduleSmallOrdersTile.permShowV137,
 #moduleWarehouseTile.permShowV137,
 #moduleProjectsTile.permShowV137,
@@ -25053,7 +25120,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · ToDo nur mit expliziter Berechtigung */
+/* BV2026-1-163 · ToDo nur mit expliziter Berechtigung */
 #todoDashboardV518.permTodoShowV138,
 .todoDashboardV518.permTodoShowV138,
 [data-todo-dashboard].permTodoShowV138{
@@ -25109,7 +25176,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Kleinauftrag-Materialrechte ohne globale Alerts */
+/* BV2026-1-163 · Kleinauftrag-Materialrechte ohne globale Alerts */
 (function(){
  function allowedV140(kind){
    try{
@@ -25166,7 +25233,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Lieferantenansicht nur mit "Lieferanten einsehen" */
+/* BV2026-1-163 · Lieferantenansicht nur mit "Lieferanten einsehen" */
 (function(){
  function supplierViewAllowedV141(){
    try{return currentPermissions().platformSupplierView===true}catch(e){return false}
@@ -25209,7 +25276,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · Berechtigungen logisch gruppieren */
+/* BV2026-1-163 · Berechtigungen logisch gruppieren */
 #permissionModal .permLogicalGroupV142{
  margin:10px 12px 12px;border:1px solid #d8e1dd;border-radius:10px;overflow:hidden;background:#fff
 }
@@ -25312,7 +25379,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · iPhone/Safari: lokalen Sync-Speicher verkleinern */
+/* BV2026-1-163 · iPhone/Safari: lokalen Sync-Speicher verkleinern */
 (function(){
   function compactSyncBaseV143(base){
     const out={};
@@ -25384,7 +25451,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · iPhone: Karten-Kopf vollständig im Viewport */
+/* BV2026-1-163 · iPhone: Karten-Kopf vollständig im Viewport */
 @media(max-width:700px){
   html,body{max-width:100%;overflow-x:hidden!important}
 
@@ -25486,7 +25553,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · echtes Zwei-Finger-Zoomen auf den Karten */
+/* BV2026-1-163 · echtes Zwei-Finger-Zoomen auf den Karten */
 @media(max-width:700px){
   #mapwrap,#productionPlanWrap{
     touch-action:none!important;
@@ -25597,7 +25664,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · Materialansicht iPhone */
+/* BV2026-1-163 · Materialansicht iPhone */
 @media(max-width:700px){
   /* Materialbereich nutzt die ganze Displaybreite. */
   #page-inventory{padding-left:0!important;padding-right:0!important}
@@ -25631,7 +25698,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 }
 </style>
 <script>
-/* BV2026-1-156 · Umbuchen direkt aus der Karten-ID-Suche */
+/* BV2026-1-163 · Umbuchen direkt aus der Karten-ID-Suche */
 (function(){
  window.openWarehouseTransferFromQuickV146=function(){
    const id=document.getElementById('quickPackageId')?.value;
@@ -25664,7 +25731,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · Mobile Modals dürfen nicht hinter der unteren Navigation enden */
+/* BV2026-1-163 · Mobile Modals dürfen nicht hinter der unteren Navigation enden */
 @media(max-width:700px){
   /* Der Inhalt aller geöffneten Modals erhält genügend Platz unterhalb
      des letzten Buttons, damit die fixe grüne Navigation nichts verdeckt. */
@@ -25694,7 +25761,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · iPhone Umbuchung: eigener vollflächiger, überall scrollbar Dialog */
+/* BV2026-1-163 · iPhone Umbuchung: eigener vollflächiger, überall scrollbar Dialog */
 @media(max-width:700px){
   #warehouseTransferModalV545.open{
     display:block!important;
@@ -25791,7 +25858,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Schnellbearbeitung: Ebene ist optional */
+/* BV2026-1-163 · Schnellbearbeitung: Ebene ist optional */
 (function(){
   /* Die Schnellbearbeitung hatte im Gegensatz zur normalen Materialbearbeitung
      keinen Eintrag "Keine Ebene" und verlangte immer ein Level-Objekt. */
@@ -25873,7 +25940,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-156 · Cloud-Fehler direkt diagnostizierbar */
+/* BV2026-1-163 · Cloud-Fehler direkt diagnostizierbar */
 #cloudErrorDiagV151{
  position:fixed;inset:0;z-index:50000;background:rgba(0,0,0,.46);
  display:none;align-items:center;justify-content:center;padding:16px
@@ -25968,7 +26035,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Cloud-Diagnose zeigt auch intern abgefangene Sync-Fehler */
+/* BV2026-1-163 · Cloud-Diagnose zeigt auch intern abgefangene Sync-Fehler */
 (function(){
  const oldShow=window.showCloudErrorDiagV151;
  window.showCloudErrorDiagV151=async function(){
@@ -26011,7 +26078,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Diagnose-Hinweis für reparierte leere Cloud-Datensätze */
+/* BV2026-1-163 · Diagnose-Hinweis für reparierte leere Cloud-Datensätze */
 (function(){
  try{
    const old=window.showCloudErrorDiagV151;
@@ -26030,7 +26097,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-156 · Cloud und Oberflächenfehler getrennt diagnostizieren */
+/* BV2026-1-163 · Cloud und Oberflächenfehler getrennt diagnostizieren */
 (function(){
  const old=window.showCloudErrorDiagV151;
  if(typeof old!=='function')return;
@@ -26046,5 +26113,289 @@ renderPlatformReservationGantt=function(from='',to=''){
      pre.textContent += '\n\nOberflächen-Diagnose: keine Fehler beim letzten Aktualisieren.';
    }
  };
+})();
+</script>
+
+
+<style>
+/* BV2026-1-163 · Material umbuchen klar gegliedert */
+#warehouseTransferModalV545 .wtModalV549{max-width:920px!important}
+#warehouseTransferModalV545 .wtSectionV549{
+  margin:14px 0;padding:16px;border:1px solid #d9e2de;border-radius:14px;background:#f8fbf9
+}
+#warehouseTransferModalV545 .wtSectionTitleV549{
+  margin:0 0 12px;font-size:18px;font-weight:800;color:#123f33
+}
+#warehouseTransferModalV545 .wtGridV549{
+  display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;align-items:end
+}
+#warehouseTransferModalV545 .wtGrid2V549{grid-template-columns:1fr 1fr}
+#warehouseTransferModalV545 label{display:flex;flex-direction:column;gap:6px;font-weight:700}
+#warehouseTransferModalV545 input,
+#warehouseTransferModalV545 select,
+#warehouseTransferModalV545 textarea{width:100%;box-sizing:border-box}
+#warehouseTransferModalV545 input:disabled{
+  opacity:1;color:#17362e;background:#eef3f0;border-color:#d5dfda
+}
+#warehouseTransferModalV545 .wtTargetRowV549{display:flex;gap:8px;align-items:stretch}
+#warehouseTransferModalV545 .wtTargetRowV549 select{min-width:0;flex:1}
+#warehouseTransferModalV545 .wtValueCardV549{
+  margin-top:12px;padding:13px 14px;border-radius:11px;background:#fff;border:1px solid #d9e2de
+}
+#warehouseTransferModalV545 .wtInfoV549{
+  margin:14px 0;padding:13px 15px;border-radius:12px;background:#eef5f1;
+  border-left:4px solid #155744;line-height:1.45
+}
+#warehouseTransferModalV545 .wtFooterV549{
+  display:flex;justify-content:flex-end;gap:10px;margin-top:16px
+}
+@media(max-width:700px){
+ #warehouseTransferModalV545 .wtSectionV549{padding:13px;margin:10px 0}
+ #warehouseTransferModalV545 .wtGridV549,
+ #warehouseTransferModalV545 .wtGrid2V549{grid-template-columns:1fr!important}
+ #warehouseTransferModalV545 .wtTargetRowV549{flex-direction:column}
+ #warehouseTransferModalV545 .wtTargetRowV549 .btn{width:100%}
+ #warehouseTransferModalV545 .wtFooterV549{display:grid;grid-template-columns:1fr}
+}
+</style>
+
+
+<style>
+#cloudDataDiagV159{position:fixed;inset:0;z-index:60000;background:rgba(0,0,0,.48);display:none;align-items:center;justify-content:center;padding:16px}
+#cloudDataDiagV159.open{display:flex}
+#cloudDataDiagV159 .box{width:min(820px,100%);max-height:90dvh;overflow:auto;background:#0d3d31;color:#fff;border-radius:16px;padding:18px}
+#cloudDataDiagV159 pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#082d25;padding:13px;border-radius:10px;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+</style>
+<script>
+/* BV2026-1-163 · Nur-Lese-Diagnose: lokaler Lagerbestand vs. Supabase.
+   Diese Funktion schreibt/ändert/löscht keinerlei Nutzdaten. */
+(function(){
+ function countLocalV159(){
+   return {
+     packages:Array.isArray(st?.packages)?st.packages.filter(Boolean).length:0,
+     racks:Array.isArray(st?.racks)?st.racks.filter(Boolean).length:0,
+     areas:Array.isArray(st?.areas)?st.areas.filter(Boolean).length:0,
+     materials:Array.isArray(st?.materials)?st.materials.filter(Boolean).length:0
+   };
+ }
+ window.showCloudDataDiagV159=async function(){
+   const pre=document.getElementById('cloudDataDiagTextV159');
+   document.getElementById('cloudDataDiagV159')?.classList.add('open');
+   pre.textContent='Cloud-Bestand wird NUR GELESEN …';
+   const local=countLocalV159();
+   let lines=[
+     'NUR-LESE-DIAGNOSE – es werden keine Daten verändert.',
+     '',
+     'LOKAL AUF DIESEM GERÄT',
+     'Pakete: '+local.packages,
+     'Gestelle: '+local.racks,
+     'Flächen: '+local.areas,
+     'Materialarten: '+local.materials,
+     ''
+   ];
+   try{
+     if(typeof cloudReady==='function'&&!cloudReady())throw new Error('Cloud ist nicht bereit / keine gültige Session.');
+     const remote=await fetchRemoteEntities();
+     const counts={}, invalid={};
+     Object.values(remote||{}).forEach(x=>{
+       const type=x?.type||'(ohne Typ)';
+       counts[type]=(counts[type]||0)+1;
+       if(!x||!x.data||typeof x.data!=='object')invalid[type]=(invalid[type]||0)+1;
+     });
+     lines.push('SUPABASE / CLOUD');
+     const types=Object.keys(counts).sort();
+     if(!types.length)lines.push('Keine Cloud-Entities gefunden.');
+     else types.forEach(t=>lines.push(`${t}: ${counts[t]}${invalid[t]?`  (davon ungültig/leer: ${invalid[t]})`:''}`));
+     lines.push('');
+     lines.push('Lager-Kerntypen:');
+     ['packages','racks','areas','materials'].forEach(t=>lines.push(`${t}: ${counts[t]||0}`));
+     lines.push('');
+     if(local.packages===0&&(counts.packages||0)>0){
+       lines.push('ERGEBNIS: Die Pakete sind in der Cloud vorhanden, aber lokal nicht geladen.');
+       lines.push('WICHTIG: Gerät → Cloud NICHT ausführen.');
+     }else if(local.packages===0&&(counts.packages||0)===0){
+       lines.push('WARNUNG: Weder lokal noch in der aktuellen Cloud-Abfrage wurden Pakete gefunden.');
+       lines.push('Keine Synchronisation erzwingen; zuerst Backup/Cloud-Historie prüfen.');
+     }else{
+       lines.push('ERGEBNIS: Lokale Pakete sind vorhanden. Anzahl mit Cloud vergleichen.');
+     }
+   }catch(e){
+     lines.push('CLOUD-LESEFEHLER: '+String(e?.message||e));
+     lines.push('Es wurde nichts geschrieben oder verändert.');
+   }
+   pre.textContent=lines.join('\n');
+ };
+
+ document.body.insertAdjacentHTML('beforeend',`
+ <div id="cloudDataDiagV159">
+  <div class="box">
+   <h3 style="margin-top:0">Cloud-Datenbestand prüfen</h3>
+   <pre id="cloudDataDiagTextV159"></pre>
+   <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <button class="btn" type="button" onclick="showCloudDataDiagV159()">Neu prüfen</button>
+    <button class="btn secondary" type="button" onclick="document.getElementById('cloudDataDiagV159').classList.remove('open')">Schliessen</button>
+   </div>
+  </div>
+ </div>`);
+
+ /* Diagnose über den Cloud-Chip erreichbar, ohne dessen normalen Sync auszulösen:
+    langer Druck / Rechtsklick; zusätzlich Alt+Klick am Desktop. */
+ function bindV159(){
+   document.querySelectorAll('button,.chip,.badge,span,div').forEach(el=>{
+     const tx=(el.textContent||'').trim();
+     if((tx==='Cloud'||tx==='Cloud aktuell'||tx==='Cloud-Fehler')&&!el.dataset.dataDiagV159){
+       el.dataset.dataDiagV159='1';
+       el.addEventListener('contextmenu',e=>{e.preventDefault();e.stopPropagation();showCloudDataDiagV159()});
+       el.addEventListener('click',e=>{if(e.altKey){e.preventDefault();e.stopPropagation();showCloudDataDiagV159()}},true);
+     }
+   });
+ }
+ setInterval(bindV159,1200);setTimeout(bindV159,0);
+
+ /* Direkt beim leeren Materialbestand einen sicheren Diagnoseknopf anbieten. */
+ function addButtonV159(){
+   if(document.getElementById('cloudDataCheckBtnV159'))return;
+   const host=document.querySelector('#inventoryPage .toolbar')||document.querySelector('[data-page="inventory"] .toolbar');
+   if(!host)return;
+   const b=document.createElement('button');
+   b.id='cloudDataCheckBtnV159';b.type='button';b.className='btn secondary';
+   b.textContent='Cloud-Daten prüfen';
+   b.onclick=showCloudDataDiagV159;
+   host.appendChild(b);
+ }
+ setInterval(addButtonV159,1500);setTimeout(addButtonV159,200);
+})();
+</script>
+
+
+<style>
+#cloudDataFixedBtnV160{
+ position:fixed;right:18px;top:86px;z-index:45000;
+ box-shadow:0 4px 14px rgba(0,0,0,.16)
+}
+@media(max-width:700px){
+ #cloudDataFixedBtnV160{right:10px;top:74px;font-size:13px;padding:9px 11px}
+}
+</style>
+<script>
+/* V160: sicher sichtbarer Einstieg in die Nur-Lese-Cloud-Diagnose. */
+(function(){
+ function ensureCloudDiagButtonV160(){
+   if(document.getElementById('cloudDataFixedBtnV160'))return;
+   const b=document.createElement('button');
+   b.id='cloudDataFixedBtnV160';
+   b.type='button';
+   b.className='btn secondary';
+   b.textContent='Cloud-Daten prüfen';
+   b.title='Nur lesen – verändert keine Daten';
+   b.addEventListener('click',function(e){
+     e.preventDefault();e.stopPropagation();
+     if(typeof window.showCloudDataDiagV159==='function'){
+       window.showCloudDataDiagV159();
+     }else{
+       alert('Cloud-Diagnose konnte nicht gestartet werden.');
+     }
+   });
+   document.body.appendChild(b);
+ }
+ if(document.readyState==='loading'){
+   document.addEventListener('DOMContentLoaded',ensureCloudDiagButtonV160,{once:true});
+ }else ensureCloudDiagButtonV160();
+ setTimeout(ensureCloudDiagButtonV160,500);
+})();
+</script>
+
+
+<script>
+/* BV2026-1-163
+   Reparatur Materialansicht:
+   Cloud-/Lokaldaten sind vorhanden, aber die Ansicht konnte nach dem asynchronen
+   Laden auf dem zuvor gerenderten 0-Stand stehen bleiben.
+   Dieser Patch verändert KEINE Lagerdaten; er aktualisiert nur die Oberfläche. */
+(function(){
+ let lastSigV161='';
+ let busyV161=false;
+
+ function inventoryVisibleV161(){
+   const page=document.getElementById('page-inventory') ||
+              document.getElementById('inventoryPage') ||
+              document.querySelector('[data-page-content="inventory"]');
+   if(page){
+     const cs=getComputedStyle(page);
+     return cs.display!=='none' && cs.visibility!=='hidden';
+   }
+   return typeof currentPage!=='undefined' && currentPage==='inventory';
+ }
+
+ function dataSigV161(){
+   const pk=Array.isArray(st?.packages)?st.packages.filter(Boolean):[];
+   const rk=Array.isArray(st?.racks)?st.racks.filter(Boolean):[];
+   const ar=Array.isArray(st?.areas)?st.areas.filter(Boolean):[];
+   const mc=Array.isArray(st?.materialCatalog)?st.materialCatalog.filter(Boolean):[];
+   return [pk.length,rk.length,ar.length,mc.length,
+     pk[0]?.id||'',pk[pk.length-1]?.id||'',
+     rk[0]?.id||'',rk[rk.length-1]?.id||''].join('|');
+ }
+
+ function refreshInventoryViewV161(force){
+   if(busyV161 || !inventoryVisibleV161())return;
+   const sig=dataSigV161();
+   const displayed=Number(document.getElementById('sPkg')?.textContent||0);
+   const actual=Array.isArray(st?.packages)?st.packages.filter(Boolean).length:0;
+
+   if(!force && sig===lastSigV161 && displayed===actual)return;
+   busyV161=true;
+   try{
+     if(typeof renderFilters==='function')renderFilters();
+     if(typeof renderInv==='function')renderInv();
+     lastSigV161=sig;
+   }catch(e){
+     console.error('V161 Materialansicht aktualisieren',e);
+   }finally{
+     busyV161=false;
+   }
+ }
+
+ /* Nach Cloud-Laden kann st bereits gefüllt sein, während die Tabelle noch 0 zeigt. */
+ setInterval(function(){
+   const actual=Array.isArray(st?.packages)?st.packages.filter(Boolean).length:0;
+   const displayed=Number(document.getElementById('sPkg')?.textContent||0);
+   if(inventoryVisibleV161() && (actual!==displayed || dataSigV161()!==lastSigV161)){
+     refreshInventoryViewV161(true);
+   }
+ },900);
+
+ window.refreshInventoryViewV161=()=>refreshInventoryViewV161(true);
+
+ /* Beim Öffnen der Materialseite nochmals sicher rendern. */
+ if(typeof showPage==='function'){
+   const oldShowPageV161=showPage;
+   showPage=function(page){
+     const out=oldShowPageV161.apply(this,arguments);
+     if(page==='inventory')setTimeout(()=>refreshInventoryViewV161(true),60);
+     return out;
+   };
+ }
+
+ setTimeout(()=>refreshInventoryViewV161(true),300);
+})();
+</script>
+
+
+<script>
+/* V162 – Materialansicht: Fehler sichtbar machen statt still 0 anzeigen. */
+(function(){
+ const oldRenderInvV162=renderInv;
+ renderInv=function(){
+   try{
+     return oldRenderInvV162.apply(this,arguments);
+   }catch(err){
+     console.error('V162 renderInv',err);
+     const n=Array.isArray(st?.packages)?st.packages.filter(Boolean).length:0;
+     if(E('sPkg'))E('sPkg').textContent=n;
+     if(E('tbody'))E('tbody').innerHTML=`<tr><td colspan="${Math.max(1,(st.inventoryColumnOrder||[]).length)}" style="padding:18px;color:#9b2c20"><b>Materialdaten vorhanden (${n} Pakete), aber die Tabelle konnte nicht vollständig aufgebaut werden.</b><br>${esc(String(err?.message||err))}</td></tr>`;
+   }
+ };
+ setTimeout(()=>{try{renderInv()}catch(_){}},250);
 })();
 </script>
