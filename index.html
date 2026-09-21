@@ -5,7 +5,7 @@
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; form-action 'self'; img-src 'self' data: blob: https://*.supabase.co; connect-src 'self' https://*.supabase.co; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; font-src 'self' data:; media-src 'self' data: blob:; worker-src 'self' blob:; upgrade-insecure-requests">
 <!-- V406: Transporte direkt unter der Projekterfassung -->
-<title>Künzli Lagerverwaltung V345 · BV2026-1-150</title>
+<title>Künzli Lagerverwaltung V345 · BV2026-1-156</title>
 <style>
 :root{--g:#173f32;--bg:#f3f5f3;--line:#d8ded9;--mut:#6a746e;--red:#df3428}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:#17201c}button,input,select,textarea{font:inherit}
@@ -4184,7 +4184,7 @@ window.APP_RELEASE = {
 
 
 <style>
-/* BV2026-1-150 · Cloud/Benutzer/Rolle gehören zur Bereichsauswahl, nicht in die einzelnen Bereiche. */
+/* BV2026-1-156 · Cloud/Benutzer/Rolle gehören zur Bereichsauswahl, nicht in die einzelnen Bereiche. */
 .app > header #syncStatusBadge,
 .app > header #authHeaderBtn,
 .app > header #activeRoleBadge{display:none!important}
@@ -4208,7 +4208,7 @@ window.APP_RELEASE = {
 
 
 <style>
-/* BV2026-1-150 · kompakte Mehrfachauswahl für grosse Gerätebestände */
+/* BV2026-1-156 · kompakte Mehrfachauswahl für grosse Gerätebestände */
 .equipmentMultiV102{margin-top:10px!important}
 .equipmentMultiV102>.containerEnableV525,
 .equipmentMultiV102>.containerSelectLabelV526,
@@ -10416,6 +10416,14 @@ function singletonCloudData(){
  };
 }
 function entityId(type,obj,idx){
+ /* V153: Cloud-/Altbestände können vereinzelt leere/null Einträge enthalten.
+    Diese dürfen den gesamten Sync nicht mit "reading id" abbrechen. */
+ if(!obj||typeof obj!=='object'){
+   if(type==='commissions')return 'commission:'+String(idx);
+   if(type==='controls')return 'control:'+String(idx);
+   if(type==='users')return 'user:'+String(idx);
+   return String(idx);
+ }
  if(type==='commissions')return obj.id||('commission:'+String(obj.name||idx));
  if(type==='controls')return obj.id||('control:'+idx);
  if(type==='users')return obj.id||('user:'+idx);
@@ -10431,17 +10439,19 @@ function localEntityMap(){
  let map={};
  entityCollections().forEach(type=>{
    (st[type]||[]).forEach((obj,idx)=>{
+     if(!obj||typeof obj!=='object')return;
      let id=entityId(type,obj,idx);
      map[type+'|'+id]={type,id,data:obj};
    });
  });
  loadProjects();
  (projectStore.projects||[]).forEach((obj,idx)=>{
+   if(!obj||typeof obj!=='object')return;
    let id=obj.id||('project:'+idx);
    map['projects|'+id]={type:'projects',id,data:obj};
  });
  loadSmallOrders();
- (smallOrderStore.reports||[]).filter(r=>r.cloudSync===true).forEach((obj,idx)=>{
+ (smallOrderStore.reports||[]).filter(r=>r&&typeof r==='object'&&r.cloudSync===true).forEach((obj,idx)=>{
    let id=obj.id||('smallOrder:'+idx);
    map['smallOrders|'+id]={type:'smallOrders',id,data:obj};
  });
@@ -10548,7 +10558,7 @@ function applyRemoteEntities(remote,preserveKeys=new Set()){
  let protectUnexpectedEmpty=(remoteEntityCount===0 && entityCollections().some(t=>(st[t]||[]).length));
  entityCollections().forEach(type=>{
    let arr=[];
-   Object.values(remote).filter(x=>x.type===type).forEach(x=>{
+   Object.values(remote||{}).filter(x=>x&&x.type===type&&x.data&&typeof x.data==='object').forEach(x=>{
      let k=cloudKey(type,x.id);
      if(preserveKeys.has(k)){
        let local=(st[type]||[]).find((o,i)=>entityId(type,o,i)===x.id);
@@ -10566,18 +10576,19 @@ function applyRemoteEntities(remote,preserveKeys=new Set()){
    else next[type]=arr;
  });
  loadProjects();
- let remoteProjects=Object.values(remote||{}).filter(x=>x.type==='projects');
+ let remoteProjects=Object.values(remote||{}).filter(x=>x&&x.type==='projects'&&x.data&&typeof x.data==='object');
  let projectArr=[];
  remoteProjects.forEach(x=>{
    let k=cloudKey('projects',x.id);
    if(preserveKeys.has(k)){
-     let local=(projectStore.projects||[]).find(p=>String(p.id)===String(x.id));
+     let local=(projectStore.projects||[]).find(p=>p&&typeof p==='object'&&String(p.id)===String(x.id));
      if(local)projectArr.push(local);
    }else projectArr.push(x.data);
  });
  (projectStore.projects||[]).forEach(p=>{
+   if(!p||typeof p!=='object')return;
    let id=String(p.id||''),k=cloudKey('projects',id);
-   if(preserveKeys.has(k)&&!remote[k]&&!projectArr.some(x=>String(x.id)===id))projectArr.push(p);
+   if(preserveKeys.has(k)&&!remote[k]&&!projectArr.some(x=>x&&typeof x==='object'&&String(x.id)===id))projectArr.push(p);
  });
  if(!(protectUnexpectedEmpty && remoteProjects.length===0 && (projectStore.projects||[]).length)){
    projectStore.projects=projectArr;
@@ -10630,19 +10641,19 @@ function applyRemoteEntities(remote,preserveKeys=new Set()){
 
  // V162: Cloud-Kleinaufträge mit lokalen Alt-Rapporten zusammenführen.
  loadSmallOrders();
- let legacyLocal=(smallOrderStore.reports||[]).filter(r=>r.cloudSync!==true);
- let remoteSmallOrders=Object.values(remote||{}).filter(x=>x.type==='smallOrders');
+ let legacyLocal=(smallOrderStore.reports||[]).filter(r=>r&&typeof r==='object'&&r.cloudSync!==true);
+ let remoteSmallOrders=Object.values(remote||{}).filter(x=>x&&x.type==='smallOrders'&&x.data&&typeof x.data==='object');
  let cloudReports=[];
  remoteSmallOrders.forEach(x=>{
    let k=cloudKey('smallOrders',x.id);
    if(preserveKeys.has(k)){
-     let local=(smallOrderStore.reports||[]).find(r=>String(r.id)===String(x.id));
+     let local=(smallOrderStore.reports||[]).find(r=>r&&typeof r==='object'&&String(r.id)===String(x.id));
      if(local)cloudReports.push(local);
    }else cloudReports.push(Object.assign({},x.data,{cloudSync:true}));
  });
- (smallOrderStore.reports||[]).filter(r=>r.cloudSync===true).forEach(r=>{
+ (smallOrderStore.reports||[]).filter(r=>r&&typeof r==='object'&&r.cloudSync===true).forEach(r=>{
    let id=String(r.id||''),k=cloudKey('smallOrders',id);
-   if(preserveKeys.has(k)&&!remote[k]&&!cloudReports.some(x=>String(x.id)===id))cloudReports.push(r);
+   if(preserveKeys.has(k)&&!remote[k]&&!cloudReports.some(x=>x&&typeof x==='object'&&String(x.id)===id))cloudReports.push(r);
  });
  // Alte lokale Rapporte bleiben nur auf diesem Gerät; Cloud-Rapporte werden geräteübergreifend ersetzt/ergänzt.
  smallOrderStore.reports=[...legacyLocal,...cloudReports];
@@ -10696,17 +10707,17 @@ async function resolveSyncConflict(index,choice){
      let map=localEntityMap(),k=cloudKey(c.type,c.id);
      if(c.type==='projects'){
        loadProjects();
-       if(c.deletedRemote)projectStore.projects=(projectStore.projects||[]).filter(p=>String(p.id)!==String(c.id));
+       if(c.deletedRemote)projectStore.projects=(projectStore.projects||[]).filter(p=>!p||typeof p!=='object'||String(p.id)!==String(c.id));
        else{
-         let arr=projectStore.projects||[],ix=arr.findIndex(p=>String(p.id)===String(c.id));
+         let arr=(projectStore.projects||[]).filter(p=>p&&typeof p==='object'),ix=arr.findIndex(p=>String(p.id)===String(c.id));
          if(ix>=0)arr[ix]=c.remote;else arr.push(c.remote);projectStore.projects=arr;
        }
        localStorage.setItem(PROJECTS_KEY,JSON.stringify(projectStore));
      }else if(c.type==='smallOrders'){
        loadSmallOrders();
-       if(c.deletedRemote)smallOrderStore.reports=(smallOrderStore.reports||[]).filter(r=>String(r.id)!==String(c.id));
+       if(c.deletedRemote)smallOrderStore.reports=(smallOrderStore.reports||[]).filter(r=>!r||typeof r!=='object'||String(r.id)!==String(c.id));
        else{
-         let rr=Object.assign({},c.remote,{cloudSync:true}),arr=smallOrderStore.reports||[],ix=arr.findIndex(r=>String(r.id)===String(c.id));
+         let rr=Object.assign({},c.remote,{cloudSync:true}),arr=(smallOrderStore.reports||[]).filter(r=>r&&typeof r==='object'),ix=arr.findIndex(r=>String(r.id)===String(c.id));
          if(ix>=0)arr[ix]=rr;else arr.push(rr);smallOrderStore.reports=arr;
        }
        localStorage.setItem(SMALL_ORDERS_KEY,JSON.stringify(smallOrderStore));
@@ -10796,11 +10807,15 @@ async function pushEntitySync(manual=false){
  }
 }
 async function pullEntitySync(manual=false){
+ let syncStageV154='Start';
  cloudCfg=loadCloudConfig();
  if(!cloudReady()){if(manual)alert('Bitte zuerst Cloud einrichten und anmelden.');return false}
  if(cloudBusy)return false;cloudBusy=true;setSyncStatus('syncing','Cloud-Änderungen werden geladen');
  try{
-   let remote=await fetchRemoteEntities(),base=loadSyncBase(),local=localEntityMap(),conflicts=[];
+   syncStageV154='Cloud-Datensätze laden';
+   let remote=await fetchRemoteEntities();
+   syncStageV154='lokale Daten aufbereiten';
+   let base=loadSyncBase(),local=localEntityMap(),conflicts=[];
    let keys=new Set([...Object.keys(remote),...Object.keys(base),...Object.keys(local)]);
    for(let k of keys){
      let l=local[k],b=base[k],r=remote[k],localHash=l?stableJson(l.data):null,baseHash=b?.hash??null,remoteHash=r?stableJson(r.data):null;
@@ -10809,9 +10824,39 @@ async function pullEntitySync(manual=false){
      }
    }
    let preserve=new Set(conflicts.map(c=>cloudKey(c.type,c.id)));
-   applyRemoteEntities(remote,preserve);syncBaseFromRemote(remote);saveSyncConflicts(conflicts);
-   lastCloudUpdatedAt=Object.values(remote).map(x=>x.updated_at||'').sort().pop()||'';
-   refresh();setSyncStatus(conflicts.length?'err':'ok',conflicts.length?conflicts.length+' Konflikt(e) gefunden':'Cloud-Änderungen geladen');
+   syncStageV154='Cloud-Daten lokal anwenden';
+   applyRemoteEntities(remote,preserve);
+
+   /* V155: Alt-/Cloudbestände können leere Array-Einträge enthalten.
+      Vor jedem Rendern werden nur diese ungültigen Einträge entfernt.
+      Gültige Nutzdaten bleiben unverändert. */
+   syncStageV154='Cloud-Daten bereinigen';
+   try{
+     entityCollections().forEach(type=>{
+       if(Array.isArray(st[type]))st[type]=st[type].filter(x=>x&&typeof x==='object');
+     });
+     loadProjects();
+     if(Array.isArray(projectStore.projects))
+       projectStore.projects=projectStore.projects.filter(x=>x&&typeof x==='object');
+     loadSmallOrders();
+     if(Array.isArray(smallOrderStore.reports))
+       smallOrderStore.reports=smallOrderStore.reports.filter(x=>x&&typeof x==='object');
+   }catch(e){console.warn('V155 Cloud-Daten bereinigen',e)}
+
+   syncStageV154='Sync-Basis speichern';
+   syncBaseFromRemote(remote);
+
+   syncStageV154='Konfliktstatus speichern';
+   saveSyncConflicts(conflicts);
+
+   syncStageV154='Cloud-Zeitstempel auswerten';
+   lastCloudUpdatedAt=Object.values(remote||{}).filter(x=>x&&typeof x==='object').map(x=>x.updated_at||'').sort().pop()||'';
+
+   syncStageV154='Oberfläche aktualisieren';
+   refresh();
+
+   syncStageV154='Cloud-Status setzen';
+   setSyncStatus(conflicts.length?'err':'ok',conflicts.length?conflicts.length+' Konflikt(e) gefunden':'Cloud-Änderungen geladen');
    if(platformNeedsCloudRepair&&!conflicts.some(c=>c.type==='platforms')){
      platformNeedsCloudRepair=false;
      setTimeout(()=>queueCloudSync?.(),900);
@@ -10822,7 +10867,12 @@ async function pullEntitySync(manual=false){
    }
    if(manual)alert(conflicts.length?`${conflicts.length} Konflikt(e) gefunden.`:'Cloud-Daten wurden objektweise geladen.');
    return !conflicts.length;
- }catch(e){setSyncStatus('err',String(e.message||e));if(manual)alert('Laden fehlgeschlagen:\n'+String(e.message||e));return false}
+ }catch(e){
+   let msg='['+syncStageV154+'] '+String(e.message||e);
+   setSyncStatus('err',msg);
+   if(manual)alert('Laden fehlgeschlagen:\n'+msg);
+   return false
+ }
  finally{cloudBusy=false}
 }
 
@@ -10852,6 +10902,13 @@ function cloudReady(){
 }
 function setSyncStatus(kind,msg){
  lastCloudMessage=msg||'';
+ /* V152: Fehler dort erfassen, wo der Cloud-Status tatsächlich gesetzt wird.
+    pullEntitySync/pushEntitySync fangen Fehler intern ab, deshalb konnte V151 sie nicht sehen. */
+ if(kind==='err'){
+   try{sessionStorage.setItem('kuenzli_cloud_status_error_v152',JSON.stringify({
+     at:new Date().toLocaleString(),message:String(msg||'Unbekannter Cloud-Fehler')
+   }))}catch(e){}
+ }
  let text=kind==='syncing'?'Synchronisiere…':kind==='ok'?'Cloud aktuell':kind==='err'?'Cloud-Fehler':(cloudCfg.mode==='supabase'?'Cloud':'Lokal');
  ['syncStatusBadge','cloudManageStatus'].forEach(id=>{
    let el=E(id);if(!el)return;
@@ -19765,7 +19822,40 @@ function runSystemCheck(showAlert=false){
 }
 
 function refresh(){
- cloudCfg=loadCloudConfig();ensurePermissionStore();ensureReservations();renderUserHeader();renderMapCommissionFilters();renderAreas();renderFilters();renderInv();renderManage();renderControl();renderBackupManage();if(currentPage==='reserved')renderReserved();setSyncStatus('',cloudCfg.mode==='supabase'?'Cloud-Modus':'Lokaler Modus');if(E('systemCheckSummary'))runSystemCheck(false)
+ /* V156: Ein Darstellungsfehler darf einen erfolgreich abgeschlossenen
+    Cloud-Abgleich nicht mehr als Cloud-Fehler markieren. */
+ cloudCfg=loadCloudConfig();
+ ensurePermissionStore();
+ ensureReservations();
+
+ const refreshErrorsV156=[];
+ const safeV156=(name,fn)=>{
+   try{fn()}
+   catch(e){
+     refreshErrorsV156.push(name+': '+String(e?.message||e));
+     console.error('V156 refresh · '+name,e);
+   }
+ };
+
+ safeV156('Benutzerkopf',()=>renderUserHeader());
+ safeV156('Kommissionsfilter',()=>renderMapCommissionFilters());
+ safeV156('Karte/Lagerflächen',()=>renderAreas());
+ safeV156('Materialfilter',()=>renderFilters());
+ safeV156('Materialtabelle',()=>renderInv());
+ safeV156('Verwalten',()=>renderManage());
+ safeV156('Kontrolle',()=>renderControl());
+ safeV156('Sicherungen',()=>renderBackupManage());
+ if(currentPage==='reserved')safeV156('Reserviert',()=>renderReserved());
+ safeV156('Systemcheck',()=>{if(E('systemCheckSummary'))runSystemCheck(false)});
+
+ try{
+   sessionStorage.setItem('kuenzli_refresh_errors_v156',JSON.stringify({
+     at:new Date().toLocaleString(),
+     errors:refreshErrorsV156
+   }));
+ }catch(e){}
+
+ setSyncStatus('',cloudCfg.mode==='supabase'?'Cloud-Modus':'Lokaler Modus');
 }
 ensureV24();persist();STRUCTURE_MARKED_V60=markRestoredStructureForCloud();
 setTimeout(initMobileMaps,0);
@@ -22540,7 +22630,7 @@ window.addEventListener('load',()=>setTimeout(runImportV481,1800));
 </style>
 
 <style>
-/* BV2026-1-150 · Transportstatus: gleiche Farben im geschlossenen Feld und in den Dropdown-Einträgen. */
+/* BV2026-1-156 · Transportstatus: gleiche Farben im geschlossenen Feld und in den Dropdown-Einträgen. */
 .platformTransportStatusInlineV523 option[value="Geplant"]{background:#fff3c8!important;color:#795600!important}
 .platformTransportStatusInlineV523 option[value="Bestätigt"]{background:#dcecff!important;color:#164f86!important}
 .platformTransportStatusInlineV523 option[value="Geliefert"]{background:#e3f4e7!important;color:#176b2c!important}
@@ -22548,7 +22638,7 @@ window.addEventListener('load',()=>setTimeout(runImportV481,1800));
 </style>
 
 
-<!-- BV2026-1-150 · offene Baustellen-Rungen unabhängig von der Pritsche anzeigen -->
+<!-- BV2026-1-156 · offene Baustellen-Rungen unabhängig von der Pritsche anzeigen -->
 <style>
 .platformOpenSiteRungsV89{margin:12px 0 4px;padding:14px 16px;border:1px solid #d8ded9;border-radius:12px;background:#f8faf8}
 .platformOpenSiteRungsV89 h4{margin:0 0 9px;font-size:16px;color:#173f32}
@@ -22595,11 +22685,11 @@ window.addEventListener('load',()=>setTimeout(runImportV481,1800));
 })();
 </script>
 
-<!-- BV2026-1-150: Anz. Kronen nur für Brühwiler-Mittelrungen; Wert wird mit der Rungenposition gespeichert. -->
+<!-- BV2026-1-156: Anz. Kronen nur für Brühwiler-Mittelrungen; Wert wird mit der Rungenposition gespeichert. -->
 
 
 <script>
-/* BV2026-1-150 · Brühwiler-Kronen werden unabhängig von Mittelrungen zurückgebucht. */
+/* BV2026-1-156 · Brühwiler-Kronen werden unabhängig von Mittelrungen zurückgebucht. */
 function platformQuickReturnCrownOptionsV94(){
   const rows=(platformStore.projectRungsOpen||[])
     .filter(r=>r.supplier==='Brühwiler' && r.kind!=='outer' && (Number(r.crownQty)||0)>0)
@@ -22645,7 +22735,7 @@ function returnPlatformCrownsToWarehouseV94(index){
 }
 </script>
 
-<!-- BV2026-1-150 · Fahrzeuge/Geräte mit optionalen Stammdaten und PDF -->
+<!-- BV2026-1-156 · Fahrzeuge/Geräte mit optionalen Stammdaten und PDF -->
 <style>
 .platformEquipmentFormV95{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:end}
 .platformEquipmentFormV95 label{font-size:12px;color:#59655f}.platformEquipmentFormV95 input{display:block;width:100%;margin-top:4px;padding:9px;border:1px solid var(--line);border-radius:8px;background:#fff}
@@ -22732,7 +22822,7 @@ function returnPlatformCrownsToWarehouseV94(index){
 
 
 <script>
-/* BV2026-1-150 · Direkter Sprung vom Lieferanten-Akkordeon zum Fahrzeuge/Geräte-Formular. */
+/* BV2026-1-156 · Direkter Sprung vom Lieferanten-Akkordeon zum Fahrzeuge/Geräte-Formular. */
 window.openPlatformEquipmentFormV98=function(supplier){
   selectedPlatformSupplier=supplier;
   updatePlatformStockSupplierFields();
@@ -22752,7 +22842,7 @@ window.openPlatformEquipmentFormV98=function(supplier){
 
 
 <script>
-/* BV2026-1-150 · Fahrzeuge/Geräte direkt im aufgeklappten Lieferantenbereich erfassen. */
+/* BV2026-1-156 · Fahrzeuge/Geräte direkt im aufgeklappten Lieferantenbereich erfassen. */
 function platformEquipmentKeyV99(s){return String(s||'').replace(/[^A-Za-z0-9]/g,'_');}
 window.togglePlatformEquipmentInlineV99=function(supplier,force){
   const box=E('platformEquipmentInlineV99_'+platformEquipmentKeyV99(supplier));
@@ -22804,7 +22894,7 @@ window.savePlatformEquipmentInlineV99=async function(supplier){
 
 
 <script>
-/* BV2026-1-150 · Fahrzeuge/Geräte in der Projekt-Reservierungsplanung */
+/* BV2026-1-156 · Fahrzeuge/Geräte in der Projekt-Reservierungsplanung */
 let platformReservationSelectedEquipmentV101=new Set();
 
 function platformEquipmentReservationsV101(x){
@@ -22932,7 +23022,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · mehrere Fahrzeuge/Geräte pro LKW bzw. Anhänger */
+/* BV2026-1-156 · mehrere Fahrzeuge/Geräte pro LKW bzw. Anhänger */
 .equipmentMultiV102{margin-top:12px}
 </style>
 <script>
@@ -23162,7 +23252,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · Container kompakt wie Fahrzeuge/Geräte */
+/* BV2026-1-156 · Container kompakt wie Fahrzeuge/Geräte */
 .containerCompactV104{margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .containerCompactSummaryV104{font-weight:750;color:var(--muted)}
 .containerDialogV104{position:fixed;inset:0;z-index:100001;background:rgba(0,0,0,.34);display:none;align-items:center;justify-content:center;padding:18px}
@@ -23248,7 +23338,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · mitgeführte Container/Geräte direkt am Fahrzeug anzeigen */
+/* BV2026-1-156 · mitgeführte Container/Geräte direkt am Fahrzeug anzeigen */
 .transportExtrasV105{margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#f7f9f8;font-size:14px;line-height:1.45}
 .transportExtrasV105 b{color:var(--green)}
 .transportExtrasV105 .extraRowV105+.extraRowV105{margin-top:4px}
@@ -23305,7 +23395,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · Zusatzladung eindeutig dem LKW bzw. Anhänger zuordnen */
+/* BV2026-1-156 · Zusatzladung eindeutig dem LKW bzw. Anhänger zuordnen */
 .transportExtrasV105{position:relative;margin-top:8px!important;padding:8px 10px!important}
 .transportExtrasV105::before{
  display:block;font-weight:900;font-size:13px;letter-spacing:.02em;
@@ -23346,7 +23436,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · Fahrzeuge/Geräte separat ins Lager zurückbuchen */
+/* BV2026-1-156 · Fahrzeuge/Geräte separat ins Lager zurückbuchen */
 .platformQuickReturnEquipmentV107{margin-top:0}
 </style>
 <script>
@@ -23421,7 +23511,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · Berechtigungen nach Hauptansicht und Bereich gruppiert */
+/* BV2026-1-156 · Berechtigungen nach Hauptansicht und Bereich gruppiert */
 .permissionGridV108{grid-template-columns:1fr!important}
 .permissionSectionV108{padding:0!important;border:0!important;background:transparent!important}
 .permissionGroupV108{border:1px solid var(--line);border-radius:14px;background:#fff;margin:12px 0;overflow:hidden}
@@ -23445,7 +23535,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Produktion: Projekt erstellen und Kommission separat */
+/* BV2026-1-156 · Produktion: Projekt erstellen und Kommission separat */
 (function(){
  function currentPermissionUserV109(){
    const name=(document.querySelector('#permissionEditor h2 + *')?.textContent||'').trim();
@@ -23497,7 +23587,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Produktionsanalyse als eigene Produktions-Berechtigung */
+/* BV2026-1-156 · Produktionsanalyse als eigene Produktions-Berechtigung */
 (function(){
  function userV110(){
    const name=(document.querySelector('#permissionEditor h2 + *')?.textContent||'').trim();
@@ -23537,7 +23627,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Kleinaufträge: Materialerstellung Künzli / Immer AG separat */
+/* BV2026-1-156 · Kleinaufträge: Materialerstellung Künzli / Immer AG separat */
 (function(){
  function userV111(){
    const name=(document.querySelector('#permissionEditor h2 + *')?.textContent||'').trim();
@@ -23582,7 +23672,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Löschen von Daten und Rapporten separat berechtigen */
+/* BV2026-1-156 · Löschen von Daten und Rapporten separat berechtigen */
 (function(){
  function userV112(){
    const name=(document.querySelector('#permissionEditor h2 + *')?.textContent||'').trim();
@@ -23635,7 +23725,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Detailberechtigungen Pritschenverwaltung / Logistik */
+/* BV2026-1-156 · Detailberechtigungen Pritschenverwaltung / Logistik */
 (function(){
  const defsV113={
    platformReturn:'permPlatformReturnV113',
@@ -23685,7 +23775,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · Detailberechtigungen Materiallager */
+/* BV2026-1-156 · Detailberechtigungen Materiallager */
 .permissionSubgroupV114{grid-column:1/-1;border-bottom:1px solid #edf0ee}
 .permissionSubHeadV114{font-weight:850!important;background:#f8faf9}
 .permissionSubchildrenV114{display:grid;grid-template-columns:repeat(2,minmax(180px,1fr));padding-left:22px;background:#fff}
@@ -23693,7 +23783,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 @media(max-width:650px){.permissionSubchildrenV114{grid-template-columns:1fr;padding-left:12px}}
 </style>
 <script>
-/* BV2026-1-150 · Materiallager-Rechte separat speichern */
+/* BV2026-1-156 · Materiallager-Rechte separat speichern */
 (function(){
  const defsV114={
    materialMasterData:'permMaterialMasterDataV114',
@@ -23743,7 +23833,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · Berechtigungen werden in der Oberfläche tatsächlich durchgesetzt */
+/* BV2026-1-156 · Berechtigungen werden in der Oberfläche tatsächlich durchgesetzt */
 .permHiddenV115{display:none!important}
 </style>
 <script>
@@ -23910,7 +24000,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · Abmelden direkt in der Bereichsauswahl */
+/* BV2026-1-156 · Abmelden direkt in der Bereichsauswahl */
 #areaLogoutV116{
   border:1px solid #e0caca;background:#fff5f5;color:#8d2929;
   border-radius:18px;padding:13px 22px;font-weight:850;font-size:16px;
@@ -23969,7 +24059,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Fix: Detailberechtigungen direkt an den zentralen Berechtigungsspeicher angebunden */
+/* BV2026-1-156 · Fix: Detailberechtigungen direkt an den zentralen Berechtigungsspeicher angebunden */
 (function(){
  function applyPermissionStateV117(){
    try{
@@ -23988,7 +24078,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Berechtigungen: deny-by-default + direkte Modul-Sperren */
+/* BV2026-1-156 · Berechtigungen: deny-by-default + direkte Modul-Sperren */
 (function(){
  function allowedV118(k){
    try{return currentPermissions()[k]===true}catch(e){return false}
@@ -24057,7 +24147,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Verwalten und Einstellungen separat freischaltbar */
+/* BV2026-1-156 · Verwalten und Einstellungen separat freischaltbar */
 (function(){
  function pV119(k){try{return currentPermissions()[k]===true}catch(e){return false}}
  function applyV119(){
@@ -24087,7 +24177,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · "Verwalten & Einstellungen" ist ein kompletter Hauptbereich */
+/* BV2026-1-156 · "Verwalten & Einstellungen" ist ein kompletter Hauptbereich */
 (function(){
  function canManageV120(){
    try{return currentPermissions().manage===true}catch(e){return false}
@@ -24122,7 +24212,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Reparatur Speichern-Button Berechtigungen */
+/* BV2026-1-156 · Reparatur Speichern-Button Berechtigungen */
 (function(){
  window.savePermissionEditorV121=function(ev){
    if(ev){ev.preventDefault();ev.stopPropagation();}
@@ -24194,7 +24284,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · To-do-Liste nur mit eigener Berechtigung sichtbar */
+/* BV2026-1-156 · To-do-Liste nur mit eigener Berechtigung sichtbar */
 (function(){
  function todoAllowedV122(){
    try{return currentPermissions().todo===true}catch(e){return false}
@@ -24226,7 +24316,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Rechte für Flächen/Gestelle/Ebenen + dauerhaftes Abmelden */
+/* BV2026-1-156 · Rechte für Flächen/Gestelle/Ebenen + dauerhaftes Abmelden */
 (function(){
  function allowedV123(k){
    try{return currentPermissions()[k]===true}catch(e){return false}
@@ -24366,7 +24456,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · "Fläche sperren / entsperren" ebenfalls nur mit Flächen-Berechtigung */
+/* BV2026-1-156 · "Fläche sperren / entsperren" ebenfalls nur mit Flächen-Berechtigung */
 (function(){
  function areaAllowedV124(){
    try{return currentPermissions().materialAreas===true}catch(e){return false}
@@ -24416,7 +24506,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Ohne Berechtigung dürfen keine Pakete erfasst werden */
+/* BV2026-1-156 · Ohne Berechtigung dürfen keine Pakete erfasst werden */
 (function(){
  function allowedV125(){
    try{return currentPermissions().materialPackageCreate===true}catch(e){return false}
@@ -24466,7 +24556,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Paket-Erfassung an den echten Funktionen gesperrt */
+/* BV2026-1-156 · Paket-Erfassung an den echten Funktionen gesperrt */
 (function(){
  function packageCreateAllowedV126(){
    try{return currentPermissions().materialPackageCreate===true}catch(e){return false}
@@ -24495,7 +24585,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Produktionshalle nur mit eigener Ansichtsberechtigung */
+/* BV2026-1-156 · Produktionshalle nur mit eigener Ansichtsberechtigung */
 (function(){
  function productionHallAllowedV127(){
    try{return currentPermissions().productionHall===true}catch(e){return false}
@@ -24529,7 +24619,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 .inventoryLocationReadOnlyV128{display:inline-block;padding:8px 0;color:inherit}
 </style>
 <script>
-/* BV2026-1-150 · Jede Lager-Aktion mit eigener Berechtigung */
+/* BV2026-1-156 · Jede Lager-Aktion mit eigener Berechtigung */
 (function(){
  const rules=[
    ['materialGoLocation',/^\s*Zu Lagerort\s*$/i],
@@ -24560,7 +24650,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Projektfreigaben zuverlässig öffnen */
+/* BV2026-1-156 · Projektfreigaben zuverlässig öffnen */
 (function(){
  window.openProjectAccessManagerV129=function(id,ev){
    if(ev){ev.preventDefault();ev.stopPropagation();}
@@ -24618,7 +24708,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Projektfreigaben: explizite Modal-Anzeige zurücksetzen */
+/* BV2026-1-156 · Projektfreigaben: explizite Modal-Anzeige zurücksetzen */
 (function(){
  const oldClose=window.closeM;
  if(typeof oldClose==='function'){
@@ -24647,7 +24737,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 #projectAccessDebugV131 .ok{color:#a9f5b4}.err{color:#ffb1b1}.info{color:#fff}
 </style>
 <script>
-/* BV2026-1-150 · Sichtbare Diagnose für "Mitarbeiter einladen / Freigaben" */
+/* BV2026-1-156 · Sichtbare Diagnose für "Mitarbeiter einladen / Freigaben" */
 (function(){
  function box(){
    let b=document.getElementById('projectAccessDebugV131');
@@ -24718,7 +24808,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · Projektfreigaben garantiert über der gesamten Anwendung */
+/* BV2026-1-156 · Projektfreigaben garantiert über der gesamten Anwendung */
 #projectAccessModal{
  position:fixed!important;
  inset:0!important;
@@ -24771,7 +24861,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Berechtigungen sofort in die Cloud und beim Benutzer zeitnah neu laden */
+/* BV2026-1-156 · Berechtigungen sofort in die Cloud und beim Benutzer zeitnah neu laden */
 (function(){
  /* Beim Speichern einer Berechtigung nicht nur den verzögerten Queue-Sync abwarten. */
  const oldSave=window.savePermissionEditorV121;
@@ -24818,7 +24908,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 #permDebugV134 button{background:#fff;color:#10352b;border:0;border-radius:8px;padding:6px 9px;font-weight:800}
 </style>
 <script>
-/* BV2026-1-150 · sichtbare Berechtigungsdiagnose */
+/* BV2026-1-156 · sichtbare Berechtigungsdiagnose */
 (function(){
  function dbg(msg){
    let b=document.getElementById('permDebugV134');
@@ -24869,7 +24959,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Bereichskarten werden ausschliesslich aus aktuellen Rechten gesteuert */
+/* BV2026-1-156 · Bereichskarten werden ausschliesslich aus aktuellen Rechten gesteuert */
 (function(){
  function applyAreaCardsV135(){
    let p={};
@@ -24909,7 +24999,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · Bereichskarten: Rechte direkt gegen alte CSS-Regeln durchsetzen */
+/* BV2026-1-156 · Bereichskarten: Rechte direkt gegen alte CSS-Regeln durchsetzen */
 #moduleSmallOrdersTile.permShowV137,
 #moduleWarehouseTile.permShowV137,
 #moduleProjectsTile.permShowV137,
@@ -24963,7 +25053,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · ToDo nur mit expliziter Berechtigung */
+/* BV2026-1-156 · ToDo nur mit expliziter Berechtigung */
 #todoDashboardV518.permTodoShowV138,
 .todoDashboardV518.permTodoShowV138,
 [data-todo-dashboard].permTodoShowV138{
@@ -25019,7 +25109,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Kleinauftrag-Materialrechte ohne globale Alerts */
+/* BV2026-1-156 · Kleinauftrag-Materialrechte ohne globale Alerts */
 (function(){
  function allowedV140(kind){
    try{
@@ -25076,7 +25166,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Lieferantenansicht nur mit "Lieferanten einsehen" */
+/* BV2026-1-156 · Lieferantenansicht nur mit "Lieferanten einsehen" */
 (function(){
  function supplierViewAllowedV141(){
    try{return currentPermissions().platformSupplierView===true}catch(e){return false}
@@ -25119,7 +25209,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · Berechtigungen logisch gruppieren */
+/* BV2026-1-156 · Berechtigungen logisch gruppieren */
 #permissionModal .permLogicalGroupV142{
  margin:10px 12px 12px;border:1px solid #d8e1dd;border-radius:10px;overflow:hidden;background:#fff
 }
@@ -25222,7 +25312,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · iPhone/Safari: lokalen Sync-Speicher verkleinern */
+/* BV2026-1-156 · iPhone/Safari: lokalen Sync-Speicher verkleinern */
 (function(){
   function compactSyncBaseV143(base){
     const out={};
@@ -25294,7 +25384,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · iPhone: Karten-Kopf vollständig im Viewport */
+/* BV2026-1-156 · iPhone: Karten-Kopf vollständig im Viewport */
 @media(max-width:700px){
   html,body{max-width:100%;overflow-x:hidden!important}
 
@@ -25396,7 +25486,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · echtes Zwei-Finger-Zoomen auf den Karten */
+/* BV2026-1-156 · echtes Zwei-Finger-Zoomen auf den Karten */
 @media(max-width:700px){
   #mapwrap,#productionPlanWrap{
     touch-action:none!important;
@@ -25507,7 +25597,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · Materialansicht iPhone */
+/* BV2026-1-156 · Materialansicht iPhone */
 @media(max-width:700px){
   /* Materialbereich nutzt die ganze Displaybreite. */
   #page-inventory{padding-left:0!important;padding-right:0!important}
@@ -25541,7 +25631,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 }
 </style>
 <script>
-/* BV2026-1-150 · Umbuchen direkt aus der Karten-ID-Suche */
+/* BV2026-1-156 · Umbuchen direkt aus der Karten-ID-Suche */
 (function(){
  window.openWarehouseTransferFromQuickV146=function(){
    const id=document.getElementById('quickPackageId')?.value;
@@ -25574,7 +25664,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · Mobile Modals dürfen nicht hinter der unteren Navigation enden */
+/* BV2026-1-156 · Mobile Modals dürfen nicht hinter der unteren Navigation enden */
 @media(max-width:700px){
   /* Der Inhalt aller geöffneten Modals erhält genügend Platz unterhalb
      des letzten Buttons, damit die fixe grüne Navigation nichts verdeckt. */
@@ -25604,7 +25694,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-150 · iPhone Umbuchung: eigener vollflächiger, überall scrollbar Dialog */
+/* BV2026-1-156 · iPhone Umbuchung: eigener vollflächiger, überall scrollbar Dialog */
 @media(max-width:700px){
   #warehouseTransferModalV545.open{
     display:block!important;
@@ -25701,7 +25791,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-150 · Schnellbearbeitung: Ebene ist optional */
+/* BV2026-1-156 · Schnellbearbeitung: Ebene ist optional */
 (function(){
   /* Die Schnellbearbeitung hatte im Gegensatz zur normalen Materialbearbeitung
      keinen Eintrag "Keine Ebene" und verlangte immer ein Level-Objekt. */
@@ -25778,5 +25868,183 @@ renderPlatformReservationGantt=function(from='',to=''){
     jump(p.rackId,p.id);
     setTimeout(()=>{const t=document.querySelector('.pkg.target');if(t)t.scrollIntoView({behavior:'smooth',block:'center',inline:'center'})},100);
   };
+})();
+</script>
+
+
+<style>
+/* BV2026-1-156 · Cloud-Fehler direkt diagnostizierbar */
+#cloudErrorDiagV151{
+ position:fixed;inset:0;z-index:50000;background:rgba(0,0,0,.46);
+ display:none;align-items:center;justify-content:center;padding:16px
+}
+#cloudErrorDiagV151.open{display:flex}
+#cloudErrorDiagV151 .box{
+ width:min(760px,100%);max-height:88dvh;overflow:auto;background:#0d3d31;color:#fff;
+ border-radius:16px;padding:18px;box-shadow:0 18px 60px rgba(0,0,0,.35)
+}
+#cloudErrorDiagV151 pre{
+ white-space:pre-wrap;overflow-wrap:anywhere;background:#082d25;padding:12px;border-radius:10px;
+ font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace
+}
+#cloudErrorDiagV151 .btn{margin-top:10px}
+</style>
+<script>
+(function(){
+ let lastCloudErrorV151=null,lastCloudErrorAtV151='';
+ function rememberV151(err,source){
+   lastCloudErrorV151=err;
+   lastCloudErrorAtV151=new Date().toLocaleString();
+   try{sessionStorage.setItem('kuenzli_cloud_error_v151',JSON.stringify({
+     at:lastCloudErrorAtV151,source:source||'',name:err?.name||'',message:err?.message||String(err||''),
+     code:err?.code||'',details:err?.details||'',hint:err?.hint||''
+   }))}catch(_){}
+ }
+ window.addEventListener('unhandledrejection',e=>{
+   const x=e.reason;
+   if(/supabase|cloud|fetch|network|quota|sync|warehouse/i.test(String(x?.message||x||'')))rememberV151(x,'Promise');
+ });
+ window.addEventListener('error',e=>{
+   if(/supabase|cloud|fetch|network|quota|sync|warehouse/i.test(String(e.message||'')))rememberV151(e.error||e,'JavaScript');
+ });
+
+ const wrapAsync=(name)=>{
+   const old=window[name];if(typeof old!=='function'||old._diagV151)return;
+   const w=async function(){
+     try{return await old.apply(this,arguments)}
+     catch(e){rememberV151(e,name);throw e}
+   };w._diagV151=true;window[name]=w;
+ };
+ ['pullEntitySync','pushEntitySync','syncEntityData','ensureFreshSession'].forEach(wrapAsync);
+
+ function storedV151(){
+   try{return JSON.parse(sessionStorage.getItem('kuenzli_cloud_error_v151')||'null')}catch(_){return null}
+ }
+ window.showCloudErrorDiagV151=async function(){
+   let sessionText='nicht geprüft',online=navigator.onLine?'ja':'nein';
+   try{
+     if(typeof sbClient!=='undefined'&&sbClient){
+       const r=await sbClient.auth.getSession();
+       sessionText=r?.data?.session?'vorhanden':'keine Session';
+       if(r?.error)rememberV151(r.error,'auth.getSession');
+     }
+   }catch(e){sessionText='Fehler: '+(e.message||e);rememberV151(e,'auth.getSession')}
+   const x=storedV151();
+   const lines=[
+     'Zeit: '+new Date().toLocaleString(),
+     'Browser online: '+online,
+     'Cloud-Modus: '+(typeof cloudAuthEnabled==='function'?cloudAuthEnabled():'?'),
+     'Session: '+sessionText,
+     'Benutzer: '+(typeof authUsername==='function'?(authUsername()||'–'):'–'),
+     '',
+     'Letzter erfasster Cloud-Fehler:',
+     x?('Zeit: '+(x.at||'–')+'\nQuelle: '+(x.source||'–')+'\nName: '+(x.name||'–')+
+        '\nCode: '+(x.code||'–')+'\nMeldung: '+(x.message||'–')+
+        '\nDetails: '+(x.details||'–')+'\nHinweis: '+(x.hint||'–')):'Noch kein genauer Fehler erfasst.'
+   ];
+   document.getElementById('cloudErrorDiagTextV151').textContent=lines.join('\n');
+   document.getElementById('cloudErrorDiagV151').classList.add('open');
+ };
+ function bindBadgeV151(){
+   document.querySelectorAll('button,.chip,.badge,span,div').forEach(el=>{
+     if((el.textContent||'').trim()==='Cloud-Fehler'&&!el.dataset.diagV151){
+       el.dataset.diagV151='1';el.style.cursor='pointer';el.title='Cloud-Fehlerdetails anzeigen';
+       el.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();showCloudErrorDiagV151()});
+     }
+   });
+ }
+ setInterval(bindBadgeV151,1200);setTimeout(bindBadgeV151,0);
+
+ document.body.insertAdjacentHTML('beforeend',`
+ <div id="cloudErrorDiagV151">
+  <div class="box">
+   <h3 style="margin-top:0">Cloud-Diagnose</h3>
+   <pre id="cloudErrorDiagTextV151"></pre>
+   <button class="btn" type="button" onclick="document.getElementById('cloudErrorDiagV151').classList.remove('open')">Schliessen</button>
+  </div>
+ </div>`);
+})();
+</script>
+
+
+<script>
+/* BV2026-1-156 · Cloud-Diagnose zeigt auch intern abgefangene Sync-Fehler */
+(function(){
+ const oldShow=window.showCloudErrorDiagV151;
+ window.showCloudErrorDiagV151=async function(){
+   let online=navigator.onLine?'ja':'nein';
+   let sessionText='nicht verfügbar';
+   try{
+     if(typeof authSession!=='undefined')sessionText=authSession?'vorhanden':'keine Session';
+   }catch(e){}
+   let saved=null;
+   try{saved=JSON.parse(sessionStorage.getItem('kuenzli_cloud_status_error_v152')||'null')}catch(e){}
+   let badgeTitle='';
+   try{
+     const b=document.getElementById('syncStatusBadge')||document.getElementById('cloudManageStatus');
+     badgeTitle=b?.title||'';
+   }catch(e){}
+   let conflictCount='?';
+   try{conflictCount=(loadSyncConflicts()||[]).length}catch(e){}
+   const lines=[
+     'Zeit: '+new Date().toLocaleString(),
+     'Browser online: '+online,
+     'Cloud-Modus: '+(typeof cloudCfg!=='undefined'?cloudCfg.mode:'?'),
+     'Cloud bereit: '+(typeof cloudReady==='function'?cloudReady():'?'),
+     'Session: '+sessionText,
+     'Benutzer: '+(typeof authUsername==='function'?(authUsername()||'–'):'–'),
+     'Cloud-Mitglied geladen: '+(typeof cloudMember!=='undefined'&&!!cloudMember),
+     'Konflikte: '+conflictCount,
+     '',
+     'Aktueller Cloud-Status:',
+     (typeof lastCloudMessage!=='undefined'&&lastCloudMessage)?lastCloudMessage:(badgeTitle||'–'),
+     '',
+     'Letzter gespeicherter Fehler:',
+     saved?('Zeit: '+(saved.at||'–')+'\nMeldung: '+(saved.message||'–')):'Noch keiner gespeichert.'
+   ];
+   const pre=document.getElementById('cloudErrorDiagTextV151');
+   if(pre)pre.textContent=lines.join('\n');
+   document.getElementById('cloudErrorDiagV151')?.classList.add('open');
+ };
+})();
+</script>
+
+
+<script>
+/* BV2026-1-156 · Diagnose-Hinweis für reparierte leere Cloud-Datensätze */
+(function(){
+ try{
+   const old=window.showCloudErrorDiagV151;
+   if(typeof old==='function'){
+     window.showCloudErrorDiagV151=async function(){
+       await old.apply(this,arguments);
+       const pre=document.getElementById('cloudErrorDiagTextV151');
+       if(pre && /reading ['"]?id['"]?/i.test(pre.textContent||'')){
+         pre.textContent += '\n\nV153-Hinweis: Leere/null Datensätze werden jetzt beim Cloud-Abgleich sicher übersprungen.';
+       }
+     };
+   }
+ }catch(e){}
+})();
+</script>
+
+
+<script>
+/* BV2026-1-156 · Cloud und Oberflächenfehler getrennt diagnostizieren */
+(function(){
+ const old=window.showCloudErrorDiagV151;
+ if(typeof old!=='function')return;
+ window.showCloudErrorDiagV151=async function(){
+   await old.apply(this,arguments);
+   const pre=document.getElementById('cloudErrorDiagTextV151');
+   if(!pre)return;
+   let x=null;
+   try{x=JSON.parse(sessionStorage.getItem('kuenzli_refresh_errors_v156')||'null')}catch(e){}
+   if(x?.errors?.length){
+     pre.textContent += '\n\nOberflächen-Diagnose ('+(x.at||'–')+'):\n- '+x.errors.join('\n- ');
+   }else{
+     pre.textContent += '\n\nOberflächen-Diagnose: keine Fehler beim letzten Aktualisieren.';
+   }
+ };
 })();
 </script>
