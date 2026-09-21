@@ -5,7 +5,7 @@
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; form-action 'self'; img-src 'self' data: blob: https://*.supabase.co; connect-src 'self' https://*.supabase.co; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; font-src 'self' data:; media-src 'self' data: blob:; worker-src 'self' blob:; upgrade-insecure-requests">
 <!-- V406: Transporte direkt unter der Projekterfassung -->
-<title>Künzli Lagerverwaltung V345 · BV2026-1-145</title>
+<title>Künzli Lagerverwaltung V345 · BV2026-1-146</title>
 <style>
 :root{--g:#173f32;--bg:#f3f5f3;--line:#d8ded9;--mut:#6a746e;--red:#df3428}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:#17201c}button,input,select,textarea{font:inherit}
@@ -4184,7 +4184,7 @@ window.APP_RELEASE = {
 
 
 <style>
-/* BV2026-1-145 · Cloud/Benutzer/Rolle gehören zur Bereichsauswahl, nicht in die einzelnen Bereiche. */
+/* BV2026-1-146 · Cloud/Benutzer/Rolle gehören zur Bereichsauswahl, nicht in die einzelnen Bereiche. */
 .app > header #syncStatusBadge,
 .app > header #authHeaderBtn,
 .app > header #activeRoleBadge{display:none!important}
@@ -4208,7 +4208,7 @@ window.APP_RELEASE = {
 
 
 <style>
-/* BV2026-1-145 · kompakte Mehrfachauswahl für grosse Gerätebestände */
+/* BV2026-1-146 · kompakte Mehrfachauswahl für grosse Gerätebestände */
 .equipmentMultiV102{margin-top:10px!important}
 .equipmentMultiV102>.containerEnableV525,
 .equipmentMultiV102>.containerSelectLabelV526,
@@ -5017,6 +5017,7 @@ window.APP_RELEASE = {
 </div>
 <div class="toolbar" style="justify-content:center;margin-top:18px">
   <button class="btn" onclick="saveQuickMaterial()">Änderungen speichern</button>
+  <button class="btn secondary" id="quickTransferBtnV146" type="button" onclick="openWarehouseTransferFromQuickV146()">↔ Umbuchen</button>
   <button class="btn secondary" onclick="openFullMaterialFromQuick()">Vollständig bearbeiten</button>
 </div>
 </div></div>
@@ -17037,14 +17038,14 @@ function saveWarehouseTransferV545(e){
  let priceQty=warehouseTransferQtyForPriceV545(p,count,m.unit),unitPrice=Number(m.price||0);
  let full=Math.abs(count-available)<0.000001,newPkg=null,newElementId=p.elementId||'';
  if(full){
-   p.project=to;p.updatedAt=now;
+   p.project=to;p.status='Kommission';p.archivedAt='';p.updatedAt=now;
    addHistory(p,'Umbuchung',`${from||'Ohne Kommission'} → ${to} · ${count} Stk. · Wert ${moneyCHF(priceQty*unitPrice)}`);
  }else{
    p.qty=Number((available-count).toFixed(4));p.updatedAt=now;
    newElementId=nextSplitElementIdV545(p);
    newPkg=JSON.parse(JSON.stringify(p));
    newPkg.id='p'+Date.now()+Math.random().toString(16).slice(2);
-   newPkg.elementId=newElementId;newPkg.qty=Number(count.toFixed(4));newPkg.project=to;
+   newPkg.elementId=newElementId;newPkg.qty=Number(count.toFixed(4));newPkg.project=to;newPkg.status='Kommission';newPkg.archivedAt='';
    newPkg.createdAt=now;newPkg.updatedAt=now;newPkg.archivedAt='';
    newPkg.reservations=[];newPkg.history=[];
    addHistory(p,'Teil-Umbuchung',`${count} Stk. von ${available} Stk. · ${from||'Ohne Kommission'} → ${to} · neuer Eintrag ${newElementId} · Wert ${moneyCHF(priceQty*unitPrice)}`);
@@ -22523,7 +22524,7 @@ window.addEventListener('load',()=>setTimeout(runImportV481,1800));
 </style>
 
 <style>
-/* BV2026-1-145 · Transportstatus: gleiche Farben im geschlossenen Feld und in den Dropdown-Einträgen. */
+/* BV2026-1-146 · Transportstatus: gleiche Farben im geschlossenen Feld und in den Dropdown-Einträgen. */
 .platformTransportStatusInlineV523 option[value="Geplant"]{background:#fff3c8!important;color:#795600!important}
 .platformTransportStatusInlineV523 option[value="Bestätigt"]{background:#dcecff!important;color:#164f86!important}
 .platformTransportStatusInlineV523 option[value="Geliefert"]{background:#e3f4e7!important;color:#176b2c!important}
@@ -22531,7 +22532,7 @@ window.addEventListener('load',()=>setTimeout(runImportV481,1800));
 </style>
 
 
-<!-- BV2026-1-145 · offene Baustellen-Rungen unabhängig von der Pritsche anzeigen -->
+<!-- BV2026-1-146 · offene Baustellen-Rungen unabhängig von der Pritsche anzeigen -->
 <style>
 .platformOpenSiteRungsV89{margin:12px 0 4px;padding:14px 16px;border:1px solid #d8ded9;border-radius:12px;background:#f8faf8}
 .platformOpenSiteRungsV89 h4{margin:0 0 9px;font-size:16px;color:#173f32}
@@ -22578,11 +22579,11 @@ window.addEventListener('load',()=>setTimeout(runImportV481,1800));
 })();
 </script>
 
-<!-- BV2026-1-145: Anz. Kronen nur für Brühwiler-Mittelrungen; Wert wird mit der Rungenposition gespeichert. -->
+<!-- BV2026-1-146: Anz. Kronen nur für Brühwiler-Mittelrungen; Wert wird mit der Rungenposition gespeichert. -->
 
 
 <script>
-/* BV2026-1-145 · Brühwiler-Kronen werden unabhängig von Mittelrungen zurückgebucht. */
+/* BV2026-1-146 · Brühwiler-Kronen werden unabhängig von Mittelrungen zurückgebucht. */
 function platformQuickReturnCrownOptionsV94(){
   const rows=(platformStore.projectRungsOpen||[])
     .filter(r=>r.supplier==='Brühwiler' && r.kind!=='outer' && (Number(r.crownQty)||0)>0)
@@ -22628,7 +22629,7 @@ function returnPlatformCrownsToWarehouseV94(index){
 }
 </script>
 
-<!-- BV2026-1-145 · Fahrzeuge/Geräte mit optionalen Stammdaten und PDF -->
+<!-- BV2026-1-146 · Fahrzeuge/Geräte mit optionalen Stammdaten und PDF -->
 <style>
 .platformEquipmentFormV95{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:end}
 .platformEquipmentFormV95 label{font-size:12px;color:#59655f}.platformEquipmentFormV95 input{display:block;width:100%;margin-top:4px;padding:9px;border:1px solid var(--line);border-radius:8px;background:#fff}
@@ -22715,7 +22716,7 @@ function returnPlatformCrownsToWarehouseV94(index){
 
 
 <script>
-/* BV2026-1-145 · Direkter Sprung vom Lieferanten-Akkordeon zum Fahrzeuge/Geräte-Formular. */
+/* BV2026-1-146 · Direkter Sprung vom Lieferanten-Akkordeon zum Fahrzeuge/Geräte-Formular. */
 window.openPlatformEquipmentFormV98=function(supplier){
   selectedPlatformSupplier=supplier;
   updatePlatformStockSupplierFields();
@@ -22735,7 +22736,7 @@ window.openPlatformEquipmentFormV98=function(supplier){
 
 
 <script>
-/* BV2026-1-145 · Fahrzeuge/Geräte direkt im aufgeklappten Lieferantenbereich erfassen. */
+/* BV2026-1-146 · Fahrzeuge/Geräte direkt im aufgeklappten Lieferantenbereich erfassen. */
 function platformEquipmentKeyV99(s){return String(s||'').replace(/[^A-Za-z0-9]/g,'_');}
 window.togglePlatformEquipmentInlineV99=function(supplier,force){
   const box=E('platformEquipmentInlineV99_'+platformEquipmentKeyV99(supplier));
@@ -22787,7 +22788,7 @@ window.savePlatformEquipmentInlineV99=async function(supplier){
 
 
 <script>
-/* BV2026-1-145 · Fahrzeuge/Geräte in der Projekt-Reservierungsplanung */
+/* BV2026-1-146 · Fahrzeuge/Geräte in der Projekt-Reservierungsplanung */
 let platformReservationSelectedEquipmentV101=new Set();
 
 function platformEquipmentReservationsV101(x){
@@ -22915,7 +22916,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-145 · mehrere Fahrzeuge/Geräte pro LKW bzw. Anhänger */
+/* BV2026-1-146 · mehrere Fahrzeuge/Geräte pro LKW bzw. Anhänger */
 .equipmentMultiV102{margin-top:12px}
 </style>
 <script>
@@ -23145,7 +23146,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-145 · Container kompakt wie Fahrzeuge/Geräte */
+/* BV2026-1-146 · Container kompakt wie Fahrzeuge/Geräte */
 .containerCompactV104{margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .containerCompactSummaryV104{font-weight:750;color:var(--muted)}
 .containerDialogV104{position:fixed;inset:0;z-index:100001;background:rgba(0,0,0,.34);display:none;align-items:center;justify-content:center;padding:18px}
@@ -23231,7 +23232,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-145 · mitgeführte Container/Geräte direkt am Fahrzeug anzeigen */
+/* BV2026-1-146 · mitgeführte Container/Geräte direkt am Fahrzeug anzeigen */
 .transportExtrasV105{margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#f7f9f8;font-size:14px;line-height:1.45}
 .transportExtrasV105 b{color:var(--green)}
 .transportExtrasV105 .extraRowV105+.extraRowV105{margin-top:4px}
@@ -23288,7 +23289,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-145 · Zusatzladung eindeutig dem LKW bzw. Anhänger zuordnen */
+/* BV2026-1-146 · Zusatzladung eindeutig dem LKW bzw. Anhänger zuordnen */
 .transportExtrasV105{position:relative;margin-top:8px!important;padding:8px 10px!important}
 .transportExtrasV105::before{
  display:block;font-weight:900;font-size:13px;letter-spacing:.02em;
@@ -23329,7 +23330,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-145 · Fahrzeuge/Geräte separat ins Lager zurückbuchen */
+/* BV2026-1-146 · Fahrzeuge/Geräte separat ins Lager zurückbuchen */
 .platformQuickReturnEquipmentV107{margin-top:0}
 </style>
 <script>
@@ -23404,7 +23405,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-145 · Berechtigungen nach Hauptansicht und Bereich gruppiert */
+/* BV2026-1-146 · Berechtigungen nach Hauptansicht und Bereich gruppiert */
 .permissionGridV108{grid-template-columns:1fr!important}
 .permissionSectionV108{padding:0!important;border:0!important;background:transparent!important}
 .permissionGroupV108{border:1px solid var(--line);border-radius:14px;background:#fff;margin:12px 0;overflow:hidden}
@@ -23428,7 +23429,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Produktion: Projekt erstellen und Kommission separat */
+/* BV2026-1-146 · Produktion: Projekt erstellen und Kommission separat */
 (function(){
  function currentPermissionUserV109(){
    const name=(document.querySelector('#permissionEditor h2 + *')?.textContent||'').trim();
@@ -23480,7 +23481,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Produktionsanalyse als eigene Produktions-Berechtigung */
+/* BV2026-1-146 · Produktionsanalyse als eigene Produktions-Berechtigung */
 (function(){
  function userV110(){
    const name=(document.querySelector('#permissionEditor h2 + *')?.textContent||'').trim();
@@ -23520,7 +23521,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Kleinaufträge: Materialerstellung Künzli / Immer AG separat */
+/* BV2026-1-146 · Kleinaufträge: Materialerstellung Künzli / Immer AG separat */
 (function(){
  function userV111(){
    const name=(document.querySelector('#permissionEditor h2 + *')?.textContent||'').trim();
@@ -23565,7 +23566,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Löschen von Daten und Rapporten separat berechtigen */
+/* BV2026-1-146 · Löschen von Daten und Rapporten separat berechtigen */
 (function(){
  function userV112(){
    const name=(document.querySelector('#permissionEditor h2 + *')?.textContent||'').trim();
@@ -23618,7 +23619,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Detailberechtigungen Pritschenverwaltung / Logistik */
+/* BV2026-1-146 · Detailberechtigungen Pritschenverwaltung / Logistik */
 (function(){
  const defsV113={
    platformReturn:'permPlatformReturnV113',
@@ -23668,7 +23669,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-145 · Detailberechtigungen Materiallager */
+/* BV2026-1-146 · Detailberechtigungen Materiallager */
 .permissionSubgroupV114{grid-column:1/-1;border-bottom:1px solid #edf0ee}
 .permissionSubHeadV114{font-weight:850!important;background:#f8faf9}
 .permissionSubchildrenV114{display:grid;grid-template-columns:repeat(2,minmax(180px,1fr));padding-left:22px;background:#fff}
@@ -23676,7 +23677,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 @media(max-width:650px){.permissionSubchildrenV114{grid-template-columns:1fr;padding-left:12px}}
 </style>
 <script>
-/* BV2026-1-145 · Materiallager-Rechte separat speichern */
+/* BV2026-1-146 · Materiallager-Rechte separat speichern */
 (function(){
  const defsV114={
    materialMasterData:'permMaterialMasterDataV114',
@@ -23726,7 +23727,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-145 · Berechtigungen werden in der Oberfläche tatsächlich durchgesetzt */
+/* BV2026-1-146 · Berechtigungen werden in der Oberfläche tatsächlich durchgesetzt */
 .permHiddenV115{display:none!important}
 </style>
 <script>
@@ -23893,7 +23894,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-145 · Abmelden direkt in der Bereichsauswahl */
+/* BV2026-1-146 · Abmelden direkt in der Bereichsauswahl */
 #areaLogoutV116{
   border:1px solid #e0caca;background:#fff5f5;color:#8d2929;
   border-radius:18px;padding:13px 22px;font-weight:850;font-size:16px;
@@ -23952,7 +23953,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Fix: Detailberechtigungen direkt an den zentralen Berechtigungsspeicher angebunden */
+/* BV2026-1-146 · Fix: Detailberechtigungen direkt an den zentralen Berechtigungsspeicher angebunden */
 (function(){
  function applyPermissionStateV117(){
    try{
@@ -23971,7 +23972,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Berechtigungen: deny-by-default + direkte Modul-Sperren */
+/* BV2026-1-146 · Berechtigungen: deny-by-default + direkte Modul-Sperren */
 (function(){
  function allowedV118(k){
    try{return currentPermissions()[k]===true}catch(e){return false}
@@ -24040,7 +24041,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Verwalten und Einstellungen separat freischaltbar */
+/* BV2026-1-146 · Verwalten und Einstellungen separat freischaltbar */
 (function(){
  function pV119(k){try{return currentPermissions()[k]===true}catch(e){return false}}
  function applyV119(){
@@ -24070,7 +24071,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · "Verwalten & Einstellungen" ist ein kompletter Hauptbereich */
+/* BV2026-1-146 · "Verwalten & Einstellungen" ist ein kompletter Hauptbereich */
 (function(){
  function canManageV120(){
    try{return currentPermissions().manage===true}catch(e){return false}
@@ -24105,7 +24106,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Reparatur Speichern-Button Berechtigungen */
+/* BV2026-1-146 · Reparatur Speichern-Button Berechtigungen */
 (function(){
  window.savePermissionEditorV121=function(ev){
    if(ev){ev.preventDefault();ev.stopPropagation();}
@@ -24177,7 +24178,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · To-do-Liste nur mit eigener Berechtigung sichtbar */
+/* BV2026-1-146 · To-do-Liste nur mit eigener Berechtigung sichtbar */
 (function(){
  function todoAllowedV122(){
    try{return currentPermissions().todo===true}catch(e){return false}
@@ -24209,7 +24210,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Rechte für Flächen/Gestelle/Ebenen + dauerhaftes Abmelden */
+/* BV2026-1-146 · Rechte für Flächen/Gestelle/Ebenen + dauerhaftes Abmelden */
 (function(){
  function allowedV123(k){
    try{return currentPermissions()[k]===true}catch(e){return false}
@@ -24349,7 +24350,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · "Fläche sperren / entsperren" ebenfalls nur mit Flächen-Berechtigung */
+/* BV2026-1-146 · "Fläche sperren / entsperren" ebenfalls nur mit Flächen-Berechtigung */
 (function(){
  function areaAllowedV124(){
    try{return currentPermissions().materialAreas===true}catch(e){return false}
@@ -24399,7 +24400,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Ohne Berechtigung dürfen keine Pakete erfasst werden */
+/* BV2026-1-146 · Ohne Berechtigung dürfen keine Pakete erfasst werden */
 (function(){
  function allowedV125(){
    try{return currentPermissions().materialPackageCreate===true}catch(e){return false}
@@ -24449,7 +24450,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Paket-Erfassung an den echten Funktionen gesperrt */
+/* BV2026-1-146 · Paket-Erfassung an den echten Funktionen gesperrt */
 (function(){
  function packageCreateAllowedV126(){
    try{return currentPermissions().materialPackageCreate===true}catch(e){return false}
@@ -24478,7 +24479,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Produktionshalle nur mit eigener Ansichtsberechtigung */
+/* BV2026-1-146 · Produktionshalle nur mit eigener Ansichtsberechtigung */
 (function(){
  function productionHallAllowedV127(){
    try{return currentPermissions().productionHall===true}catch(e){return false}
@@ -24512,7 +24513,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 .inventoryLocationReadOnlyV128{display:inline-block;padding:8px 0;color:inherit}
 </style>
 <script>
-/* BV2026-1-145 · Jede Lager-Aktion mit eigener Berechtigung */
+/* BV2026-1-146 · Jede Lager-Aktion mit eigener Berechtigung */
 (function(){
  const rules=[
    ['materialGoLocation',/^\s*Zu Lagerort\s*$/i],
@@ -24543,7 +24544,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Projektfreigaben zuverlässig öffnen */
+/* BV2026-1-146 · Projektfreigaben zuverlässig öffnen */
 (function(){
  window.openProjectAccessManagerV129=function(id,ev){
    if(ev){ev.preventDefault();ev.stopPropagation();}
@@ -24601,7 +24602,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Projektfreigaben: explizite Modal-Anzeige zurücksetzen */
+/* BV2026-1-146 · Projektfreigaben: explizite Modal-Anzeige zurücksetzen */
 (function(){
  const oldClose=window.closeM;
  if(typeof oldClose==='function'){
@@ -24630,7 +24631,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 #projectAccessDebugV131 .ok{color:#a9f5b4}.err{color:#ffb1b1}.info{color:#fff}
 </style>
 <script>
-/* BV2026-1-145 · Sichtbare Diagnose für "Mitarbeiter einladen / Freigaben" */
+/* BV2026-1-146 · Sichtbare Diagnose für "Mitarbeiter einladen / Freigaben" */
 (function(){
  function box(){
    let b=document.getElementById('projectAccessDebugV131');
@@ -24701,7 +24702,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-145 · Projektfreigaben garantiert über der gesamten Anwendung */
+/* BV2026-1-146 · Projektfreigaben garantiert über der gesamten Anwendung */
 #projectAccessModal{
  position:fixed!important;
  inset:0!important;
@@ -24754,7 +24755,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Berechtigungen sofort in die Cloud und beim Benutzer zeitnah neu laden */
+/* BV2026-1-146 · Berechtigungen sofort in die Cloud und beim Benutzer zeitnah neu laden */
 (function(){
  /* Beim Speichern einer Berechtigung nicht nur den verzögerten Queue-Sync abwarten. */
  const oldSave=window.savePermissionEditorV121;
@@ -24801,7 +24802,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 #permDebugV134 button{background:#fff;color:#10352b;border:0;border-radius:8px;padding:6px 9px;font-weight:800}
 </style>
 <script>
-/* BV2026-1-145 · sichtbare Berechtigungsdiagnose */
+/* BV2026-1-146 · sichtbare Berechtigungsdiagnose */
 (function(){
  function dbg(msg){
    let b=document.getElementById('permDebugV134');
@@ -24852,7 +24853,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Bereichskarten werden ausschliesslich aus aktuellen Rechten gesteuert */
+/* BV2026-1-146 · Bereichskarten werden ausschliesslich aus aktuellen Rechten gesteuert */
 (function(){
  function applyAreaCardsV135(){
    let p={};
@@ -24892,7 +24893,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-145 · Bereichskarten: Rechte direkt gegen alte CSS-Regeln durchsetzen */
+/* BV2026-1-146 · Bereichskarten: Rechte direkt gegen alte CSS-Regeln durchsetzen */
 #moduleSmallOrdersTile.permShowV137,
 #moduleWarehouseTile.permShowV137,
 #moduleProjectsTile.permShowV137,
@@ -24946,7 +24947,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-145 · ToDo nur mit expliziter Berechtigung */
+/* BV2026-1-146 · ToDo nur mit expliziter Berechtigung */
 #todoDashboardV518.permTodoShowV138,
 .todoDashboardV518.permTodoShowV138,
 [data-todo-dashboard].permTodoShowV138{
@@ -25002,7 +25003,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Kleinauftrag-Materialrechte ohne globale Alerts */
+/* BV2026-1-146 · Kleinauftrag-Materialrechte ohne globale Alerts */
 (function(){
  function allowedV140(kind){
    try{
@@ -25059,7 +25060,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · Lieferantenansicht nur mit "Lieferanten einsehen" */
+/* BV2026-1-146 · Lieferantenansicht nur mit "Lieferanten einsehen" */
 (function(){
  function supplierViewAllowedV141(){
    try{return currentPermissions().platformSupplierView===true}catch(e){return false}
@@ -25102,7 +25103,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-145 · Berechtigungen logisch gruppieren */
+/* BV2026-1-146 · Berechtigungen logisch gruppieren */
 #permissionModal .permLogicalGroupV142{
  margin:10px 12px 12px;border:1px solid #d8e1dd;border-radius:10px;overflow:hidden;background:#fff
 }
@@ -25205,7 +25206,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <script>
-/* BV2026-1-145 · iPhone/Safari: lokalen Sync-Speicher verkleinern */
+/* BV2026-1-146 · iPhone/Safari: lokalen Sync-Speicher verkleinern */
 (function(){
   function compactSyncBaseV143(base){
     const out={};
@@ -25277,7 +25278,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-145 · iPhone: Karten-Kopf vollständig im Viewport */
+/* BV2026-1-146 · iPhone: Karten-Kopf vollständig im Viewport */
 @media(max-width:700px){
   html,body{max-width:100%;overflow-x:hidden!important}
 
@@ -25379,7 +25380,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <style>
-/* BV2026-1-145 · echtes Zwei-Finger-Zoomen auf den Karten */
+/* BV2026-1-146 · echtes Zwei-Finger-Zoomen auf den Karten */
 @media(max-width:700px){
   #mapwrap,#productionPlanWrap{
     touch-action:none!important;
@@ -25485,5 +25486,72 @@ renderPlatformReservationGantt=function(from='',to=''){
    setTimeout(init,0);
  };
  setTimeout(init,0);
+})();
+</script>
+
+
+<style>
+/* BV2026-1-146 · Materialansicht iPhone */
+@media(max-width:700px){
+  /* Materialbereich nutzt die ganze Displaybreite. */
+  #page-inventory{padding-left:0!important;padding-right:0!important}
+  #page-inventory>.grid,
+  #page-inventory>.card,
+  #page-inventory .grid>.card{
+    width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;
+    border-left:0!important;border-right:0!important;border-radius:0!important;
+  }
+  #page-inventory .tablewrap{
+    width:100%!important;max-width:none!important;
+    overflow-x:auto!important;overflow-y:visible!important;
+    max-height:none!important;border-left:0!important;border-right:0!important;border-radius:0!important;
+  }
+  #page-inventory #invTable{width:max-content!important;min-width:100%!important}
+
+  /* Das Drei-Punkte-Menü liegt auf dem iPhone über der Tabelle statt darin. */
+  #page-inventory details.actionMenuV451[open] .actionMenuPanelV451{
+    position:fixed!important;
+    left:12px!important;right:12px!important;bottom:calc(82px + env(safe-area-inset-bottom))!important;top:auto!important;
+    width:auto!important;min-width:0!important;max-width:none!important;
+    max-height:62dvh!important;overflow:auto!important;
+    z-index:20050!important;padding:10px!important;border-radius:16px!important;
+    box-shadow:0 16px 55px rgba(0,0,0,.32)!important;
+  }
+  #page-inventory details.actionMenuV451[open] .actionMenuPanelV451 .btn{
+    display:flex;align-items:center!important;width:100%!important;min-height:50px!important;
+    padding:12px 14px!important;font-size:16px!important;white-space:normal!important;
+  }
+  #page-inventory details.actionMenuV451[open] summary{position:relative;z-index:20051}
+}
+</style>
+<script>
+/* BV2026-1-146 · Umbuchen direkt aus der Karten-ID-Suche */
+(function(){
+ window.openWarehouseTransferFromQuickV146=function(){
+   const id=document.getElementById('quickPackageId')?.value;
+   if(!id)return;
+   try{closeM('quickMaterialModal')}catch(e){}
+   setTimeout(function(){openWarehouseTransferV550(id)},0);
+ };
+ function applyQuickTransferPermissionV146(){
+   const b=document.getElementById('quickTransferBtnV146');
+   if(!b)return;
+   let ok=false;
+   try{ok=currentPermissions().materialTransfer===true}catch(e){}
+   b.style.display=ok?'':'none';
+ }
+ const oldOpen=window.openQuickMaterial;
+ window.openQuickMaterial=function(pid){
+   const r=oldOpen.apply(this,arguments);
+   applyQuickTransferPermissionV146();
+   return r;
+ };
+ const oldRefresh=window.refreshPermissionVisibility;
+ window.refreshPermissionVisibility=function(){
+   const r=typeof oldRefresh==='function'?oldRefresh.apply(this,arguments):undefined;
+   applyQuickTransferPermissionV146();
+   return r;
+ };
+ setTimeout(applyQuickTransferPermissionV146,0);
 })();
 </script>
