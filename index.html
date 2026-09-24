@@ -6599,6 +6599,22 @@ function renameUser(id){if(!requireAdmin())return;let u=st.users.find(x=>x.id===
 
 function loadAuthSession(){try{return JSON.parse(localStorage.getItem(AUTH_KEY)||'null')}catch(e){return null}}
 let authSession=loadAuthSession(),cloudMember=null,cloudPollTimer=null,lastCloudUpdatedAt='',mustChangePassword=false;
+/* V208: Sofortiger sicherer Lokalstart bei bereits vorhandener Auth-Sitzung.
+   Dieser provisorische Member ist absichtlich __offlineV207, damit cloudReady() false bleibt:
+   vor erfolgreicher Hintergrundprüfung sind weder Cloud-Pull noch Cloud-Push möglich. */
+if(authSession){
+ try{
+   let c=JSON.parse(localStorage.getItem('kuenzli_last_cloud_member_v207')||'null');
+   if(c&&c.warehouseId===cloudCfg?.warehouseId&&c.userId===authSession?.user?.id&&c.member){
+     cloudMember={...c.member,__offlineV207:true,__localStartupV208:true};
+   }else{
+     let lu=(typeof activeUser==='function'?activeUser():null);
+     cloudMember={user_id:authSession?.user?.id||'',username:authUsername?.()||'',name:lu?.name||'Offline',role:lu?.role||'Mitarbeiter',active:true,__offlineV207:true,__localStartupV208:true};
+   }
+ }catch(e){
+   cloudMember={user_id:authSession?.user?.id||'',username:'',name:'Offline',role:'Mitarbeiter',active:true,__offlineV207:true,__localStartupV208:true};
+ }
+}
 
 function cloudAuthEnabled(){return cloudCfg?.mode==='supabase'}
 function authAccessToken(){return authSession?.access_token||''}
@@ -19962,25 +19978,28 @@ try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){console.warn('V164 St
 STRUCTURE_MARKED_V60=markRestoredStructureForCloud();
 setTimeout(initMobileMaps,0);
 refresh();
+/* V208: UI startet sofort lokal. Erst nach 5 s erfolgt genau eine reine Mitgliedschaftsprüfung
+   im Hintergrund. Kein Claim, kein Start-Pull. Eine erfolgreiche leere Antwort darf danach sperren;
+   5xx/PGRST003 lässt den sicheren Offline-Modus bestehen. */
+let lastIdentityProbeV208=0,identityProbeV208=false;
+async function probeCloudIdentityV208(){
+ if(identityProbeV208||!authSession||document.hidden)return;
+ if(Date.now()-lastIdentityProbeV208<60000)return;
+ identityProbeV208=true;lastIdentityProbeV208=Date.now();
+ try{await refreshCloudIdentity(false)}finally{identityProbeV208=false}
+}
 if(cloudCfg.mode==='supabase'&&authSession){
- setTimeout(async()=>{
-   if(!cloudMember)await refreshCloudIdentity();
-   /* V207: Beim Start niemals automatisch Cloud -> Gerät laden.
-      Lokaler Bestand bleibt führend, bis ein manueller Abgleich ausgelöst wird. */
-   if(cloudReady()&&cloudCfg.autoSync){
-     setSyncStatus('','Cloud verbunden – automatischer Start-Pull deaktiviert');
-     startCloudPolling();
-   }
- },250);
+ setSyncStatus('err','Sicherer Lokalstart – Cloud wird im Hintergrund geprüft, kein Pull/Push');
+ setTimeout(()=>probeCloudIdentityV208(),5000);
 }
 document.addEventListener('visibilitychange',()=>{
  if(!document.hidden&&cloudCfg.autoSync){
-   if(cloudMember?.__offlineV207)refreshCloudIdentity(false);else{startCloudPolling();checkCloudForUpdates(true)}
+   if(cloudMember?.__offlineV207)probeCloudIdentityV208();else startCloudPolling();
  }
 });
 window.addEventListener('focus',()=>{
  if(cloudCfg.autoSync){
-   if(cloudMember?.__offlineV207)refreshCloudIdentity(false);else{startCloudPolling();checkCloudForUpdates(true)}
+   if(cloudMember?.__offlineV207)probeCloudIdentityV208();else startCloudPolling();
  }
 });
 
@@ -27115,3 +27134,5 @@ renderPlatformReservationGantt=function(from='',to=''){
 </script>
 
 <!-- V207: Supabase resilient local-first cloud guard; 5-minute polling; no automatic startup/full pull; transient 5xx offline fallback. -->
+
+<!-- V208: immediate safe local startup; delayed read-only membership probe; no startup pull/push. -->
