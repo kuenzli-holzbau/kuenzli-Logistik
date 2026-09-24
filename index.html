@@ -3451,7 +3451,9 @@ select,input,textarea{min-height:40px}
 .platformArchivedTransportsV388 .platformTransportTableWrap{padding:10px}
 
 @media(max-width:760px){.toolsStatusGridV421{grid-template-columns:1fr}}
-</style><link rel="apple-touch-icon" sizes="180x180" href="./kuenzli-app-icon.png">
+</style>
+<script>window.KUENZLI_RESCUE_V188=true;</script>
+<link rel="apple-touch-icon" sizes="180x180" href="./kuenzli-app-icon.png">
 <link rel="icon" type="image/png" href="./kuenzli-app-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -4966,11 +4968,13 @@ window.APP_RELEASE = {
 <label><b>Benutzername</b><input id="authUsername" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="z.B. peter"></label>
 <label><b>PIN / Passwort</b><input id="authPassword" type="password" inputmode="numeric" autocomplete="current-password" placeholder="mind. 6 Zeichen"></label>
 <div class="toolbar"><button class="btn" onclick="signInCloud()">Anmelden</button><button class="btn secondary" onclick="signUpCloud()">Erstmalig aktivieren</button></div>
+<div class="v188RescueBox"><b>Rettungsmodus aktiv</b><div>Cloud-Synchronisierung ist in V188 vorsorglich pausiert. Zuerst den lokalen Stand dieses Geräts sichern.</div><button class="btn" type="button" onclick="exportLocalRescueV188()">Lokale Daten sichern</button><div id="v188RescueSummaryOut" class="muted"></div></div>
 <p class="muted">Keine E-Mail nötig. Intern verwendet die App eine technische Login-Adresse. Der Benutzername muss vorher für dieses Lager freigegeben worden sein.</p>
 </div>
 <div id="authSignedIn" class="authBox" style="display:none">
 <div id="authIdentity" class="authState"></div>
 <div class="toolbar"><button class="btn secondary" onclick="refreshCloudIdentity()">Berechtigung aktualisieren</button><button class="btn secondary" onclick="changeOwnPassword()">Passwort ändern</button><button class="btn danger" onclick="signOutCloud()">Abmelden</button></div>
+<div class="v188RescueBox"><b>Rettungsmodus aktiv</b><div>Cloud-Synchronisierung ist in V188 vorsorglich pausiert. Keine lokalen Inventurdaten werden automatisch in die Cloud geschrieben oder von dort überschrieben.</div><button class="btn" type="button" onclick="exportLocalRescueV188()">Lokale Daten sichern</button><div id="v188RescueSummaryIn" class="muted"></div></div>
 </div>
 </div></div>
 
@@ -10806,6 +10810,7 @@ async function resolveSyncConflict(index,choice){
 }
 let pendingManualCloudPushV487=false;
 async function pushEntitySync(manual=false){
+ if(window.KUENZLI_RESCUE_V188===true){if(manual)alert('Rettungsmodus V188: Lokal → Cloud ist gesperrt. Bitte zuerst die lokalen Daten sichern.');return false;}
  cloudCfg=loadCloudConfig();
  if(!cloudReady()){
    if(manual)alert('Cloud ist noch nicht bereit. Bitte Anmeldung und Cloud-Benutzer prüfen.');
@@ -10860,6 +10865,7 @@ async function pushEntitySync(manual=false){
  }
 }
 async function pullEntitySync(manual=false){
+ if(window.KUENZLI_RESCUE_V188===true){if(manual)alert('Rettungsmodus V188: Cloud → Gerät ist gesperrt, damit lokale Inventurdaten nicht überschrieben werden.');return false;}
  let syncStageV154='Start';
  cloudCfg=loadCloudConfig();
  if(!cloudReady()){if(manual)alert('Bitte zuerst Cloud einrichten und anmelden.');return false}
@@ -11030,6 +11036,7 @@ function renderCloudSettings(){
  let ms=E('authManageState');if(ms&&cloudSetupMode()&&!cloudMember)ms.innerHTML='<b>Einrichtungsmodus aktiv.</b> Cloud-Einstellungen können bis zur erfolgreichen ersten Administrator-Aktivierung jederzeit korrigiert werden.';
 }
 function queueCloudSync(){
+ if(window.KUENZLI_RESCUE_V188===true)return;
  cloudCfg=loadCloudConfig();
  if(!cloudReady()||!cloudCfg.autoSync)return;
  clearTimeout(cloudTimer);
@@ -19934,7 +19941,7 @@ try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){console.warn('V164 St
 STRUCTURE_MARKED_V60=markRestoredStructureForCloud();
 setTimeout(initMobileMaps,0);
 refresh();
-if(cloudCfg.mode==='supabase'&&authSession){
+if(cloudCfg.mode==='supabase'&&authSession&&window.KUENZLI_RESCUE_V188!==true){
  setTimeout(async()=>{
    if(!cloudMember)await refreshCloudIdentity();
    if(cloudReady()&&cloudCfg.autoSync){
@@ -19949,10 +19956,10 @@ if(cloudCfg.mode==='supabase'&&authSession){
  },250);
 }
 document.addEventListener('visibilitychange',()=>{
- if(!document.hidden&&cloudCfg.autoSync){startCloudPolling();checkCloudForUpdates(true)}
+ if(window.KUENZLI_RESCUE_V188!==true&&!document.hidden&&cloudCfg.autoSync){startCloudPolling();checkCloudForUpdates(true)}
 });
 window.addEventListener('focus',()=>{
- if(cloudCfg.autoSync){startCloudPolling();checkCloudForUpdates(true)}
+ if(window.KUENZLI_RESCUE_V188!==true&&cloudCfg.autoSync){startCloudPolling();checkCloudForUpdates(true)}
 });
 
 
@@ -27139,5 +27146,59 @@ renderPlatformReservationGantt=function(from='',to=''){
  /* Bereits sichtbare Ansichten sofort aktualisieren. */
  try{if(document.getElementById('allControlBody'))decorateAreaCardsV187()}catch(_e){}
  try{if(document.getElementById('tbody'))renderInv()}catch(_e){}
+})();
+</script>
+
+<style id="v188RescueStyle">
+.v188RescueBox{margin-top:14px;padding:14px;border:2px solid #b77b00;border-radius:12px;background:#fff7df;display:grid;gap:9px;color:#2b2415}
+.v188RescueBox .btn{justify-self:start}.v188RescueBox .muted{font-size:13px;color:#655b42!important}
+</style>
+<script id="v188RescuePatch">
+(function(){
+ window.KUENZLI_RESCUE_V188=true;
+ function rescueSummaryV188(){
+   let state=null;try{state=JSON.parse(localStorage.getItem('holzlager_v8')||'null')}catch(_e){}
+   return {
+     packages:Array.isArray(state?.packages)?state.packages.length:0,
+     controls:Array.isArray(state?.controls)?state.controls.length:0,
+     areas:Array.isArray(state?.areas)?state.areas.length:0,
+     racks:Array.isArray(state?.racks)?state.racks.length:0,
+     activeControlId:state?.activeControlId||null
+   };
+ }
+ window.exportLocalRescueV188=function(){
+   try{
+     const local={};
+     for(let i=0;i<localStorage.length;i++){
+       const k=localStorage.key(i); local[k]=localStorage.getItem(k);
+     }
+     const session={};
+     for(let i=0;i<sessionStorage.length;i++){
+       const k=sessionStorage.key(i); session[k]=sessionStorage.getItem(k);
+     }
+     const payload={
+       type:'KUENZLI-LOGISTIK-LOCAL-RESCUE',version:'V188',
+       exportedAt:new Date().toISOString(),
+       page:location.href,
+       summary:rescueSummaryV188(),
+       localStorage:local,
+       sessionStorage:session
+     };
+     const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+     const url=URL.createObjectURL(blob),a=document.createElement('a');
+     const d=new Date(),pad=n=>String(n).padStart(2,'0');
+     a.href=url;a.download='Kuenzli-Logistik-Lokalsicherung-'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'-'+pad(d.getHours())+pad(d.getMinutes())+'.json';
+     document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
+     const x=rescueSummaryV188();
+     alert('Lokale Sicherung erstellt.\n\nPakete: '+x.packages+'\nKontrollen: '+x.controls+'\nFlächen: '+x.areas+'\nGestelle: '+x.racks+'\n\nBitte die JSON-Datei auf dem iPad behalten und zusätzlich an einem zweiten Ort sichern.');
+   }catch(e){alert('Lokale Sicherung konnte nicht erstellt werden:\n'+String(e?.message||e));}
+ };
+ function show(){
+   const x=rescueSummaryV188(),t='Lokal gefunden: '+x.packages+' Pakete · '+x.controls+' Kontrollen · '+x.areas+' Flächen · '+x.racks+' Gestelle';
+   ['v188RescueSummaryOut','v188RescueSummaryIn'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=t;});
+   try{if(typeof setSyncStatus==='function')setSyncStatus('err','Rettungsmodus V188 · Cloud-Sync pausiert');}catch(_e){}
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show);else show();
+ setTimeout(show,500);
 })();
 </script>
