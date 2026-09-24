@@ -3452,7 +3452,7 @@ select,input,textarea{min-height:40px}
 
 @media(max-width:760px){.toolsStatusGridV421{grid-template-columns:1fr}}
 </style>
-<script>window.KUENZLI_RESCUE_V188=true;window.KUENZLI_RESCUE_V202=true;</script>
+<script>window.KUENZLI_RESCUE_V188=true;window.KUENZLI_RESCUE_V202=true;window.KUENZLI_RESCUE_V203=true;</script>
 <link rel="apple-touch-icon" sizes="180x180" href="./kuenzli-app-icon.png">
 <link rel="icon" type="image/png" href="./kuenzli-app-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -6444,8 +6444,15 @@ function currentPermissions(){
  // V202: lokaler Wiederherstellungsmodus nach erfolgreicher Anmeldung.
  // Die normale Bereichsauswahl ist lokal wieder verfügbar; V188 blockiert weiterhin
  // sämtliche Cloud-Pull/Push-Wege, damit der vorhandene Materialbestand unangetastet bleibt.
- if(window.KUENZLI_RESCUE_V202===true && authSession && !mustChangePassword){
-  return {warehouse:true,material:true,control:true,reserved:true,archive:true,defects:true,transfers:true,manage:true,projects:true,smallOrders:true,platforms:true,tools:true,allProjects:true,projectIds:[]};
+ if((window.KUENZLI_RESCUE_V203===true || window.KUENZLI_RESCUE_V202===true)){
+  /* V203: Rettungsrechte sind absichtlich NICHT mehr an authSession gekoppelt.
+     Auf iPad/Safari kann ein Auth-State-Refresh authSession kurz leeren; dadurch
+     verschwanden in V202 beim ersten Touch alle Bereiche ausser Lagerverwaltung.
+     Dieser lokale Rettungskontext betrifft nur UI-Rechte. Cloud Pull/Push bleibt
+     durch KUENZLI_RESCUE_V188 blockiert. */
+  const p={warehouse:true,material:true,control:true,reserved:true,archive:true,defects:true,transfers:true,manage:true,projects:true,smallOrders:true,platforms:true,tools:true,allProjects:true,projectIds:[]};
+  try{Object.keys(permissionFieldMap()).forEach(k=>p[k]=true)}catch(_e){}
+  return p;
  }
  return permissionsForKey(currentPermissionKey(),currentRole())
 }
@@ -27465,4 +27472,4 @@ renderPlatformReservationGantt=function(from='',to=''){
 })();
 </script>
 
-\n<!-- BV2026-1-202 · Lokaler Normalmodus: alle Bereiche sichtbar, Cloud weiterhin gesperrt -->\n<style id="v202Style">\n#v202Safe{position:fixed;z-index:2147483646;left:10px;right:10px;top:10px;padding:9px 12px;border:2px solid #176044;border-radius:12px;background:#f2fbf6;box-shadow:0 6px 24px #0002;font:13px/1.35 system-ui,-apple-system,sans-serif;color:#17352b}body.v202safe{padding-top:76px!important}\n</style>\n<script id="v202LocalNormal">\n(function(){\n window.KUENZLI_RESCUE_V188=true;window.KUENZLI_RESCUE_V202=true;\n function stop(){try{stopCloudPolling()}catch(_e){}}\n function count(){try{return Array.isArray(st&&st.packages)?st.packages.filter(Boolean).length:0}catch(_e){return 0}}\n function install(){\n  stop();if(!authSession||mustChangePassword)return;\n  try{document.body.classList.remove('accessLocked');document.body.classList.add('v202safe')}catch(_e){}\n  try{document.getElementById('authModal')?.classList.remove('open')}catch(_e){}\n  try{refreshPermissionVisibility()}catch(_e){}\n  try{showModuleHome()}catch(_e){}\n  var e=document.getElementById('v202Safe');if(!e){e=document.createElement('div');e.id='v202Safe';document.body.appendChild(e)}\n  e.innerHTML='<b>V202 · Lokaler Wiederherstellungsmodus</b> · '+count()+' Pakete geschützt · alle Bereiche lokal verfügbar · Cloud Lesen/Schreiben gesperrt.';\n  stop();\n }\n if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();\n setTimeout(install,200);setTimeout(install,900);setTimeout(install,2200);\n})();\n</script>\n
+\n<!-- BV2026-1-203 · Touch-stabiler lokaler Normalmodus: alle Bereiche sichtbar, Cloud weiterhin gesperrt -->\n<style id="v202Style">\n#v202Safe{position:fixed;z-index:2147483646;left:10px;right:10px;top:10px;padding:9px 12px;border:2px solid #176044;border-radius:12px;background:#f2fbf6;box-shadow:0 6px 24px #0002;font:13px/1.35 system-ui,-apple-system,sans-serif;color:#17352b}body.v202safe{padding-top:76px!important}\n</style>\n<script id="v202LocalNormal">\n(function(){\n window.KUENZLI_RESCUE_V188=true;window.KUENZLI_RESCUE_V202=true;window.KUENZLI_RESCUE_V203=true;\n function stop(){try{stopCloudPolling()}catch(_e){}}\n function count(){try{return Array.isArray(st&&st.packages)?st.packages.filter(Boolean).length:0}catch(_e){return 0}}\n function install(){\n  stop();if(!authSession||mustChangePassword)return;\n  try{document.body.classList.remove('accessLocked');document.body.classList.add('v202safe')}catch(_e){}\n  try{document.getElementById('authModal')?.classList.remove('open')}catch(_e){}\n  try{refreshPermissionVisibility()}catch(_e){}\n  try{showModuleHome()}catch(_e){}\n  var e=document.getElementById('v202Safe');if(!e){e=document.createElement('div');e.id='v202Safe';document.body.appendChild(e)}\n  e.innerHTML='<b>V203 · Lokaler Wiederherstellungsmodus</b> · '+count()+' Pakete geschützt · alle Bereiche lokal verfügbar · Cloud Lesen/Schreiben gesperrt.';\n  stop();\n }\n if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();\n setTimeout(install,200);setTimeout(install,900);setTimeout(install,2200);\n})();\n</script>\n
