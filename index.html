@@ -6619,7 +6619,7 @@ function saveAuthSession(s){
  renderAuthUI();renderUserHeader();
 }
 async function authFetch(path,body){
- cloudCfg=loadCloudConfig();
+ cloudCfg=loadCloudConfig(); if(manual)syncDiagLogV216('1 KONFIG','Cloud-Konfiguration geladen');
  if(!cloudCfg.url||!cloudCfg.anonKey)throw new Error('Cloud-Einstellungen fehlen.');
  let r=await fetch(String(cloudCfg.url).replace(/\/+$/,'')+'/auth/v1/'+path,{
    method:'POST',
@@ -10805,7 +10805,41 @@ async function resolveSyncConflict(index,choice){
  }catch(e){alert('Konflikt konnte nicht gelöst werden:\n'+String(e.message||e))}
 }
 let pendingManualCloudPushV487=false;
-async function pushEntitySyncCoreV215(manual=false){
+let syncDiagV216=null;
+function syncDiagEnsureV216(){
+ let d=document.getElementById('syncDiagV216');
+ if(d)return d;
+ d=document.createElement('div');d.id='syncDiagV216';
+ d.style.cssText='display:none;position:fixed;inset:0;z-index:100002;background:rgba(0,0,0,.48);padding:16px;overflow:auto';
+ d.innerHTML=`<div style="max-width:980px;margin:2vh auto;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 20px 70px rgba(0,0,0,.3)">
+ <div style="padding:16px 18px;border-bottom:1px solid #ddd"><b style="font-size:21px">Cloud-Sync Analyse V216</b><div style="color:#667085;margin-top:4px">Live-Protokoll von Lokal → Cloud. Lagerdaten werden durch das Analysefenster nicht gelöscht oder zurückgesetzt.</div></div>
+ <div id="syncDiagStatusV216" style="padding:10px 18px;background:#f6f8fa;font-weight:700">Bereit</div>
+ <pre id="syncDiagLogV216" style="margin:0;padding:16px 18px;white-space:pre-wrap;word-break:break-word;max-height:58vh;overflow:auto;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace"></pre>
+ <div style="padding:12px 18px;border-top:1px solid #ddd;display:flex;gap:8px;justify-content:flex-end"><button class="btn secondary" onclick="navigator.clipboard?.writeText(document.getElementById('syncDiagLogV216').textContent||'')">Protokoll kopieren</button><button class="btn" onclick="document.getElementById('syncDiagV216').style.display='none'">Schliessen</button></div></div>`;
+ document.body.appendChild(d);return d;
+}
+function syncDiagStartV216(){
+ const d=syncDiagEnsureV216();d.style.display='block';
+ document.getElementById('syncDiagLogV216').textContent='';
+ syncDiagV216={started:Date.now(),step:0};
+ syncDiagLogV216('START','Manueller Lokal → Cloud Sync gestartet');
+ try{syncDiagLogV216('SPEICHER','localStorage Zeichen grob: '+Object.keys(localStorage).reduce((n,k)=>n+(k.length+(localStorage.getItem(k)||'').length),0));}catch(e){syncDiagLogV216('SPEICHER-FEHLER',e)}
+}
+function syncDiagLogV216(stage,detail){
+ if(!syncDiagV216)return;
+ const el=document.getElementById('syncDiagLogV216'),st=document.getElementById('syncDiagStatusV216');
+ const ms=Date.now()-syncDiagV216.started;syncDiagV216.step++;
+ let msg='';
+ if(detail instanceof Error) msg=(detail.name||'Error')+': '+(detail.message||detail)+(detail.stack?'\n'+detail.stack:'');
+ else if(typeof detail==='object'){try{msg=JSON.stringify(detail)}catch(_){msg=String(detail)}} else msg=String(detail??'');
+ const line=`${syncDiagV216.step}. +${ms}ms [${stage}] ${msg}`;
+ el.textContent+=(el.textContent?'\n':'')+line;el.scrollTop=el.scrollHeight;st.textContent=stage+' · '+msg.slice(0,180);
+}
+function syncDiagStorageWriteV216(label,fn){
+ syncDiagLogV216(label,'localStorage-Schreibtest beginnt');
+ try{const v=fn();syncDiagLogV216(label+' OK','localStorage-Schreibvorgang erfolgreich');return v}catch(e){syncDiagLogV216(label+' FEHLER',e);throw e}
+}
+async function pushEntitySyncCoreV216(manual=false){
  cloudCfg=loadCloudConfig();
  if(!cloudReady()){
    if(manual)alert('Cloud ist noch nicht bereit. Bitte Anmeldung und Cloud-Benutzer prüfen.');
@@ -10820,9 +10854,13 @@ async function pushEntitySyncCoreV215(manual=false){
    }
    return false;
  }
- cloudBusy=true;setSyncStatus('syncing',manual?'Lokal → Cloud wird übertragen':'Änderungen werden abgeglichen');
+ cloudBusy=true;setSyncStatus('syncing',manual?'Lokal → Cloud wird übertragen':'Änderungen werden abgeglichen'); if(manual)syncDiagLogV216('2 START','cloudBusy gesetzt');
  try{
-   let remote=await fetchRemoteEntities(),base=loadSyncBase(),local=localEntityMap(),keys=new Set([...Object.keys(base),...Object.keys(local),...Object.keys(remote)]),conflicts=[],changed=0;
+   if(manual)syncDiagLogV216('3 CLOUD LESEN','fetchRemoteEntities startet');
+   let remote=await fetchRemoteEntities(); if(manual)syncDiagLogV216('3 CLOUD LESEN OK',Object.keys(remote).length+' Cloud-Objekte');
+   if(manual)syncDiagLogV216('4 SYNC-BASIS','loadSyncBase startet'); let base=loadSyncBase(); if(manual)syncDiagLogV216('4 SYNC-BASIS OK',Object.keys(base).length+' Basis-Objekte');
+   if(manual)syncDiagLogV216('5 LOKAL','localEntityMap startet'); let local=localEntityMap(); if(manual)syncDiagLogV216('5 LOKAL OK',Object.keys(local).length+' lokale Objekte');
+   let keys=new Set([...Object.keys(base),...Object.keys(local),...Object.keys(remote)]),conflicts=[],changed=0; if(manual)syncDiagLogV216('6 VERGLEICH',keys.size+' Schlüssel werden geprüft');
    for(let k of keys){
      let l=local[k],b=base[k],r=remote[k],localHash=l?stableJson(l.data):null,baseHash=b?.hash??null,remoteHash=r?stableJson(r.data):null,localChanged=(localHash!==baseHash),remoteChanged=(remoteHash!==baseHash);
      if(!localChanged)continue;let [type,id]=k.split('|');
@@ -10830,15 +10868,19 @@ async function pushEntitySyncCoreV215(manual=false){
      if(!canWriteCloudEntity(type,action))continue;
      if(remoteChanged){conflicts.push({type,id,local:l?.data||null,remote:r?.data||null,remoteVersion:r?.version||0,remoteBy:r?.updated_by||'',deletedLocal:!l,deletedRemote:!r});continue}
      try{
-       if(l)await rpcEntitySave(type,id,l.data,r?.version||b?.version||0,false);else if(r)await rpcEntityDelete(type,id,r.version||b?.version||0,false);changed++;
+       if(manual)syncDiagLogV216('7 CLOUD WRITE',action+' '+type+'|'+id);
+       if(l)await rpcEntitySave(type,id,l.data,r?.version||b?.version||0,false);else if(r)await rpcEntityDelete(type,id,r.version||b?.version||0,false);changed++; if(manual)syncDiagLogV216('7 CLOUD WRITE OK',type+'|'+id);
      }catch(e){
        if(!e.syncConflict)throw e;
        let freshOne=(await fetchRemoteEntities())[k];
        conflicts.push({type,id,local:l?.data||null,remote:freshOne?.data||e.remote||null,remoteVersion:freshOne?.version||e.remoteVersion||0,remoteBy:freshOne?.updated_by||'anderem Gerät',deletedLocal:!l,deletedRemote:!freshOne});
      }
    }
-   if(conflicts.length){saveSyncConflicts(conflicts);setSyncStatus('err',conflicts.length+' Konflikt(e) gefunden')}else saveSyncConflicts([]);
-   let fresh=await fetchRemoteEntities(),preserve=new Set(conflicts.map(c=>cloudKey(c.type,c.id)));applyRemoteEntities(fresh,preserve);syncBaseFromRemote(fresh);
+   if(manual)syncDiagLogV216('8 KONFLIKTE',conflicts.length+' Konflikte; saveSyncConflicts startet');
+   if(conflicts.length){syncDiagStorageWriteV216('8 KONFLIKTE SPEICHERN',()=>saveSyncConflicts(conflicts));setSyncStatus('err',conflicts.length+' Konflikt(e) gefunden')}else syncDiagStorageWriteV216('8 KONFLIKTE LEEREN',()=>saveSyncConflicts([]));
+   if(manual)syncDiagLogV216('9 CLOUD NEU LESEN','Start'); let fresh=await fetchRemoteEntities(); if(manual)syncDiagLogV216('9 CLOUD NEU LESEN OK',Object.keys(fresh).length+' Objekte');
+   let preserve=new Set(conflicts.map(c=>cloudKey(c.type,c.id))); if(manual)syncDiagLogV216('10 CLOUD ANWENDEN','applyRemoteEntities startet'); applyRemoteEntities(fresh,preserve); if(manual)syncDiagLogV216('10 CLOUD ANWENDEN OK','fertig');
+   if(manual)syncDiagLogV216('11 SYNC-BASIS SPEICHERN','syncBaseFromRemote startet'); syncBaseFromRemote(fresh); if(manual)syncDiagLogV216('11 SYNC-BASIS OK','fertig');
    lastCloudUpdatedAt=Object.values(fresh).map(x=>x.updated_at||'').sort().pop()||'';refresh();
    if(manual)alert(conflicts.length?`${conflicts.length} Konflikt(e) gefunden. Die lokale Änderung wurde nicht überschrieben.`:`Synchronisiert. ${changed} lokale Änderung(en) übertragen.`);
    if(platformNeedsCloudRepair&&!conflicts.some(c=>c.type==='platforms')){
@@ -10850,12 +10892,12 @@ async function pushEntitySyncCoreV215(manual=false){
      setTimeout(()=>queueCloudSync?.(),1050);
    }
    if(!conflicts.length)setSyncStatus('ok','Objektweise synchronisiert');return !conflicts.length;
- }catch(e){setSyncStatus('err',String(e.message||e));if(manual)alert('Synchronisierung fehlgeschlagen:\n'+String(e.message||e));return false}
+ }catch(e){if(manual)syncDiagLogV216('FEHLER',e);setSyncStatus('err',String(e.message||e));if(manual)alert('Synchronisierung fehlgeschlagen:\n'+String(e.message||e)+'\n\nDas Analysefenster zeigt die letzte erfolgreiche Stufe.');return false}
  finally{
    cloudBusy=false;
    if(pendingManualCloudPushV487){
      pendingManualCloudPushV487=false;
-     setTimeout(()=>pushEntitySyncCoreV215(true),120);
+     setTimeout(()=>pushEntitySyncCoreV216(true),120);
    }
  }
 }
@@ -10936,10 +10978,11 @@ async function previewLocalToCloudV215(){
  }catch(e){setSyncStatus('err','Vorschau fehlgeschlagen: '+String(e.message||e));alert('Vorschau konnte nicht erstellt werden:\n'+String(e.message||e));return false}
 }
 async function pushEntitySync(manual=false){
- if(!manual)return pushEntitySyncCoreV215(false);
+ if(!manual)return pushEntitySyncCoreV216(false);
  const ok=await previewLocalToCloudV215();
  if(!ok){setSyncStatus('','Übertragung abgebrochen · keine Änderung');return false}
- return pushEntitySyncCoreV215(true);
+ syncDiagStartV216();
+ return pushEntitySyncCoreV216(true);
 }
 
 async function pullEntitySyncV186(manual=false){
