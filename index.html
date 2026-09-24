@@ -27473,3 +27473,64 @@ renderPlatformReservationGantt=function(from='',to=''){
 </script>
 
 \n<!-- BV2026-1-203 · Touch-stabiler lokaler Normalmodus: alle Bereiche sichtbar, Cloud weiterhin gesperrt -->\n<style id="v202Style">\n#v202Safe{position:fixed;z-index:2147483646;left:10px;right:10px;top:10px;padding:9px 12px;border:2px solid #176044;border-radius:12px;background:#f2fbf6;box-shadow:0 6px 24px #0002;font:13px/1.35 system-ui,-apple-system,sans-serif;color:#17352b}body.v202safe{padding-top:76px!important}\n</style>\n<script id="v202LocalNormal">\n(function(){\n window.KUENZLI_RESCUE_V188=true;window.KUENZLI_RESCUE_V202=true;window.KUENZLI_RESCUE_V203=true;\n function stop(){try{stopCloudPolling()}catch(_e){}}\n function count(){try{return Array.isArray(st&&st.packages)?st.packages.filter(Boolean).length:0}catch(_e){return 0}}\n function install(){\n  stop();if(!authSession||mustChangePassword)return;\n  try{document.body.classList.remove('accessLocked');document.body.classList.add('v202safe')}catch(_e){}\n  try{document.getElementById('authModal')?.classList.remove('open')}catch(_e){}\n  try{refreshPermissionVisibility()}catch(_e){}\n  try{showModuleHome()}catch(_e){}\n  var e=document.getElementById('v202Safe');if(!e){e=document.createElement('div');e.id='v202Safe';document.body.appendChild(e)}\n  e.innerHTML='<b>V203 · Lokaler Wiederherstellungsmodus</b> · '+count()+' Pakete geschützt · alle Bereiche lokal verfügbar · Cloud Lesen/Schreiben gesperrt.';\n  stop();\n }\n if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();\n setTimeout(install,200);setTimeout(install,900);setTimeout(install,2200);\n})();\n</script>\n
+
+<!-- BV2026-1-204 · Cloud-Diagnose nur lesen; keine Anwendung, kein Push, keine Konfliktauflösung -->
+<style id="v204Style">
+#v204Diag{position:fixed;z-index:2147483647;left:10px;right:10px;bottom:10px;padding:10px 12px;border:2px solid #245b86;border-radius:12px;background:#eef7ff;box-shadow:0 6px 24px #0003;font:13px/1.35 system-ui,-apple-system,sans-serif;color:#17344c;max-height:42vh;overflow:auto}
+#v204Diag .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}#v204Diag pre{white-space:pre-wrap;margin:7px 0 0;font:12px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace}.v204Btn{border:0;border-radius:8px;padding:8px 11px;font-weight:800;background:#245b86;color:white}.v204Btn.secondary{background:#fff;color:#245b86;border:1px solid #245b86}
+</style>
+<script id="v204ReadOnlyCloudDiag">
+(function(){
+ window.KUENZLI_RESCUE_V188=true;window.KUENZLI_RESCUE_V202=true;window.KUENZLI_RESCUE_V203=true;window.KUENZLI_DIAG_V204=true;
+ function esc204(x){return String(x==null?'':x).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+ function localCount204(){try{return Array.isArray(st?.packages)?st.packages.filter(Boolean).length:0}catch(_e){return 0}}
+ function show204(msg){let p=document.getElementById('v204Out');if(p)p.textContent=msg}
+ async function read204(){
+  show204('Cloud wird NUR gelesen …\nLokaler Materialbestand bleibt unverändert.');
+  try{
+   try{stopCloudPolling()}catch(_e){}
+   cloudCfg=loadCloudConfig();
+   if(!authSession)throw new Error('Keine Cloud-Anmeldung vorhanden.');
+   if(!await ensureFreshSession())throw new Error('Cloud-Sitzung konnte nicht erneuert werden.');
+   /* Mitgliedschaft absichtlich direkt per GET lesen: KEIN claimCloudMembership(), KEIN refreshCloudIdentity(). */
+   let mu=membershipBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&user_id=eq.'+encodeURIComponent(authSession.user.id)+'&select=user_id,username,name,role,active';
+   let mr=await fetch(mu,{headers:cloudHeaders()});
+   let mt=await mr.text();if(!mr.ok)throw new Error('Lagerfreigabe HTTP '+mr.status+': '+mt.slice(0,500));
+   let members=[];try{members=JSON.parse(mt)||[]}catch(_e){}
+   let eu=entityBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&select=entity_type,entity_id,data,version,updated_at,updated_by';
+   let er=await fetch(eu,{headers:cloudHeaders()});
+   let et=await er.text();if(!er.ok)throw new Error('Cloud-Daten HTTP '+er.status+': '+et.slice(0,500));
+   let rows=[];try{rows=JSON.parse(et)||[]}catch(_e){throw new Error('Cloud-Daten konnten nicht gelesen werden.')} 
+   let counts={};rows.forEach(x=>counts[x.entity_type]=(counts[x.entity_type]||0)+1);
+   let remotePackages=rows.filter(x=>x.entity_type==='packages'&&x.data);
+   let localPackages=Array.isArray(st?.packages)?st.packages.filter(Boolean):[];
+   let lid=new Set(localPackages.map((p,i)=>String(p?.id??p?.elementId??i)));
+   let rid=new Set(remotePackages.map(x=>String(x.entity_id)));
+   let onlyLocal=[...lid].filter(x=>!rid.has(x)).length,onlyCloud=[...rid].filter(x=>!lid.has(x)).length;
+   let member=members[0]||null;
+   let lines=[
+    'V204 · READ-ONLY abgeschlossen',
+    'Lokal: '+localPackages.length+' Pakete',
+    'Cloud: '+remotePackages.length+' Paket-Datensätze',
+    'Nur lokal (ID-Vergleich): '+onlyLocal,
+    'Nur Cloud (ID-Vergleich): '+onlyCloud,
+    'Cloud-Flächen: '+(counts.areas||0)+' · Gestelle: '+(counts.racks||0),
+    'Lagerfreigabe: '+(member?((member.active===false?'INAKTIV':'vorhanden')+' · '+(member.username||'')+' · '+(member.role||'')):'KEIN Datensatz'),
+    'Cloud-Gesamtdatensätze: '+rows.length,
+    '',
+    'Es wurde nichts in localStorage angewendet und nichts in die Cloud geschrieben.'
+   ];
+   show204(lines.join('\n'));
+  }catch(e){show204('V204 · Lesetest fehlgeschlagen\n'+String(e?.message||e)+'\n\nEs wurde nichts synchronisiert oder überschrieben.');}
+  finally{try{stopCloudPolling()}catch(_e){}}
+ }
+ window.v204ReadOnly=read204;
+ function install204(){
+  try{stopCloudPolling()}catch(_e){}
+  let b=document.getElementById('v204Diag');if(!b){b=document.createElement('div');b.id='v204Diag';document.body.appendChild(b)}
+  b.innerHTML='<div class="row"><b>V204 · Cloud sicher prüfen</b><span>'+localCount204()+' lokale Pakete geschützt</span><button class="v204Btn" type="button" onclick="v204ReadOnly()">Cloud nur lesen</button><button class="v204Btn secondary" type="button" onclick="exportLocalRescueV188()">Lokale Sicherung</button></div><pre id="v204Out">Noch keine Cloud-Abfrage. Cloud Pull/Push bleibt gesperrt.</pre>';
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install204);else install204();
+ setTimeout(install204,400);
+})();
+</script>
