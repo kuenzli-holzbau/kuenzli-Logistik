@@ -27372,3 +27372,63 @@ renderPlatformReservationGantt=function(from='',to=''){
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(refreshV191,250));else setTimeout(refreshV191,250);
 })();
 </script>
+
+<!-- V192: sichere Reparatur/Diagnose der Lager-Mitgliedschaft; keine Lagerdaten-Synchronisation -->
+<style id="v192MembershipStyle">
+.v192Box{margin:14px 0;padding:14px;border:2px solid #356b4f;border-radius:12px;background:#f1faf5;display:grid;gap:10px}.v192Box .toolbar{display:flex;gap:8px;flex-wrap:wrap}.v192State{white-space:pre-wrap;font-size:13px}.v192Warn{font-weight:700;color:#24543b}
+</style>
+<script id="v192MembershipPatch">
+(function(){
+ window.KUENZLI_RESCUE_V188=true;
+ window.KUENZLI_REPAIR_V192=true;
+ function out(s){const e=document.getElementById('v192State');if(e)e.textContent=s||''}
+ function uname(){try{return cleanUsername(authUsername()||'')}catch(_e){return ''}}
+ async function inviteForUser(){
+   await ensureFreshSession();
+   const u=uname();if(!u)throw new Error('Kein Cloud-Benutzername in der aktuellen Sitzung gefunden.');
+   const url=inviteBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&username=eq.'+encodeURIComponent(u)+'&select=username,name,role,active,claimed_by&limit=1';
+   const r=await fetch(url,{headers:cloudHeaders()});if(!r.ok)throw new Error((await r.text())||('HTTP '+r.status));
+   return (await r.json())[0]||null;
+ }
+ window.v192CheckMembership=async function(){
+   out('Lagerfreigabe wird nur gelesen …');
+   try{
+     if(!authSession)throw new Error('Keine gültige Cloud-Sitzung.');
+     stopCloudPolling();
+     const row=await inviteForUser();
+     const uid=String(authSession?.user?.id||'');
+     if(!row){out('Keine Freigabe für Benutzer „'+uname()+'“ und Lager „'+cloudCfg.warehouseId+'“ gefunden.\nEs wurde nichts geändert.');return}
+     const owner=String(row.claimed_by||'');
+     let state=!row.active?'DEAKTIVIERT':!owner?'NOCH NICHT AKTIVIERT':owner===uid?'DIESEM KONTO ZUGEORDNET':'EINEM ANDEREN KONTO ZUGEORDNET';
+     out('Freigabe gefunden.\nBenutzer: '+row.username+' · Name: '+(row.name||'–')+' · Rolle: '+(row.role||'–')+'\nStatus: '+state+'\n\nEs wurde nichts geändert. Cloud → Gerät und Gerät → Cloud bleiben gesperrt.');
+   }catch(e){out('Prüfung fehlgeschlagen: '+String(e?.message||e)+'\nEs wurde nichts geändert.');}
+ };
+ window.v192RepairMembership=async function(){
+   out('Lagerfreigabe wird geprüft …');
+   try{
+     if(!authSession)throw new Error('Keine gültige Cloud-Sitzung.');
+     stopCloudPolling();
+     const row=await inviteForUser(),uid=String(authSession?.user?.id||'');
+     if(!row)throw new Error('Für Benutzer „'+uname()+'“ existiert keine vorbereitete Lagerfreigabe. Ein Administrator muss diese zuerst anlegen.');
+     if(!row.active)throw new Error('Die vorbereitete Lagerfreigabe ist deaktiviert. Ein Administrator muss sie aktivieren.');
+     if(row.claimed_by&&String(row.claimed_by)!==uid)throw new Error('Diese Lagerfreigabe ist bereits einem anderen Cloud-Konto zugeordnet. Es wurde bewusst nichts geändert.');
+     if(!row.claimed_by){
+       const ok=await claimCloudMembership(row.username,true);if(!ok)throw new Error('Die Lagerfreigabe konnte nicht diesem Konto zugeordnet werden.');
+     }
+     const ok=await refreshCloudIdentity(false);stopCloudPolling();
+     if(!ok||!cloudMember)throw new Error('Freigabe ist vorhanden, konnte aber nach der Reparatur nicht als aktive Mitgliedschaft geladen werden.');
+     out('Lagerfreigabe ist wieder aktiv.\nBenutzer: '+(cloudMember.username||row.username)+' · Name: '+(cloudMember.name||row.name||'–')+' · Rolle: '+(cloudMember.role||row.role||'–')+'\n\nWICHTIG: Es wurden keine Lager-, Paket-, Gestell- oder Inventurdaten gelesen, überschrieben oder synchronisiert. Cloud → Gerät und Gerät → Cloud bleiben gesperrt.');
+     try{setSyncStatus('err','V192: Lagerfreigabe aktiv · Datensynchronisation weiterhin gesperrt')}catch(_e){}
+     try{if(typeof runSystemCheck==='function')runSystemCheck(false)}catch(_e){}
+   }catch(e){stopCloudPolling();out('Reparatur nicht durchgeführt: '+String(e?.message||e)+'\nLokale Lagerdaten bleiben unverändert. Datensynchronisation bleibt gesperrt.');}
+ };
+ function install(){
+   const host=document.getElementById('v190Box')||document.getElementById('v189RepairBox')||document.getElementById('authSignedIn')||document.querySelector('.app');
+   if(!host||document.getElementById('v192Box'))return;
+   const b=document.createElement('div');b.id='v192Box';b.className='v192Box';
+   b.innerHTML='<b>Lagerfreigabe-Reparatur V192</b><div class="v192Warn">Nur die Benutzer-/Lagerfreigabe wird geprüft bzw. wieder dem aktuellen Cloud-Konto zugeordnet. Lagerdaten bleiben gesperrt.</div><div class="toolbar"><button class="btn secondary" type="button" onclick="v192CheckMembership()">1 · Lagerfreigabe nur prüfen</button><button class="btn" type="button" onclick="v192RepairMembership()">2 · Lagerfreigabe reparieren</button></div><div id="v192State" class="v192State muted">Noch nichts geändert.</div>';
+   host.appendChild(b);try{stopCloudPolling()}catch(_e){}
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(install,120));else setTimeout(install,120);setTimeout(install,900);
+})();
+</script>
