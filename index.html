@@ -10376,6 +10376,10 @@ async function adminUpdateCloudUser(username,name,role,active){await ensureFresh
 async function editCloudUser(username){if(!requireAdmin()||!cloudReady())return;try{let r=await fetch(inviteBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&username=eq.'+encodeURIComponent(username)+'&select=username,name,role,active,claimed_by&limit=1',{headers:cloudHeaders()});if(!r.ok)throw new Error((await r.text())||('HTTP '+r.status));let row=(await r.json())[0];if(!row)return;let name=prompt('Anzeigename:',row.name||username);if(name===null)return;name=name.trim();if(!name)return;let role=prompt('Rolle: Mitarbeiter, Lagerverantwortlicher oder Administrator',row.role||'Mitarbeiter');if(role===null)return;role=role.trim();if(!['Mitarbeiter','Lagerverantwortlicher','Administrator'].includes(role)){alert('Ungültige Rolle.');return}await adminUpdateCloudUser(username,name,role,row.active);if(row.claimed_by===authSession?.user?.id)await refreshCloudIdentity();renderCloudUsers();alert('Cloud-Benutzer wurde aktualisiert.')}catch(e){alert('Benutzer konnte nicht geändert werden:\n'+String(e.message||e))}}
 
 function membershipBase(){return String(cloudCfg.url||'').replace(/\/+$/,'')+'/rest/v1/warehouse_members'}
+/* V207: Cloud-Ausfall ist NICHT gleich fehlende Lagerfreigabe.
+   Nur eine erfolgreich beantwortete Abfrage ohne Mitgliedschaft sperrt den Zugang.
+   Bei HTTP 5xx/PGRST003 bleibt ein bereits authentifizierter Benutzer lokal arbeitsfähig;
+   dieser Offline-Fallback ist ausdrücklich NICHT cloudReady und kann daher weder Pull noch Push auslösen. */
 async function refreshCloudIdentity(attemptClaim=true){
  cloudCfg=loadCloudConfig();
  if(!cloudAuthEnabled()||!authSession){cloudMember=null;renderAuthUI();renderUserHeader();return false}
@@ -10383,10 +10387,12 @@ async function refreshCloudIdentity(attemptClaim=true){
  try{
    let url=membershipBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&user_id=eq.'+encodeURIComponent(authSession.user.id)+'&active=eq.true&select=user_id,username,name,role,active';
    let r=await fetch(url,{headers:cloudHeaders()});
-   if(!r.ok)throw new Error((await r.text())||('HTTP '+r.status));
-   let rows=await r.json();cloudMember=rows[0]||null;
+   let txt=await r.text();
+   if(!r.ok){let err=new Error(txt||('HTTP '+r.status));err.httpStatus=r.status;err.responseText=txt;throw err}
+   let rows=[];try{rows=txt?JSON.parse(txt):[]}catch(e){throw new Error('Ungültige Antwort der Lagerfreigabe')}
+   cloudMember=rows[0]||null;
 
-   // V64: vorhandenes Auth-Konto kann eine später angelegte Freigabe nachträglich übernehmen.
+   // Nur bei einer ERFOLGREICHEN leeren Antwort darf der normale Claim versucht werden.
    if(!cloudMember&&attemptClaim){
      let username=cleanUsername(authUsername()||'');
      if(username){
@@ -10397,6 +10403,7 @@ async function refreshCloudIdentity(attemptClaim=true){
 
    if(cloudMember?.role==='Administrator')markCloudSetupComplete();
    if(cloudMember){
+     try{localStorage.setItem('kuenzli_last_cloud_member_v207',JSON.stringify({warehouseId:cloudCfg.warehouseId,userId:authSession.user.id,member:cloudMember,at:new Date().toISOString()}))}catch(e){}
      await getPasswordChangeRequirement();
      setTimeout(()=>startCloudPolling(),0);
    }else{
@@ -10406,6 +10413,18 @@ async function refreshCloudIdentity(attemptClaim=true){
    if(!cloudMember)setSyncStatus('err','Angemeldet – Cloud-Lagerfreigabe fehlt');
    return !!cloudMember;
  }catch(e){
+   let msg=String(e?.responseText||e?.message||e||'');
+   let transient=(Number(e?.httpStatus)>=500)||/PGRST003|timed out acquiring connection|connection pool|HTTP 50[0234]/i.test(msg);
+   if(transient&&authSession){
+     let cached=null;try{let c=JSON.parse(localStorage.getItem('kuenzli_last_cloud_member_v207')||'null');if(c&&c.warehouseId===cloudCfg.warehouseId&&c.userId===authSession.user.id)cached=c.member}catch(x){}
+     let local=activeUser?.()||null;
+     cloudMember=cached||{user_id:authSession.user.id,username:authUsername()||'',name:local?.name||authUsername()||'Offline',role:local?.role||'Mitarbeiter',active:true,__offlineV207:true};
+     cloudMember.__offlineV207=true;
+     mustChangePassword=false;
+     renderAuthUI();renderUserHeader();
+     setSyncStatus('err','Cloud vorübergehend nicht erreichbar – sicherer Offline-Modus, kein Pull/Push');
+     return true;
+   }
    cloudMember=null;renderAuthUI();renderUserHeader();
    setSyncStatus('err','Berechtigung konnte nicht geladen werden');
    return false
@@ -10414,28 +10433,37 @@ async function refreshCloudIdentity(attemptClaim=true){
 function cloudEditorOpen(){
  return [...document.querySelectorAll('.modal.open')].length>0;
 }
+let cloudPollInFlightV207=false,cloudPollBackoffUntilV207=0,cloudPollFailuresV207=0;
 function startCloudPolling(){
  stopCloudPolling();
  cloudCfg=loadCloudConfig();
  if(!cloudReady()||!cloudCfg.autoSync||!authSession||!cloudMember)return;
- cloudPollTimer=setInterval(()=>checkCloudForUpdates(),8000);
+ // V207: 8 Sekunden -> 5 Minuten. Kein Voll-Pull aus dem Polling.
+ cloudPollTimer=setInterval(()=>checkCloudForUpdates(),300000);
 }
 function stopCloudPolling(){if(cloudPollTimer){clearInterval(cloudPollTimer);cloudPollTimer=null}}
 async function checkCloudForUpdates(force=false){
- if(cloudBusy||!cloudReady()||!authSession||!cloudMember||document.hidden)return;
+ if(cloudPollInFlightV207||cloudBusy||!cloudReady()||!authSession||!cloudMember||document.hidden)return;
  if(!force&&cloudEditorOpen())return;
+ if(Date.now()<cloudPollBackoffUntilV207)return;
+ cloudPollInFlightV207=true;
  try{
    await ensureFreshSession();
    let url=entityBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&select=updated_at&order=updated_at.desc&limit=1';
-   let r=await fetch(url,{headers:cloudHeaders()});if(!r.ok)return;
-   let rows=await r.json(),remote=rows[0]?.updated_at||'';
-   if(remote&&lastCloudUpdatedAt&&remote>lastCloudUpdatedAt)await pullEntitySync(false);
-   else if(remote&&!lastCloudUpdatedAt){
-     // Beim ersten Check einmal wirklich laden, damit keine Änderung eines anderen
-     // Benutzers zwischen Seitenstart und Polling verloren geht.
-     await pullEntitySync(false);
-   }
- }catch(e){}
+   let r=await fetch(url,{headers:cloudHeaders()});
+   let txt=await r.text();
+   if(!r.ok){let er=new Error(txt||('HTTP '+r.status));er.httpStatus=r.status;throw er}
+   let rows=[];try{rows=txt?JSON.parse(txt):[]}catch(e){}
+   let remote=rows[0]?.updated_at||'';
+   cloudPollFailuresV207=0;cloudPollBackoffUntilV207=0;
+   // V207: Polling ist nur ein leichter Änderungsindikator. Niemals automatisch Cloud -> Gerät.
+   if(remote&&lastCloudUpdatedAt&&remote>lastCloudUpdatedAt)setSyncStatus('','Cloud-Änderung verfügbar – manueller Abgleich erforderlich');
+   else if(remote&&!lastCloudUpdatedAt)lastCloudUpdatedAt=remote;
+ }catch(e){
+   cloudPollFailuresV207=Math.min(cloudPollFailuresV207+1,6);
+   cloudPollBackoffUntilV207=Date.now()+Math.min(300000*Math.pow(2,cloudPollFailuresV207-1),3600000);
+   setSyncStatus('err','Cloud vorübergehend nicht erreichbar – lokaler Betrieb bleibt aktiv');
+ }finally{cloudPollInFlightV207=false}
 }
 
 
@@ -10951,7 +10979,7 @@ function loadCloudConfig(){
 let cloudCfg=loadCloudConfig(),cloudTimer=null,cloudBusy=false,lastCloudMessage='';
 
 function cloudReady(){
- return cloudCfg.mode==='supabase' && /^https:\/\/.+\.supabase\.co\/?$/.test(String(cloudCfg.url||'').trim()) && !!String(cloudCfg.anonKey||'').trim() && !!String(cloudCfg.warehouseId||'').trim() && !!authSession && !!cloudMember
+ return cloudCfg.mode==='supabase' && /^https:\/\/.+\.supabase\.co\/?$/.test(String(cloudCfg.url||'').trim()) && !!String(cloudCfg.anonKey||'').trim() && !!String(cloudCfg.warehouseId||'').trim() && !!authSession && !!cloudMember && !cloudMember.__offlineV207
 }
 function setSyncStatus(kind,msg){
  lastCloudMessage=msg||'';
@@ -19937,22 +19965,23 @@ refresh();
 if(cloudCfg.mode==='supabase'&&authSession){
  setTimeout(async()=>{
    if(!cloudMember)await refreshCloudIdentity();
+   /* V207: Beim Start niemals automatisch Cloud -> Gerät laden.
+      Lokaler Bestand bleibt führend, bis ein manueller Abgleich ausgelöst wird. */
    if(cloudReady()&&cloudCfg.autoSync){
-     /* V164: erster Abgleich ist explizit Cloud -> Gerät. Erst danach Polling. */
-     await pullEntitySync(false);
-     try{
-       if(typeof renderFilters==='function')renderFilters();
-       if(typeof renderInv==='function')renderInv();
-     }catch(e){console.error('V164 Materialansicht nach Cloud-Start',e)}
+     setSyncStatus('','Cloud verbunden – automatischer Start-Pull deaktiviert');
+     startCloudPolling();
    }
-   startCloudPolling();
  },250);
 }
 document.addEventListener('visibilitychange',()=>{
- if(!document.hidden&&cloudCfg.autoSync){startCloudPolling();checkCloudForUpdates(true)}
+ if(!document.hidden&&cloudCfg.autoSync){
+   if(cloudMember?.__offlineV207)refreshCloudIdentity(false);else{startCloudPolling();checkCloudForUpdates(true)}
+ }
 });
 window.addEventListener('focus',()=>{
- if(cloudCfg.autoSync){startCloudPolling();checkCloudForUpdates(true)}
+ if(cloudCfg.autoSync){
+   if(cloudMember?.__offlineV207)refreshCloudIdentity(false);else{startCloudPolling();checkCloudForUpdates(true)}
+ }
 });
 
 
@@ -27084,3 +27113,5 @@ renderPlatformReservationGantt=function(from='',to=''){
  setTimeout(()=>{try{if(document.getElementById('allControlBody'))renderFullControl()}catch(_e){}},0);
 })();
 </script>
+
+<!-- V207: Supabase resilient local-first cloud guard; 5-minute polling; no automatic startup/full pull; transient 5xx offline fallback. -->
