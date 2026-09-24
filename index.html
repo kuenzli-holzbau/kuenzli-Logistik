@@ -4987,6 +4987,12 @@ window.APP_RELEASE = {
 <div id="authIdentity" class="authState"></div>
 <div class="toolbar"><button class="btn secondary" onclick="refreshCloudIdentity()">Berechtigung aktualisieren</button><button class="btn secondary" onclick="changeOwnPassword()">Passwort ändern</button><button class="btn danger" onclick="signOutCloud()">Abmelden</button></div>
 <div class="v188RescueBox"><b>Rettungsmodus aktiv</b><div>Cloud-Synchronisierung ist in V188 vorsorglich pausiert. Keine lokalen Inventurdaten werden automatisch in die Cloud geschrieben oder von dort überschrieben.</div><button class="btn" type="button" onclick="exportLocalRescueV188()">Lokale Daten sichern</button><div id="v188RescueSummaryIn" class="muted"></div></div>
+<div id="v197MembershipRescue" class="v188RescueBox" style="border-color:#1d5f8a;background:#eef7fd">
+<b>Lagerfreigabe-Reparatur V197</b>
+<div><b>Direkt im ursprünglichen Cloud-Anmeldefenster eingebaut.</b> Diese Prüfung liest nur Benutzer-/Lagerfreigabe. Paket-, Gestell- und Inventurdaten werden weder gelesen noch synchronisiert.</div>
+<div class="toolbar"><button class="btn secondary" type="button" onclick="v197CheckMembership()">1 · Lagerfreigabe nur prüfen</button><button class="btn" id="v197RepairBtn" type="button" onclick="v197RepairMembership()" style="display:none">2 · Lagerfreigabe reparieren</button></div>
+<div id="v197MembershipState" class="muted" style="white-space:pre-wrap">Bereit. Zuerst Schritt 1 ausführen.</div>
+</div>
 </div>
 </div></div>
 
@@ -6827,6 +6833,56 @@ async function signOutCloud(){
  mustChangePassword=false;
  saveAuthSession(null);cloudMember=null;stopCloudPolling();renderAuthUI();refresh();
  alert('Abgemeldet.');
+}
+async function v197MembershipInvite(){
+ if(!authSession)throw new Error('Keine gültige Cloud-Sitzung.');
+ if(!await ensureFreshSession())throw new Error('Cloud-Sitzung ist abgelaufen.');
+ cloudCfg=loadCloudConfig();
+ const username=cleanUsername(authUsername()||'');
+ if(!username)throw new Error('Kein Benutzername in der Cloud-Sitzung gefunden.');
+ const url=inviteBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&username=eq.'+encodeURIComponent(username)+'&select=username,name,role,active,claimed_by&limit=1';
+ const r=await fetch(url,{headers:cloudHeaders()});
+ if(!r.ok)throw new Error((await r.text())||('HTTP '+r.status));
+ return (await r.json())[0]||null;
+}
+async function v197CheckMembership(){
+ const out=E('v197MembershipState'),repair=E('v197RepairBtn');
+ if(repair)repair.style.display='none';
+ if(out)out.textContent='Lagerfreigabe wird ausschließlich gelesen …';
+ try{
+   stopCloudPolling();
+   const row=await v197MembershipInvite(),uid=String(authSession?.user?.id||'');
+   if(!row){if(out)out.textContent='Keine vorbereitete Lagerfreigabe für diesen Benutzer gefunden.\nEs wurde nichts geändert.';return}
+   const owner=String(row.claimed_by||'');
+   const state=!row.active?'DEAKTIVIERT':!owner?'NOCH NICHT AKTIVIERT':owner===uid?'DIESEM KONTO ZUGEORDNET':'EINEM ANDEREN KONTO ZUGEORDNET';
+   if(out)out.textContent='Freigabe gefunden.\nBenutzer: '+row.username+' · Name: '+(row.name||'–')+' · Rolle: '+(row.role||'–')+'\nStatus: '+state+'\n\nEs wurde nichts geändert. Lagerdaten-Synchronisation bleibt gesperrt.';
+   if(repair && row.active && (!owner || owner===uid))repair.style.display='inline-flex';
+ }catch(e){if(out)out.textContent='Prüfung fehlgeschlagen: '+String(e?.message||e)+'\nEs wurde nichts geändert.'}
+ finally{stopCloudPolling()}
+}
+async function v197RepairMembership(){
+ const out=E('v197MembershipState');
+ if(!confirm('Nur die Lagerfreigabe reparieren?\n\nEs werden KEINE Paket-, Gestell- oder Inventurdaten synchronisiert.'))return;
+ if(out)out.textContent='Lagerfreigabe wird repariert …';
+ try{
+   stopCloudPolling();
+   const row=await v197MembershipInvite(),uid=String(authSession?.user?.id||'');
+   if(!row)throw new Error('Keine vorbereitete Lagerfreigabe vorhanden.');
+   if(!row.active)throw new Error('Die vorbereitete Lagerfreigabe ist deaktiviert.');
+   if(row.claimed_by&&String(row.claimed_by)!==uid)throw new Error('Die Freigabe gehört bereits zu einem anderen Cloud-Konto.');
+   if(!row.claimed_by){
+     const url=String(cloudCfg.url||'').replace(/\/+$/,'')+'/rest/v1/rpc/claim_warehouse_membership';
+     const r=await fetch(url,{method:'POST',headers:cloudHeaders(),body:JSON.stringify({p_warehouse:cloudCfg.warehouseId,p_username:row.username})});
+     const txt=await r.text();let ok=false;try{ok=JSON.parse(txt)===true}catch(_e){}
+     if(!r.ok||!ok)throw new Error(txt||('HTTP '+r.status));
+   }
+   // Read-only verification. Deliberately do NOT call refreshCloudIdentity(), pullEntitySync(), persist() or queueCloudSync().
+   const verifyUrl=membershipBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&user_id=eq.'+encodeURIComponent(uid)+'&active=eq.true&select=user_id,username,name,role,active&limit=1';
+   const vr=await fetch(verifyUrl,{headers:cloudHeaders()});if(!vr.ok)throw new Error((await vr.text())||('HTTP '+vr.status));
+   const member=(await vr.json())[0]||null;if(!member)throw new Error('Freigabe konnte nach der Zuordnung nicht verifiziert werden.');
+   if(out)out.textContent='Lagerfreigabe erfolgreich verifiziert.\nBenutzer: '+(member.username||row.username)+' · Name: '+(member.name||row.name||'–')+' · Rolle: '+(member.role||row.role||'–')+'\n\nKeine Lager-, Paket-, Gestell- oder Inventurdaten wurden gelesen, überschrieben oder synchronisiert. Bitte jetzt noch NICHT normal synchronisieren.';
+ }catch(e){if(out)out.textContent='Reparatur nicht durchgeführt: '+String(e?.message||e)+'\nLokale Lagerdaten bleiben unverändert.'}
+ finally{stopCloudPolling()}
 }
 let activeMainModule='';
 function showModuleHome(){
@@ -10289,7 +10345,7 @@ function saveHoursPlan(){
  p.updatedAt=new Date().toISOString();saveProjects();closeM('hoursPlannerModal');openProjectDetail(p.id);
 }
 function applyAccessGate(){
- let allowed=!!(authSession&&cloudMember&&!mustChangePassword);
+ let allowed=!!(authSession&&!mustChangePassword); /* V197 rescue: local app access; cloudReady() remains false without membership */
  document.body.classList.toggle('accessLocked',!allowed);
  let modal=E('authModal'),home=E('moduleHome'),app=document.querySelector('.app');
  if(!allowed){
