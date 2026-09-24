@@ -27489,3 +27489,52 @@ renderPlatformReservationGantt=function(from='',to=''){
  setTimeout(guard,250);setTimeout(guard,1200);
 })();
 </script>
+
+<!-- V195: Lagerfreigabe-Reparatur direkt auf der Cloud-Sperrseite; Lagerdaten bleiben gesperrt -->
+<style id="v195GateRepairStyle">
+#v195GateRepair{margin-top:14px;padding:14px;border:2px solid #356b4f;border-radius:12px;background:#f1faf5;display:grid;gap:10px}
+#v195GateRepair .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+#v195GateRepairState{white-space:pre-wrap;font-size:13px}
+</style>
+<script id="v195GateRepairPatch">
+(function(){
+ window.KUENZLI_REPAIR_V195=true;
+ window.KUENZLI_RESCUE_V188=true;
+ function install(){
+   try{stopCloudPolling()}catch(_e){}
+   var host=document.getElementById('authSignedIn');
+   if(!host)return false;
+   var old=document.getElementById('v195GateRepair');
+   if(old)return true;
+   var b=document.createElement('div');
+   b.id='v195GateRepair';
+   b.innerHTML='<b>Lagerfreigabe-Reparatur V195</b><div><b>Nur die Benutzer-/Lagerfreigabe wird geprüft.</b> Paket-, Gestell- und Inventurdaten bleiben vollständig gesperrt.</div><div class="toolbar"><button class="btn secondary" type="button" id="v195CheckBtn">1 · Lagerfreigabe nur prüfen</button><button class="btn" type="button" id="v195RepairBtn" style="display:none">2 · Lagerfreigabe reparieren</button></div><div id="v195GateRepairState" class="muted">Noch nichts geändert.</div>';
+   host.appendChild(b);
+   var state=b.querySelector('#v195GateRepairState'),check=b.querySelector('#v195CheckBtn'),repair=b.querySelector('#v195RepairBtn');
+   function copyState(){var src=document.getElementById('v192State');if(src&&src!==state)state.textContent=src.textContent||''}
+   check.onclick=async function(){
+     repair.style.display='none';state.textContent='Lagerfreigabe wird nur gelesen …';
+     var temp=document.getElementById('v192State'),made=false;
+     if(!temp){temp=document.createElement('div');temp.id='v192State';temp.style.display='none';document.body.appendChild(temp);made=true;}
+     try{await window.v192CheckMembership();copyState();
+       var t=state.textContent||'';
+       if(/NOCH NICHT AKTIVIERT|DIESEM KONTO ZUGEORDNET/.test(t))repair.style.display='inline-flex';
+     }catch(e){state.textContent='Prüfung fehlgeschlagen: '+String(e&&e.message||e)+'\nEs wurde nichts geändert.'}
+     if(made&&temp.parentNode)temp.parentNode.removeChild(temp);
+     try{stopCloudPolling()}catch(_e){}
+   };
+   repair.onclick=async function(){
+     if(!confirm('Nur die Lagerfreigabe reparieren?\n\nEs werden KEINE Paket-, Gestell- oder Inventurdaten synchronisiert.'))return;
+     var temp=document.getElementById('v192State'),made=false;
+     if(!temp){temp=document.createElement('div');temp.id='v192State';temp.style.display='none';document.body.appendChild(temp);made=true;}
+     try{await window.v192RepairMembership();copyState();}catch(e){state.textContent='Reparatur nicht durchgeführt: '+String(e&&e.message||e)+'\nLokale Lagerdaten bleiben unverändert.'}
+     if(made&&temp.parentNode)temp.parentNode.removeChild(temp);
+     try{stopCloudPolling()}catch(_e){}
+   };
+   return true;
+ }
+ function boot(){install();setTimeout(install,250);setTimeout(install,1000);setTimeout(install,2500)}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+ new MutationObserver(function(){install()}).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
