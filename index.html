@@ -4774,7 +4774,7 @@ window.APP_RELEASE = {
      <button class="btn" onclick="saveCloudSettings()">Speichern</button>
      <button class="btn secondary" onclick="openAuthModal()">Anmelden / Konto</button>
      <button class="btn secondary" onclick="testCloudConnection()">Verbindung testen</button>
-     <button class="btn secondary" onclick="syncDiagStartV216();syncDiagLogV216('0 BUTTON V219','Direkter Button-Hook aktiv');setTimeout(function(){setSyncStatus('syncing','Lokal → Cloud gestartet');pushEntitySyncCoreV216(true)},150)">Lokal → Cloud · Analyse V219</button>
+     <button class="btn secondary" onclick="setSyncStatus('syncing','Lokal → Cloud gestartet');pushEntitySync(true)">Lokal → Cloud</button>
      <button class="btn secondary" onclick="pullEntitySync(true)">Cloud → Gerät</button>
      <button class="btn secondary" type="button" onclick="downloadBackupV495()">Datensicherung herunterladen</button>
      <input id="backupFileV495" type="file" accept=".json,application/json" style="display:none" onchange="restoreBackupV495(this.files&&this.files[0]);this.value=''">
