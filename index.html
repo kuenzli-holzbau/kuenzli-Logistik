@@ -27202,3 +27202,61 @@ renderPlatformReservationGantt=function(from='',to=''){
  setTimeout(show,500);
 })();
 </script>
+
+<!-- V189: sicherer Cloud-Reparaturmodus; lokale iPad-Daten bleiben führend, keinerlei automatischer Cloud-Schreib-/Leseabgleich -->
+<style id="v189RepairStyle">
+.v189RepairBox{margin-top:12px;padding:14px;border:2px solid #1d5f8a;border-radius:12px;background:#eef7fd;display:grid;gap:9px}
+.v189RepairState{font-size:13px;white-space:pre-wrap}.v189RepairBox .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+</style>
+<script id="v189RepairPatch">
+(function(){
+ window.KUENZLI_RESCUE_V188=true; // absichtlich: sämtliche normalen Pull/Push-Wege bleiben blockiert
+ window.KUENZLI_REPAIR_V189=true;
+
+ function v189Summary(){
+   let s=null;try{s=JSON.parse(localStorage.getItem('holzlager_v8')||'null')}catch(_e){}
+   let conflicts=[];try{conflicts=JSON.parse(localStorage.getItem('holzlager_conflicts_v49')||'[]')||[]}catch(_e){}
+   return {packages:Array.isArray(s?.packages)?s.packages.length:0,controls:Array.isArray(s?.controls)?s.controls.length:0,areas:Array.isArray(s?.areas)?s.areas.length:0,racks:Array.isArray(s?.racks)?s.racks.length:0,conflicts:Array.isArray(conflicts)?conflicts.length:0};
+ }
+ function v189StateText(extra){
+   const x=v189Summary();
+   return 'Lokaler Stand geschützt: '+x.packages+' Pakete · '+x.controls+' Kontrollen · '+x.areas+' Flächen · '+x.racks+' Gestelle\nGespeicherte Cloud-Konflikte: '+x.conflicts+(extra?'\n'+extra:'');
+ }
+ window.v189RefreshMembership=async function(){
+   const out=document.getElementById('v189RepairState');if(out)out.textContent=v189StateText('Cloud-Berechtigung wird nur gelesen …');
+   try{
+     if(!authSession){if(out)out.textContent=v189StateText('Keine gültige Cloud-Sitzung. Bitte normal anmelden. Lokale Daten bleiben geschützt.');return}
+     const ok=await refreshCloudIdentity(true);
+     if(out)out.textContent=v189StateText(ok?'Cloud-Lagerfreigabe gefunden: '+(cloudMember?.name||cloudMember?.username||'Benutzer')+' · '+(cloudMember?.role||'')+'.\nSynchronisierung bleibt weiterhin gesperrt, bis die Konflikte kontrolliert übernommen wurden.':'Cloud-Lagerfreigabe weiterhin nicht gefunden. Es wurde nichts synchronisiert oder überschrieben.');
+   }catch(e){if(out)out.textContent=v189StateText('Prüfung fehlgeschlagen: '+String(e?.message||e)+'\nEs wurde nichts synchronisiert oder überschrieben.');}
+ };
+
+ // V189: Zugriff auf den lokal gesicherten Stand erlauben, auch wenn die Cloud-Mitgliedschaft gerade nicht geladen werden kann.
+ // Das ändert keine Daten und hebt die Sync-Sperre NICHT auf.
+ const oldGate=window.applyAccessGate;
+ window.applyAccessGate=function(){
+   if(window.KUENZLI_REPAIR_V189===true && authSession && !mustChangePassword){
+     document.body.classList.remove('accessLocked');
+     const modal=document.getElementById('authModal');if(modal)modal.classList.remove('open');
+     const app=document.querySelector('.app');if(app)app.style.visibility='';
+     if(!activeMainModule)try{showModuleHome()}catch(_e){}
+     return;
+   }
+   return oldGate.apply(this,arguments);
+ };
+
+ function install(){
+   let host=document.getElementById('authSignedIn')||document.getElementById('authModal');
+   if(host&&!document.getElementById('v189RepairBox')){
+     const box=document.createElement('div');box.id='v189RepairBox';box.className='v189RepairBox';
+     box.innerHTML='<b>Cloud-Reparaturmodus V189</b><div>Der lokale iPad-Stand bleibt geschützt. Automatische Synchronisierung sowie Cloud → Gerät und Gerät → Cloud sind weiterhin gesperrt.</div><div class="toolbar"><button class="btn" type="button" onclick="v189RefreshMembership()">Cloud-Berechtigung prüfen</button><button class="btn secondary" type="button" onclick="exportLocalRescueV188()">Lokale Daten erneut sichern</button></div><div id="v189RepairState" class="v189RepairState muted"></div>';
+     host.appendChild(box);
+   }
+   const out=document.getElementById('v189RepairState');if(out)out.textContent=v189StateText('Noch keine Cloud-Daten angewendet.');
+   try{renderAuthUI()}catch(_e){}
+   try{setSyncStatus('err','V189 Reparaturmodus · lokaler Stand geschützt · Cloud-Sync gesperrt')}catch(_e){}
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(install,50));else setTimeout(install,50);
+ setTimeout(install,700);
+})();
+</script>
