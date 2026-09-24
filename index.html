@@ -27538,3 +27538,56 @@ renderPlatformReservationGantt=function(from='',to=''){
  new MutationObserver(function(){install()}).observe(document.documentElement,{childList:true,subtree:true});
 })();
 </script>
+
+<!-- V196: eigenständiger Rettungsbildschirm VOR der normalen Cloud-Sperre -->
+<style id="v196RescueStyle">
+#v196RescueScreen{position:fixed;inset:0;z-index:2147483647;background:#f5f7f6;overflow:auto;padding:24px;box-sizing:border-box;font-family:inherit;color:#17231d}
+#v196RescueCard{max-width:760px;margin:5vh auto;background:#fff;border:2px solid #356b4f;border-radius:18px;padding:22px;box-shadow:0 12px 40px rgba(0,0,0,.16);display:grid;gap:14px}
+#v196RescueCard h2{margin:0;color:#214d38}#v196RescueCard .toolbar{display:flex;gap:10px;flex-wrap:wrap}
+#v196RescueCard button{font:inherit;font-weight:700;border:0;border-radius:10px;padding:12px 16px;background:#285b43;color:#fff}
+#v196RescueCard button.secondary{background:#e8efeb;color:#214d38;border:1px solid #9fb5aa}
+#v196State{white-space:pre-wrap;padding:12px;border-radius:10px;background:#f3f5f4;min-height:42px}
+#v196Safety{padding:12px;border-radius:10px;background:#fff5d9;border:1px solid #e5c66b}
+</style>
+<script id="v196RescuePatch">
+(function(){
+ window.KUENZLI_RESCUE_V188=true; window.KUENZLI_REPAIR_V196=true;
+ function gateVisible(){var a=document.getElementById('authGate');var s=document.getElementById('authSignedIn');return !!(s || (a&&getComputedStyle(a).display!=='none'));}
+ function stop(){try{stopCloudPolling()}catch(_e){} try{window.cloudReady=false}catch(_e){}}
+ function rawBackup(){
+   try{
+     var raw=localStorage.getItem('holzlager_v8'); if(!raw)throw new Error('Kein lokaler Lagerdatenstand gefunden.');
+     var parsed=null,summary={}; try{parsed=JSON.parse(raw);summary={packages:(parsed.packages||[]).length,controls:(parsed.controls||[]).length,areas:(parsed.areas||[]).length,racks:(parsed.racks||[]).length,activeControlId:parsed.activeControlId??null}}catch(_e){}
+     var env={type:'KUENZLI-LOGISTIK-LOCAL-RESCUE',version:'V196',exportedAt:new Date().toISOString(),page:location.href,summary:summary,localStorage:{holzlager_v8:raw}};
+     ['holzlager_conflicts_v49','holzlager_backups_v54','holzlager_projects_v1','holzlager_small_orders_v1'].forEach(function(k){var v=localStorage.getItem(k);if(v!==null)env.localStorage[k]=v});
+     var blob=new Blob([JSON.stringify(env,null,2)],{type:'application/json'}),u=URL.createObjectURL(blob),a=document.createElement('a');
+     a.href=u;a.download='Kuenzli-Logistik-Lokalsicherung-V196-'+new Date().toISOString().replace(/[:.]/g,'-')+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},2000);
+   }catch(e){alert('Lokale Sicherung fehlgeschlagen: '+String(e&&e.message||e));}
+ }
+ function install(){
+   stop(); if(!gateVisible())return false; if(document.getElementById('v196RescueScreen'))return true;
+   var x=document.createElement('div');x.id='v196RescueScreen';x.innerHTML='<div id="v196RescueCard"><h2>KÜNZLI LOGISTIK · Rettungsmodus V196</h2><div id="v196Safety"><b>Lokaler iPad-Stand bleibt geschützt.</b><br>Cloud → Gerät und Gerät → Cloud sind für die Lagerdaten weiterhin gesperrt. Diese Seite prüft ausschließlich die Cloud-Anmeldung/Lagerfreigabe.</div><div class="toolbar"><button type="button" id="v196Check">1 · Lagerfreigabe nur prüfen</button><button type="button" id="v196Repair" style="display:none">2 · Lagerfreigabe reparieren</button><button type="button" class="secondary" id="v196Backup">Lokale Daten erneut sichern</button></div><div id="v196State">Bereit. Zuerst „1 · Lagerfreigabe nur prüfen“ drücken.</div></div>';
+   document.body.appendChild(x);
+   var state=x.querySelector('#v196State'),repair=x.querySelector('#v196Repair');
+   x.querySelector('#v196Backup').onclick=rawBackup;
+   x.querySelector('#v196Check').onclick=async function(){
+     stop();repair.style.display='none';state.textContent='Lagerfreigabe wird ausschließlich gelesen …';
+     var temp=document.getElementById('v192State'),made=false;if(!temp){temp=document.createElement('div');temp.id='v192State';temp.style.display='none';document.body.appendChild(temp);made=true;}
+     try{if(typeof window.v192CheckMembership!=='function')throw new Error('Prüffunktion nicht geladen.');await window.v192CheckMembership();state.textContent=temp.textContent||'Prüfung beendet.';if(/NOCH NICHT AKTIVIERT|DIESEM KONTO ZUGEORDNET/.test(state.textContent))repair.style.display='inline-block';}
+     catch(e){state.textContent='Prüfung fehlgeschlagen: '+String(e&&e.message||e)+'\nEs wurde nichts geändert.'}
+     if(made&&temp.parentNode)temp.remove();stop();
+   };
+   repair.onclick=async function(){
+     if(!confirm('Nur die Lagerfreigabe reparieren?\n\nKEINE Paket-, Gestell- oder Inventurdaten werden synchronisiert.'))return;
+     stop();state.textContent='Lagerfreigabe wird repariert …';var temp=document.getElementById('v192State'),made=false;if(!temp){temp=document.createElement('div');temp.id='v192State';temp.style.display='none';document.body.appendChild(temp);made=true;}
+     try{if(typeof window.v192RepairMembership!=='function')throw new Error('Reparaturfunktion nicht geladen.');await window.v192RepairMembership();state.textContent=temp.textContent||'Reparatur beendet.';}
+     catch(e){state.textContent='Reparatur nicht durchgeführt: '+String(e&&e.message||e)+'\nLokale Lagerdaten bleiben unverändert.'}
+     if(made&&temp.parentNode)temp.remove();stop();
+   };
+   return true;
+ }
+ function boot(){stop();install();setTimeout(install,150);setTimeout(install,700);setTimeout(install,1800)}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+ new MutationObserver(function(){stop();install()}).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
