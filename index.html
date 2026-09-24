@@ -4882,6 +4882,18 @@ window.APP_RELEASE = {
     <div id="systemCheckList" class="manageList" style="margin-top:8px"></div>
    </div>
 
+   <div class="manageSubsection" id="v194MembershipCard">
+    <div class="manageHead">
+     <div><h3 style="margin:0">Lagerfreigabe-Reparatur V194</h3><p class="muted">Prüft ausschließlich die Benutzer-/Lagerfreigabe. Paket-, Gestell- und Inventurdaten bleiben gesperrt.</p></div>
+    </div>
+    <div class="authState" style="font-weight:700;color:#24543b">Sicherheitsmodus: Kein Cloud → Gerät und kein Gerät → Cloud.</div>
+    <div class="toolbar compactToolbar" style="margin-top:8px">
+     <button class="btn secondary" type="button" onclick="v192CheckMembership()">1 · Lagerfreigabe nur prüfen</button>
+     <button class="btn" type="button" onclick="v192RepairMembership()">2 · Lagerfreigabe reparieren</button>
+    </div>
+    <div id="v192State" class="authState muted" style="white-space:pre-wrap;margin-top:8px">Noch nichts geändert.</div>
+   </div>
+
    <div class="manageSubsection">
     <div class="manageHead">
      <div><h3 style="margin:0">Datensicherung</h3><p class="muted">Komplette Lagerdaten als JSON sichern oder wiederherstellen.</p></div>
@@ -27460,5 +27472,20 @@ renderPlatformReservationGantt=function(from='',to=''){
  function boot(){ensureBox();setTimeout(ensureBox,300);setTimeout(ensureBox,1200);}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
  new MutationObserver(function(){ensureBox()}).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+
+<!-- V194: feste Lagerfreigabe-Karte im statischen Verwaltungs-Markup; keine Datenmutation -->
+<script id="v194MembershipStaticGuard">
+(function(){
+ window.KUENZLI_REPAIR_V194=true;
+ function guard(){
+   try{stopCloudPolling()}catch(_e){}
+   var card=document.getElementById('v194MembershipCard');
+   if(!card)return;
+   document.querySelectorAll('#v192Box').forEach(function(b){b.remove();});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',guard);else guard();
+ setTimeout(guard,250);setTimeout(guard,1200);
 })();
 </script>
