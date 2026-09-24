@@ -27260,3 +27260,72 @@ renderPlatformReservationGantt=function(from='',to=''){
  setTimeout(install,700);
 })();
 </script>
+
+
+<!-- V190: kontrollierte Reparatur der auf dem iPad bestätigten Flächeninventur; kein Cloud-Pull -->
+<style id="v190RepairStyle">
+.v190Box{margin:14px 0;padding:14px;border:2px solid #8a5a00;border-radius:12px;background:#fff8e8;display:grid;gap:10px}.v190Box .toolbar{display:flex;gap:8px;flex-wrap:wrap}.v190State{white-space:pre-wrap;font-size:13px}.v190Warn{font-weight:700;color:#7a4300}
+</style>
+<script id="v190RepairPatch">
+(function(){
+ window.KUENZLI_RESCUE_V188=true;
+ window.KUENZLI_REPAIR_V189=true;
+ window.KUENZLI_REPAIR_V190=true;
+ const V190_DAY='2026-09-24';
+ function cs(){try{return JSON.parse(localStorage.getItem('holzlager_conflicts_v49')||'[]')||[]}catch(e){return []}}
+ function isInventoryPackage(c){
+   if(!c||c.type!=='packages'||!c.local)return false;
+   const h=Array.isArray(c.local.history)?c.local.history:[];
+   return String(c.local.lastCheckedAt||'').startsWith(V190_DAY) && h.some(x=>String(x?.type||'').indexOf('Lagerkontrolle Fläche')===0);
+ }
+ function plan(){
+   const all=cs(),pk=all.filter(isInventoryPackage),rackIds=new Set(pk.map(c=>String(c.local?.rackId||'')).filter(Boolean));
+   const racks=all.filter(c=>c?.type==='racks'&&c.local&&rackIds.has(String(c.id)));
+   return {all,pk,racks,repair:[...pk,...racks]};
+ }
+ function txt(extra){const p=plan();return 'Gespeicherte Konflikte: '+p.all.length+'\nDavon heutige bestätigte Inventurpakete: '+p.pk.length+'\nBetroffene Gestelle mit lokaler Ebenenstruktur: '+p.racks.length+'\nAndere Konflikte bleiben unangetastet: '+(p.all.length-p.repair.length)+(extra?'\n'+extra:'')}
+ function out(s){let e=document.getElementById('v190State');if(e)e.textContent=txt(s)}
+ window.v190Check=async function(){
+   out('Cloud wird ausschließlich gelesen …');
+   try{
+     if(!authSession)throw new Error('Keine gültige Cloud-Sitzung.');
+     await refreshCloudIdentity(true);if(!cloudMember)throw new Error('Keine Lagerfreigabe gefunden.');
+     const remote=await fetchRemoteEntities(),p=plan();let same=0,older=0,missing=0;
+     p.repair.forEach(c=>{let r=remote[cloudKey(c.type,c.id)];if(!r)missing++;else if(stableJson(r.data)===stableJson(c.local))same++;else older++;});
+     out('Cloud-Lesetest erfolgreich · '+(cloudMember.role||'Freigabe vorhanden')+'\nZu reparieren: '+older+' abweichend · '+missing+' noch nicht in Cloud · '+same+' bereits identisch.\nEs wurde NICHTS geschrieben.');
+   }catch(e){out('Prüfung fehlgeschlagen: '+String(e?.message||e)+'\nEs wurde nichts geschrieben oder überschrieben.');}
+ };
+ window.v190RepairInventory=async function(){
+   const p=plan();if(!p.pk.length){out('Keine heutigen Inventur-Paketkonflikte gefunden. Keine Aktion nötig.');return}
+   if(!authSession){out('Keine gültige Cloud-Sitzung. Reparatur nicht gestartet.');return}
+   const phrase=prompt('Sicherheitsbestätigung:\n\nEs werden ausschließlich die heutigen bestätigten Inventurpakete und deren betroffene Gestellstruktur vom iPad in die Cloud geschrieben. Cloud → Gerät bleibt gesperrt.\n\nBitte exakt eingeben: INVENTUR SICHERN');
+   if(phrase!=='INVENTUR SICHERN'){out('Abgebrochen. Es wurde nichts geändert.');return}
+   try{
+     await refreshCloudIdentity(true);if(!cloudMember)throw new Error('Keine Lagerfreigabe gefunden.');
+     let remote=await fetchRemoteEntities(),base=loadSyncBase(),done=0,already=0,failed=[];
+     for(const c of p.repair){
+       try{
+         let k=cloudKey(c.type,c.id),r=remote[k];
+         if(r&&stableJson(r.data)===stableJson(c.local)){base[k]={version:Number(r.version||0),hash:stableJson(c.local)};already++;continue}
+         if(!canWriteCloudEntity(c.type,'save'))throw new Error('Cloud-Rolle erlaubt diese Änderung nicht');
+         let val=await rpcEntitySave(c.type,c.id,c.local,Number(r?.version||0),false);
+         let ver=Number(val?.version||((r?.version||0)+1));base[k]={version:ver,hash:stableJson(c.local)};done++;
+       }catch(e){failed.push(c.type+' '+c.id+': '+String(e?.message||e));}
+     }
+     saveSyncBase(base);
+     const repaired=new Set(p.repair.filter(c=>!failed.some(f=>f.startsWith(c.type+' '+c.id+':'))).map(c=>cloudKey(c.type,c.id)));
+     saveSyncConflicts(cs().filter(c=>!repaired.has(cloudKey(c.type,c.id))));
+     const verify=await fetchRemoteEntities();let verified=0,notVerified=[];
+     p.repair.forEach(c=>{let r=verify[cloudKey(c.type,c.id)];if(r&&stableJson(r.data)===stableJson(c.local))verified++;else notVerified.push(c.type+' '+c.id)});
+     out('Reparatur beendet.\nNeu in Cloud geschrieben: '+done+' · bereits identisch: '+already+' · verifiziert: '+verified+'/'+p.repair.length+' · Fehler: '+failed.length+'\nCloud → Gerät blieb während der gesamten Reparatur gesperrt.'+(failed.length?'\nFehler:\n'+failed.slice(0,8).join('\n'):'')+(notVerified.length?'\nNicht verifiziert: '+notVerified.length:''));
+     try{setSyncStatus(failed.length||notVerified.length?'err':'ok',failed.length?'V190: Reparatur mit Fehlern':'V190: Inventurstand sicher in Cloud') }catch(_e){}
+   }catch(e){out('Reparatur abgebrochen: '+String(e?.message||e)+'\nCloud → Gerät blieb gesperrt. Lokale Daten wurden nicht verändert.');}
+ };
+ function install(){
+   let host=document.getElementById('v189RepairBox')||document.getElementById('authSignedIn')||document.querySelector('.app');if(!host||document.getElementById('v190Box'))return;
+   let b=document.createElement('div');b.id='v190Box';b.className='v190Box';b.innerHTML='<b>Inventur-Reparatur V190</b><div class="v190Warn">Lokaler iPad-Stand bleibt geschützt. Kein Cloud → Gerät.</div><div>V190 repariert nur die heutigen bestätigten Flächeninventur-Pakete und die dazu betroffenen Gestellstrukturen. Andere Konflikte werden nicht automatisch entschieden.</div><div class="toolbar"><button class="btn secondary" type="button" onclick="v190Check()">1 · Cloud nur prüfen</button><button class="btn" type="button" onclick="v190RepairInventory()">2 · Inventurstand in Cloud sichern</button><button class="btn secondary" type="button" onclick="exportLocalRescueV188()">Lokale Sicherung erneut laden</button></div><div id="v190State" class="v190State muted"></div>';
+   host.appendChild(b);out('Noch nichts in die Cloud geschrieben. Zuerst „1 · Cloud nur prüfen“ verwenden.');
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(install,100));else setTimeout(install,100);setTimeout(install,900);
+})();
+</script>
