@@ -3452,7 +3452,7 @@ select,input,textarea{min-height:40px}
 
 @media(max-width:760px){.toolsStatusGridV421{grid-template-columns:1fr}}
 </style>
-<script>window.KUENZLI_RESCUE_V188=true;window.KUENZLI_RESCUE_V201=true;</script>
+<script>window.KUENZLI_RESCUE_V188=true;window.KUENZLI_RESCUE_V202=true;</script>
 <link rel="apple-touch-icon" sizes="180x180" href="./kuenzli-app-icon.png">
 <link rel="icon" type="image/png" href="./kuenzli-app-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -6441,8 +6441,11 @@ function permissionsForKey(key,role='Mitarbeiter'){
  return defaultPermissionsForRole(role);
 }
 function currentPermissions(){
- if(window.KUENZLI_RESCUE_V201===true && authSession && !mustChangePassword){
-  return {warehouse:true,material:true,control:false,reserved:false,archive:false,defects:false,transfers:false,manage:false,projects:false,smallOrders:false,platforms:false,tools:false,allProjects:false,projectIds:[]};
+ // V202: lokaler Wiederherstellungsmodus nach erfolgreicher Anmeldung.
+ // Die normale Bereichsauswahl ist lokal wieder verfügbar; V188 blockiert weiterhin
+ // sämtliche Cloud-Pull/Push-Wege, damit der vorhandene Materialbestand unangetastet bleibt.
+ if(window.KUENZLI_RESCUE_V202===true && authSession && !mustChangePassword){
+  return {warehouse:true,material:true,control:true,reserved:true,archive:true,defects:true,transfers:true,manage:true,projects:true,smallOrders:true,platforms:true,tools:true,allProjects:true,projectIds:[]};
  }
  return permissionsForKey(currentPermissionKey(),currentRole())
 }
@@ -27462,4 +27465,4 @@ renderPlatformReservationGantt=function(from='',to=''){
 })();
 </script>
 
-\n<!-- BV2026-1-201 · Materialbestand-Rettungsmodus: lokaler Bestand, Cloud vollständig gesperrt -->\n<style id="v201Style">\n#v201Safe{position:fixed;z-index:2147483646;left:10px;right:10px;top:10px;padding:10px 12px;border:2px solid #176044;border-radius:12px;background:#f2fbf6;box-shadow:0 6px 24px #0002;font:13px/1.35 system-ui,-apple-system,sans-serif;color:#17352b}body.v201safe{padding-top:82px!important}#v201Safe .btn{margin-left:8px}\n</style>\n<script id="v201SafeLocalMaterial">\n(function(){\n window.KUENZLI_RESCUE_V188=true;window.KUENZLI_RESCUE_V201=true;\n function stop(){try{stopCloudPolling()}catch(_e){}}\n function count(){try{return Array.isArray(st&&st.packages)?st.packages.filter(Boolean).length:0}catch(_e){return 0}}\n window.v201OpenMaterial=function(){\n  stop();\n  try{refreshPermissionVisibility()}catch(_e){}\n  try{openWarehouseModule();showPage('inventory')}catch(e){alert('Materialbestand konnte nicht geöffnet werden: '+String(e&&e.message||e))}\n  stop();\n };\n function install(){\n  stop();if(!authSession||mustChangePassword)return;\n  try{document.body.classList.remove('accessLocked');document.body.classList.add('v201safe')}catch(_e){}\n  try{document.getElementById('authModal')?.classList.remove('open')}catch(_e){}\n  try{refreshPermissionVisibility()}catch(_e){}\n  var e=document.getElementById('v201Safe');if(!e){e=document.createElement('div');e.id='v201Safe';document.body.appendChild(e)}\n  e.innerHTML='<b>V201 · Materialbestand geschützt</b> · lokal '+count()+' Pakete. Cloud Lesen/Schreiben ist gesperrt. <button class="btn" type="button" onclick="v201OpenMaterial()">Materialbestand öffnen</button>';\n  stop();\n }\n if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();\n setTimeout(install,200);setTimeout(install,900);setTimeout(install,2200);\n})();\n</script>\n
+\n<!-- BV2026-1-202 · Lokaler Normalmodus: alle Bereiche sichtbar, Cloud weiterhin gesperrt -->\n<style id="v202Style">\n#v202Safe{position:fixed;z-index:2147483646;left:10px;right:10px;top:10px;padding:9px 12px;border:2px solid #176044;border-radius:12px;background:#f2fbf6;box-shadow:0 6px 24px #0002;font:13px/1.35 system-ui,-apple-system,sans-serif;color:#17352b}body.v202safe{padding-top:76px!important}\n</style>\n<script id="v202LocalNormal">\n(function(){\n window.KUENZLI_RESCUE_V188=true;window.KUENZLI_RESCUE_V202=true;\n function stop(){try{stopCloudPolling()}catch(_e){}}\n function count(){try{return Array.isArray(st&&st.packages)?st.packages.filter(Boolean).length:0}catch(_e){return 0}}\n function install(){\n  stop();if(!authSession||mustChangePassword)return;\n  try{document.body.classList.remove('accessLocked');document.body.classList.add('v202safe')}catch(_e){}\n  try{document.getElementById('authModal')?.classList.remove('open')}catch(_e){}\n  try{refreshPermissionVisibility()}catch(_e){}\n  try{showModuleHome()}catch(_e){}\n  var e=document.getElementById('v202Safe');if(!e){e=document.createElement('div');e.id='v202Safe';document.body.appendChild(e)}\n  e.innerHTML='<b>V202 · Lokaler Wiederherstellungsmodus</b> · '+count()+' Pakete geschützt · alle Bereiche lokal verfügbar · Cloud Lesen/Schreiben gesperrt.';\n  stop();\n }\n if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();\n setTimeout(install,200);setTimeout(install,900);setTimeout(install,2200);\n})();\n</script>\n
