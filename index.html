@@ -5,7 +5,7 @@
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; form-action 'self'; img-src 'self' data: blob: https://*.supabase.co; connect-src 'self' https://*.supabase.co; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; font-src 'self' data:; media-src 'self' data: blob:; worker-src 'self' blob:; upgrade-insecure-requests">
 <!-- V406: Transporte direkt unter der Projekterfassung -->
-<title>Künzli Lagerverwaltung · BV2026-1-211</title>
+<title>Künzli Lagerverwaltung V345 · BV2026-1-175</title>
 <style>
 :root{--g:#173f32;--bg:#f3f5f3;--line:#d8ded9;--mut:#6a746e;--red:#df3428}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:#17201c}button,input,select,textarea{font:inherit}
@@ -27092,27 +27092,6 @@ renderPlatformReservationGantt=function(from='',to=''){
    - Admin-Benutzerliste wird gedrosselt statt bei jedem Rendern neu geladen
    Nutzdaten/Bestände und bestehende Storage-Keys werden nicht migriert/gelöscht.
    ================================================================ */
-/* V211: zeitlich begrenzter Notfall-Nachweis aus dem am 24.09.2026 exportierten
-   Cloud-Backup. Gilt NUR für exakt dieses bereits authentifizierte Supabase-Konto
-   im Hauptlager. Eine erfolgreiche 2xx-Antwort ohne Mitgliedschaft hat weiterhin
-   Vorrang und sperrt den Zugriff. Keine Nutz-/Lagerdaten werden verändert. */
-const OFFLINE_MEMBER_V211={
- warehouseId:'hauptlager',
- userId:'1494e6e4-9549-4af5-b887-fa05b74c0421',
- username:'adkin',
- member:{user_id:'1494e6e4-9549-4af5-b887-fa05b74c0421',username:'adkin',name:'Adrian Kindschi',role:'Administrator',active:true},
- validUntil:'2026-09-26T00:00:00+02:00'
-};
-function verifiedOfflineMemberV211(){
- if(!authSession?.user?.id||!cloudCfg)return null;
- if(Date.now()>Date.parse(OFFLINE_MEMBER_V211.validUntil))return null;
- if(cloudCfg.warehouseId!==OFFLINE_MEMBER_V211.warehouseId)return null;
- if(authSession.user.id!==OFFLINE_MEMBER_V211.userId)return null;
- let uname=cleanUsername(authUsername()||'');
- if(uname&&uname!==OFFLINE_MEMBER_V211.username)return null;
- return OFFLINE_MEMBER_V211.member;
-}
-
 const CLOUD_MEMBER_CACHE_V210='kuenzli_cloud_member_cache_v210';
 const CLOUD_META_V210='kuenzli_cloud_meta_v210';
 let cloudCheckFlightV210=false;
@@ -27169,13 +27148,10 @@ async function refreshCloudIdentity(attemptClaim=true){
    return !!cloudMember;
  }catch(e){
    const cached=cachedCloudMemberV210();
-   const emergency=verifiedOfflineMemberV211();
-   if(cached||emergency){
-     cloudMember=cached?.member||emergency;
-     if(emergency&&!cached)cacheCloudMemberV210(emergency);
+   if(cached){
+     cloudMember=cached.member;
      noteCloudFailureV210(e.status,String(e.message||e));
      renderAuthUI();renderUserHeader();
-     setSyncStatus('err','Cloud vorübergehend nicht erreichbar · bestätigte Offline-Freigabe aktiv');
      return true;
    }
    cloudMember=null;renderAuthUI();renderUserHeader();
@@ -27248,3 +27224,4 @@ async function renderCloudUsers(){
 }
 
 </script>
+\n\n<script>\n/* ================================================================\n   BV2026-1-212 · Cloud-Lastschutz\n   Deaktiviert den historischen 2,5-Sekunden-Berechtigungs-Poller V133.\n   Die robuste V210/V211-Cloudlogik bleibt unverändert aktiv:\n   - Metadaten-Polling maximal alle 120 Sekunden\n   - Sichtbarkeit/Fokus kann einen einzelnen Check auslösen\n   - Single-Flight und Backoff bleiben erhalten\n   Keine Nutzdaten, Bestände, Inventuren oder Storage-Keys werden verändert.\n   ================================================================ */\n(function(){\n  try{\n    if(typeof permissionPollV133!=='undefined' && permissionPollV133){\n      clearInterval(permissionPollV133);\n      permissionPollV133=null;\n    }\n  }catch(_e){}\n})();\n</script>\n
