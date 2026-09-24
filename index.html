@@ -3451,9 +3451,7 @@ select,input,textarea{min-height:40px}
 .platformArchivedTransportsV388 .platformTransportTableWrap{padding:10px}
 
 @media(max-width:760px){.toolsStatusGridV421{grid-template-columns:1fr}}
-</style>
-<script>window.KUENZLI_RESCUE_V188=true;window.KUENZLI_RESCUE_V202=true;window.KUENZLI_RESCUE_V203=true;</script>
-<link rel="apple-touch-icon" sizes="180x180" href="./kuenzli-app-icon.png">
+</style><link rel="apple-touch-icon" sizes="180x180" href="./kuenzli-app-icon.png">
 <link rel="icon" type="image/png" href="./kuenzli-app-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -4882,18 +4880,6 @@ window.APP_RELEASE = {
     <div id="systemCheckList" class="manageList" style="margin-top:8px"></div>
    </div>
 
-   <div class="manageSubsection" id="v206CloudReadOnlyCard">
-    <div class="manageHead">
-     <div><h3 style="margin:0">Cloud-Diagnose V206 · nur lesen</h3><p class="muted">Liest Lagerfreigabe und Cloud-Bestand. Es wird nichts lokal angewendet und nichts in die Cloud geschrieben.</p></div>
-    </div>
-    <div class="authState" style="font-weight:700;color:#24543b">Sicherheitsmodus: 347 lokale Pakete bleiben unangetastet · Cloud → Gerät und Gerät → Cloud gesperrt.</div>
-    <div class="toolbar compactToolbar" style="margin-top:8px">
-     <button class="btn" type="button" onclick="v206ReadOnlyCloud()">Cloud nur lesen</button>
-     <button class="btn secondary" type="button" onclick="exportLocalRescueV188()">Lokale Daten sichern</button>
-    </div>
-    <div id="v206ReadOnlyState" class="authState muted" style="white-space:pre-wrap;margin-top:8px">Noch keine Cloud-Abfrage.</div>
-   </div>
-
    <div class="manageSubsection">
     <div class="manageHead">
      <div><h3 style="margin:0">Datensicherung</h3><p class="muted">Komplette Lagerdaten als JSON sichern oder wiederherstellen.</p></div>
@@ -4980,19 +4966,11 @@ window.APP_RELEASE = {
 <label><b>Benutzername</b><input id="authUsername" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="z.B. peter"></label>
 <label><b>PIN / Passwort</b><input id="authPassword" type="password" inputmode="numeric" autocomplete="current-password" placeholder="mind. 6 Zeichen"></label>
 <div class="toolbar"><button class="btn" onclick="signInCloud()">Anmelden</button><button class="btn secondary" onclick="signUpCloud()">Erstmalig aktivieren</button></div>
-<div class="v188RescueBox"><b>Rettungsmodus aktiv</b><div>Cloud-Synchronisierung ist in V188 vorsorglich pausiert. Zuerst den lokalen Stand dieses Geräts sichern.</div><button class="btn" type="button" onclick="exportLocalRescueV188()">Lokale Daten sichern</button><div id="v188RescueSummaryOut" class="muted"></div></div>
 <p class="muted">Keine E-Mail nötig. Intern verwendet die App eine technische Login-Adresse. Der Benutzername muss vorher für dieses Lager freigegeben worden sein.</p>
 </div>
 <div id="authSignedIn" class="authBox" style="display:none">
 <div id="authIdentity" class="authState"></div>
 <div class="toolbar"><button class="btn secondary" onclick="refreshCloudIdentity()">Berechtigung aktualisieren</button><button class="btn secondary" onclick="changeOwnPassword()">Passwort ändern</button><button class="btn danger" onclick="signOutCloud()">Abmelden</button></div>
-<div class="v188RescueBox"><b>Rettungsmodus aktiv</b><div>Cloud-Synchronisierung ist in V188 vorsorglich pausiert. Keine lokalen Inventurdaten werden automatisch in die Cloud geschrieben oder von dort überschrieben.</div><button class="btn" type="button" onclick="exportLocalRescueV188()">Lokale Daten sichern</button><div id="v188RescueSummaryIn" class="muted"></div></div>
-<div id="v197MembershipRescue" class="v188RescueBox" style="border-color:#1d5f8a;background:#eef7fd">
-<b>Lagerfreigabe-Reparatur V197</b>
-<div><b>Direkt im ursprünglichen Cloud-Anmeldefenster eingebaut.</b> Diese Prüfung liest nur Benutzer-/Lagerfreigabe. Paket-, Gestell- und Inventurdaten werden weder gelesen noch synchronisiert.</div>
-<div class="toolbar"><button class="btn secondary" type="button" onclick="v197CheckMembership()">1 · Lagerfreigabe nur prüfen</button><button class="btn" id="v197RepairBtn" type="button" onclick="v197RepairMembership()" style="display:none">2 · Lagerfreigabe reparieren</button></div>
-<div id="v197MembershipState" class="muted" style="white-space:pre-wrap">Bereit. Zuerst Schritt 1 ausführen.</div>
-</div>
 </div>
 </div></div>
 
@@ -6391,22 +6369,6 @@ function ensurePermissionStore(){
 function permissionKeyForLocal(id){return 'local:'+String(id||'')}
 function permissionKeyForCloud(username){return 'cloud:'+cleanUsername(username||'')}
 function currentPermissionKey(){
- // V200 rescue: use ONLY an already saved local permission set for the authenticated user.
- // No permission is invented and no cloud data is read/written here.
- if(window.KUENZLI_RESCUE_V200===true && cloudAuthEnabled() && authSession){
-   let uname='';
-   try{uname=cleanUsername(cloudMember?.username||authUsername()||'')}catch(_e){}
-   if(!uname){
-     try{
-       const au=activeUser();
-       if(au && au.name) uname=cleanUsername(au.name);
-     }catch(_e){}
-   }
-   if(uname){
-     const k=permissionKeyForCloud(uname);
-     if(st?.userPermissions?.[k] && typeof st.userPermissions[k]==='object')return k;
-   }
- }
  return cloudAuthEnabled()?permissionKeyForCloud(cloudMember?.username||authUsername()):permissionKeyForLocal(st.activeUserId||'');
 }
 function defaultPermissionsForRole(role){
@@ -6440,22 +6402,7 @@ function permissionsForKey(key,role='Mitarbeiter'){
  };
  return defaultPermissionsForRole(role);
 }
-function currentPermissions(){
- // V202: lokaler Wiederherstellungsmodus nach erfolgreicher Anmeldung.
- // Die normale Bereichsauswahl ist lokal wieder verfügbar; V188 blockiert weiterhin
- // sämtliche Cloud-Pull/Push-Wege, damit der vorhandene Materialbestand unangetastet bleibt.
- if((window.KUENZLI_RESCUE_V203===true || window.KUENZLI_RESCUE_V202===true)){
-  /* V203: Rettungsrechte sind absichtlich NICHT mehr an authSession gekoppelt.
-     Auf iPad/Safari kann ein Auth-State-Refresh authSession kurz leeren; dadurch
-     verschwanden in V202 beim ersten Touch alle Bereiche ausser Lagerverwaltung.
-     Dieser lokale Rettungskontext betrifft nur UI-Rechte. Cloud Pull/Push bleibt
-     durch KUENZLI_RESCUE_V188 blockiert. */
-  const p={warehouse:true,material:true,control:true,reserved:true,archive:true,defects:true,transfers:true,manage:true,projects:true,smallOrders:true,platforms:true,tools:true,allProjects:true,projectIds:[]};
-  try{Object.keys(permissionFieldMap()).forEach(k=>p[k]=true)}catch(_e){}
-  return p;
- }
- return permissionsForKey(currentPermissionKey(),currentRole())
-}
+function currentPermissions(){return permissionsForKey(currentPermissionKey(),currentRole())}
 function hasAppPermission(name){
  let p=currentPermissions();
  if(name==='map')return !!p.warehouse;
@@ -6864,56 +6811,6 @@ async function signOutCloud(){
  mustChangePassword=false;
  saveAuthSession(null);cloudMember=null;stopCloudPolling();renderAuthUI();refresh();
  alert('Abgemeldet.');
-}
-async function v197MembershipInvite(){
- if(!authSession)throw new Error('Keine gültige Cloud-Sitzung.');
- if(!await ensureFreshSession())throw new Error('Cloud-Sitzung ist abgelaufen.');
- cloudCfg=loadCloudConfig();
- const username=cleanUsername(authUsername()||'');
- if(!username)throw new Error('Kein Benutzername in der Cloud-Sitzung gefunden.');
- const url=inviteBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&username=eq.'+encodeURIComponent(username)+'&select=username,name,role,active,claimed_by&limit=1';
- const r=await fetch(url,{headers:cloudHeaders()});
- if(!r.ok)throw new Error((await r.text())||('HTTP '+r.status));
- return (await r.json())[0]||null;
-}
-async function v197CheckMembership(){
- const out=E('v197MembershipState'),repair=E('v197RepairBtn');
- if(repair)repair.style.display='none';
- if(out)out.textContent='Lagerfreigabe wird ausschließlich gelesen …';
- try{
-   stopCloudPolling();
-   const row=await v197MembershipInvite(),uid=String(authSession?.user?.id||'');
-   if(!row){if(out)out.textContent='Keine vorbereitete Lagerfreigabe für diesen Benutzer gefunden.\nEs wurde nichts geändert.';return}
-   const owner=String(row.claimed_by||'');
-   const state=!row.active?'DEAKTIVIERT':!owner?'NOCH NICHT AKTIVIERT':owner===uid?'DIESEM KONTO ZUGEORDNET':'EINEM ANDEREN KONTO ZUGEORDNET';
-   if(out)out.textContent='Freigabe gefunden.\nBenutzer: '+row.username+' · Name: '+(row.name||'–')+' · Rolle: '+(row.role||'–')+'\nStatus: '+state+'\n\nEs wurde nichts geändert. Lagerdaten-Synchronisation bleibt gesperrt.';
-   if(repair && row.active && (!owner || owner===uid))repair.style.display='inline-flex';
- }catch(e){if(out)out.textContent='Prüfung fehlgeschlagen: '+String(e?.message||e)+'\nEs wurde nichts geändert.'}
- finally{stopCloudPolling()}
-}
-async function v197RepairMembership(){
- const out=E('v197MembershipState');
- if(!confirm('Nur die Lagerfreigabe reparieren?\n\nEs werden KEINE Paket-, Gestell- oder Inventurdaten synchronisiert.'))return;
- if(out)out.textContent='Lagerfreigabe wird repariert …';
- try{
-   stopCloudPolling();
-   const row=await v197MembershipInvite(),uid=String(authSession?.user?.id||'');
-   if(!row)throw new Error('Keine vorbereitete Lagerfreigabe vorhanden.');
-   if(!row.active)throw new Error('Die vorbereitete Lagerfreigabe ist deaktiviert.');
-   if(row.claimed_by&&String(row.claimed_by)!==uid)throw new Error('Die Freigabe gehört bereits zu einem anderen Cloud-Konto.');
-   if(!row.claimed_by){
-     const url=String(cloudCfg.url||'').replace(/\/+$/,'')+'/rest/v1/rpc/claim_warehouse_membership';
-     const r=await fetch(url,{method:'POST',headers:cloudHeaders(),body:JSON.stringify({p_warehouse:cloudCfg.warehouseId,p_username:row.username})});
-     const txt=await r.text();let ok=false;try{ok=JSON.parse(txt)===true}catch(_e){}
-     if(!r.ok||!ok)throw new Error(txt||('HTTP '+r.status));
-   }
-   // Read-only verification. Deliberately do NOT call refreshCloudIdentity(), pullEntitySync(), persist() or queueCloudSync().
-   const verifyUrl=membershipBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&user_id=eq.'+encodeURIComponent(uid)+'&active=eq.true&select=user_id,username,name,role,active&limit=1';
-   const vr=await fetch(verifyUrl,{headers:cloudHeaders()});if(!vr.ok)throw new Error((await vr.text())||('HTTP '+vr.status));
-   const member=(await vr.json())[0]||null;if(!member)throw new Error('Freigabe konnte nach der Zuordnung nicht verifiziert werden.');
-   if(out)out.textContent='Lagerfreigabe erfolgreich verifiziert.\nBenutzer: '+(member.username||row.username)+' · Name: '+(member.name||row.name||'–')+' · Rolle: '+(member.role||row.role||'–')+'\n\nKeine Lager-, Paket-, Gestell- oder Inventurdaten wurden gelesen, überschrieben oder synchronisiert. Bitte jetzt noch NICHT normal synchronisieren.';
- }catch(e){if(out)out.textContent='Reparatur nicht durchgeführt: '+String(e?.message||e)+'\nLokale Lagerdaten bleiben unverändert.'}
- finally{stopCloudPolling()}
 }
 let activeMainModule='';
 function showModuleHome(){
@@ -10376,7 +10273,7 @@ function saveHoursPlan(){
  p.updatedAt=new Date().toISOString();saveProjects();closeM('hoursPlannerModal');openProjectDetail(p.id);
 }
 function applyAccessGate(){
- let allowed=!!(authSession&&!mustChangePassword); /* V197 rescue: local app access; cloudReady() remains false without membership */
+ let allowed=!!(authSession&&cloudMember&&!mustChangePassword);
  document.body.classList.toggle('accessLocked',!allowed);
  let modal=E('authModal'),home=E('moduleHome'),app=document.querySelector('.app');
  if(!allowed){
@@ -10909,7 +10806,6 @@ async function resolveSyncConflict(index,choice){
 }
 let pendingManualCloudPushV487=false;
 async function pushEntitySync(manual=false){
- if(window.KUENZLI_RESCUE_V188===true){if(manual)alert('Rettungsmodus V188: Lokal → Cloud ist gesperrt. Bitte zuerst die lokalen Daten sichern.');return false;}
  cloudCfg=loadCloudConfig();
  if(!cloudReady()){
    if(manual)alert('Cloud ist noch nicht bereit. Bitte Anmeldung und Cloud-Benutzer prüfen.');
@@ -10964,7 +10860,6 @@ async function pushEntitySync(manual=false){
  }
 }
 async function pullEntitySync(manual=false){
- if(window.KUENZLI_RESCUE_V188===true){if(manual)alert('Rettungsmodus V188: Cloud → Gerät ist gesperrt, damit lokale Inventurdaten nicht überschrieben werden.');return false;}
  let syncStageV154='Start';
  cloudCfg=loadCloudConfig();
  if(!cloudReady()){if(manual)alert('Bitte zuerst Cloud einrichten und anmelden.');return false}
@@ -11135,7 +11030,6 @@ function renderCloudSettings(){
  let ms=E('authManageState');if(ms&&cloudSetupMode()&&!cloudMember)ms.innerHTML='<b>Einrichtungsmodus aktiv.</b> Cloud-Einstellungen können bis zur erfolgreichen ersten Administrator-Aktivierung jederzeit korrigiert werden.';
 }
 function queueCloudSync(){
- if(window.KUENZLI_RESCUE_V188===true)return;
  cloudCfg=loadCloudConfig();
  if(!cloudReady()||!cloudCfg.autoSync)return;
  clearTimeout(cloudTimer);
@@ -20040,7 +19934,7 @@ try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){console.warn('V164 St
 STRUCTURE_MARKED_V60=markRestoredStructureForCloud();
 setTimeout(initMobileMaps,0);
 refresh();
-if(cloudCfg.mode==='supabase'&&authSession&&window.KUENZLI_RESCUE_V188!==true){
+if(cloudCfg.mode==='supabase'&&authSession){
  setTimeout(async()=>{
    if(!cloudMember)await refreshCloudIdentity();
    if(cloudReady()&&cloudCfg.autoSync){
@@ -20055,10 +19949,10 @@ if(cloudCfg.mode==='supabase'&&authSession&&window.KUENZLI_RESCUE_V188!==true){
  },250);
 }
 document.addEventListener('visibilitychange',()=>{
- if(window.KUENZLI_RESCUE_V188!==true&&!document.hidden&&cloudCfg.autoSync){startCloudPolling();checkCloudForUpdates(true)}
+ if(!document.hidden&&cloudCfg.autoSync){startCloudPolling();checkCloudForUpdates(true)}
 });
 window.addEventListener('focus',()=>{
- if(window.KUENZLI_RESCUE_V188!==true&&cloudCfg.autoSync){startCloudPolling();checkCloudForUpdates(true)}
+ if(cloudCfg.autoSync){startCloudPolling();checkCloudForUpdates(true)}
 });
 
 
@@ -22521,8 +22415,7 @@ function runImportV481(){
 try{const oldApplyV481=applyRemoteEntities;applyRemoteEntities=function(remote,preserveKeys=new Set()){let x=oldApplyV481(remote,preserveKeys);importDoneSessionV481=false;setTimeout(runImportV481,100);return x}}catch(e){}
 window.addEventListener('load',()=>setTimeout(runImportV481,1800));
 
-</script>
-
+</script>\n
 
 
 
@@ -27246,313 +27139,5 @@ renderPlatformReservationGantt=function(from='',to=''){
  /* Bereits sichtbare Ansichten sofort aktualisieren. */
  try{if(document.getElementById('allControlBody'))decorateAreaCardsV187()}catch(_e){}
  try{if(document.getElementById('tbody'))renderInv()}catch(_e){}
-})();
-</script>
-
-<style id="v188RescueStyle">
-.v188RescueBox{margin-top:14px;padding:14px;border:2px solid #b77b00;border-radius:12px;background:#fff7df;display:grid;gap:9px;color:#2b2415}
-.v188RescueBox .btn{justify-self:start}.v188RescueBox .muted{font-size:13px;color:#655b42!important}
-</style>
-<script id="v188RescuePatch">
-(function(){
- window.KUENZLI_RESCUE_V188=true;
- function rescueSummaryV188(){
-   let state=null;try{state=JSON.parse(localStorage.getItem('holzlager_v8')||'null')}catch(_e){}
-   return {
-     packages:Array.isArray(state?.packages)?state.packages.length:0,
-     controls:Array.isArray(state?.controls)?state.controls.length:0,
-     areas:Array.isArray(state?.areas)?state.areas.length:0,
-     racks:Array.isArray(state?.racks)?state.racks.length:0,
-     activeControlId:state?.activeControlId||null
-   };
- }
- window.exportLocalRescueV188=function(){
-   try{
-     const local={};
-     for(let i=0;i<localStorage.length;i++){
-       const k=localStorage.key(i); local[k]=localStorage.getItem(k);
-     }
-     const session={};
-     for(let i=0;i<sessionStorage.length;i++){
-       const k=sessionStorage.key(i); session[k]=sessionStorage.getItem(k);
-     }
-     const payload={
-       type:'KUENZLI-LOGISTIK-LOCAL-RESCUE',version:'V188',
-       exportedAt:new Date().toISOString(),
-       page:location.href,
-       summary:rescueSummaryV188(),
-       localStorage:local,
-       sessionStorage:session
-     };
-     const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-     const url=URL.createObjectURL(blob),a=document.createElement('a');
-     const d=new Date(),pad=n=>String(n).padStart(2,'0');
-     a.href=url;a.download='Kuenzli-Logistik-Lokalsicherung-'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'-'+pad(d.getHours())+pad(d.getMinutes())+'.json';
-     document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
-     const x=rescueSummaryV188();
-     alert('Lokale Sicherung erstellt.\n\nPakete: '+x.packages+'\nKontrollen: '+x.controls+'\nFlächen: '+x.areas+'\nGestelle: '+x.racks+'\n\nBitte die JSON-Datei auf dem iPad behalten und zusätzlich an einem zweiten Ort sichern.');
-   }catch(e){alert('Lokale Sicherung konnte nicht erstellt werden:\n'+String(e?.message||e));}
- };
- function show(){
-   const x=rescueSummaryV188(),t='Lokal gefunden: '+x.packages+' Pakete · '+x.controls+' Kontrollen · '+x.areas+' Flächen · '+x.racks+' Gestelle';
-   ['v188RescueSummaryOut','v188RescueSummaryIn'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=t;});
-   try{if(typeof setSyncStatus==='function')setSyncStatus('err','Rettungsmodus V188 · Cloud-Sync pausiert');}catch(_e){}
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show);else show();
- setTimeout(show,500);
-})();
-</script>
-
-<!-- V189: sicherer Cloud-Reparaturmodus; lokale iPad-Daten bleiben führend, keinerlei automatischer Cloud-Schreib-/Leseabgleich -->
-<style id="v189RepairStyle">
-.v189RepairBox{margin-top:12px;padding:14px;border:2px solid #1d5f8a;border-radius:12px;background:#eef7fd;display:grid;gap:9px}
-.v189RepairState{font-size:13px;white-space:pre-wrap}.v189RepairBox .toolbar{display:flex;gap:8px;flex-wrap:wrap}
-</style>
-<script id="v189RepairPatch">
-(function(){
- window.KUENZLI_RESCUE_V188=true; // absichtlich: sämtliche normalen Pull/Push-Wege bleiben blockiert
- window.KUENZLI_REPAIR_V189=true;
-
- function v189Summary(){
-   let s=null;try{s=JSON.parse(localStorage.getItem('holzlager_v8')||'null')}catch(_e){}
-   let conflicts=[];try{conflicts=JSON.parse(localStorage.getItem('holzlager_conflicts_v49')||'[]')||[]}catch(_e){}
-   return {packages:Array.isArray(s?.packages)?s.packages.length:0,controls:Array.isArray(s?.controls)?s.controls.length:0,areas:Array.isArray(s?.areas)?s.areas.length:0,racks:Array.isArray(s?.racks)?s.racks.length:0,conflicts:Array.isArray(conflicts)?conflicts.length:0};
- }
- function v189StateText(extra){
-   const x=v189Summary();
-   return 'Lokaler Stand geschützt: '+x.packages+' Pakete · '+x.controls+' Kontrollen · '+x.areas+' Flächen · '+x.racks+' Gestelle\nGespeicherte Cloud-Konflikte: '+x.conflicts+(extra?'\n'+extra:'');
- }
- window.v189RefreshMembership=async function(){
-   const out=document.getElementById('v189RepairState');if(out)out.textContent=v189StateText('Cloud-Berechtigung wird nur gelesen …');
-   try{
-     if(!authSession){if(out)out.textContent=v189StateText('Keine gültige Cloud-Sitzung. Bitte normal anmelden. Lokale Daten bleiben geschützt.');return}
-     const ok=await refreshCloudIdentity(true);
-     if(out)out.textContent=v189StateText(ok?'Cloud-Lagerfreigabe gefunden: '+(cloudMember?.name||cloudMember?.username||'Benutzer')+' · '+(cloudMember?.role||'')+'.\nSynchronisierung bleibt weiterhin gesperrt, bis die Konflikte kontrolliert übernommen wurden.':'Cloud-Lagerfreigabe weiterhin nicht gefunden. Es wurde nichts synchronisiert oder überschrieben.');
-   }catch(e){if(out)out.textContent=v189StateText('Prüfung fehlgeschlagen: '+String(e?.message||e)+'\nEs wurde nichts synchronisiert oder überschrieben.');}
- };
-
- // V189: Zugriff auf den lokal gesicherten Stand erlauben, auch wenn die Cloud-Mitgliedschaft gerade nicht geladen werden kann.
- // Das ändert keine Daten und hebt die Sync-Sperre NICHT auf.
- const oldGate=window.applyAccessGate;
- window.applyAccessGate=function(){
-   if(window.KUENZLI_REPAIR_V189===true && authSession && !mustChangePassword){
-     document.body.classList.remove('accessLocked');
-     const modal=document.getElementById('authModal');if(modal)modal.classList.remove('open');
-     const app=document.querySelector('.app');if(app)app.style.visibility='';
-     if(!activeMainModule)try{showModuleHome()}catch(_e){}
-     return;
-   }
-   return oldGate.apply(this,arguments);
- };
-
- function install(){
-   let host=document.getElementById('authSignedIn')||document.getElementById('authModal');
-   if(host&&!document.getElementById('v189RepairBox')){
-     const box=document.createElement('div');box.id='v189RepairBox';box.className='v189RepairBox';
-     box.innerHTML='<b>Cloud-Reparaturmodus V189</b><div>Der lokale iPad-Stand bleibt geschützt. Automatische Synchronisierung sowie Cloud → Gerät und Gerät → Cloud sind weiterhin gesperrt.</div><div class="toolbar"><button class="btn" type="button" onclick="v189RefreshMembership()">Cloud-Berechtigung prüfen</button><button class="btn secondary" type="button" onclick="exportLocalRescueV188()">Lokale Daten erneut sichern</button></div><div id="v189RepairState" class="v189RepairState muted"></div>';
-     host.appendChild(box);
-   }
-   const out=document.getElementById('v189RepairState');if(out)out.textContent=v189StateText('Noch keine Cloud-Daten angewendet.');
-   try{renderAuthUI()}catch(_e){}
-   try{setSyncStatus('err','V189 Reparaturmodus · lokaler Stand geschützt · Cloud-Sync gesperrt')}catch(_e){}
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(install,50));else setTimeout(install,50);
- setTimeout(install,700);
-})();
-</script>
-
-
-<!-- V190: kontrollierte Reparatur der auf dem iPad bestätigten Flächeninventur; kein Cloud-Pull -->
-<style id="v190RepairStyle">
-.v190Box{margin:14px 0;padding:14px;border:2px solid #8a5a00;border-radius:12px;background:#fff8e8;display:grid;gap:10px}.v190Box .toolbar{display:flex;gap:8px;flex-wrap:wrap}.v190State{white-space:pre-wrap;font-size:13px}.v190Warn{font-weight:700;color:#7a4300}
-</style>
-<script id="v190RepairPatch">
-(function(){
- window.KUENZLI_RESCUE_V188=true;
- window.KUENZLI_REPAIR_V189=true;
- window.KUENZLI_REPAIR_V190=true;
- const V190_DAY='2026-09-24';
- function cs(){try{return JSON.parse(localStorage.getItem('holzlager_conflicts_v49')||'[]')||[]}catch(e){return []}}
- function isInventoryPackage(c){
-   if(!c||c.type!=='packages'||!c.local)return false;
-   const h=Array.isArray(c.local.history)?c.local.history:[];
-   return String(c.local.lastCheckedAt||'').startsWith(V190_DAY) && h.some(x=>String(x?.type||'').indexOf('Lagerkontrolle Fläche')===0);
- }
- function plan(){
-   const all=cs(),pk=all.filter(isInventoryPackage),rackIds=new Set(pk.map(c=>String(c.local?.rackId||'')).filter(Boolean));
-   const racks=all.filter(c=>c?.type==='racks'&&c.local&&rackIds.has(String(c.id)));
-   return {all,pk,racks,repair:[...pk,...racks]};
- }
- function txt(extra){const p=plan();return 'Gespeicherte Konflikte: '+p.all.length+'\nDavon heutige bestätigte Inventurpakete: '+p.pk.length+'\nBetroffene Gestelle mit lokaler Ebenenstruktur: '+p.racks.length+'\nAndere Konflikte bleiben unangetastet: '+(p.all.length-p.repair.length)+(extra?'\n'+extra:'')}
- function out(s){let e=document.getElementById('v190State');if(e)e.textContent=txt(s)}
- window.v190Check=async function(){
-   out('Cloud wird ausschließlich gelesen …');
-   try{
-     if(!authSession)throw new Error('Keine gültige Cloud-Sitzung.');
-     await refreshCloudIdentity(true);if(!cloudMember)throw new Error('Keine Lagerfreigabe gefunden.');
-     const remote=await fetchRemoteEntities(),p=plan();let same=0,older=0,missing=0;
-     p.repair.forEach(c=>{let r=remote[cloudKey(c.type,c.id)];if(!r)missing++;else if(stableJson(r.data)===stableJson(c.local))same++;else older++;});
-     out('Cloud-Lesetest erfolgreich · '+(cloudMember.role||'Freigabe vorhanden')+'\nZu reparieren: '+older+' abweichend · '+missing+' noch nicht in Cloud · '+same+' bereits identisch.\nEs wurde NICHTS geschrieben.');
-   }catch(e){out('Prüfung fehlgeschlagen: '+String(e?.message||e)+'\nEs wurde nichts geschrieben oder überschrieben.');}
- };
- window.v190RepairInventory=async function(){
-   const p=plan();if(!p.pk.length){out('Keine heutigen Inventur-Paketkonflikte gefunden. Keine Aktion nötig.');return}
-   if(!authSession){out('Keine gültige Cloud-Sitzung. Reparatur nicht gestartet.');return}
-   const phrase=prompt('Sicherheitsbestätigung:\n\nEs werden ausschließlich die heutigen bestätigten Inventurpakete und deren betroffene Gestellstruktur vom iPad in die Cloud geschrieben. Cloud → Gerät bleibt gesperrt.\n\nBitte exakt eingeben: INVENTUR SICHERN');
-   if(phrase!=='INVENTUR SICHERN'){out('Abgebrochen. Es wurde nichts geändert.');return}
-   try{
-     await refreshCloudIdentity(true);if(!cloudMember)throw new Error('Keine Lagerfreigabe gefunden.');
-     let remote=await fetchRemoteEntities(),base=loadSyncBase(),done=0,already=0,failed=[];
-     for(const c of p.repair){
-       try{
-         let k=cloudKey(c.type,c.id),r=remote[k];
-         if(r&&stableJson(r.data)===stableJson(c.local)){base[k]={version:Number(r.version||0),hash:stableJson(c.local)};already++;continue}
-         if(!canWriteCloudEntity(c.type,'save'))throw new Error('Cloud-Rolle erlaubt diese Änderung nicht');
-         let val=await rpcEntitySave(c.type,c.id,c.local,Number(r?.version||0),false);
-         let ver=Number(val?.version||((r?.version||0)+1));base[k]={version:ver,hash:stableJson(c.local)};done++;
-       }catch(e){failed.push(c.type+' '+c.id+': '+String(e?.message||e));}
-     }
-     saveSyncBase(base);
-     const repaired=new Set(p.repair.filter(c=>!failed.some(f=>f.startsWith(c.type+' '+c.id+':'))).map(c=>cloudKey(c.type,c.id)));
-     saveSyncConflicts(cs().filter(c=>!repaired.has(cloudKey(c.type,c.id))));
-     const verify=await fetchRemoteEntities();let verified=0,notVerified=[];
-     p.repair.forEach(c=>{let r=verify[cloudKey(c.type,c.id)];if(r&&stableJson(r.data)===stableJson(c.local))verified++;else notVerified.push(c.type+' '+c.id)});
-     out('Reparatur beendet.\nNeu in Cloud geschrieben: '+done+' · bereits identisch: '+already+' · verifiziert: '+verified+'/'+p.repair.length+' · Fehler: '+failed.length+'\nCloud → Gerät blieb während der gesamten Reparatur gesperrt.'+(failed.length?'\nFehler:\n'+failed.slice(0,8).join('\n'):'')+(notVerified.length?'\nNicht verifiziert: '+notVerified.length:''));
-     try{setSyncStatus(failed.length||notVerified.length?'err':'ok',failed.length?'V190: Reparatur mit Fehlern':'V190: Inventurstand sicher in Cloud') }catch(_e){}
-   }catch(e){out('Reparatur abgebrochen: '+String(e?.message||e)+'\nCloud → Gerät blieb gesperrt. Lokale Daten wurden nicht verändert.');}
- };
- function install(){
-   let host=document.getElementById('v189RepairBox')||document.getElementById('authSignedIn')||document.querySelector('.app');if(!host||document.getElementById('v190Box'))return;
-   let b=document.createElement('div');b.id='v190Box';b.className='v190Box';b.innerHTML='<b>Inventur-Reparatur V190</b><div class="v190Warn">Lokaler iPad-Stand bleibt geschützt. Kein Cloud → Gerät.</div><div>V190 repariert nur die heutigen bestätigten Flächeninventur-Pakete und die dazu betroffenen Gestellstrukturen. Andere Konflikte werden nicht automatisch entschieden.</div><div class="toolbar"><button class="btn secondary" type="button" onclick="v190Check()">1 · Cloud nur prüfen</button><button class="btn" type="button" onclick="v190RepairInventory()">2 · Inventurstand in Cloud sichern</button><button class="btn secondary" type="button" onclick="exportLocalRescueV188()">Lokale Sicherung erneut laden</button></div><div id="v190State" class="v190State muted"></div>';
-   host.appendChild(b);out('Noch nichts in die Cloud geschrieben. Zuerst „1 · Cloud nur prüfen“ verwenden.');
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(install,100));else setTimeout(install,100);setTimeout(install,900);
-})();
-</script>
-
-<!-- V191: Systemcheck an optionales Ebenenmodell angepasst; rein diagnostisch, keine Datenmigration -->
-<script id="v191SystemCheckPatch">
-(function(){
- window.KUENZLI_REPAIR_V191=true;
- function noLevelV191(v){return v===null||v===undefined||v===''||Number(v)<0}
- window.collectSystemIssues=function(){
-   ensureV24();ensureReservations();
-   let issues=[],add=(level,title,detail)=>issues.push({level,title,detail});
-   const racks=Array.isArray(st.racks)?st.racks.filter(Boolean):[], areas=Array.isArray(st.areas)?st.areas.filter(Boolean):[], packages=Array.isArray(st.packages)?st.packages.filter(Boolean):[];
-   let areaIds=new Set(areas.map(a=>a.id)),pkgIds=new Set(),elementMap=new Map();
-   racks.forEach(r=>{
-     if(!areaIds.has(r.areaId))add('err','Gestell ohne Lagerfläche',`${r.name||r.id} verweist auf eine nicht vorhandene Lagerfläche.`);
-     // Keine Ebene ist im aktuellen Lagerdatenmodell ausdrücklich zulässig.
-   });
-   packages.forEach(p=>{
-     if(pkgIds.has(p.id))add('err','Doppelte Paket-ID',`Interne ID ${p.id} kommt mehrfach vor.`);pkgIds.add(p.id);
-     let r=racks.find(x=>x.id===p.rackId);
-     if(!r)add('err','Material ohne Gestell',`${p.elementId||p.material||p.id} verweist auf ein nicht vorhandenes Gestell.`);
-     else if(!noLevelV191(p.levelIndex)){
-       const idx=Number(p.levelIndex), levels=Array.isArray(r.levels)?r.levels:[];
-       if(!Number.isInteger(idx)||idx<0||!levels[idx])add('err','Ungültige Ebenenreferenz',`${p.elementId||p.material||p.id}: ${r.name||r.id}, Ebene ${Number.isFinite(idx)?idx+1:String(p.levelIndex)} existiert lokal nicht.`);
-     }
-     if(p.elementId){let key=String(p.elementId).trim().toUpperCase();if(elementMap.has(key))add('err','Doppelte Element-ID',`${key} wird von mehreren aktiven/archivierten Materialien verwendet.`);else elementMap.set(key,p.id)}
-     let rq=reservedQty(p),total=reservationTotalQty(p);if(rq>total)add('warn','Überreservierung',`${p.elementId||p.material||p.id}: Menge ${total}, reserviert ${rq}.`);
-     (p.reservations||[]).forEach(rr=>{if(numM(rr.qty)<=0)add('warn','Ungültige Reservierungsmenge',`${p.elementId||p.material||p.id} enthält eine Reservierung ohne positive Menge.`)})
-   });
-   (st.trash||[]).forEach(t=>{if(!t.package)add('warn','Unvollständiger Papierkorb-Eintrag',`Papierkorb-ID ${t.id||'–'} enthält kein Material.`)});
-   let active=activeControl();if(active){let missing=(active.items||[]).filter(i=>!packages.some(p=>p.id===i.packageId)&&!i.result).length;if(missing)add('warn','Laufende Kontrolle enthält fehlende Datensätze',`${missing} offene Position(en) verweisen auf nicht mehr vorhandene Materialien.`)}
-   let cs=[];try{cs=loadSyncConflicts()||[]}catch(_e){}
-   if(cs.length){
-     const rackConf=cs.filter(c=>c?.type==='racks'&&c.local&&c.remote&&stableJson(c.local)!==stableJson(c.remote));
-     const pkgConf=cs.filter(c=>c?.type==='packages'&&c.local&&c.remote&&stableJson(c.local)!==stableJson(c.remote));
-     add('warn','Offene Synchronisationskonflikte',`${cs.length} Konflikt(e) gespeichert · ${rackConf.length} Gestellstruktur · ${pkgConf.length} Material/Paket. Lokaler Stand wird in V191 nicht automatisch verändert.`);
-   }
-   if(cloudCfg.mode==='supabase'&&!authSession)add('warn','Cloud ohne Anmeldung','Cloud-Modus ist aktiv, aber es besteht keine Anmeldung.');
-   if(cloudCfg.mode==='supabase'&&authSession&&!cloudMember)add('warn','Keine aktive Lager-Mitgliedschaft','Angemeldet, aber für diese Lager-ID ist keine aktive Mitgliedschaft geladen.');
-   return issues;
- };
- function refreshV191(){try{if(document.getElementById('systemCheckSummary'))runSystemCheck(false)}catch(_e){}}
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(refreshV191,250));else setTimeout(refreshV191,250);
-})();
-</script>
-
-
-<!-- BV2026-1-203 · Touch-stabiler lokaler Normalmodus: alle Bereiche sichtbar, Cloud weiterhin gesperrt -->
-<style id="v202Style">\n#v202Safe{position:fixed;z-index:2147483646;left:10px;right:10px;top:10px;padding:9px 12px;border:2px solid #176044;border-radius:12px;background:#f2fbf6;box-shadow:0 6px 24px #0002;font:13px/1.35 system-ui,-apple-system,sans-serif;color:#17352b}body.v202safe{padding-top:76px!important}\n</style>\n<script id="v202LocalNormal">\n(function(){\n window.KUENZLI_RESCUE_V188=true;window.KUENZLI_RESCUE_V202=true;window.KUENZLI_RESCUE_V203=true;\n function stop(){try{stopCloudPolling()}catch(_e){}}\n function count(){try{return Array.isArray(st&&st.packages)?st.packages.filter(Boolean).length:0}catch(_e){return 0}}\n function install(){\n  stop();if(!authSession||mustChangePassword)return;\n  try{document.body.classList.remove('accessLocked');document.body.classList.add('v202safe')}catch(_e){}\n  try{document.getElementById('authModal')?.classList.remove('open')}catch(_e){}\n  try{refreshPermissionVisibility()}catch(_e){}\n  try{showModuleHome()}catch(_e){}\n  var e=document.getElementById('v202Safe');if(!e){e=document.createElement('div');e.id='v202Safe';document.body.appendChild(e)}\n  e.innerHTML='<b>V206 · Lokaler Wiederherstellungsmodus</b> · '+count()+' Pakete geschützt · alle Bereiche lokal verfügbar · Cloud Lesen/Schreiben gesperrt.';\n  stop();\n }\n if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();\n setTimeout(install,200);setTimeout(install,900);setTimeout(install,2200);\n})();\n</script>\n
-
-
-<!-- BV2026-1-206 · READ-ONLY Cloud-Diagnose mit sicherer 504/PGRST003-Behandlung -->
-<script id="v206ReadOnlyCloudDiag">
-(function(){
- window.KUENZLI_RESCUE_V188=true;
- window.KUENZLI_RESCUE_V202=true;
- window.KUENZLI_RESCUE_V203=true;
- window.KUENZLI_DIAG_V206=true;
- window.V206_MEMBERSHIP_STATUS='unknown';
- function out(msg){var e=document.getElementById('v206ReadOnlyState');if(e)e.textContent=msg;}
- function localPackages(){try{return Array.isArray(st&&st.packages)?st.packages.filter(Boolean):[]}catch(_e){return []}}
- function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
- function isPoolTimeout(status,text){return Number(status)===504 || /PGRST003|Timed out acquiring connection from connection pool/i.test(String(text||''));}
- async function readWithRetry(url,label){
-  var waits=[0,2500,5000], last=null;
-  for(var i=0;i<waits.length;i++){
-   if(waits[i]){out('V206 · '+label+' vorübergehend nicht erreichbar.\nSicherer Leseversuch '+(i+1)+'/3 in '+(waits[i]/1000)+' s …\n\nKeine lokalen Daten werden verändert.');await sleep(waits[i]);}
-   var r=await fetch(url,{method:'GET',headers:cloudHeaders()});
-   var t=await r.text();
-   if(r.ok)return {response:r,text:t};
-   last={status:r.status,text:t};
-   if(!isPoolTimeout(r.status,t))break;
-  }
-  var err=new Error(label+' HTTP '+(last&&last.status)+': '+String(last&&last.text||'').slice(0,600));
-  err.v206Temporary=!!(last&&isPoolTimeout(last.status,last.text));
-  err.status=last&&last.status; err.body=last&&last.text;
-  throw err;
- }
- function refreshCheck(){try{if(document.getElementById('systemCheckSummary'))runSystemCheck(false)}catch(_e){}}
- var previousCollect=window.collectSystemIssues;
- if(typeof previousCollect==='function'){
-  window.collectSystemIssues=function(){
-   var issues=previousCollect.apply(this,arguments)||[];
-   if(window.V206_MEMBERSHIP_STATUS==='temporary-unavailable'){
-    issues=issues.filter(function(x){return !(x&&x.title==='Keine aktive Lager-Mitgliedschaft');});
-    issues.push({level:'warn',title:'Cloud/Lagerfreigabe vorübergehend nicht prüfbar',detail:'Die Lagerfreigabe konnte wegen eines Cloud-Datenbank-Timeouts (HTTP 504 / PGRST003) nicht verifiziert werden. Das ist kein Nachweis für eine fehlende Mitgliedschaft. Lokaler Materialbestand bleibt geschützt.'});
-   }
-   return issues;
-  };
- }
- window.v206ReadOnlyCloud=async function(){
-  out('V206 · Cloud wird ausschließlich gelesen …\nLokaler Materialbestand bleibt unverändert.');
-  window.V206_MEMBERSHIP_STATUS='checking';
-  try{
-   try{stopCloudPolling()}catch(_e){}
-   cloudCfg=loadCloudConfig();
-   if(!authSession)throw new Error('Keine Cloud-Anmeldung vorhanden.');
-   if(!await ensureFreshSession())throw new Error('Cloud-Sitzung konnte nicht erneuert werden.');
-   var uid=authSession&&authSession.user&&authSession.user.id;
-   if(!uid)throw new Error('Keine Benutzer-ID in der Cloud-Sitzung.');
-   var mu=membershipBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&user_id=eq.'+encodeURIComponent(uid)+'&select=user_id,username,name,role,active';
-   var mres=await readWithRetry(mu,'Lagerfreigabe');
-   var members=[];try{members=JSON.parse(mres.text)||[]}catch(_e){throw new Error('Antwort der Lagerfreigabe ist kein gültiges JSON.');}
-   window.V206_MEMBERSHIP_STATUS=members.length?'verified':'verified-none';
-   var eu=entityBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&select=entity_type,entity_id,data,version,updated_at,updated_by';
-   var eres=await readWithRetry(eu,'Cloud-Daten');
-   var rows=[];try{rows=JSON.parse(eres.text)||[]}catch(_e){throw new Error('Antwort der Cloud-Daten ist kein gültiges JSON.');}
-   var counts={};rows.forEach(function(x){if(x&&x.entity_type)counts[x.entity_type]=(counts[x.entity_type]||0)+1;});
-   var remote=rows.filter(function(x){return x&&x.entity_type==='packages'&&x.data;});
-   var local=localPackages();
-   var localIds=new Set(local.map(function(p,i){return String((p&&p.id)!=null?p.id:((p&&p.elementId)!=null?p.elementId:i));}));
-   var remoteIds=new Set(remote.map(function(x){return String(x.entity_id);}));
-   var onlyLocal=0,onlyCloud=0;localIds.forEach(function(x){if(!remoteIds.has(x))onlyLocal++;});remoteIds.forEach(function(x){if(!localIds.has(x))onlyCloud++;});
-   var m=members[0]||null;
-   var mtxt=!m?'KEIN Datensatz':((m.active===false?'INAKTIV':'AKTIV')+' · '+(m.username||'ohne Benutzername')+' · '+(m.role||'ohne Rolle'));
-   out(['V206 · READ-ONLY abgeschlossen','Lokal: '+local.length+' Pakete','Cloud: '+remote.length+' Paket-Datensätze','Nur lokal (ID): '+onlyLocal,'Nur Cloud (ID): '+onlyCloud,'Cloud-Flächen: '+(counts.areas||0)+' · Gestelle: '+(counts.racks||0),'Lagerfreigabe: '+mtxt,'Cloud-Gesamtdatensätze: '+rows.length,'','NICHTS wurde lokal angewendet. NICHTS wurde in die Cloud geschrieben.'].join('\n'));
-  }catch(e){
-   if(e&&e.v206Temporary){
-    window.V206_MEMBERSHIP_STATUS='temporary-unavailable';
-    out('V206 · Cloud vorübergehend nicht erreichbar\nHTTP 504 / PGRST003: Datenbank-Verbindungspool hat nach 3 Leseversuchen nicht rechtzeitig geantwortet.\n\nDie Lagerfreigabe wird NICHT als fehlend gewertet.\n347 lokale Pakete bleiben unangetastet.\nEs wurde nichts synchronisiert oder überschrieben.\n\nSpäter erneut „Cloud nur lesen“ drücken.');
-   }else{
-    window.V206_MEMBERSHIP_STATUS='error';
-    out('V206 · Lesetest fehlgeschlagen\n'+String(e&&e.message||e)+'\n\nDie Lagerfreigabe wurde nicht verändert. Es wurde nichts synchronisiert oder überschrieben.');
-   }
-  }finally{try{stopCloudPolling()}catch(_e){} refreshCheck();}
- };
- try{stopCloudPolling()}catch(_e){}
 })();
 </script>
