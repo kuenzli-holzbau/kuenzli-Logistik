@@ -6391,6 +6391,22 @@ function ensurePermissionStore(){
 function permissionKeyForLocal(id){return 'local:'+String(id||'')}
 function permissionKeyForCloud(username){return 'cloud:'+cleanUsername(username||'')}
 function currentPermissionKey(){
+ // V200 rescue: use ONLY an already saved local permission set for the authenticated user.
+ // No permission is invented and no cloud data is read/written here.
+ if(window.KUENZLI_RESCUE_V200===true && cloudAuthEnabled() && authSession){
+   let uname='';
+   try{uname=cleanUsername(cloudMember?.username||authUsername()||'')}catch(_e){}
+   if(!uname){
+     try{
+       const au=activeUser();
+       if(au && au.name) uname=cleanUsername(au.name);
+     }catch(_e){}
+   }
+   if(uname){
+     const k=permissionKeyForCloud(uname);
+     if(st?.userPermissions?.[k] && typeof st.userPermissions[k]==='object')return k;
+   }
+ }
  return cloudAuthEnabled()?permissionKeyForCloud(cloudMember?.username||authUsername()):permissionKeyForLocal(st.activeUserId||'');
 }
 function defaultPermissionsForRole(role){
@@ -27733,58 +27749,4 @@ renderPlatformReservationGantt=function(from='',to=''){
  setTimeout(boot,900);
 })();
 </script>
-
-<!-- BV2026-1-199 · lokaler Rettungszugang zur Navigation; keinerlei Cloud-Datenabgleich -->
-<style id="v199Style">
-#v199RescueNav{position:fixed;left:12px;right:12px;top:12px;z-index:2147483646;background:#fff;border:2px solid #174d40;border-radius:14px;box-shadow:0 10px 32px rgba(0,0,0,.18);padding:12px 14px;font:14px/1.35 system-ui,-apple-system,sans-serif;color:#17211d}
-#v199RescueNav .v199row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}#v199RescueNav b{margin-right:6px}#v199RescueNav button{border:0;border-radius:9px;padding:10px 13px;font-weight:800;background:#174d40;color:#fff}#v199RescueNav button.secondary{background:#e9f0ed;color:#174d40}#v199RescueState{margin-top:7px;font-size:12px;color:#53615b;white-space:pre-wrap}
-body{padding-top:82px!important}
-</style>
-<script id="v199LocalRescueNav">
-(function(){
-  window.KUENZLI_RESCUE_V188=true;
-  window.KUENZLI_REPAIR_V199=true;
-  function stopCloud(){try{stopCloudPolling()}catch(e){} }
-  function unlockVisual(){
-    stopCloud();
-    try{document.body.classList.remove('accessLocked')}catch(e){}
-    try{document.getElementById('authModal')?.classList.remove('open')}catch(e){}
-    try{document.getElementById('v196RescueScreen')?.remove()}catch(e){}
-  }
-  function localPermInfo(){
-    try{
-      var u=(typeof authUsername==='function'?authUsername():'')||cloudMember?.username||'';
-      var k='cloud:'+String(u||'').trim().toLowerCase();
-      var p=st?.userPermissions?.[k]||null;
-      return {user:u,key:k,p:p};
-    }catch(e){return {user:'',key:'',p:null,error:String(e)}}
-  }
-  function setState(t){var e=document.getElementById('v199RescueState');if(e)e.textContent=t}
-  function go(fn,name){
-    unlockVisual();
-    try{
-      if(typeof window[fn]!=='function')throw new Error(fn+' ist nicht verfügbar');
-      window[fn]();
-      setState(name+' lokal geöffnet. Cloud-Synchronisation bleibt gesperrt.');
-    }catch(e){setState(name+' konnte nicht geöffnet werden: '+String(e&&e.message||e));}
-    stopCloud();
-  }
-  function install(){
-    unlockVisual();
-    var old=document.getElementById('v199RescueNav');if(old)return;
-    var x=document.createElement('div');x.id='v199RescueNav';
-    x.innerHTML='<div class="v199row"><b>Rettungsmodus V199</b><button id="v199Settings" type="button">Verwaltung öffnen</button><button id="v199Warehouse" type="button">Lager öffnen</button><button id="v199Home" class="secondary" type="button">Bereichsauswahl</button><button id="v199Backup" class="secondary" type="button">Lokale Daten sichern</button></div><div id="v199RescueState">Lokaler Datenstand aktiv. Cloud → Gerät und Gerät → Cloud bleiben gesperrt.</div>';
-    document.body.appendChild(x);
-    document.getElementById('v199Settings').onclick=function(){go('openGlobalSettingsModule','Verwaltung')};
-    document.getElementById('v199Warehouse').onclick=function(){go('openWarehouseModule','Lager')};
-    document.getElementById('v199Home').onclick=function(){go('showModuleHome','Bereichsauswahl')};
-    document.getElementById('v199Backup').onclick=function(){try{exportLocalRescueV188();setState('Lokale Sicherung erstellt. Cloud blieb gesperrt.')}catch(e){setState('Sicherung fehlgeschlagen: '+String(e&&e.message||e))}};
-    var q=localPermInfo();
-    if(q.p){setState('Lokale Berechtigungen gefunden: '+q.key+' · Lager '+(q.p.warehouse===true?'JA':'NEIN')+' · Verwaltung '+(q.p.manage===true?'JA':'NEIN')+'.\nCloud → Gerät und Gerät → Cloud bleiben gesperrt.');}
-    else setState('Lokaler Berechtigungssatz für '+(q.key||'Cloud-Benutzer')+' nicht gefunden. Rettungsnavigation bleibt verfügbar; Cloud-Synchronisation ist gesperrt.');
-  }
-  function boot(){unlockVisual();install();stopCloud()}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
-  setTimeout(boot,300);setTimeout(boot,1200);
-})();
-</script>
+\n<!-- BV2026-1-200 · sicherer lokaler Berechtigungskontext; keine Cloud-Lagerdaten -->\n<style id="v200Style">\n#v200LocalState{position:fixed;left:12px;right:12px;top:12px;z-index:2147483646;background:#fff;border:2px solid #174d40;border-radius:12px;padding:10px 13px;box-shadow:0 8px 28px rgba(0,0,0,.16);font:13px/1.35 system-ui,-apple-system,sans-serif;color:#17211d}\n#v200LocalState b{margin-right:8px} body.v200-local-open{padding-top:68px!important}\n</style>\n<script id="v200LocalPermissionContext">\n(function(){\n  window.KUENZLI_RESCUE_V188=true; // existing hard guard: blocks Lager cloud push/pull\n  window.KUENZLI_RESCUE_V200=true;\n  function stopCloud(){try{if(typeof stopCloudPolling==='function')stopCloudPolling()}catch(_e){}}\n  function savedKey(){\n    if(!window.authSession)return '';\n    var uname='';\n    try{uname=cleanUsername((window.cloudMember&&cloudMember.username)||authUsername()||'')}catch(_e){}\n    if(!uname){try{var au=activeUser();uname=cleanUsername(au&&au.name||'')}catch(_e){}}\n    var k=uname?'cloud:'+uname:'';\n    return k && st && st.userPermissions && st.userPermissions[k] ? k : '';\n  }\n  function install(){\n    stopCloud();\n    if(!window.authSession)return; // never bypass the login itself\n    var k=savedKey();\n    if(!k)return; // never fabricate permissions\n    try{document.body.classList.remove('accessLocked');document.body.classList.add('v200-local-open')}catch(_e){}\n    try{document.getElementById('authModal')?.classList.remove('open')}catch(_e){}\n    try{document.getElementById('v196RescueScreen')?.remove()}catch(_e){}\n    try{if(typeof refreshPermissionVisibility==='function')refreshPermissionVisibility()}catch(_e){}\n    var p=st.userPermissions[k]||{};\n    var e=document.getElementById('v200LocalState');\n    if(!e){e=document.createElement('div');e.id='v200LocalState';document.body.appendChild(e)}\n    e.innerHTML='<b>V200 · Lokaler Berechtigungssatz aktiv</b>'+k+' · Lager '+(p.warehouse===true?'JA':'NEIN')+' · Lagerkontrolle '+(p.control===true?'JA':'NEIN')+' · Verwaltung '+(p.manage===true?'JA':'NEIN')+'<br><span style="color:#53615b">Cloud-Lagerdaten bleiben gesperrt. Es werden nur die bereits auf diesem iPad gespeicherten Rechte verwendet.</span>' ;\n    stopCloud();\n  }\n  function boot(){install();stopCloud()}\n  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();\n  setTimeout(boot,250);setTimeout(boot,1000);setTimeout(boot,2500);\n})();\n</script>\n
