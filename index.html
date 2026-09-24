@@ -4882,16 +4882,16 @@ window.APP_RELEASE = {
     <div id="systemCheckList" class="manageList" style="margin-top:8px"></div>
    </div>
 
-   <div class="manageSubsection" id="v205CloudReadOnlyCard">
+   <div class="manageSubsection" id="v206CloudReadOnlyCard">
     <div class="manageHead">
-     <div><h3 style="margin:0">Cloud-Diagnose V205 · nur lesen</h3><p class="muted">Liest Lagerfreigabe und Cloud-Bestand. Es wird nichts lokal angewendet und nichts in die Cloud geschrieben.</p></div>
+     <div><h3 style="margin:0">Cloud-Diagnose V206 · nur lesen</h3><p class="muted">Liest Lagerfreigabe und Cloud-Bestand. Es wird nichts lokal angewendet und nichts in die Cloud geschrieben.</p></div>
     </div>
     <div class="authState" style="font-weight:700;color:#24543b">Sicherheitsmodus: 347 lokale Pakete bleiben unangetastet · Cloud → Gerät und Gerät → Cloud gesperrt.</div>
     <div class="toolbar compactToolbar" style="margin-top:8px">
-     <button class="btn" type="button" onclick="v205ReadOnlyCloud()">Cloud nur lesen</button>
+     <button class="btn" type="button" onclick="v206ReadOnlyCloud()">Cloud nur lesen</button>
      <button class="btn secondary" type="button" onclick="exportLocalRescueV188()">Lokale Daten sichern</button>
     </div>
-    <div id="v205ReadOnlyState" class="authState muted" style="white-space:pre-wrap;margin-top:8px">Noch keine Cloud-Abfrage.</div>
+    <div id="v206ReadOnlyState" class="authState muted" style="white-space:pre-wrap;margin-top:8px">Noch keine Cloud-Abfrage.</div>
    </div>
 
    <div class="manageSubsection">
@@ -27475,20 +27475,51 @@ renderPlatformReservationGantt=function(from='',to=''){
 
 
 <!-- BV2026-1-203 · Touch-stabiler lokaler Normalmodus: alle Bereiche sichtbar, Cloud weiterhin gesperrt -->
-<style id="v202Style">\n#v202Safe{position:fixed;z-index:2147483646;left:10px;right:10px;top:10px;padding:9px 12px;border:2px solid #176044;border-radius:12px;background:#f2fbf6;box-shadow:0 6px 24px #0002;font:13px/1.35 system-ui,-apple-system,sans-serif;color:#17352b}body.v202safe{padding-top:76px!important}\n</style>\n<script id="v202LocalNormal">\n(function(){\n window.KUENZLI_RESCUE_V188=true;window.KUENZLI_RESCUE_V202=true;window.KUENZLI_RESCUE_V203=true;\n function stop(){try{stopCloudPolling()}catch(_e){}}\n function count(){try{return Array.isArray(st&&st.packages)?st.packages.filter(Boolean).length:0}catch(_e){return 0}}\n function install(){\n  stop();if(!authSession||mustChangePassword)return;\n  try{document.body.classList.remove('accessLocked');document.body.classList.add('v202safe')}catch(_e){}\n  try{document.getElementById('authModal')?.classList.remove('open')}catch(_e){}\n  try{refreshPermissionVisibility()}catch(_e){}\n  try{showModuleHome()}catch(_e){}\n  var e=document.getElementById('v202Safe');if(!e){e=document.createElement('div');e.id='v202Safe';document.body.appendChild(e)}\n  e.innerHTML='<b>V203 · Lokaler Wiederherstellungsmodus</b> · '+count()+' Pakete geschützt · alle Bereiche lokal verfügbar · Cloud Lesen/Schreiben gesperrt.';\n  stop();\n }\n if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();\n setTimeout(install,200);setTimeout(install,900);setTimeout(install,2200);\n})();\n</script>\n
+<style id="v202Style">\n#v202Safe{position:fixed;z-index:2147483646;left:10px;right:10px;top:10px;padding:9px 12px;border:2px solid #176044;border-radius:12px;background:#f2fbf6;box-shadow:0 6px 24px #0002;font:13px/1.35 system-ui,-apple-system,sans-serif;color:#17352b}body.v202safe{padding-top:76px!important}\n</style>\n<script id="v202LocalNormal">\n(function(){\n window.KUENZLI_RESCUE_V188=true;window.KUENZLI_RESCUE_V202=true;window.KUENZLI_RESCUE_V203=true;\n function stop(){try{stopCloudPolling()}catch(_e){}}\n function count(){try{return Array.isArray(st&&st.packages)?st.packages.filter(Boolean).length:0}catch(_e){return 0}}\n function install(){\n  stop();if(!authSession||mustChangePassword)return;\n  try{document.body.classList.remove('accessLocked');document.body.classList.add('v202safe')}catch(_e){}\n  try{document.getElementById('authModal')?.classList.remove('open')}catch(_e){}\n  try{refreshPermissionVisibility()}catch(_e){}\n  try{showModuleHome()}catch(_e){}\n  var e=document.getElementById('v202Safe');if(!e){e=document.createElement('div');e.id='v202Safe';document.body.appendChild(e)}\n  e.innerHTML='<b>V206 · Lokaler Wiederherstellungsmodus</b> · '+count()+' Pakete geschützt · alle Bereiche lokal verfügbar · Cloud Lesen/Schreiben gesperrt.';\n  stop();\n }\n if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();\n setTimeout(install,200);setTimeout(install,900);setTimeout(install,2200);\n})();\n</script>\n
 
 
-<!-- BV2026-1-205 · source-integrierte READ-ONLY Cloud-Diagnose -->
-<script id="v205ReadOnlyCloudDiag">
+<!-- BV2026-1-206 · READ-ONLY Cloud-Diagnose mit sicherer 504/PGRST003-Behandlung -->
+<script id="v206ReadOnlyCloudDiag">
 (function(){
  window.KUENZLI_RESCUE_V188=true;
  window.KUENZLI_RESCUE_V202=true;
  window.KUENZLI_RESCUE_V203=true;
- window.KUENZLI_DIAG_V205=true;
- function out(msg){var e=document.getElementById('v205ReadOnlyState');if(e)e.textContent=msg;}
+ window.KUENZLI_DIAG_V206=true;
+ window.V206_MEMBERSHIP_STATUS='unknown';
+ function out(msg){var e=document.getElementById('v206ReadOnlyState');if(e)e.textContent=msg;}
  function localPackages(){try{return Array.isArray(st&&st.packages)?st.packages.filter(Boolean):[]}catch(_e){return []}}
- window.v205ReadOnlyCloud=async function(){
-  out('Cloud wird ausschließlich gelesen …\\nLokaler Materialbestand bleibt unverändert.');
+ function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
+ function isPoolTimeout(status,text){return Number(status)===504 || /PGRST003|Timed out acquiring connection from connection pool/i.test(String(text||''));}
+ async function readWithRetry(url,label){
+  var waits=[0,2500,5000], last=null;
+  for(var i=0;i<waits.length;i++){
+   if(waits[i]){out('V206 · '+label+' vorübergehend nicht erreichbar.\nSicherer Leseversuch '+(i+1)+'/3 in '+(waits[i]/1000)+' s …\n\nKeine lokalen Daten werden verändert.');await sleep(waits[i]);}
+   var r=await fetch(url,{method:'GET',headers:cloudHeaders()});
+   var t=await r.text();
+   if(r.ok)return {response:r,text:t};
+   last={status:r.status,text:t};
+   if(!isPoolTimeout(r.status,t))break;
+  }
+  var err=new Error(label+' HTTP '+(last&&last.status)+': '+String(last&&last.text||'').slice(0,600));
+  err.v206Temporary=!!(last&&isPoolTimeout(last.status,last.text));
+  err.status=last&&last.status; err.body=last&&last.text;
+  throw err;
+ }
+ function refreshCheck(){try{if(document.getElementById('systemCheckSummary'))runSystemCheck(false)}catch(_e){}}
+ var previousCollect=window.collectSystemIssues;
+ if(typeof previousCollect==='function'){
+  window.collectSystemIssues=function(){
+   var issues=previousCollect.apply(this,arguments)||[];
+   if(window.V206_MEMBERSHIP_STATUS==='temporary-unavailable'){
+    issues=issues.filter(function(x){return !(x&&x.title==='Keine aktive Lager-Mitgliedschaft');});
+    issues.push({level:'warn',title:'Cloud/Lagerfreigabe vorübergehend nicht prüfbar',detail:'Die Lagerfreigabe konnte wegen eines Cloud-Datenbank-Timeouts (HTTP 504 / PGRST003) nicht verifiziert werden. Das ist kein Nachweis für eine fehlende Mitgliedschaft. Lokaler Materialbestand bleibt geschützt.'});
+   }
+   return issues;
+  };
+ }
+ window.v206ReadOnlyCloud=async function(){
+  out('V206 · Cloud wird ausschließlich gelesen …\nLokaler Materialbestand bleibt unverändert.');
+  window.V206_MEMBERSHIP_STATUS='checking';
   try{
    try{stopCloudPolling()}catch(_e){}
    cloudCfg=loadCloudConfig();
@@ -27497,15 +27528,12 @@ renderPlatformReservationGantt=function(from='',to=''){
    var uid=authSession&&authSession.user&&authSession.user.id;
    if(!uid)throw new Error('Keine Benutzer-ID in der Cloud-Sitzung.');
    var mu=membershipBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&user_id=eq.'+encodeURIComponent(uid)+'&select=user_id,username,name,role,active';
-   var mr=await fetch(mu,{method:'GET',headers:cloudHeaders()});
-   var mt=await mr.text();
-   if(!mr.ok)throw new Error('Lagerfreigabe HTTP '+mr.status+': '+mt.slice(0,600));
-   var members=[];try{members=JSON.parse(mt)||[]}catch(_e){throw new Error('Antwort der Lagerfreigabe ist kein gültiges JSON.');}
+   var mres=await readWithRetry(mu,'Lagerfreigabe');
+   var members=[];try{members=JSON.parse(mres.text)||[]}catch(_e){throw new Error('Antwort der Lagerfreigabe ist kein gültiges JSON.');}
+   window.V206_MEMBERSHIP_STATUS=members.length?'verified':'verified-none';
    var eu=entityBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&select=entity_type,entity_id,data,version,updated_at,updated_by';
-   var er=await fetch(eu,{method:'GET',headers:cloudHeaders()});
-   var et=await er.text();
-   if(!er.ok)throw new Error('Cloud-Daten HTTP '+er.status+': '+et.slice(0,600));
-   var rows=[];try{rows=JSON.parse(et)||[]}catch(_e){throw new Error('Antwort der Cloud-Daten ist kein gültiges JSON.');}
+   var eres=await readWithRetry(eu,'Cloud-Daten');
+   var rows=[];try{rows=JSON.parse(eres.text)||[]}catch(_e){throw new Error('Antwort der Cloud-Daten ist kein gültiges JSON.');}
    var counts={};rows.forEach(function(x){if(x&&x.entity_type)counts[x.entity_type]=(counts[x.entity_type]||0)+1;});
    var remote=rows.filter(function(x){return x&&x.entity_type==='packages'&&x.data;});
    var local=localPackages();
@@ -27514,9 +27542,16 @@ renderPlatformReservationGantt=function(from='',to=''){
    var onlyLocal=0,onlyCloud=0;localIds.forEach(function(x){if(!remoteIds.has(x))onlyLocal++;});remoteIds.forEach(function(x){if(!localIds.has(x))onlyCloud++;});
    var m=members[0]||null;
    var mtxt=!m?'KEIN Datensatz':((m.active===false?'INAKTIV':'AKTIV')+' · '+(m.username||'ohne Benutzername')+' · '+(m.role||'ohne Rolle'));
-   out(['V205 · READ-ONLY abgeschlossen','Lokal: '+local.length+' Pakete','Cloud: '+remote.length+' Paket-Datensätze','Nur lokal (ID): '+onlyLocal,'Nur Cloud (ID): '+onlyCloud,'Cloud-Flächen: '+(counts.areas||0)+' · Gestelle: '+(counts.racks||0),'Lagerfreigabe: '+mtxt,'Cloud-Gesamtdatensätze: '+rows.length,'','NICHTS wurde lokal angewendet. NICHTS wurde in die Cloud geschrieben.'].join('\\n'));
-  }catch(e){out('V205 · Lesetest fehlgeschlagen\\n'+String(e&&e.message||e)+'\\n\\nEs wurde nichts synchronisiert oder überschrieben.');}
-  finally{try{stopCloudPolling()}catch(_e){}}
+   out(['V206 · READ-ONLY abgeschlossen','Lokal: '+local.length+' Pakete','Cloud: '+remote.length+' Paket-Datensätze','Nur lokal (ID): '+onlyLocal,'Nur Cloud (ID): '+onlyCloud,'Cloud-Flächen: '+(counts.areas||0)+' · Gestelle: '+(counts.racks||0),'Lagerfreigabe: '+mtxt,'Cloud-Gesamtdatensätze: '+rows.length,'','NICHTS wurde lokal angewendet. NICHTS wurde in die Cloud geschrieben.'].join('\n'));
+  }catch(e){
+   if(e&&e.v206Temporary){
+    window.V206_MEMBERSHIP_STATUS='temporary-unavailable';
+    out('V206 · Cloud vorübergehend nicht erreichbar\nHTTP 504 / PGRST003: Datenbank-Verbindungspool hat nach 3 Leseversuchen nicht rechtzeitig geantwortet.\n\nDie Lagerfreigabe wird NICHT als fehlend gewertet.\n347 lokale Pakete bleiben unangetastet.\nEs wurde nichts synchronisiert oder überschrieben.\n\nSpäter erneut „Cloud nur lesen“ drücken.');
+   }else{
+    window.V206_MEMBERSHIP_STATUS='error';
+    out('V206 · Lesetest fehlgeschlagen\n'+String(e&&e.message||e)+'\n\nDie Lagerfreigabe wurde nicht verändert. Es wurde nichts synchronisiert oder überschrieben.');
+   }
+  }finally{try{stopCloudPolling()}catch(_e){} refreshCheck();}
  };
  try{stopCloudPolling()}catch(_e){}
 })();
