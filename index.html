@@ -27432,3 +27432,33 @@ renderPlatformReservationGantt=function(from='',to=''){
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(install,120));else setTimeout(install,120);setTimeout(install,900);
 })();
 </script>
+
+<!-- V193: Lagerfreigabe-Box zuverlässig direkt in System & Sicherung platzieren -->
+<style id="v193MembershipStyle">
+#v192Box.v193Placed{margin:12px 0 16px 0}
+</style>
+<script id="v193MembershipPlacementPatch">
+(function(){
+ window.KUENZLI_REPAIR_V193=true;
+ function systemHost(){
+   var card=document.getElementById('systemCheckCard');
+   return card&&card.parentElement ? {body:card.parentElement,card:card} : null;
+ }
+ function ensureBox(){
+   var h=systemHost(); if(!h)return false;
+   var b=document.getElementById('v192Box');
+   if(!b){
+     b=document.createElement('div'); b.id='v192Box'; b.className='v192Box';
+     b.innerHTML='<b>Lagerfreigabe-Reparatur V193</b><div class="v192Warn">Nur die Benutzer-/Lagerfreigabe wird geprüft bzw. wieder dem aktuellen Cloud-Konto zugeordnet. Lagerdaten bleiben gesperrt.</div><div class="toolbar"><button class="btn secondary" type="button" onclick="v192CheckMembership()">1 · Lagerfreigabe nur prüfen</button><button class="btn" type="button" onclick="v192RepairMembership()">2 · Lagerfreigabe reparieren</button></div><div id="v192State" class="v192State muted">Noch nichts geändert.</div>';
+   }
+   b.classList.add('v193Placed');
+   var title=b.querySelector('b'); if(title)title.textContent='Lagerfreigabe-Reparatur V193';
+   if(b.parentElement!==h.body || b.previousElementSibling!==h.card) h.card.insertAdjacentElement('afterend',b);
+   try{stopCloudPolling()}catch(_e){}
+   return true;
+ }
+ function boot(){ensureBox();setTimeout(ensureBox,300);setTimeout(ensureBox,1200);}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+ new MutationObserver(function(){ensureBox()}).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
