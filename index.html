@@ -27647,3 +27647,89 @@ renderPlatformReservationGantt=function(from='',to=''){
  new MutationObserver(function(){stop();install()}).observe(document.documentElement,{childList:true,subtree:true});
 })();
 </script>
+
+<!-- BV2026-1-198 · Berechtigungen isoliert laden; keine Lagerdaten-Synchronisation -->
+<style id="v198Style">
+#v198PermState{max-width:980px;margin:8px auto 14px;padding:10px 14px;border:1px solid #b8c9c0;border-radius:10px;background:#f4f8f6;font-size:13px;white-space:pre-wrap}
+#v198PermState.ok{border-color:#6ea184;background:#edf8f1}#v198PermState.err{border-color:#c88;background:#fff2f2}
+</style>
+<script id="v198PermissionRepair">
+(function(){
+ window.KUENZLI_RESCUE_V188=true;
+ window.KUENZLI_REPAIR_V198=true;
+ function key(){try{return 'cloud:'+cleanUsername(authUsername()||cloudMember?.username||'')}catch(_e){return ''}}
+ function stateEl(){
+   var home=document.getElementById('moduleHome'); if(!home)return null;
+   var e=document.getElementById('v198PermState');
+   if(!e){e=document.createElement('div');e.id='v198PermState';e.textContent='V198: Berechtigungen werden geprüft …';var inner=home.querySelector('.moduleHomeInner');if(inner)inner.insertBefore(e,inner.querySelector('.moduleHomeDashboard'));}
+   return e;
+ }
+ function applyUI(){
+   try{document.body.classList.remove('accessLocked')}catch(_e){}
+   try{document.getElementById('v196RescueScreen')?.remove()}catch(_e){}
+   try{document.getElementById('authModal')?.classList.remove('open')}catch(_e){}
+   try{refreshPermissionVisibility?.()}catch(_e){}
+   try{renderUserHeader?.()}catch(_e){}
+   try{
+     var p=currentPermissions()||{};
+     var map={moduleWarehouseTile:'warehouse',moduleProjectsTile:'projects',moduleSmallOrdersTile:'smallOrders',modulePlatformsTile:'platforms',moduleToolsTile:'tools'};
+     Object.keys(map).forEach(function(id){var el=document.getElementById(id);if(!el)return;var yes=p[map[id]]===true;el.hidden=!yes;el.style.setProperty('display',yes?'flex':'none','important');el.style.pointerEvents=yes?'auto':'none';});
+   }catch(_e){}
+ }
+ async function readMembershipOnly(){
+   if(!authSession)throw new Error('Keine Cloud-Anmeldung vorhanden.');
+   if(!await ensureFreshSession())throw new Error('Cloud-Sitzung konnte nicht erneuert werden.');
+   cloudCfg=loadCloudConfig();
+   var url=membershipBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&user_id=eq.'+encodeURIComponent(authSession.user.id)+'&active=eq.true&select=user_id,username,name,role,active&limit=1';
+   var r=await fetch(url,{headers:cloudHeaders()});if(!r.ok)throw new Error((await r.text())||('HTTP '+r.status));
+   var row=(await r.json())[0]||null;
+   if(!row){
+     var uname=cleanUsername(authUsername()||'');
+     if(uname){var claimed=await claimCloudMembership(uname,true);if(claimed){r=await fetch(url,{headers:cloudHeaders()});if(r.ok)row=(await r.json())[0]||null;}}
+   }
+   if(row)cloudMember=row;
+   return row;
+ }
+ async function readPermissionsOnly(){
+   var member=await readMembershipOnly();
+   var k=key();if(!k)throw new Error('Cloud-Benutzername konnte nicht bestimmt werden.');
+   var local=(st.userPermissions&&st.userPermissions[k])||null;
+   var url=entityBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&entity_type=eq.__state&entity_id=eq.main&select=data&limit=1';
+   var r=await fetch(url,{headers:cloudHeaders()});
+   if(!r.ok)throw new Error((await r.text())||('HTTP '+r.status));
+   var row=(await r.json())[0]||null;
+   var remote=row?.data?.userPermissions?.[k]||null;
+   /* Nur den Berechtigungssatz dieses Benutzers übernehmen. Keine andere Eigenschaft aus __state. */
+   if(remote&&typeof remote==='object'){
+     if(!st.userPermissions||typeof st.userPermissions!=='object')st.userPermissions={};
+     st.userPermissions[k]=JSON.parse(JSON.stringify(remote));
+     localStorage.setItem(KEY,JSON.stringify(st));
+   }else if(!local){
+     throw new Error('Für '+k+' wurde weder lokal noch in der Cloud ein Berechtigungssatz gefunden.');
+   }
+   return {member:member,permissions:remote||local,key:k,source:remote?'Cloud':'lokale Sicherung'};
+ }
+ window.v198LoadPermissionsOnly=async function(){
+   var e=stateEl();if(e){e.className='';e.textContent='V198: Es werden ausschließlich Anmeldung, Lager-Mitgliedschaft und dein Berechtigungssatz gelesen. Lager-/Inventurdaten bleiben gesperrt.'}
+   try{
+     try{stopCloudPolling()}catch(_e){}
+     var x=await readPermissionsOnly();
+     applyUI();
+     var p=x.permissions||{},names=[];['warehouse','projects','smallOrders','platforms','tools','manage'].forEach(function(n){if(p[n]===true)names.push(n)});
+     if(e){e.className='ok';e.textContent='V198: Berechtigungen aktiv · '+(x.member?.name||x.member?.username||authUsername()||'Benutzer')+' · Quelle: '+x.source+'\nFreigegeben: '+(names.join(', ')||'keine Hauptbereiche')+'\nKeine Pakete, Gestelle, Flächen oder Inventurdaten wurden aus der Cloud übernommen oder dorthin geschrieben.'}
+     return true;
+   }catch(err){
+     applyUI();
+     if(e){e.className='err';e.textContent='V198: Berechtigungen konnten nicht geladen werden: '+String(err&&err.message||err)+'\nLokale Lager- und Inventurdaten wurden nicht verändert.'}
+     return false;
+   }finally{try{stopCloudPolling()}catch(_e){}}
+ };
+ function boot(){
+   try{document.getElementById('v196RescueScreen')?.remove()}catch(_e){}
+   applyUI();stateEl();
+   if(authSession&&!mustChangePassword)setTimeout(function(){window.v198LoadPermissionsOnly()},250);
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+ setTimeout(boot,900);
+})();
+</script>
