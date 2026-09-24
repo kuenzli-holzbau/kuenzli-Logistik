@@ -6768,20 +6768,58 @@ async function ensureFreshSession(){
    saveAuthSession(s);return true;
  }catch(e){saveAuthSession(null);cloudMember=null;return false}
 }
+function loginDiagOpenV221(){
+ let d=document.getElementById('loginDiagV221');
+ if(!d){
+   d=document.createElement('div');d.id='loginDiagV221';
+   d.style.cssText='position:fixed;inset:0;z-index:200000;background:rgba(0,0,0,.48);display:flex;align-items:center;justify-content:center;padding:18px';
+   d.innerHTML='<div style="width:min(760px,96vw);max-height:88vh;overflow:auto;background:#fff;border-radius:16px;padding:18px;box-shadow:0 20px 70px rgba(0,0,0,.35)"><div style="display:flex;justify-content:space-between;gap:12px;align-items:center"><b style="font-size:20px">Login-Analyse V221</b><button type="button" class="btn secondary" onclick="document.getElementById(\'loginDiagV221\').style.display=\'none\'">Schliessen</button></div><div style="font-size:12px;color:#59655f;margin:8px 0">Nur Diagnose. Lagerdaten und localStorage werden nicht verändert.</div><pre id="loginDiagLogV221" style="white-space:pre-wrap;word-break:break-word;background:#f5f7f6;border:1px solid #d8ded9;border-radius:10px;padding:12px;min-height:220px;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace"></pre></div>';
+   document.body.appendChild(d);
+ }else d.style.display='flex';
+ let p=document.getElementById('loginDiagLogV221');if(p)p.textContent='';
+}
+function loginDiagV221(msg,obj){
+ let p=document.getElementById('loginDiagLogV221');if(!p)return;
+ let line=new Date().toLocaleTimeString()+'  '+msg;
+ if(obj!==undefined){try{line+='  '+JSON.stringify(obj)}catch(_){line+='  '+String(obj)}}
+ p.textContent+=(p.textContent?'\n':'')+line;p.scrollTop=p.scrollHeight;
+}
+function loginDiagPaintV221(){return new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))}
 async function signInCloud(){
  let username=cleanUsername(E('authUsername')?.value||''),password=E('authPassword')?.value||'';
  if(!username||!password){alert('Bitte Benutzername und PIN/Passwort eingeben.');return}
+ loginDiagOpenV221();
+ loginDiagV221('1 START','Benutzer @'+username);
+ loginDiagV221('2 Zustand vor Login',{cloudMode:cloudCfg?.mode||'',warehouseId:cloudCfg?.warehouseId||'',hasSession:!!authSession,hasMember:!!cloudMember});
+ await loginDiagPaintV221();
  try{
    let email=syntheticEmail(username);
+   loginDiagV221('3 Auth-Anfrage startet');await loginDiagPaintV221();
    let s=await authFetch('token?grant_type=password',{email,password});
+   loginDiagV221('4 Auth-Antwort erhalten',{hasAccessToken:!!s?.access_token,hasRefreshToken:!!s?.refresh_token,userId:s?.user?.id||''});
    saveAuthSession(s);
-   await refreshCloudIdentity(true);
+   loginDiagV221('5 Session gespeichert');await loginDiagPaintV221();
+   loginDiagV221('6 Membership-Prüfung startet');await loginDiagPaintV221();
+   let memberOk=await refreshCloudIdentity(true);
+   loginDiagV221('7 Membership-Prüfung beendet',{result:!!memberOk,hasMember:!!cloudMember,role:cloudMember?.role||'',name:cloudMember?.name||''});
    if(!cloudMember){
+     loginDiagV221('STOP: keine bestätigte Cloud-Lagerfreigabe');
      alert('Anmeldung erfolgreich, aber für diesen Benutzer fehlt noch die Cloud-Lagerfreigabe.\n\nEin Administrator muss ihn unter Verwalten → Cloud & Synchronisierung → Cloud-Benutzer freigeben. Danach hier „Berechtigung aktualisieren“ drücken.');
      return;
    }
-   closeM('authModal');if(cloudReady())await pullEntitySync(false);startCloudPolling();
- }catch(e){alert('Anmeldung fehlgeschlagen:\n'+String(e.message||e))}
+   loginDiagV221('8 Zugang bestätigt – Login-Dialog wird geschlossen');
+   closeM('authModal');
+   if(cloudReady()){
+     loginDiagV221('9 Cloud-Pull startet');await loginDiagPaintV221();
+     await pullEntitySync(false);
+     loginDiagV221('10 Cloud-Pull beendet');
+   }else loginDiagV221('9 Cloud-Pull übersprungen: cloudReady=false');
+   startCloudPolling();
+   loginDiagV221('11 FERTIG – Polling gestartet');
+ }catch(e){
+   loginDiagV221('FEHLER',{name:e?.name||'',message:String(e?.message||e),stack:String(e?.stack||'')});
+   alert('Anmeldung fehlgeschlagen:\n'+String(e.message||e));
+ }
 }
 async function signUpCloud(){
  let username=cleanUsername(E('authUsername')?.value||''),password=E('authPassword')?.value||'';
