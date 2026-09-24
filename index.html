@@ -27200,17 +27200,36 @@ async function pullEntitySync(manual=false){
  return ok;
 }
 
+let cloudPushPendingV214=false;
+function scheduleCloudPushV214(delay=10000){
+ clearTimeout(cloudTimer);
+ cloudTimer=setTimeout(async()=>{
+   if(!cloudPushPendingV214)return;
+   if(document.hidden){scheduleCloudPushV214(15000);return}
+   let waitUntil=Math.max(cloudBackoffUntilV210||0,cloudPushBackoffUntilV210||0);
+   if(Date.now()<waitUntil){scheduleCloudPushV214(Math.min(Math.max(waitUntil-Date.now()+500,5000),60000));return}
+   try{
+     let ok=await pushEntitySync(false);
+     if(ok){cloudPushPendingV214=false;cloudPushBackoffUntilV210=0}
+     else{cloudPushBackoffUntilV210=Date.now()+60000;scheduleCloudPushV214(60000)}
+   }catch(_){cloudPushBackoffUntilV210=Date.now()+60000;scheduleCloudPushV214(60000)}
+ },Math.max(0,delay));
+}
 function queueCloudSync(){
  cloudCfg=loadCloudConfig();
  if(!cloudReady()||!cloudCfg.autoSync)return;
- clearTimeout(cloudTimer);
- /* Änderungen lokal sofort speichern, Cloud-Schreiben bündeln. Kein Request-Hammern. */
- cloudTimer=setTimeout(async()=>{
-   if(document.hidden||Date.now()<cloudBackoffUntilV210||Date.now()<cloudPushBackoffUntilV210)return;
-   try{let ok=await pushEntitySync(false);if(!ok)cloudPushBackoffUntilV210=Date.now()+60000;else cloudPushBackoffUntilV210=0}catch(_){cloudPushBackoffUntilV210=Date.now()+60000}
- },10000);
+ /* V214: Eine lokale Änderung bleibt als ausstehend markiert, bis der Cloud-Push
+    erfolgreich war. Ein Tabwechsel darf den 10-s-Push nicht mehr verwerfen. */
+ cloudPushPendingV214=true;
+ scheduleCloudPushV214(10000);
  if(!cloudPollTimer)startCloudPolling();
 }
+document.addEventListener('visibilitychange',()=>{
+ if(!document.hidden&&cloudPushPendingV214)setTimeout(()=>scheduleCloudPushV214(1200),300);
+});
+window.addEventListener('focus',()=>{
+ if(cloudPushPendingV214)setTimeout(()=>scheduleCloudPushV214(1200),300);
+});
 
 async function renderCloudUsers(){
  /* Nur auf der Verwaltungsseite und höchstens einmal pro Minute laden. */
@@ -27225,6 +27244,15 @@ async function renderCloudUsers(){
 
 </script>
 
+<script>
+/* ================================================================
+   BV2026-1-214 · zuverlässige gebündelte Cloud-Schreibwarteschlange
+   - Tabwechsel verwirft einen geplanten Cloud-Push nicht mehr
+   - ausstehender Push bleibt bis Erfolg im Arbeitsspeicher markiert
+   - bei hidden/backoff wird nur neu terminiert, nicht geschrieben
+   - keine Datenmigration, keine Storage-Key-Aenderung
+   ================================================================ */
+</script>
 
 <script>
 /* ================================================================
