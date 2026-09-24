@@ -24969,16 +24969,16 @@ renderPlatformReservationGantt=function(from='',to=''){
      try{
        if(document.hidden)return;
        if(typeof cloudAuthEnabled==='function' && !cloudAuthEnabled())return;
-       if(typeof checkCloudForUpdates==='function')checkCloudForUpdates(true);
+       if(typeof checkCloudForUpdates==='function')checkCloudForUpdates(false);
      }catch(e){}
-   },2500);
+   },120000);
  }
  startPermissionPollV133();
 
  /* Auch beim Zurückkehren in den Tab sofort nach neuen Rechten schauen. */
  document.addEventListener('visibilitychange',function(){
    if(!document.hidden){
-     try{if(typeof checkCloudForUpdates==='function')checkCloudForUpdates(true)}catch(e){}
+     try{if(typeof checkCloudForUpdates==='function')setTimeout(function(){checkCloudForUpdates(false)},1500)}catch(e){}
    }
  });
 })();
@@ -27224,4 +27224,20 @@ async function renderCloudUsers(){
 }
 
 </script>
-\n\n<script>\n/* ================================================================\n   BV2026-1-212 · Cloud-Lastschutz\n   Deaktiviert den historischen 2,5-Sekunden-Berechtigungs-Poller V133.\n   Die robuste V210/V211-Cloudlogik bleibt unverändert aktiv:\n   - Metadaten-Polling maximal alle 120 Sekunden\n   - Sichtbarkeit/Fokus kann einen einzelnen Check auslösen\n   - Single-Flight und Backoff bleiben erhalten\n   Keine Nutzdaten, Bestände, Inventuren oder Storage-Keys werden verändert.\n   ================================================================ */\n(function(){\n  try{\n    if(typeof permissionPollV133!=='undefined' && permissionPollV133){\n      clearInterval(permissionPollV133);\n      permissionPollV133=null;\n    }\n  }catch(_e){}\n})();\n</script>\n
+
+
+<script>
+/* ================================================================
+   BV2026-1-213 · kontrollierte Cloud-Synchronisation
+   - historischer Berechtigungs-Poller: 2,5 s -> 120 s
+   - Sichtbarkeits-Rueckkehr: ein verzoegerter, nicht erzwungener Check
+   - V210 Single-Flight, 120-s-Metadatenpolling und Backoff bleiben aktiv
+   - lokale Aenderungen werden weiterhin gebuendelt via queueCloudSync()
+   Keine Nutzdaten, Inventuren, Konflikte oder Storage-Keys werden migriert.
+   ================================================================ */
+try{
+  if(typeof setSyncStatus==='function' && typeof cloudReady==='function' && cloudReady()){
+    setSyncStatus('ok','Cloud aktiv · kontrollierte Synchronisation');
+  }
+}catch(_e){}
+</script>
