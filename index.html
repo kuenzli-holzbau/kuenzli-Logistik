@@ -26867,3 +26867,277 @@ renderPlatformReservationGantt=function(from='',to=''){
  setTimeout(()=>{try{enhanceLevelsV184()}catch(_e){}},0);
 })();
 </script>
+
+<!-- V185: standortbezogene Lagerkontrolle per Element-ID -->
+<style>
+#page-control .controlScanV185{display:grid;gap:14px;margin-top:12px}
+#page-control .controlLocationV185,#page-control .controlLookupV185,#page-control .controlEditV185{border:1px solid #d5dfd9;border-radius:14px;background:#f8faf9;padding:14px}
+#page-control .controlLocationV185 h3,#page-control .controlLookupV185 h3,#page-control .controlEditV185 h3{margin:0 0 10px}
+#page-control .controlLocationGridV185{display:grid;grid-template-columns:repeat(3,minmax(160px,1fr));gap:10px}
+#page-control .controlLocationGridV185 label,#page-control .controlFieldsV185 label{display:grid;gap:5px;font-weight:850;font-size:12px}
+#page-control .controlLocationGridV185 select,#page-control .controlFieldsV185 input,#page-control .controlFieldsV185 select,#page-control .controlIdV185{width:100%;box-sizing:border-box;border:1px solid #c8d2cd;border-radius:9px;background:#fff;padding:10px 11px;font:inherit}
+#page-control .controlIdV185{font-size:24px;font-weight:900;letter-spacing:.02em;padding:13px 14px}
+#page-control .controlFieldsV185{display:grid;grid-template-columns:repeat(3,minmax(150px,1fr));gap:10px}
+#page-control .controlFieldsV185 .wideV185{grid-column:span 2}
+#page-control .controlCompareV185{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+#page-control .controlPlaceV185{padding:10px;border-radius:9px;background:#fff;border:1px solid #dce4df}
+#page-control .controlPlaceV185 b{display:block;margin-bottom:3px}
+#page-control .controlActionsV185{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#page-control .controlPrimaryV185{font-size:16px;padding:11px 16px}
+#page-control .controlProgressV185{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+#page-control .controlProgressV185 .controlPill{font-weight:850}
+#page-control .controlHintV185{margin-top:6px;color:#68756e;font-size:12px}
+#page-control .controlFoundV185{font-size:13px;font-weight:850;margin-bottom:10px}
+@media(max-width:760px){
+ #page-control .controlLocationGridV185,#page-control .controlFieldsV185,#page-control .controlCompareV185{grid-template-columns:1fr}
+ #page-control .controlFieldsV185 .wideV185{grid-column:auto}
+ #page-control .controlIdV185{font-size:20px}
+ #page-control .controlActionsV185 .btn{width:100%}
+}
+</style>
+<script>
+(function(){
+ let locV185={areaId:'',rackId:'',levelIndex:''},loadedPidV185='';
+ const escAttrV185=s=>String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ function fullControlV185(){try{return typeof activeControl==='function'?activeControl():null}catch(_e){return null}}
+ function activePackagesV185(){return (st.packages||[]).filter(Boolean).filter(p=>p.status!=='aufgebraucht')}
+ function unlockedAreasV185(){return (st.areas||[]).filter(a=>!a.locked)}
+ function normalizeLocationV185(){
+  const areas=unlockedAreasV185();
+  if(!areas.some(a=>a.id===locV185.areaId))locV185.areaId=areas[0]?.id||'';
+  const racks=(st.racks||[]).filter(r=>r.areaId===locV185.areaId);
+  if(!racks.some(r=>r.id===locV185.rackId))locV185.rackId=racks[0]?.id||'';
+  const rack=(st.racks||[]).find(r=>r.id===locV185.rackId),n=rack?.levels?.length||0;
+  if(locV185.levelIndex!==''&&(!Number.isInteger(Number(locV185.levelIndex))||Number(locV185.levelIndex)<0||Number(locV185.levelIndex)>=n))locV185.levelIndex='';
+ }
+ function locTextV185(rid,li){
+  const r=(st.racks||[]).find(x=>x.id===rid),lv=(li===null||li===undefined||li==='')?'– keine Ebene –':(r?.levels?.[Number(li)]?.name||'–');
+  return `${r?areaName(r.areaId):'–'} / ${r?.name||'–'} / ${lv}`;
+ }
+ function renderLocationOptionsV185(){
+  normalizeLocationV185();
+  const a=document.getElementById('ctrlAreaV185'),r=document.getElementById('ctrlRackV185'),l=document.getElementById('ctrlLevelV185');if(!a||!r||!l)return;
+  a.innerHTML=unlockedAreasV185().map(x=>`<option value="${escAttrV185(x.id)}" ${x.id===locV185.areaId?'selected':''}>${esc(x.name)}</option>`).join('');
+  const racks=(st.racks||[]).filter(x=>x.areaId===locV185.areaId);r.innerHTML=racks.map(x=>`<option value="${escAttrV185(x.id)}" ${x.id===locV185.rackId?'selected':''}>${esc(x.name)}</option>`).join('');
+  const rack=(st.racks||[]).find(x=>x.id===locV185.rackId);l.innerHTML='<option value="">– keine Ebene –</option>'+((rack?.levels||[]).map((x,i)=>`<option value="${i}" ${String(i)===String(locV185.levelIndex)?'selected':''}>${esc(x.name||('Ebene '+(i+1)))}</option>`).join(''));
+ }
+ window.controlAreaV185=function(v){locV185.areaId=v;locV185.rackId='';locV185.levelIndex='';normalizeLocationV185();renderLocationOptionsV185();loadedPidV185='';renderEditorV185();focusIdV185()};
+ window.controlRackV185=function(v){locV185.rackId=v;locV185.levelIndex='';normalizeLocationV185();renderLocationOptionsV185();loadedPidV185='';renderEditorV185();focusIdV185()};
+ window.controlLevelV185=function(v){locV185.levelIndex=v;loadedPidV185='';renderEditorV185();focusIdV185()};
+ window.controlNewRackV185=function(){
+  if(typeof requireStructure==='function'&&!requireStructure())return;
+  if(!locV185.areaId)return alert('Bitte zuerst eine Fläche wählen.');
+  const name=prompt('Name des neuen Gestells / Regals:','');if(name===null||!name.trim())return;
+  const id='r'+Date.now(),order=(st.racks||[]).filter(r=>r.areaId===locV185.areaId).length;
+  st.racks.push({id,areaId:locV185.areaId,name:name.trim(),photo:'',levels:[],displayOrder:order});locV185.rackId=id;locV185.levelIndex='';persist();renderFullControl();
+ };
+ window.controlNewLevelV185=function(){
+  if(typeof requireStructure==='function'&&!requireStructure())return;
+  const r=(st.racks||[]).find(x=>x.id===locV185.rackId);if(!r)return alert('Bitte zuerst ein Gestell / Regal wählen.');
+  const name=prompt('Name der neuen Ebene:','Ebene '+((r.levels?.length||0)+1));if(name===null||!name.trim())return;
+  if(!Array.isArray(r.levels))r.levels=[];r.levels.push({name:name.trim(),length:'',width:'',height:''});locV185.levelIndex=String(r.levels.length-1);persist();renderFullControl();
+ };
+ function findPackageV185(raw){
+  const q=String(raw||'').trim().toLowerCase();if(!q)return null;
+  return activePackagesV185().find(p=>String(p.elementId||'').trim().toLowerCase()===q)||null;
+ }
+ window.controlFindV185=function(){
+  const inp=document.getElementById('ctrlElementV185'),p=findPackageV185(inp?.value);if(!p){loadedPidV185='';renderEditorV185();if(inp?.value?.trim())alert('Element-ID nicht gefunden: '+inp.value.trim());focusIdV185();return}
+  loadedPidV185=p.id;renderEditorV185();setTimeout(()=>document.getElementById('ctrlQtyV185')?.focus(),0);
+ };
+ window.controlIdKeyV185=function(e){if(e.key==='Enter'){e.preventDefault();controlFindV185()}};
+ function renderEditorV185(){
+  const box=document.getElementById('ctrlEditorV185');if(!box)return;
+  const p=(st.packages||[]).find(x=>x.id===loadedPidV185);if(!p){box.innerHTML='<div class="help">Element-ID eingeben. Erst mit „Bestätigen & nächstes Element“ werden Änderungen gespeichert.</div>';return}
+  const old=locTextV185(p.rackId,p.levelIndex),target=locTextV185(locV185.rackId,locV185.levelIndex);
+  box.innerHTML=`<div class="controlEditV185"><div class="controlFoundV185">Gefunden: <b>${esc(p.elementId||'–')}</b></div>
+   <div class="controlCompareV185"><div class="controlPlaceV185"><b>Bisheriger Lagerort</b>${esc(old)}</div><div class="controlPlaceV185"><b>Gefunden bei</b>${esc(target)}</div></div>
+   <div class="controlFieldsV185">
+    <label class="wideV185">Material<input id="ctrlMaterialV185" value="${escAttrV185(p.material||'')}"></label>
+    <label>Element-ID<input value="${escAttrV185(p.elementId||'')}" disabled></label>
+    <label>Menge<input id="ctrlQtyV185" inputmode="decimal" value="${escAttrV185(p.qty??'')}"></label>
+    <label>Breite (mm)<input id="ctrlWidthV185" inputmode="decimal" value="${escAttrV185(p.width??'')}"></label>
+    <label>Höhe (mm)<input id="ctrlHeightV185" inputmode="decimal" value="${escAttrV185(p.height??'')}"></label>
+    <label>Länge (mm)<input id="ctrlLengthV185" inputmode="decimal" value="${escAttrV185(p.length??'')}"></label>
+    <label class="wideV185">Kommission<select id="ctrlProjectV185">${commissionOptions(p.project||'')}</select></label>
+   </div>
+   <div class="controlActionsV185"><button class="btn controlPrimaryV185" type="button" onclick="controlConfirmV185()">✓ Bestätigen & nächstes Element</button><button class="btn secondary" type="button" onclick="controlCancelV185()">Abbrechen</button></div></div>`;
+ }
+ function valV185(id){return document.getElementById(id)?.value??''}
+ function numTextV185(v){return String(v??'').trim().replace(',','.');}
+ window.controlConfirmV185=function(){
+  const c=fullControlV185(),p=(st.packages||[]).find(x=>x.id===loadedPidV185);if(!c||!p)return;
+  if(typeof currentPermissions==='function'&&currentPermissions().materialEditPackage!==true){alert('Für das Bearbeiten von Paketen ist keine Berechtigung freigeschaltet.');return}
+  const r=(st.racks||[]).find(x=>x.id===locV185.rackId);if(!r)return alert('Bitte zuerst Fläche und Gestell / Regal wählen.');
+  const li=locV185.levelIndex===''?null:Number(locV185.levelIndex);if(li!==null&&!r.levels?.[li])return alert('Die gewählte Ebene ist nicht mehr vorhanden.');
+  const next={material:valV185('ctrlMaterialV185').trim(),qty:numTextV185(valV185('ctrlQtyV185')),width:numTextV185(valV185('ctrlWidthV185')),height:numTextV185(valV185('ctrlHeightV185')),length:numTextV185(valV185('ctrlLengthV185')),project:valV185('ctrlProjectV185')};
+  if(!next.material)return alert('Material darf nicht leer sein.');
+  const before={material:String(p.material??''),qty:String(p.qty??''),width:String(p.width??''),height:String(p.height??''),length:String(p.length??''),project:String(p.project??''),rackId:p.rackId||'',levelIndex:(p.levelIndex===null||p.levelIndex===undefined?'':String(p.levelIndex))};
+  const changed=before.material!==next.material||before.qty!==next.qty||before.width!==next.width||before.height!==next.height||before.length!==next.length||before.project!==next.project||before.rackId!==r.id||before.levelIndex!==(li===null?'':String(li));
+  const summary=`${p.elementId||p.material}\n\nBisher: ${locTextV185(p.rackId,p.levelIndex)}\nNeu: ${locTextV185(r.id,li)}\n\nMenge: ${p.qty??'–'} → ${next.qty||'–'}\nB × H × L: ${p.width??'–'} × ${p.height??'–'} × ${p.length??'–'} → ${next.width||'–'} × ${next.height||'–'} × ${next.length||'–'} mm\nKommission: ${p.project||'–'} → ${next.project||'–'}\n\nÄnderungen bestätigen?`;
+  if(!confirm(summary))return;
+  const oldLoc=locTextV185(p.rackId,p.levelIndex),now=new Date().toISOString(),by=currentUserName();
+  p.material=next.material;p.qty=next.qty;p.width=next.width;p.height=next.height;p.length=next.length;p.project=next.project;p.rackId=r.id;p.levelIndex=li;p.lastCheckedAt=now;p.lastCheckedBy=by;
+  const item=(c.items||[]).find(i=>i.packageId===p.id);if(item){item.result=changed?'Geändert':'Vorhanden';item.checkedAt=now;item.checkedBy=by;item.note=changed?`Kontrolliert / angepasst: ${oldLoc} → ${locTextV185(r.id,li)}`:''}
+  try{addHistory(p,'Lagerkontrolle',(changed?'Geändert':'Vorhanden')+' · '+oldLoc+' → '+locTextV185(r.id,li)+' · kontrolliert von '+by)}catch(_e){}
+  loadedPidV185='';persist();renderFullControl();setTimeout(focusIdV185,0);
+ };
+ window.controlCancelV185=function(){loadedPidV185='';renderEditorV185();const i=document.getElementById('ctrlElementV185');if(i)i.value='';focusIdV185()};
+ window.controlAddFoundV185=function(){
+  if(!locV185.rackId)return alert('Bitte zuerst Fläche und Gestell / Regal wählen.');
+  window.addingFoundForControl=true;openMaterial(locV185.rackId);
+  setTimeout(()=>{const lv=document.getElementById('mLevel');if(lv)lv.value=locV185.levelIndex;},0);
+ };
+ function focusIdV185(){setTimeout(()=>document.getElementById('ctrlElementV185')?.focus(),20)}
+ function renderV185(){
+  ensureV24();const c=fullControlV185(),box=document.getElementById('allControlBody');if(!box)return;
+  if(!c){box.innerHTML='<div class="help">Keine laufende Lagerkontrolle. Starte mit „+ Neue Kontrolle“.</div>';return}
+  normalizeLocationV185();const done=(c.items||[]).filter(i=>i.result).length,total=(c.items||[]).length,pct=total?Math.round(done/total*100):100,counts={};(c.items||[]).forEach(i=>counts[i.result]=(counts[i.result]||0)+1);
+  const areas=unlockedAreasV185(),racks=(st.racks||[]).filter(r=>r.areaId===locV185.areaId),rack=(st.racks||[]).find(r=>r.id===locV185.rackId);
+  const finish=done===total&&total?`<div class="help"><b>Alle ${total} Positionen wurden kontrolliert.</b><div class="toolbar"><button class="btn" onclick="finishControl('${c.id}')">Kontrolle abschliessen</button><button class="btn secondary" onclick="exportControlPDF('${c.id}')">Kontrollbericht PDF</button><button class="btn secondary" onclick="exportControlExcel('${c.id}')">Kontrollbericht Excel</button></div></div>`:'';
+  box.innerHTML=`<h3>${esc(controlLabel(c))}</h3><div class="controlProgressV185"><span class="controlPill">${done} / ${total} kontrolliert · ${pct}%</span><span class="controlPill">Geändert ${counts['Geändert']||0}</span><span class="controlPill">Neu gefunden ${counts['Neu gefunden']||0}</span><button class="btn danger" style="margin-left:auto" onclick="discardActiveControlV173?.()">Offene Kontrolle verwerfen</button></div><div class="progress"><div style="width:${pct}%"></div></div>${finish}
+   <div class="controlScanV185"><section class="controlLocationV185"><h3>1. Mein aktueller Standort</h3><div class="controlLocationGridV185">
+    <label>Fläche<select id="ctrlAreaV185" onchange="controlAreaV185(this.value)">${areas.map(a=>`<option value="${escAttrV185(a.id)}" ${a.id===locV185.areaId?'selected':''}>${esc(a.name)}</option>`).join('')}</select></label>
+    <label>Gestell / Regal<select id="ctrlRackV185" onchange="controlRackV185(this.value)">${racks.map(r=>`<option value="${escAttrV185(r.id)}" ${r.id===locV185.rackId?'selected':''}>${esc(r.name)}</option>`).join('')}</select></label>
+    <label>Ebene (optional)<select id="ctrlLevelV185" onchange="controlLevelV185(this.value)"><option value="">– keine Ebene –</option>${(rack?.levels||[]).map((l,i)=>`<option value="${i}" ${String(i)===String(locV185.levelIndex)?'selected':''}>${esc(l.name||('Ebene '+(i+1)))}</option>`).join('')}</select></label>
+   </div><div class="controlActionsV185"><button class="btn secondary" type="button" onclick="controlNewRackV185()">+ Gestell / Regal</button><button class="btn secondary" type="button" onclick="controlNewLevelV185()">+ Ebene</button></div></section>
+   <section class="controlLookupV185"><h3>2. Element-ID</h3><input id="ctrlElementV185" class="controlIdV185" placeholder="z. B. E-438" autocomplete="off" onkeydown="controlIdKeyV185(event)"><div class="controlActionsV185"><button class="btn" type="button" onclick="controlFindV185()">Element laden</button><button class="btn secondary" type="button" onclick="controlAddFoundV185()">+ Paket ohne Element-ID gefunden</button></div><div class="controlHintV185">Eingabe allein ändert keine Daten. Gespeichert wird erst nach deiner Bestätigung.</div></section><div id="ctrlEditorV185"></div></div>`;
+  renderEditorV185();focusIdV185();
+  const hist=document.getElementById('controlHistory');if(hist)hist.innerHTML=(st.controls||[]).filter(x=>x.completed&&x.type!=='standard').map(x=>`<div class="manageItem"><div class="manageHead"><div><b>${esc(controlLabel(x))}</b><div class="muted">${formatDateTime(x.completed)} · ${x.items.length} Positionen</div></div><div class="toolbar"><button class="btn secondary" onclick="controlDetails('${x.id}')">Details</button><button class="btn" onclick="exportControlPDF('${x.id}')">PDF</button></div></div></div>`).join('')||'<p class="muted">Noch keine abgeschlossene Kontrolle.</p>';
+ }
+ window.renderFullControl=renderV185;
+ const oldNew=window.newFullControl;window.newFullControl=function(){const before=fullControlV185()?.id||'';const out=oldNew.apply(this,arguments);setTimeout(()=>{const after=fullControlV185()?.id||'';if(after&&after!==before){loadedPidV185='';normalizeLocationV185();renderV185()}},0);return out};
+ setTimeout(()=>{if(document.getElementById('page-control')?.classList.contains('active')||document.getElementById('allControlBody'))try{renderV185()}catch(_e){}},0);
+})();
+</script>
+
+<!-- V186: eigenstaendige Inventur je Lagerflaeche -->
+<style>
+#page-control .areaInvGridV186{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:14px}
+#page-control .areaInvCardV186{border:1px solid #d5dfd9;border-radius:14px;background:#fff;padding:14px;display:grid;gap:9px}
+#page-control .areaInvCardV186 h3{margin:0}.areaInvMetaV186{font-size:12px;color:#66736c}.areaInvStatusV186{font-weight:900}
+#page-control .areaInvTopV186{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.areaInvTopV186 .btn:last-child{margin-left:auto}
+#page-control .areaInvMissingV186{border:1px solid #e0b8b8;background:#fff7f7;border-radius:12px;padding:12px;margin-top:12px}
+#page-control .areaInvMissingRowV186{display:grid;grid-template-columns:120px 1.4fr 90px 1fr 1fr;gap:8px;padding:8px 4px;border-top:1px solid #eadede;align-items:center}
+#page-control .areaInvMissingRowV186:first-of-type{border-top:0}.areaInvMissingHeadV186{font-weight:900;font-size:12px}
+@media(max-width:760px){#page-control .areaInvMissingRowV186{grid-template-columns:1fr 1fr}.areaInvMissingRowV186>*{min-width:0}}
+</style>
+<script>
+(function(){
+ let areaIdV186='',rackIdV186='',levelV186='',pidV186='';
+ const ea=s=>String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ const areas=()=> (st.areas||[]).filter(a=>!a.locked);
+ const pkgActive=()=> (st.packages||[]).filter(Boolean).filter(p=>p.status!=='aufgebraucht');
+ const rackOf=p=>(st.racks||[]).find(r=>r.id===p?.rackId);
+ const areaOfPkg=p=>rackOf(p)?.areaId||'';
+ const controls=()=>Array.isArray(st.controls)?st.controls:(st.controls=[]);
+ const areaControl=id=>controls().find(c=>!c.completed&&c.areaInventoryV186===true&&c.areaId===id);
+ const activeAreaControl=()=>areaIdV186?areaControl(areaIdV186):null;
+ function locText(rid,li){const r=(st.racks||[]).find(x=>x.id===rid),a=(st.areas||[]).find(x=>x.id===r?.areaId),n=(li===null||li===undefined||li==='')?'– keine Ebene –':(r?.levels?.[Number(li)]?.name||('Ebene '+(Number(li)+1)));return `${a?.name||'–'} · ${r?.name||'–'} · ${n}`}
+ function snapshot(p){const r=rackOf(p),l=r?.levels?.[p.levelIndex];return {elementId:p.elementId||'',material:p.material||'',qty:p.qty||'',project:p.project||'',packCode:p.packCode||'',areaId:r?.areaId||'',area:typeof areaName==='function'?areaName(r?.areaId):'',rack:r?.name||'',level:l?.name||'',rackId:r?.id||'',levelIndex:p.levelIndex}}
+ function latestDone(id){return controls().filter(c=>c.areaInventoryV186===true&&c.areaId===id&&c.completed).sort((a,b)=>String(b.completed).localeCompare(String(a.completed)))[0]}
+ function fmtDate(v){if(!v)return '';try{return new Date(v).toLocaleString('de-CH',{dateStyle:'short',timeStyle:'short'})}catch(_e){return ''}}
+ window.startAreaInventoryV186=function(id){
+  const a=areas().find(x=>x.id===id);if(!a)return;
+  const running=areaControl(id);if(running){areaIdV186=id;pidV186='';renderFullControl();return}
+  const ps=pkgActive().filter(p=>areaOfPkg(p)===id),now=new Date().toISOString(),by=currentUserName();
+  const c={id:'c'+Date.now(),name:'Inventur '+(a.name||'Fläche'),checkedBy:by,created:now,completed:'',items:ps.map(p=>({packageId:p.id,result:'',checkedAt:'',checkedBy:'',note:'',snapshot:snapshot(p)})),areaInventoryV186:true,areaId:id,areaNameV186:a.name||''};
+  controls().unshift(c);areaIdV186=id;rackIdV186='';levelV186='';pidV186='';persist();renderFullControl();
+ };
+ window.openAreaInventoryV186=function(id){areaIdV186=id;pidV186='';rackIdV186='';levelV186='';renderFullControl()};
+ window.backAreaInventoryV186=function(){areaIdV186='';pidV186='';rackIdV186='';levelV186='';renderFullControl()};
+ function normalize(){const rs=(st.racks||[]).filter(r=>r.areaId===areaIdV186);if(!rs.some(r=>r.id===rackIdV186))rackIdV186=rs[0]?.id||'';const r=(st.racks||[]).find(x=>x.id===rackIdV186),n=r?.levels?.length||0;if(levelV186!==''&&(+levelV186<0||+levelV186>=n))levelV186=''}
+ window.areaInvRackV186=function(v){rackIdV186=v;levelV186='';pidV186='';renderAreaWorkV186()};
+ window.areaInvLevelV186=function(v){levelV186=v;pidV186='';renderAreaEditorV186();setTimeout(()=>document.getElementById('areaInvElementV186')?.focus(),0)};
+ window.areaInvNewRackV186=function(){if(typeof requireStructure==='function'&&!requireStructure())return;const a=areas().find(x=>x.id===areaIdV186);if(!a)return;const name=prompt('Name des neuen Gestells / Regals:','Gestell');if(name===null||!name.trim())return;const id='r'+Date.now(),order=(st.racks||[]).filter(r=>r.areaId===areaIdV186).length;st.racks.push({id,areaId:areaIdV186,name:name.trim(),photo:'',levels:[],displayOrder:order});rackIdV186=id;levelV186='';persist();renderFullControl()};
+ window.areaInvNewLevelV186=function(){if(typeof requireStructure==='function'&&!requireStructure())return;const r=(st.racks||[]).find(x=>x.id===rackIdV186);if(!r)return alert('Bitte zuerst ein Gestell / Regal wählen.');const name=prompt('Name der neuen Ebene:','Ebene '+((r.levels?.length||0)+1));if(name===null||!name.trim())return;if(!Array.isArray(r.levels))r.levels=[];r.levels.push({name:name.trim(),length:'',width:'',height:''});levelV186=String(r.levels.length-1);persist();renderFullControl()};
+ window.areaInvFindV186=function(){const q=String(document.getElementById('areaInvElementV186')?.value||'').trim().toLowerCase();if(!q)return;const p=pkgActive().find(x=>String(x.elementId||'').trim().toLowerCase()===q);if(!p){pidV186='';renderAreaEditorV186();alert('Element-ID nicht gefunden: '+q);return}pidV186=p.id;renderAreaEditorV186();setTimeout(()=>document.getElementById('areaInvQtyV186')?.focus(),0)};
+ window.areaInvKeyV186=function(e){if(e.key==='Enter'){e.preventDefault();areaInvFindV186()}};
+ function field(id){return document.getElementById(id)?.value??''} function num(v){return String(v??'').trim().replace(',','.')}
+ window.areaInvConfirmV186=function(){
+  const c=activeAreaControl(),p=(st.packages||[]).find(x=>x.id===pidV186),r=(st.racks||[]).find(x=>x.id===rackIdV186);if(!c||!p||!r)return;
+  const li=levelV186===''?null:Number(levelV186);if(li!==null&&!r.levels?.[li])return alert('Die gewählte Ebene ist nicht mehr vorhanden.');
+  const next={material:field('areaInvMaterialV186').trim(),qty:num(field('areaInvQtyV186')),width:num(field('areaInvWidthV186')),height:num(field('areaInvHeightV186')),length:num(field('areaInvLengthV186')),project:field('areaInvProjectV186')};
+  const oldLoc=locText(p.rackId,p.levelIndex),newLoc=locText(r.id,li);const changed=String(p.material||'')!==next.material||String(p.qty??'')!==next.qty||String(p.width??'')!==next.width||String(p.height??'')!==next.height||String(p.length??'')!==next.length||String(p.project||'')!==next.project||p.rackId!==r.id||String(p.levelIndex??'')!==String(li??'');
+  if(!confirm(`${p.elementId||p.material}\n\nBisher: ${oldLoc}\nNeu: ${newLoc}\n\nMenge: ${p.qty??'–'} → ${next.qty||'–'}\nB × H × L: ${p.width??'–'} × ${p.height??'–'} × ${p.length??'–'} → ${next.width||'–'} × ${next.height||'–'} × ${next.length||'–'} mm\nKommission: ${p.project||'–'} → ${next.project||'–'}\n\nÄnderungen bestätigen?`))return;
+  p.material=next.material;p.qty=next.qty;p.width=next.width;p.height=next.height;p.length=next.length;p.project=next.project;p.rackId=r.id;p.levelIndex=li;const now=new Date().toISOString(),by=currentUserName();p.lastCheckedAt=now;p.lastCheckedBy=by;
+  let i=(c.items||[]).find(x=>x.packageId===p.id);if(!i){i={packageId:p.id,result:'',checkedAt:'',checkedBy:'',note:'',snapshot:snapshot(p)};(c.items||(c.items=[])).push(i)}i.result=changed?'Geändert':'Vorhanden';i.checkedAt=now;i.checkedBy=by;i.note=changed?`Kontrolliert / angepasst: ${oldLoc} → ${newLoc}`:'';
+  try{addHistory(p,'Lagerkontrolle Fläche '+(c.areaNameV186||''),(changed?'Geändert':'Vorhanden')+' · '+oldLoc+' → '+newLoc+' · kontrolliert von '+by)}catch(_e){}
+  pidV186='';persist();renderFullControl();setTimeout(()=>document.getElementById('areaInvElementV186')?.focus(),0);
+ };
+ window.areaInvCancelV186=function(){pidV186='';renderAreaEditorV186();const e=document.getElementById('areaInvElementV186');if(e)e.value='';e?.focus()};
+ window.areaInvAddFoundV186=function(){if(!rackIdV186)return alert('Bitte zuerst ein Gestell / Regal wählen.');window.addingFoundForControl=true;openMaterial(rackIdV186);setTimeout(()=>{const lv=document.getElementById('mLevel');if(lv)lv.value=levelV186},0)};
+ function missing(c){return (c.items||[]).filter(i=>!i.result)}
+ window.finishAreaInventoryV186=function(){
+  const c=activeAreaControl();if(!c)return;const m=missing(c),box=document.getElementById('areaInvFinishV186');if(!box)return;
+  if(!m.length){if(!confirm('Alle erfassten Materialien dieser Fläche wurden gefunden. Inventur abschliessen?'))return;c.completed=new Date().toISOString();c.completedBy=currentUserName();persist();areaIdV186='';renderFullControl();return}
+  box.innerHTML=`<div class="areaInvMissingV186"><h3>⚠ ${m.length} Material${m.length===1?'':'ien'} nicht gefunden</h3><p>Diese Positionen sind laut Bestand auf dieser Fläche erfasst, wurden in der Inventur aber nicht bestätigt. Es werden keine Materialdaten automatisch geändert.</p><div class="areaInvMissingRowV186 areaInvMissingHeadV186"><span>Element-ID</span><span>Material</span><span>Menge</span><span>Kommission</span><span>Erwarteter Lagerort</span></div>${m.map(i=>{const p=(st.packages||[]).find(x=>x.id===i.packageId),s=i.snapshot||{};return `<div class="areaInvMissingRowV186"><b>${esc(p?.elementId||s.elementId||'–')}</b><span>${esc(p?.material||s.material||'–')}</span><span>${esc(p?.qty??s.qty??'–')}</span><span>${esc(p?.project||s.project||'–')}</span><span>${esc((s.rack||'–')+' · '+(s.level||'– keine Ebene –'))}</span></div>`}).join('')}<div class="toolbar"><button class="btn secondary" onclick="document.getElementById('areaInvFinishV186').innerHTML=''">Zurück zur Kontrolle</button><button class="btn danger" onclick="confirmAreaWithMissingV186()">Fläche mit Differenzen abschliessen</button></div></div>`;box.scrollIntoView({behavior:'smooth',block:'start'});
+ };
+ window.confirmAreaWithMissingV186=function(){const c=activeAreaControl();if(!c)return;const m=missing(c);if(!confirm(`${m.length} Position(en) werden im Inventurbericht als „Nicht gefunden“ markiert.\n\nDie Materialien selbst werden NICHT gelöscht, ausgebucht oder auf 0 gesetzt.\n\nFläche trotzdem abschliessen?`))return;const now=new Date().toISOString(),by=currentUserName();m.forEach(i=>{i.result='Nicht gefunden';i.checkedAt=now;i.checkedBy=by;i.note='Bei Flächeninventur nicht gefunden'});c.completed=now;c.completedBy=by;persist();areaIdV186='';pidV186='';renderFullControl()};
+ window.renderAreaEditorV186=function(){const box=document.getElementById('areaInvEditorV186');if(!box)return;const p=(st.packages||[]).find(x=>x.id===pidV186);if(!p){box.innerHTML='<div class="help">Element-ID eingeben. Erst nach der Bestätigung werden Lagerort oder Materialdaten geändert.</div>';return}const target=locText(rackIdV186,levelV186===''?null:+levelV186);box.innerHTML=`<div class="controlEditV185"><div class="controlFoundV185">Gefunden: <b>${esc(p.elementId||'–')}</b></div><div class="controlCompareV185"><div class="controlPlaceV185"><b>Bisheriger Lagerort</b>${esc(locText(p.rackId,p.levelIndex))}</div><div class="controlPlaceV185"><b>Gefunden bei</b>${esc(target)}</div></div><div class="controlFieldsV185"><label class="wideV185">Material<input id="areaInvMaterialV186" value="${ea(p.material||'')}"></label><label>Element-ID<input value="${ea(p.elementId||'')}" disabled></label><label>Menge<input id="areaInvQtyV186" inputmode="decimal" value="${ea(p.qty??'')}"></label><label>Breite (mm)<input id="areaInvWidthV186" inputmode="decimal" value="${ea(p.width??'')}"></label><label>Höhe (mm)<input id="areaInvHeightV186" inputmode="decimal" value="${ea(p.height??'')}"></label><label>Länge (mm)<input id="areaInvLengthV186" inputmode="decimal" value="${ea(p.length??'')}"></label><label class="wideV185">Kommission<select id="areaInvProjectV186">${commissionOptions(p.project||'')}</select></label></div><div class="controlActionsV185"><button class="btn controlPrimaryV185" onclick="areaInvConfirmV186()">✓ Bestätigen & nächstes Element</button><button class="btn secondary" onclick="areaInvCancelV186()">Abbrechen</button></div></div>`};
+ window.renderAreaWorkV186=function(){
+  const c=activeAreaControl(),box=document.getElementById('allControlBody');if(!c||!box){areaIdV186='';renderFullControl();return}normalize();const a=(st.areas||[]).find(x=>x.id===areaIdV186),rs=(st.racks||[]).filter(r=>r.areaId===areaIdV186),r=(st.racks||[]).find(x=>x.id===rackIdV186),done=(c.items||[]).filter(i=>i.result).length,total=(c.items||[]).length;
+  box.innerHTML=`<div class="areaInvTopV186"><button class="btn secondary" onclick="backAreaInventoryV186()">← Flächen</button><h3>Inventur: ${esc(a?.name||c.areaNameV186||'Fläche')}</h3><span class="controlPill">${done} / ${total} bestätigt</span><button class="btn" onclick="finishAreaInventoryV186()">Inventur Fläche abschliessen</button></div><div id="areaInvFinishV186"></div><div class="controlScanV185"><section class="controlLocationV185"><h3>1. Standort auf ${esc(a?.name||'Fläche')}</h3><div class="controlLocationGridV185" style="grid-template-columns:repeat(2,minmax(160px,1fr))"><label>Gestell / Regal<select onchange="areaInvRackV186(this.value)">${rs.map(x=>`<option value="${ea(x.id)}" ${x.id===rackIdV186?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label><label>Ebene (optional)<select onchange="areaInvLevelV186(this.value)"><option value="">– keine Ebene –</option>${(r?.levels||[]).map((l,i)=>`<option value="${i}" ${String(i)===String(levelV186)?'selected':''}>${esc(l.name||('Ebene '+(i+1)))}</option>`).join('')}</select></label></div><div class="controlActionsV185"><button class="btn secondary" onclick="areaInvNewRackV186()">+ Gestell / Regal</button><button class="btn secondary" onclick="areaInvNewLevelV186()">+ Ebene</button></div></section><section class="controlLookupV185"><h3>2. Element-ID</h3><input id="areaInvElementV186" class="controlIdV185" placeholder="Element-ID" autocomplete="off" onkeydown="areaInvKeyV186(event)"><div class="controlActionsV185"><button class="btn" onclick="areaInvFindV186()">Element laden</button><button class="btn secondary" onclick="areaInvAddFoundV186()">+ Paket ohne Element-ID gefunden</button></div></section><div id="areaInvEditorV186"></div></div>`;renderAreaEditorV186();setTimeout(()=>document.getElementById('areaInvElementV186')?.focus(),20)
+ };
+ function renderOverview(){const box=document.getElementById('allControlBody');if(!box)return;box.innerHTML=`<h3>Inventur nach Lagerfläche</h3><p class="help">Starte die Inventur direkt bei der gewünschten Fläche. Beim Abschluss werden alle dort erwarteten, aber nicht bestätigten Materialien als Differenz aufgelistet.</p><div class="areaInvGridV186">${areas().map(a=>{const run=areaControl(a.id),last=latestDone(a.id),count=pkgActive().filter(p=>areaOfPkg(p)===a.id).length,miss=last?(last.items||[]).filter(i=>i.result==='Nicht gefunden').length:0;return `<div class="areaInvCardV186"><h3>${esc(a.name)}</h3><div class="areaInvMetaV186">${count} aktive Pakete aktuell auf dieser Fläche</div>${run?`<div class="areaInvStatusV186">● Inventur läuft · ${(run.items||[]).filter(i=>i.result).length}/${(run.items||[]).length} bestätigt</div><button class="btn" onclick="openAreaInventoryV186('${ea(a.id)}')">Inventur fortsetzen</button>`:`<div class="areaInvStatusV186">${last?'✓ Letzte Inventur abgeschlossen':'Noch keine Flächeninventur'}</div>${last?`<div class="areaInvMetaV186">${fmtDate(last.completed)} · ${esc(last.completedBy||'')} · ${miss} Differenz${miss===1?'':'en'}</div>`:''}<button class="btn" onclick="startAreaInventoryV186('${ea(a.id)}')">Inventur ausführen</button>`}</div>`}).join('')||'<div class="help">Keine Lagerflächen vorhanden.</div>'}</div>`}
+ window.renderFullControl=function(){ensureV24();if(areaIdV186&&activeAreaControl())renderAreaWorkV186();else renderOverview()};
+ setTimeout(()=>{try{if(document.getElementById('allControlBody'))renderFullControl()}catch(_e){}},0);
+})();
+</script>
+
+<!-- V187 – Letzte Kontrolle als Datum in Flächeninventur und Material-Gesamtansicht -->
+<style>
+#page-control .areaInvLastCheckV187{font-size:13px;color:#53635f;margin-top:6px;font-weight:700}
+#page-control .areaInvLastCheckV187 b{color:#17201e}
+</style>
+<script>
+(function(){
+ function dateV187(v){
+  if(!v)return '–';
+  const d=new Date(v);if(Number.isNaN(d.getTime()))return '–';
+  const dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),yy=String(d.getFullYear()).slice(-2);
+  return dd+'.'+mm+'.'+yy;
+ }
+ window.formatLastControlDateV187=dateV187;
+
+ /* Material-Gesamtansicht: neue Spalte „Letzte Kontrolle“ direkt vor Aktion. */
+ INVENTORY_COLS.lastCheckedV187={label:'Letzte Kontrolle',sort:'lastCheckedV187'};
+ const ensureBeforeV187=ensureInventoryOrder;
+ ensureInventoryOrder=function(){
+  ensureBeforeV187();
+  let o=(st.inventoryColumnOrder||[]).filter(k=>k!=='lastCheckedV187');
+  const ai=o.indexOf('action');
+  o.splice(ai>=0?ai:o.length,0,'lastCheckedV187');
+  st.inventoryColumnOrder=o;
+ };
+ const cellBeforeV187=inventoryCell;
+ inventoryCell=function(p,key,r,l){
+  if(key==='lastCheckedV187')return `<b>${esc(dateV187(p?.lastCheckedAt))}</b>`;
+  return cellBeforeV187(p,key,r,l);
+ };
+
+ /* Flächenübersicht: Datum der letzten abgeschlossenen Flächeninventur immer sichtbar. */
+ function decorateAreaCardsV187(){
+  const cards=document.querySelectorAll('#allControlBody .areaInvCardV186');
+  if(!cards.length)return;
+  const controls=Array.isArray(st.controls)?st.controls:[];
+  cards.forEach(card=>{
+   if(card.querySelector('.areaInvLastCheckV187'))return;
+   const name=card.querySelector('h3')?.textContent?.trim()||'';
+   const area=(st.areas||[]).find(a=>String(a.name||'').trim()===name);
+   const last=area?controls.filter(c=>c?.areaInventoryV186===true&&c.areaId===area.id&&c.completed)
+    .sort((a,b)=>String(b.completed).localeCompare(String(a.completed)))[0]:null;
+   const line=document.createElement('div');line.className='areaInvLastCheckV187';
+   line.innerHTML='Datum: letzte Kontrolle <b>'+esc(dateV187(last?.completed))+'</b>';
+   const meta=card.querySelector('.areaInvMetaV186');
+   if(meta)meta.insertAdjacentElement('afterend',line);else card.querySelector('h3')?.insertAdjacentElement('afterend',line);
+  });
+ }
+ const fullBeforeV187=window.renderFullControl;
+ window.renderFullControl=function(){const out=fullBeforeV187.apply(this,arguments);decorateAreaCardsV187();return out};
+
+ /* Bereits sichtbare Ansichten sofort aktualisieren. */
+ try{if(document.getElementById('allControlBody'))decorateAreaCardsV187()}catch(_e){}
+ try{if(document.getElementById('tbody'))renderInv()}catch(_e){}
+})();
+</script>
