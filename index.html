@@ -28393,3 +28393,52 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V237';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V237 Sync-Referenz-Bereinigung bereit')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V238 – reine lokale Speicheranalyse nach Safari QuotaExceeded.
+   KEINE Schreiboperationen: weder Nutzdaten, Cloud-Daten, Sync-Basis noch Konfliktspeicher.
+   Zeigt nur vorhandene localStorage-Belegung und die für Sync relevanten Schlüssel. */
+(()=>{
+ const VERSION='V238';
+ function close(){document.getElementById('v238StorageModal')?.remove()}
+ function fmtChars(n){return Number(n||0).toLocaleString('de-CH')}
+ function fmtMiB(chars){return ((Number(chars||0)*2)/(1024*1024)).toFixed(3)}
+ function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+ function inspect(){
+   const rows=[];let totalChars=0;
+   for(let i=0;i<localStorage.length;i++){
+     const key=localStorage.key(i);let val='';try{val=localStorage.getItem(key)||''}catch(_e){}
+     const chars=String(key||'').length+val.length;totalChars+=chars;
+     rows.push({key,valChars:val.length,chars});
+   }
+   rows.sort((a,b)=>b.chars-a.chars);
+   const wanted=[SYNC_BASE_KEY,SYNC_CONFLICT_KEY,KEY,CLOUD_KEY,AUTH_KEY,BACKUP_KEY].filter(Boolean);
+   const relevant=wanted.map(key=>{
+     const r=rows.find(x=>x.key===key);return r||{key,valChars:0,chars:String(key).length,missing:true};
+   });
+   return {rows,relevant,totalChars};
+ }
+ function show(){
+   close();const a=inspect();
+   const syncBase=a.relevant.find(r=>r.key===SYNC_BASE_KEY),conf=a.relevant.find(r=>r.key===SYNC_CONFLICT_KEY);
+   const top=a.rows.slice(0,12);
+   const m=document.createElement('div');m.id='v238StorageModal';m.style.cssText='position:fixed;inset:0;z-index:27000;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:14px';
+   m.innerHTML=`<div style="background:#fff;width:min(1080px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V238 Safari-Speicheranalyse</h2><div><b>NUR LESEND</b> · Analyse nach „The quota has been exceeded.“</div></div><button id="v238Close" class="btn secondary" type="button">Schließen</button></div>
+    <div style="margin:12px 0;padding:11px 12px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>347 lokale Packages bleiben unangetastet.</b><br>V238 führt keinerlei localStorage-Schreib-, Lösch- oder Bereinigungsoperation aus und schreibt nichts in die Cloud.</div>
+    <div style="padding:10px 12px;background:#fff5df;border:1px solid #e7c66d;border-radius:10px"><b>Gemessene localStorage-Inhalte:</b> ${fmtChars(a.totalChars)} Zeichen inkl. Schlüssel · grob ${fmtMiB(a.totalChars)} MiB bei UTF-16.<br><span style="font-size:.92em">Die tatsächliche Safari-Quota kann davon abweichen; diese Anzeige verändert den Speicher nicht.</span></div>
+    <h3 style="margin:16px 0 8px">Sync-relevante Schlüssel</h3>
+    <div style="overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:.93em"><thead><tr><th style="text-align:left;border-bottom:1px solid #ccd4ce;padding:6px">Schlüssel</th><th style="text-align:right;border-bottom:1px solid #ccd4ce;padding:6px">Wert-Zeichen</th><th style="text-align:right;border-bottom:1px solid #ccd4ce;padding:6px">ca. MiB</th></tr></thead><tbody>${a.relevant.map(r=>`<tr><td style="padding:6px;border-bottom:1px solid #edf0ee">${esc(r.key)}${r.missing?' <b>(fehlt)</b>':''}</td><td style="padding:6px;text-align:right;border-bottom:1px solid #edf0ee">${fmtChars(r.valChars)}</td><td style="padding:6px;text-align:right;border-bottom:1px solid #edf0ee">${fmtMiB(r.valChars)}</td></tr>`).join('')}</tbody></table></div>
+    <div style="margin-top:12px;padding:10px 12px;border:1px solid #d8ded9;border-radius:10px"><b>Für die Quota-Analyse besonders wichtig:</b><br>${esc(SYNC_BASE_KEY)}: <b>${fmtChars(syncBase?.valChars||0)}</b> Zeichen · ${esc(SYNC_CONFLICT_KEY)}: <b>${fmtChars(conf?.valChars||0)}</b> Zeichen.</div>
+    <details style="margin-top:14px"><summary style="cursor:pointer;font-weight:800">12 größte localStorage-Einträge anzeigen</summary><div style="margin-top:8px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.84em;white-space:pre-wrap">${top.map((r,i)=>`${i+1}. ${esc(r.key)} — ${fmtChars(r.valChars)} Wert-Zeichen — ca. ${fmtMiB(r.valChars)} MiB`).join('\n')}</div></details>
+    <div style="margin-top:14px;padding:10px 12px;background:#f4e3e1;border:1px solid #dca59e;border-radius:10px"><b>Keine Bereinigung in V238.</b> Erst anhand dieser Messwerte wird entschieden, wie die technischen Sync-Daten speicherschonend behandelt werden können. __state bleibt gesperrt.</div>
+    <div style="padding:14px 0 4px;font-weight:850">Keine lokalen Daten, Cloud-Daten oder Sync-Referenzen verändert.</div>
+   </div>`;
+   document.body.appendChild(m);document.getElementById('v238Close').onclick=close;
+   setSyncStatus('ok','V238 Speicheranalyse · nur lesend · nichts verändert');
+ }
+ async function analyze(manual=false){if(!manual)return false;show();return true}
+ window.pushEntitySync=analyze;window.pullEntitySync=analyze;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V238';setSyncStatus('ok','V238 Safari-Speicheranalyse bereit · nur lesend')}catch(_e){}
+})();
+</script>
