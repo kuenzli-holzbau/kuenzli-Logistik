@@ -29212,3 +29212,80 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V250';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V250 Diagnose bereit')}catch(_e){}
 })();
 </script>
+<script>
+/* V251 – kontrollierter Abschluss Cloud→Gerät.
+   Behandelt exakt ein nur-lokales materialCatalog-Objekt nur dann, wenn es nirgends lokal
+   semantisch referenziert wird. Danach werden verbleibende Nicht-__state-Abweichungen
+   objektweise auf den Cloud-Stand gesetzt und verifiziert. Cloud wird nie beschrieben. */
+(()=>{
+ const VERSION='V251', EXPECT=347;
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function close(){document.getElementById('v251Modal')?.remove()}
+ function diff(remote,local){
+   const keys=new Set([...Object.keys(local),...Object.keys(remote)]),mismatch=[],localOnly=[],identical=[];
+   for(const k of keys){if(k==='__state|main')continue;const l=local[k],r=remote[k];if(l&&!r){localOnly.push({k,l,r});continue}if(!l&&r){mismatch.push({k,l,r,rh:stableJson(r.data)});continue}const lh=stableJson(l.data),rh=stableJson(r.data);if(lh===rh)identical.push({k,l,r,rh});else mismatch.push({k,l,r,lh,rh})}
+   return {mismatch,localOnly,identical};
+ }
+ function refsFor(target,local){
+   const id=String(target?.l?.id||''), name=String(target?.l?.data?.name||'').trim(), out=[];
+   function walk(v,path,hits){if(v==null)return;if(typeof v==='string'||typeof v==='number'){const s=String(v);if((id&&s===id)||(name&&s===name))hits.push(path||'(Wert)');return}if(Array.isArray(v)){v.forEach((x,i)=>walk(x,`${path}[${i}]`,hits));return}if(typeof v==='object')for(const [k,x] of Object.entries(v))walk(x,path?`${path}.${k}`:k,hits)}
+   for(const [k,e] of Object.entries(local)){if(k===target.k||k==='__state|main')continue;const hits=[];walk(e?.data,'',hits);if(hits.length)out.push({k,hits})}
+   return out;
+ }
+ function modal(html){close();const m=document.createElement('div');m.id='v251Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1160px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${html}</div>`;document.body.appendChild(m);document.getElementById('v251Close')?.addEventListener('click',close)}
+ function applyOne(x){
+   const [type,id]=x.k.split('|'),data=JSON.parse(JSON.stringify(x.r.data));load();loadProjects();loadSmallOrders();loadPlatformStore();
+   if(type==='projects'){let arr=(projectStore.projects||[]).filter(p=>p&&typeof p==='object'),ix=arr.findIndex(p=>String(p.id)===id);if(ix>=0)arr[ix]=data;else arr.push(data);projectStore.projects=arr;localStorage.setItem(PROJECTS_KEY,JSON.stringify(projectStore));return}
+   if(type==='smallOrders'){let rr=Object.assign({},data,{cloudSync:true}),arr=(smallOrderStore.reports||[]).filter(r=>r&&typeof r==='object'),ix=arr.findIndex(r=>r.cloudSync===true&&String(r.id)===id);if(ix>=0)arr[ix]=rr;else arr.push(rr);smallOrderStore.reports=arr;localStorage.setItem(SMALL_ORDERS_KEY,JSON.stringify(smallOrderStore));return}
+   if(type==='platforms'){if(id!=='main')throw new Error('Unbekannter platforms-Schlüssel: '+id);platformStore=normalizePlatformStoreData(data||{});localStorage.setItem(PLATFORM_KEY,JSON.stringify(platformStore));return}
+   if(type==='toolsContainers'){if(id!=='main')throw new Error('Unbekannter toolsContainers-Schlüssel: '+id);let d=Object.assign({},data);delete d.id;if(!Array.isArray(d.containers))d.containers=[];localStorage.setItem('kuenzli_tools_white_container_v1',JSON.stringify(d));try{window.renderWhiteContainerV413?.()}catch(_e){}return}
+   if(type==='__state')throw new Error('__state ist gesperrt.');
+   if(!entityCollections().includes(type))throw new Error('Nicht unterstützter Objekttyp: '+type);
+   let next=JSON.parse(JSON.stringify(st)),arr=Array.isArray(next[type])?next[type]:[],ix=arr.findIndex((o,i)=>entityId(type,o,i)===id);if(ix>=0)arr[ix]=data;else arr.push(data);next[type]=arr;ensureV24();st=next;ensureV24();localStorage.setItem(KEY,JSON.stringify(st));
+ }
+ function removeExactMaterial(target){
+   if(target.k==='__state|main'||target.l?.type!=='materialCatalog')throw new Error('Nur-lokales Objekt ist nicht der erwartete materialCatalog-Typ.');
+   const id=String(target.l.id||'');load();const before=(st.materialCatalog||[]).length;st.materialCatalog=(st.materialCatalog||[]).filter((o,i)=>entityId('materialCatalog',o,i)!==id);if(st.materialCatalog.length!==before-1)throw new Error('Das nur-lokale MaterialCatalog-Objekt konnte nicht eindeutig entfernt werden.');ensureV24();localStorage.setItem(KEY,JSON.stringify(st));
+   const base=loadSyncBase();if(Object.prototype.hasOwnProperty.call(base,target.k)){delete base[target.k];saveSyncBase(base)}
+ }
+ async function pull(manual=false){
+   if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V251: Cloud nicht bereit. Nichts verändert.');return false}if(cloudBusy)return false;cloudBusy=true;setSyncStatus('syncing','V251 prüft kontrollierten Abschluss');
+   try{
+     const remote=await fetchRemoteEntities(),local=localEntityMap(),d=diff(remote,local),lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;
+     const t=d.localOnly.length===1?d.localOnly[0]:null,refs=t?refsFor(t,local):[],sd=stableJson(local['__state|main']?.data)!==stableJson(remote['__state|main']?.data),safe=rp===EXPECT&&t&&t.l?.type==='materialCatalog'&&refs.length===0;
+     const rr=refs.map(x=>`<div style="padding:5px 0;border-top:1px solid #eee"><b>${esc(x.k)}</b> · ${esc(x.hits.join(', '))}</div>`).join('')||'<div style="padding:7px 0"><b>Keine Referenz gefunden.</b></div>';
+     modal(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V251 Cloud → Gerät – kontrollierter Abschluss</h2><div><b>CLOUD IST DIE QUELLE</b> · erst Referenzprüfung, dann objektweise Übernahme</div></div><button id="v251Close" class="btn secondary">Schließen</button></div>
+       <div style="margin-top:12px;padding:11px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal ${lp} · Cloud <b>${rp}</b> · Ziel <b>347/347</b>.</div>
+       <div style="margin-top:10px;padding:11px;background:${safe?'#eef7ef':'#fff0f0'};border:1px solid ${safe?'#b7d3bb':'#dfb1b1'};border-radius:10px"><b>Nur-lokal:</b> ${t?esc(t.k):d.localOnly.length+' Objekt(e)'}<br><b>Lokale Referenzen darauf: ${refs.length}</b>. ${safe?'Damit kann dieses cloudfremde MaterialCatalog-Objekt kontrolliert entfernt werden.':'Keine Freigabe zur Entfernung.'}</div>
+       <details style="margin-top:10px"><summary style="font-weight:800">Referenzprüfung anzeigen (${refs.length})</summary>${rr}</details>
+       <div style="margin-top:10px;padding:11px;background:#fff4e6;border:1px solid #e5bf84;border-radius:10px"><b>Danach verbleibende Cloud-Abweichungen: ${d.mismatch.length}</b>. Diese werden einzeln aus der Cloud übernommen, lokal verifiziert und erst danach in der Sync-Basis bestätigt.</div>
+       <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt gesperrt.</b> Abweichung: ${sd?'1':'0'}.</div>
+       ${safe?`<button id="v251Apply" class="btn" style="margin-top:14px;background:#173f32;color:white">Cloud-Stand jetzt kontrolliert vollständig auf dieses Gerät übernehmen</button>`:''}<button id="v251Cancel" class="btn secondary" style="margin:14px 0 0 8px">Abbrechen</button><div id="v251Out" style="margin-top:12px;font-weight:800">Noch nichts verändert.</div>`);
+     document.getElementById('v251Cancel').onclick=close;if(safe)document.getElementById('v251Apply').onclick=run;setSyncStatus('ok','V251 geprüft · '+refs.length+' Referenz(en)');return true;
+   }catch(e){alert('V251 Vorbereitung fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V251 Vorbereitung fehlgeschlagen');return false}finally{cloudBusy=false}
+ }
+ async function run(){
+   if(!confirm('V251 KONTROLLIERTER ABSCHLUSS\n\nDie Cloud ist ausdrücklich die Quelle.\nDas exakt eine nur-lokale, unreferenzierte MaterialCatalog-Objekt wird lokal entfernt. Danach werden alle verbleibenden Nicht-__state-Abweichungen objektweise aus der Cloud übernommen und verifiziert.\n__state bleibt gesperrt. Es wird NICHT in die Cloud geschrieben.\n\nFortfahren?'))return;
+   const out=document.getElementById('v251Out');if(cloudBusy)return;cloudBusy=true;let done=0;
+   try{
+     let remote=await fetchRemoteEntities(),local=localEntityMap(),d=diff(remote,local);const rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;
+     if(rp!==EXPECT||d.localOnly.length!==1||d.localOnly[0].l?.type!=='materialCatalog')throw new Error('Sicherheitsbild hat sich verändert.');
+     if(refsFor(d.localOnly[0],local).length)throw new Error('Das nur-lokale MaterialCatalog-Objekt wird inzwischen referenziert. Abbruch.');
+     const removedKey=d.localOnly[0].k;removeExactMaterial(d.localOnly[0]);
+     if(localEntityMap()[removedKey])throw new Error('Entfernung des cloudfremden MaterialCatalog-Objekts konnte nicht verifiziert werden.');
+     if(out)out.textContent='Nur-lokales unreferenziertes MaterialCatalog-Objekt entfernt und verifiziert. Cloud-Abweichungen werden übernommen …';
+     while(true){
+       remote=await fetchRemoteEntities();local=localEntityMap();d=diff(remote,local);if(d.localOnly.length)throw new Error('Neues nur-lokales Objekt erkannt. Abbruch.');if(!d.mismatch.length)break;
+       const x=d.mismatch[0];if(x.k==='__state|main')throw new Error('__state wäre Kandidat – Sicherheitsabbruch.');
+       applyOne(x);const after=localEntityMap()[x.k];if(!after||stableJson(after.data)!==x.rh)throw new Error(x.k+': lokale Übernahme konnte nicht exakt gegen Cloud verifiziert werden.');
+       const base=loadSyncBase();base[x.k]={version:Number(x.r?.version||0),hash:x.rh};saveSyncBase(base);done++;if(out)out.textContent=`${done} Cloud-Abweichung(en) übernommen und verifiziert …`;
+     }
+     const fr=await fetchRemoteEntities(),fl=localEntityMap(),fd=diff(fr,fl),fp=Object.keys(fl).filter(k=>k.startsWith('packages|')).length,frp=Object.keys(fr).filter(k=>k.startsWith('packages|')).length;
+     if(fp!==EXPECT||frp!==EXPECT||fd.localOnly.length||fd.mismatch.length)throw new Error(`Abschlussprüfung nicht sauber: Packages ${fp}/${frp}, Abweichungen ${fd.mismatch.length}, nur lokal ${fd.localOnly.length}.`);
+     const base=loadSyncBase();for(const x of fd.identical)base[x.k]={version:Number(x.r?.version||0),hash:x.rh};saveSyncBase(base);
+     if(out)out.innerHTML=`<span style="color:#176b3a">V251 ERFOLG: Cloud-Stand vollständig und verifiziert auf diesem Gerät. <b>347 lokale / 347 Cloud-Packages</b>. Alle Nicht-__state-Objekte sind identisch. Sync-Referenzen wurden auf den verifizierten Cloud-Stand gesetzt. __state blieb gesperrt. Es wurde nichts in die Cloud geschrieben.<br>Bitte Ergebnis fotografieren.</span>`;setSyncStatus('ok','V251 erfolgreich · 347/347 Packages');
+   }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V251 STOPP nach ${done} übernommenen Cloud-Abweichung(en): ${esc(String(e.message||e))}<br>Keine weiteren Objekte wurden verarbeitet. Bitte Ergebnis fotografieren und nicht weiter synchronisieren.</span>`;setSyncStatus('err','V251 gestoppt · '+done)}finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V251';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V251 kontrollierter Abschluss bereit')}catch(_e){}
+})();
+</script>
