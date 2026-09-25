@@ -19949,7 +19949,10 @@ async function exportInventoryPDF(){
 .inventoryDimensionInputV538{width:92px;min-width:72px;padding:7px 8px;border:1px solid #8aa99b;border-radius:7px;background:#fff;font:inherit;text-align:right}
 .inventoryDimensionInputV538:focus{outline:2px solid rgba(21,88,63,.2);border-color:#15583f}
 </style>
-</head><body><h1>Holzlager – Gesamtinventar</h1><p>Export: ${escHtml(formatDateTime(new Date().toISOString()))} · Positionen: ${body.length}</p>${table}</body></html>`);
+</head><body><h1>Holzlager – Gesamtinventar</h1><p>Export: ${escHtml(formatDateTime(new Date().toISOString()))} · Positionen: ${body.length}</p>${table}
+
+
+</body></html>`);
    win.document.close();
    win.onload=()=>setTimeout(()=>win.print(),300);
  }
@@ -28053,5 +28056,67 @@ ${safeTypeLines}
  }
  window.pullEntitySync=preview;
  try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V232 Wertevergleich nur lesend')}catch(_e){}
+})();
+</script>
+
+<script>
+/* V233 – Vorschau: lokale Konfliktwerte als Cloud-Kandidaten, NUR LESEND.
+   Es werden KEINE lokalen Daten, Cloud-Daten, Sync-Basis oder Konflikte verändert.
+   __state bleibt gesperrt und wird niemals als Kandidat angeboten. */
+(()=>{
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const same=(a,b)=>stableJson(a)===stableJson(b);
+ const fields=['rackId','levelIndex','qty','height','project','material'];
+ function fmt(v){if(v===undefined)return '∅';if(v===null)return 'null';if(typeof v==='string')return v===''?'(leer)':v;try{const x=stableJson(v);return x.length>180?x.slice(0,180)+' …':x}catch(_){return String(v)}}
+ function remove(){document.getElementById('v233LocalWinsModal')?.remove()}
+ function pair(a,b){return `<div><b>Lokal:</b> ${esc(fmt(a))}<br><span style="color:#66706a">Cloud:</span> ${esc(fmt(b))}</div>`}
+ function show(conflicts,remoteCount,localCount){
+  remove();
+  const state=conflicts.filter(c=>c.type==='__state');
+  const candidates=conflicts.filter(c=>c.type!=='__state');
+  const pk=candidates.filter(c=>c.type==='packages'), racks=candidates.filter(c=>c.type==='racks'), cats=candidates.filter(c=>c.type==='materialCatalog');
+  const relevantPk=pk.filter(c=>fields.some(f=>!same(c.local?.[f],c.remote?.[f])));
+  const metadataOnlyPk=pk.filter(c=>!fields.some(f=>!same(c.local?.[f],c.remote?.[f])));
+  const counts={};for(const f of fields)counts[f]=pk.filter(c=>!same(c.local?.[f],c.remote?.[f])).length;
+  const rows=pk.map(c=>{
+   const dif=fields.filter(f=>!same(c.local?.[f],c.remote?.[f]));
+   return `<details style="border:1px solid #d8ded9;border-radius:9px;padding:9px;margin:7px 0"><summary style="cursor:pointer;font-weight:850">${esc(c.id)} · ${dif.length?dif.map(esc).join(', '):'nur Prüf-Metadaten/History'}</summary>${dif.length?`<table style="width:100%;border-collapse:collapse;margin-top:8px"><tbody>${dif.map(f=>`<tr><td style="padding:6px;border-bottom:1px solid #e7ebe8"><code>${esc(f)}</code></td><td style="padding:6px;border-bottom:1px solid #e7ebe8">${pair(c.local?.[f],c.remote?.[f])}</td></tr>`).join('')}</tbody></table>`:'<div style="margin-top:8px">Keine Abweichung in rackId, levelIndex, qty, height, project oder material; Konflikt betrifft nur andere Felder.</div>'}</details>`;
+  }).join('');
+  const other=[...cats,...racks].map(c=>`<div style="padding:7px 0"><b>${esc(c.type)} · ${esc(c.id)}</b> – lokale Objektversion wäre Kandidat, Cloud bleibt in V233 unverändert.</div>`).join('');
+  const m=document.createElement('div');m.id='v233LocalWinsModal';m.style.cssText='position:fixed;inset:0;z-index:23000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:14px';
+  m.innerHTML=`<div style="background:#fff;width:min(1150px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">
+   <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:sticky;top:-18px;background:#fff;padding:16px 0 10px;z-index:3;border-bottom:1px solid #e1e6e3"><div><h2 style="margin:0 0 5px">V233 Lokal → Cloud Konflikt-Vorschau</h2><div><b>${candidates.length} geschützte Kandidaten</b> · packages: ${pk.length} · racks: ${racks.length} · materialCatalog: ${cats.length} · __state gesperrt: ${state.length}</div></div><button id="v233Close" class="btn secondary" type="button">Schließen</button></div>
+   <div style="margin:12px 0;padding:11px 12px;background:#fff5df;border:1px solid #e7c66d;border-radius:10px"><b>NUR VORSCHAU – KEIN SCHREIBEN.</b><br>Diese Ansicht zeigt, welche Konfliktobjekte bei einer späteren, ausdrücklich bestätigten Aktion mit dem <b>lokalen Stand in die Cloud</b> geschrieben würden. In V233 wird nichts geschrieben, keine Sync-Basis geändert und kein Konflikt gelöscht. <b>__state bleibt gesperrt.</b></div>
+   <div style="padding:10px 12px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>347 lokale Packages bleiben unverändert.</b> V233 verändert weder Packages noch Bestände auf diesem Gerät.</div>
+   <h3>Package-Kandidaten</h3><div>52 Konflikt-Packages insgesamt · ${relevantPk.length} mit Abweichung in mindestens einem fachlichen Vergleichsfeld · ${metadataOnlyPk.length} nur mit anderen Feldern/Metadaten.</div>
+   <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">${fields.map(f=>`<span style="padding:5px 9px;border:1px solid #d8ded9;border-radius:999px"><code>${f}</code>: <b>${counts[f]}</b></span>`).join('')}</div>
+   ${rows}
+   <h3>Weitere Kandidaten</h3>${other||'<p>Keine.</p>'}
+   <div style="margin-top:12px;padding:10px 12px;background:#f4e3e1;border:1px solid #dca59e;border-radius:10px"><b>__state:</b> ${state.length} Konflikt(e) – ausdrücklich ausgeschlossen und gesperrt.</div>
+   <div style="padding:14px 0 4px;font-weight:850">Noch keine lokalen oder Cloud-Daten verändert.</div>
+  </div>`;
+  document.body.appendChild(m);document.getElementById('v233Close').onclick=remove;
+ }
+ async function preview(manual=false){
+  if(!manual)return false;
+  cloudCfg=loadCloudConfig();
+  if(!cloudReady()){alert('V233 Lokal → Cloud Konflikt-Vorschau\n\nCloud ist noch nicht bereit.\n\nNichts verändert.');return false}
+  if(cloudBusy){alert('V233 Lokal → Cloud Konflikt-Vorschau\n\nEs läuft bereits eine Cloud-Synchronisierung. Bitte kurz warten.\n\nNichts verändert.');return false}
+  cloudBusy=true;setSyncStatus('syncing','V233 Konflikt-Kandidaten werden nur analysiert');
+  try{
+   const remote=await fetchRemoteEntities(),base=loadSyncBase(),local=localEntityMap();
+   const keys=new Set([...Object.keys(base),...Object.keys(local),...Object.keys(remote)]),conflicts=[];
+   for(const k of keys){
+    const l=local[k],b=base[k],r=remote[k],lh=l?stableJson(l.data):null,bh=b?.hash??null,rh=r?stableJson(r.data):null;
+    if(lh!==bh&&rh!==bh&&lh!==rh){const s=k.indexOf('|'),type=s>=0?k.slice(0,s):k,id=s>=0?k.slice(s+1):'';conflicts.push({type,id,local:l?.data??null,remote:r?.data??null});}
+   }
+   conflicts.sort((a,b)=>a.type.localeCompare(b.type)||a.id.localeCompare(b.id));
+   setSyncStatus('err',`V233 Vorschau · ${conflicts.filter(c=>c.type!=='__state').length} lokale Konflikt-Kandidaten · nichts verändert`);
+   show(conflicts,Object.keys(remote).length,Object.keys(local).length);return true;
+  }catch(e){setSyncStatus('err','V233 Vorschau fehlgeschlagen · nichts verändert');alert('V233 Lokal → Cloud Konflikt-Vorschau\n\nAnalyse fehlgeschlagen:\n'+String(e.message||e)+'\n\nNichts verändert.');return false}
+  finally{cloudBusy=false}
+ }
+ window.pullEntitySync=preview;
+ try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V233 lokale Konflikt-Vorschau nur lesend')}catch(_e){}
 })();
 </script>
