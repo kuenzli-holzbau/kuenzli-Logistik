@@ -27593,3 +27593,58 @@ try{
   }catch(_e){}
 })();
 </script>
+
+<script>
+/* V227 – sicherer Cloud -> Gerät Rückweg. Nur konfliktfreie Cloud-Änderungen; manuell. */
+(()=>{
+ async function v227SafePull(manual=false){
+  if(!manual)return false;
+  cloudCfg=loadCloudConfig();
+  if(!cloudReady()){alert('Cloud ist noch nicht bereit.');return false}
+  if(cloudBusy){alert('Es läuft bereits eine Cloud-Synchronisierung.');return false}
+  cloudBusy=true;setSyncStatus('syncing','Cloud-Änderungen werden sicher geprüft');
+  try{
+   const remote=await fetchRemoteEntities(),base=loadSyncBase(),local=localEntityMap();
+   const keys=new Set([...Object.keys(base),...Object.keys(local),...Object.keys(remote)]),safe=new Set(),protectedKeys=new Set(),conflicts=[];
+   for(const k of keys){
+    const l=local[k],b=base[k],r=remote[k],lh=l?stableJson(l.data):null,bh=b?.hash??null,rh=r?stableJson(r.data):null;
+    const localChanged=lh!==bh,remoteChanged=rh!==bh;
+    if(!remoteChanged){protectedKeys.add(k);continue}
+    if(localChanged&&lh!==rh){
+     protectedKeys.add(k);const [type,id]=k.split('|');
+     conflicts.push({type,id,local:l?.data||null,remote:r?.data||null,remoteVersion:r?.version||0,remoteBy:r?.updated_by||'',deletedLocal:!l,deletedRemote:!r});continue
+    }
+    if(localChanged&&lh===rh){protectedKeys.add(k);continue}
+    if(k==='__state|main'){protectedKeys.add(k);continue}
+    safe.add(k);
+   }
+   for(const k of keys)if(!safe.has(k))protectedKeys.add(k);
+   const byType={};for(const k of safe){const t=k.split('|')[0];byType[t]=(byType[t]||0)+1}
+   const details=Object.entries(byType).sort((a,b)=>a[0].localeCompare(b[0])).map(([t,n])=>`• ${t}: ${n}`).join('\\n');
+   if(!safe.size){
+    v224Conflicts=conflicts;v224RenderConflicts();
+    setSyncStatus(conflicts.length?'err':'ok',conflicts.length?`${conflicts.length} Konflikt(e) geschützt`:'Keine sicheren Cloud-Änderungen vorhanden');
+    alert(`V227 Prüfung abgeschlossen.\\n\\n0 Cloud-Änderungen zur sicheren Übernahme.\\n${conflicts.length} Konflikt(e) bleiben lokal geschützt.\\n\\nLokaler Bestand wurde nicht verändert.`);return true
+   }
+   if(!confirm(`V227 sichere Cloud-Übernahme\\n\\n${safe.size} konfliktfreie Cloud-Änderung(en) können übernommen werden.\\n${conflicts.length} Konflikt(e) werden NICHT überschrieben.\\n\\n${details}\\n\\nNur diese konfliktfreien Datensätze übernehmen?`)){
+    setSyncStatus('ok','Cloud-Übernahme abgebrochen · lokal unverändert');return false
+   }
+   const applyRemote=Object.assign({},remote);delete applyRemote['__state|main'];
+   applyRemoteEntities(applyRemote,protectedKeys);
+   const next=Object.assign({},base);
+   for(const k of safe){const r=remote[k];if(r)next[k]={version:Number(r.version||0),hash:stableJson(r.data)};else delete next[k]}
+   saveSyncBase(next);v224Conflicts=conflicts;v224RenderConflicts();
+   lastCloudUpdatedAt=Object.values(remote).map(x=>x?.updated_at||'').sort().pop()||lastCloudUpdatedAt||'';
+   try{noteCloudSuccessV210();saveCloudMetaV210({lastRemoteUpdatedAt:lastCloudUpdatedAt,pulledAt:new Date().toISOString()})}catch(_e){}
+   refresh();setSyncStatus(conflicts.length?'err':'ok',`${safe.size} Cloud-Änderung(en) sicher übernommen${conflicts.length?` · ${conflicts.length} Konflikt(e) geschützt`:''}`);
+   alert(`V227 abgeschlossen.\\n\\n${safe.size} konfliktfreie Cloud-Änderung(en) wurden übernommen.\\n${conflicts.length} Konflikt(e) wurden NICHT überschrieben.\\n\\nLokale Änderungen blieben geschützt.`);return true;
+  }catch(e){
+   try{noteCloudFailureV210(e.status,String(e.message||e))}catch(_e){}
+   setSyncStatus('err','Cloud → Gerät gestoppt · lokale Änderungen geschützt');
+   alert('V227 Cloud → Gerät gestoppt:\\n\\n'+String(e.message||e)+'\\n\\nKeine Konflikte wurden automatisch überschrieben.');return false
+  }finally{cloudBusy=false}
+ }
+ window.pullEntitySync=v227SafePull;
+ try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V227 sicherer Zwei-Wege-Sync bereit')}catch(_e){}
+})();
+</script>
