@@ -28725,3 +28725,88 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V243';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V243 kontrollierter Ein-Objekt-Test bereit')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V244 – kontrollierter normaler Lokal→Cloud-Mehrfachsync.
+   Nur lokale Nicht-__state-Änderungen, immer Vorschau + Bestätigung, objektweise Schreiben
+   mit Sicherheitsprüfung und Cloud-Verifikation je Objekt. Keine Löschungen. Cloud→Gerät bleibt Vorschau-only. */
+(()=>{
+ const VERSION='V244', EXPECT_PACKAGES=347;
+ function esc244(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+ function close244(){document.getElementById('v244Modal')?.remove()}
+ function analyze244(remote,local){
+   const base=loadSyncBase(),keys=new Set([...Object.keys(base),...Object.keys(local),...Object.keys(remote)]),changed=[],conflicts=[],remoteOnly=[],same=[];
+   for(const k of keys){
+     if(k==='__state|main')continue;
+     const l=local[k],r=remote[k],b=base[k],lh=l?stableJson(l.data):null,rh=r?stableJson(r.data):null,bh=b?.hash??null;
+     const lc=lh!==bh,rc=rh!==bh;
+     if(lh===rh){same.push(k);continue}
+     if(lc&&!rc)changed.push({k,l,r,b,lh,rh,bh});
+     else if(lc&&rc)conflicts.push({k,l,r,b,lh,rh,bh});
+     else if(!lc&&rc)remoteOnly.push({k,l,r,b,lh,rh,bh});
+   }
+   return {changed,conflicts,remoteOnly,same};
+ }
+ function stateDiff244(remote,local){return stableJson(local['__state|main']?.data)!==stableJson(remote['__state|main']?.data)}
+ function snap244(list){return list.map(x=>({k:x.k,lh:x.lh,rh:x.rh,rv:Number(x.r?.version||0),bv:Number(x.b?.version||0)}));}
+ function modal244(inner){close244();const m=document.createElement('div');m.id='v244Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1100px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${inner}</div>`;document.body.appendChild(m);document.getElementById('v244Close')?.addEventListener('click',close244);return m}
+ async function push244(manual=false){
+   if(!manual)return false;cloudCfg=loadCloudConfig();
+   if(!cloudReady()){alert('V244\n\nCloud ist nicht bereit. Nichts verändert.');return false}
+   if(cloudBusy){alert('V244\n\nCloud ist beschäftigt. Nichts verändert.');return false}
+   cloudBusy=true;setSyncStatus('syncing','V244 prüft Lokal → Cloud nur zur Vorschau');
+   try{
+     const remote=await fetchRemoteEntities(),local=localEntityMap(),a=analyze244(remote,local),pkg=Object.keys(local).filter(k=>k.startsWith('packages|')).length,sd=stateDiff244(remote,local);
+     const deletions=a.changed.filter(x=>!x.l), writable=a.changed.filter(x=>x.l),safe=a.conflicts.length===0&&a.remoteOnly.length===0&&deletions.length===0&&pkg===EXPECT_PACKAGES;
+     const snapshot=snap244(writable);
+     const rows=writable.map((x,i)=>`<div style="padding:7px 0;border-top:1px solid #e5e8e6"><b>${i+1}. ${esc244(x.k)}</b><br><small>Cloud-Version ${Number(x.r?.version||0)} → lokale Objektversion</small></div>`).join('')||'<div style="padding:8px 0">Keine lokale Änderung vorhanden.</div>';
+     modal244(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V244 Lokal → Cloud – kontrollierter Mehrfachsync</h2><div><b>ZUERST NUR VORSCHAU</b> · kein automatisches Schreiben</div></div><button id="v244Close" class="btn secondary">Schließen</button></div>
+       <div style="margin-top:12px;padding:11px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>Lokale Packages: ${pkg}.</b> Die 347 lokalen Packages werden durch die Vorschau nicht verändert.</div>
+       <div style="margin-top:10px;padding:11px;background:${safe?'#eef7ef':'#fff4e5'};border:1px solid ${safe?'#b7d3bb':'#e3c38e'};border-radius:10px"><b>Lokale Änderungen: ${a.changed.length}</b> · Konflikte: ${a.conflicts.length} · nur Cloud geändert: ${a.remoteOnly.length} · Löschungen: ${deletions.length}.<br>${safe?'Mehrfachsync ist für die unten aufgeführten vorhandenen Objekte freigegeben.':'Schreiben gesperrt, bis Konflikte/Cloud-Abweichungen/Löschungen geklärt sind.'}</div>
+       <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt gesperrt.</b> Aktuelle __state-Abweichung: ${sd?'1':'0'}.</div>
+       <details style="margin-top:12px" open><summary style="cursor:pointer;font-weight:800">Exakte Schreibkandidaten (${writable.length})</summary>${rows}</details>
+       ${safe&&writable.length?`<button id="v244Write" class="btn" style="margin-top:14px;background:#173f32;color:white">Diese ${writable.length} lokale(n) Änderung(en) objektweise in Cloud schreiben</button>`:''}
+       <button id="v244Cancel" class="btn secondary" style="margin:14px 0 0 8px">Abbrechen</button>
+       <div id="v244Out" style="margin-top:12px;font-weight:800">Noch nichts verändert.</div>`);
+     document.getElementById('v244Cancel').onclick=close244;
+     if(safe&&writable.length)document.getElementById('v244Write').onclick=()=>writeMany244(snapshot);
+     setSyncStatus('ok','V244 Vorschau · '+a.changed.length+' lokale Änderung(en) · '+a.conflicts.length+' Konflikt(e)');return true;
+   }catch(e){setSyncStatus('err','V244 Vorschau fehlgeschlagen · nichts verändert');alert('V244 Vorschau fehlgeschlagen:\n\n'+String(e.message||e)+'\n\nNichts verändert.');return false}
+   finally{cloudBusy=false}
+ }
+ async function writeMany244(snapshot){
+   const n=snapshot.length;
+   if(!confirm(`V244 Sicherheitsabfrage\n\n${n} lokale Objektänderung(en) werden NACHEINANDER in die Cloud geschrieben und jeweils direkt verifiziert.\nKeine Löschungen. __state bleibt gesperrt.\nBei der ersten Unsicherheit wird gestoppt.\n\nFortfahren?`))return;
+   const out=document.getElementById('v244Out');if(out)out.textContent='Erneute Sicherheitsprüfung läuft …';
+   if(cloudBusy){if(out)out.textContent='Abbruch: Cloud ist beschäftigt.';return}
+   cloudBusy=true;let done=0;
+   try{
+     let remote=await fetchRemoteEntities(),local=localEntityMap(),a=analyze244(remote,local),pkg=Object.keys(local).filter(k=>k.startsWith('packages|')).length;
+     const now=snap244(a.changed.filter(x=>x.l));
+     if(pkg!==EXPECT_PACKAGES||a.conflicts.length||a.remoteOnly.length||a.changed.some(x=>!x.l)||JSON.stringify(now)!==JSON.stringify(snapshot))throw new Error('Sicherheitsbild hat sich seit der Vorschau verändert. Abbruch ohne Schreiben.');
+     for(const s of snapshot){
+       remote=await fetchRemoteEntities();local=localEntityMap();
+       const l=local[s.k],r=remote[s.k],lh=l?stableJson(l.data):null,rh=r?stableJson(r.data):null;
+       if(!l)throw new Error(s.k+': lokales Objekt fehlt. Abbruch.');
+       if(s.k==='__state|main')throw new Error('__state ist gesperrt.');
+       if(lh!==s.lh||rh!==s.rh||Number(r?.version||0)!==s.rv)throw new Error(s.k+': Objekt hat sich seit der Vorschau verändert. Abbruch vor diesem Objekt.');
+       if(!canWriteCloudEntity(l.type,'save'))throw new Error('Keine Schreibberechtigung für '+l.type+'.');
+       await rpcEntitySave(l.type,l.id,l.data,Number(r?.version||s.bv||0),false);
+       const fresh=await fetchRemoteEntities(),fr=fresh[s.k],currentLocal=localEntityMap()[s.k],currentHash=currentLocal?stableJson(currentLocal.data):null;
+       if(!fr||currentHash!==s.lh||stableJson(fr.data)!==s.lh)throw new Error(s.k+': Cloud-Schreiben konnte nicht eindeutig verifiziert werden.');
+       const base=loadSyncBase();base[s.k]={version:Number(fr.version||0),hash:s.lh};saveSyncBase(base);done++;
+       if(out)out.textContent=`${done}/${n} Objekt(en) geschrieben, aus Cloud verifiziert und Sync-Referenz aktualisiert …`;
+     }
+     if(out)out.innerHTML=`<span style="color:#176b3a">V244 ERFOLG: ${done}/${n} Objekt(e) objektweise geschrieben, jeweils aus der Cloud verifiziert und deren Sync-Referenz aktualisiert. 347 lokale Packages/Nutzdaten wurden nicht verändert. __state blieb gesperrt.<br>Bitte Ergebnis fotografieren.</span>`;
+     setSyncStatus('ok','V244 Mehrfachsync erfolgreich · '+done+' Objekt(e)');
+   }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V244 ABBRUCH/FEHLER nach ${done}/${n} erfolgreich verifizierten Objekt(en): ${esc244(String(e.message||e))}<br>Es werden keine weiteren Objekte geschrieben.</span>`;setSyncStatus('err','V244 Mehrfachsync gestoppt · '+done+'/'+n+' erfolgreich')}
+   finally{cloudBusy=false}
+ }
+ async function pull244(manual=false){
+   if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V244 Cloud → Gerät\n\nCloud ist nicht bereit. Nichts verändert.');return false}if(cloudBusy)return false;cloudBusy=true;
+   try{const remote=await fetchRemoteEntities(),local=localEntityMap(),a=analyze244(remote,local),pkg=Object.keys(local).filter(k=>k.startsWith('packages|')).length;modal244(`<div style="display:flex;justify-content:space-between"><div><h2 style="margin:0">V244 Cloud → Gerät – Vorschau</h2><div><b>NUR LESEND</b> · keine automatische Übernahme</div></div><button id="v244Close" class="btn secondary">Schließen</button></div><div style="margin-top:14px;padding:12px;background:#eef7ef;border-radius:10px"><b>Lokale Packages: ${pkg}</b> · identische Nicht-__state-Objekte: ${a.same.length}.</div><div style="margin-top:10px;padding:12px;background:#fff4e5;border-radius:10px">Lokale Änderungen: ${a.changed.length} · Konflikte: ${a.conflicts.length} · nur Cloud geändert: ${a.remoteOnly.length}.<br><b>Es wurde nichts auf das Gerät übernommen.</b></div><div style="margin-top:10px;padding:12px;background:#fff0f0;border-radius:10px"><b>__state bleibt gesperrt.</b></div>`);setSyncStatus('ok','V244 Cloud → Gerät Vorschau · nichts angewendet');return true}catch(e){alert('V244 Cloud → Gerät Vorschau fehlgeschlagen:\n'+String(e.message||e));return false}finally{cloudBusy=false}
+ }
+ window.pushEntitySync=push244;window.pullEntitySync=pull244;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V244';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V244 kontrollierter Mehrfachsync bereit')}catch(_e){}
+})();
+</script>
