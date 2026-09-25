@@ -29095,3 +29095,70 @@ ${safeTypeLines}
  window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V248';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V248 Fortsetzung bereit')}catch(_e){}
 })();
 </script>
+<script>
+/* V249 – kontrollierte Fortsetzung: Cloud ist ausdrücklich die Quelle.
+   Alle Nicht-__state-Objekte, deren lokaler Inhalt vom aktuellen Cloud-Inhalt abweicht,
+   werden als Übernahmekandidaten behandelt – auch Folgeänderungen, die durch frühere
+   Cloud→Gerät-Schritte lokal entstanden sind. Nur lokale Objekte ohne Cloud-Gegenstück
+   bleiben geschützt. Packages zuerst; materialCatalog zuletzt und ohne ensureV24-Nachmutation.
+   Keine Cloud-Schreiboperation. __state bleibt gesperrt. */
+(()=>{
+ const VERSION='V249', EXPECT=347;
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function close(){document.getElementById('v249Modal')?.remove()}
+ function diff(remote,local){
+   const keys=new Set([...Object.keys(local),...Object.keys(remote)]),mismatch=[],localOnly=[],identical=[];
+   for(const k of keys){if(k==='__state|main')continue;const l=local[k],r=remote[k];if(l&&!r){localOnly.push({k,l,r});continue}if(!l&&r){mismatch.push({k,l,r,lh:null,rh:stableJson(r.data)});continue}const lh=stableJson(l.data),rh=stableJson(r.data);if(lh===rh)identical.push({k,l,r,lh,rh});else mismatch.push({k,l,r,lh,rh});}
+   return {mismatch,localOnly,identical};
+ }
+ function pri(x){const t=x.r?.type||x.k.split('|')[0];if(t==='packages')return 10;if(t==='materialCatalog')return 90;return 40}
+ function ordered(a){return [...a].sort((x,y)=>pri(x)-pri(y)||x.k.localeCompare(y.k))}
+ function sig(a){return a.map(x=>x.k+'#'+x.rh+'#'+Number(x.r?.version||0)).sort().join('\n')}
+ function modal(html){close();const m=document.createElement('div');m.id='v249Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1140px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${html}</div>`;document.body.appendChild(m);document.getElementById('v249Close')?.addEventListener('click',close)}
+ function applyOne(x){
+   if(!x?.r||x.k==='__state|main')throw new Error('Ungültiger/gesperrter Kandidat.');
+   const type=x.r.type,id=String(x.r.id),data=JSON.parse(JSON.stringify(x.r.data));
+   if(type==='projects'){loadProjects();let arr=(projectStore.projects||[]).filter(Boolean),ix=arr.findIndex(p=>String(p.id)===id);if(ix>=0)arr[ix]=data;else arr.push(data);projectStore.projects=arr;localStorage.setItem(PROJECTS_KEY,JSON.stringify(projectStore));return}
+   if(type==='smallOrders'){loadSmallOrders();let rr=Object.assign({},data,{cloudSync:true}),arr=(smallOrderStore.reports||[]).filter(Boolean),ix=arr.findIndex(r=>r.cloudSync===true&&String(r.id)===id);if(ix>=0)arr[ix]=rr;else arr.push(rr);smallOrderStore.reports=arr;localStorage.setItem(SMALL_ORDERS_KEY,JSON.stringify(smallOrderStore));return}
+   if(type==='platforms'){if(id!=='main')throw new Error('Unbekannter platforms-Schlüssel');platformStore=normalizePlatformStoreData(data||{});localStorage.setItem(PLATFORM_KEY,JSON.stringify(platformStore));return}
+   if(type==='toolsContainers'){if(id!=='main')throw new Error('Unbekannter toolsContainers-Schlüssel');let d=Object.assign({},data);delete d.id;if(!Array.isArray(d.containers))d.containers=[];localStorage.setItem('kuenzli_tools_white_container_v1',JSON.stringify(d));return}
+   if(!entityCollections().includes(type))throw new Error('Nicht unterstützter Typ: '+type);
+   let next=JSON.parse(JSON.stringify(st)),arr=Array.isArray(next[type])?next[type]:[],ix=arr.findIndex((o,i)=>entityId(type,o,i)===id);if(ix>=0)arr[ix]=data;else arr.push(data);next[type]=arr;st=next;
+   if(type!=='materialCatalog')ensureV24();
+   localStorage.setItem(KEY,JSON.stringify(st));
+ }
+ async function pull(manual=false){
+   if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V249: Cloud nicht bereit.');return false}if(cloudBusy)return false;cloudBusy=true;setSyncStatus('syncing','V249 prüft verbleibenden Cloud-Stand');
+   try{const remote=await fetchRemoteEntities(),local=localEntityMap(),d=diff(remote,local),c=ordered(d.mismatch),lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length,pc=c.filter(x=>x.k.startsWith('packages|')).length,mc=c.filter(x=>x.k.startsWith('materialCatalog|')).length,safe=rp===EXPECT&&d.localOnly.length===0,snap=sig(c);
+     modal(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V249 Cloud → Gerät – kontrollierte Fortsetzung</h2><div><b>CLOUD IST DIE QUELLE</b> · verbleibende Abweichungen werden auf Cloud-Stand gesetzt</div></div><button id="v249Close" class="btn secondary">Schließen</button></div>
+     <div style="margin-top:12px;padding:11px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal ${lp} · Cloud ${rp} · Ziel <b>347/347</b>.</div>
+     <div style="margin-top:10px;padding:11px;background:${safe?'#eef7ef':'#fff0f0'};border:1px solid ${safe?'#b7d3bb':'#dfb1b1'};border-radius:10px"><b>Noch abweichend: ${c.length}</b> · Packages: ${pc} · materialCatalog: ${mc}.<br>Bereits identisch: ${d.identical.length} · nur lokal ohne Cloud-Gegenstück: ${d.localOnly.length}.<br><b>V249 behandelt auch durch frühere Übernahmeschritte entstandene lokale Folgeänderungen als Cloud→Gerät-Kandidaten.</b></div>
+     <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt gesperrt und wird nicht übernommen.</b></div>
+     <details style="margin-top:12px"><summary style="font-weight:800">Verbleibende Cloud-Abweichungen (${c.length})</summary>${c.map((x,i)=>`<div style="padding:6px 0;border-top:1px solid #eee">${i+1}. <b>${esc(x.k)}</b> · Cloud-Version ${Number(x.r?.version||0)}</div>`).join('')}</details>
+     ${safe&&c.length?`<button id="v249Apply" class="btn" style="margin-top:14px;background:#173f32;color:white">Verbleibende ${c.length} Objekte auf Cloud-Stand setzen</button>`:''}<button id="v249Cancel" class="btn secondary" style="margin:14px 0 0 8px">Abbrechen</button><div id="v249Out" style="margin-top:12px;font-weight:800">Noch nichts weiter verändert.</div>`);
+     document.getElementById('v249Cancel').onclick=close;if(safe&&c.length)document.getElementById('v249Apply').onclick=()=>run(c,snap);setSyncStatus('ok','V249 bereit · '+c.length+' verbleibend');return true;
+   }catch(e){alert('V249 Vorbereitung fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V249 Vorbereitung fehlgeschlagen');return false}finally{cloudBusy=false}
+ }
+ async function run(original,snap){
+   if(!confirm(`V249 KONTROLLIERTE FORTSETZUNG\n\nDie Cloud ist ausdrücklich die Quelle.\n${original.length} verbleibende Nicht-__state-Abweichungen werden objektweise auf den aktuellen Cloud-Stand gesetzt.\nNur lokale Objekte ohne Cloud-Gegenstück bleiben geschützt.\n__state bleibt gesperrt. Es wird nichts in die Cloud geschrieben.\n\nFortfahren?`))return;
+   const out=document.getElementById('v249Out');if(cloudBusy)return;cloudBusy=true;let done=0;
+   try{
+     let remote=await fetchRemoteEntities(),local=localEntityMap(),d=diff(remote,local),c=ordered(d.mismatch);if(Object.keys(remote).filter(k=>k.startsWith('packages|')).length!==EXPECT||d.localOnly.length||sig(c)!==snap)throw new Error('Sicherheitsbild seit Vorschau verändert.');
+     for(const s of original){
+       remote=await fetchRemoteEntities();local=localEntityMap();d=diff(remote,local);if(d.localOnly.length)throw new Error('Nur-lokales Objekt ohne Cloud-Gegenstück erkannt. Abbruch.');
+       const now=d.mismatch.find(x=>x.k===s.k);if(!now)continue;if(now.rh!==s.rh||Number(now.r?.version||0)!==Number(s.r?.version||0))throw new Error(s.k+': Cloud-Version hat sich verändert.');
+       applyOne(now);
+       const after=localEntityMap()[s.k];if(!after||stableJson(after.data)!==s.rh)throw new Error(s.k+': lokale Übernahme konnte nicht exakt gegen Cloud verifiziert werden.');
+       const base=loadSyncBase();base[s.k]={version:Number(s.r?.version||0),hash:s.rh};saveSyncBase(base);done++;if(out)out.textContent=`${done}/${original.length} verbleibende Objekte auf Cloud-Stand gesetzt und verifiziert …`;
+     }
+     const fr=await fetchRemoteEntities(),fl=localEntityMap(),fd=diff(fr,fl),fp=Object.keys(fl).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(fr).filter(k=>k.startsWith('packages|')).length;
+     if(fp!==EXPECT||rp!==EXPECT)throw new Error(`Abschluss: Packages lokal ${fp}, Cloud ${rp}; erwartet 347/347.`);
+     if(fd.localOnly.length||fd.mismatch.length)throw new Error(`Abschluss noch nicht identisch: ${fd.mismatch.length} Abweichung(en), ${fd.localOnly.length} nur lokal.`);
+     // Alle aktuell identischen Nicht-__state-Objekte technisch auf den verifizierten Cloud-Stand referenzieren.
+     const base=loadSyncBase();for(const x of fd.identical){base[x.k]={version:Number(x.r?.version||0),hash:x.rh}}saveSyncBase(base);
+     if(out)out.innerHTML='<span style="color:#176b3a">V249 ERFOLG: Cloud-Stand vollständig auf dieses Gerät übernommen. <b>347 lokal / 347 Cloud Packages</b>. Alle Nicht-__state-Objekte sind identisch und ihre Sync-Referenzen wurden auf den verifizierten Cloud-Stand gesetzt. __state blieb gesperrt. Nichts wurde in die Cloud geschrieben.<br>Bitte Ergebnis fotografieren.</span>';setSyncStatus('ok','V249 erfolgreich · 347/347 Packages');
+   }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V249 STOPP nach ${done} neu verifizierten Objekt(en): ${esc(String(e.message||e))}<br>Keine weiteren Objekte wurden verarbeitet. Bitte Ergebnis fotografieren.</span>`;setSyncStatus('err','V249 gestoppt · '+done)}finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V249';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V249 kontrollierte Fortsetzung bereit')}catch(_e){}
+})();
+</script>
