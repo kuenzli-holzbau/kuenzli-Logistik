@@ -28240,3 +28240,65 @@ ${safeTypeLines}
  }catch(_e){}
 })();
 </script>
+
+<script>
+/* V236 – reine Verifikation nach V235. NUR LESEND.
+   Prüft lokale Objekte gegen den aktuellen Cloud-Stand, unabhängig von der Sync-Basis.
+   Keine lokalen Daten, Cloud-Daten, Sync-Basis oder Konflikte werden verändert.
+   __state bleibt gesperrt. */
+(()=>{
+ const VERSION='V236';
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function close(){document.getElementById('v236VerifyModal')?.remove()}
+ function splitKey(k){const s=k.indexOf('|');return {type:s>=0?k.slice(0,s):k,id:s>=0?k.slice(s+1):''}}
+ function show(remote,local){
+   close();
+   const keys=[...new Set([...Object.keys(local),...Object.keys(remote)])].sort();
+   const identical=[],different=[],localOnly=[],cloudOnly=[];
+   for(const k of keys){
+     const l=local[k],r=remote[k];
+     if(l&&r){(stableJson(l.data)===stableJson(r.data)?identical:different).push(k)}
+     else if(l)localOnly.push(k);else cloudOnly.push(k);
+   }
+   const pkgLocal=Object.keys(local).filter(k=>k.startsWith('packages|')).length;
+   const pkgCloud=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;
+   const pkgSame=identical.filter(k=>k.startsWith('packages|')).length;
+   const pkgDiff=different.filter(k=>k.startsWith('packages|')).length;
+   const stateDiff=different.filter(k=>k.startsWith('__state|')).length;
+   const nonStateDiff=different.filter(k=>!k.startsWith('__state|'));
+   const allBusinessOk=nonStateDiff.length===0&&localOnly.length===0&&cloudOnly.length===0&&pkgLocal===347&&pkgCloud===347&&pkgSame===347;
+   const detail=[...different.map(k=>['abweichend',k]),...localOnly.map(k=>['nur lokal',k]),...cloudOnly.map(k=>['nur Cloud',k])];
+   const m=document.createElement('div');m.id='v236VerifyModal';m.style.cssText='position:fixed;inset:0;z-index:25000;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:14px';
+   m.innerHTML=`<div style="background:#fff;width:min(1050px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V236 Cloud-Verifikation nach V235</h2><div><b>NUR LESEND</b> · lokaler Stand gegen aktuellen Cloud-Stand</div></div><button id="v236Close" class="btn secondary" type="button">Schließen</button></div>
+    <div style="margin:12px 0;padding:11px 12px;background:${allBusinessOk?'#eef7ef':'#fff5df'};border:1px solid ${allBusinessOk?'#b7d3bb':'#e7c66d'};border-radius:10px"><b>${allBusinessOk?'Verifikation erfolgreich.':'Verifikation zeigt noch Abweichungen.'}</b><br>Es wurden keine lokalen Daten, keine Cloud-Daten und keine Sync-Referenzen verändert.</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px">
+      <div style="padding:10px;border:1px solid #d8ded9;border-radius:10px">Lokal: <b>${Object.keys(local).length}</b></div>
+      <div style="padding:10px;border:1px solid #d8ded9;border-radius:10px">Cloud: <b>${Object.keys(remote).length}</b></div>
+      <div style="padding:10px;border:1px solid #d8ded9;border-radius:10px">Identisch: <b>${identical.length}</b></div>
+      <div style="padding:10px;border:1px solid #d8ded9;border-radius:10px">Abweichend: <b>${different.length}</b></div>
+    </div>
+    <div style="margin-top:12px;padding:11px 12px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal ${pkgLocal} · Cloud ${pkgCloud} · identisch ${pkgSame} · abweichend ${pkgDiff}.<br><b>Die 347 lokalen Packages wurden durch V236 nicht verändert.</b></div>
+    <div style="margin-top:10px;padding:10px 12px;background:#f4e3e1;border:1px solid #dca59e;border-radius:10px"><b>__state:</b> ${stateDiff} abweichend und weiterhin gesperrt. Nicht-__state-Abweichungen: <b>${nonStateDiff.length}</b>.</div>
+    <div style="margin-top:10px">Nur lokal: <b>${localOnly.length}</b> · Nur Cloud: <b>${cloudOnly.length}</b></div>
+    <details style="margin-top:12px" ${detail.length?'':'hidden'}><summary style="cursor:pointer;font-weight:850">Verbleibende Unterschiede anzeigen (${detail.length})</summary><div style="margin-top:8px;font-size:12px;line-height:1.55">${detail.map(([kind,k])=>{const p=splitKey(k);return `<code style="display:block">${esc(kind)} · ${esc(p.type)} · ${esc(p.id)}</code>`}).join('')}</div></details>
+    <div style="padding:14px 0 4px;font-weight:850">Noch keine lokalen oder Cloud-Daten verändert.</div>
+   </div>`;
+   document.body.appendChild(m);document.getElementById('v236Close').onclick=close;
+   setSyncStatus(allBusinessOk?'ok':'err',`V236 Verifikation · ${identical.length} identisch · ${different.length} abweichend · nichts verändert`);
+ }
+ async function verify(manual=false){
+   if(!manual)return false;
+   cloudCfg=loadCloudConfig();
+   if(!cloudReady()){alert('V236 Cloud-Verifikation\n\nCloud ist noch nicht bereit.\n\nNichts verändert.');return false}
+   if(cloudBusy){alert('V236 Cloud-Verifikation\n\nEs läuft bereits eine Cloud-Synchronisierung. Bitte kurz warten.\n\nNichts verändert.');return false}
+   cloudBusy=true;setSyncStatus('syncing','V236 liest Cloud nur zur Verifikation');
+   try{const remote=await fetchRemoteEntities(),local=localEntityMap();show(remote,local);return true}
+   catch(e){setSyncStatus('err','V236 Verifikation fehlgeschlagen · nichts verändert');alert('V236 Cloud-Verifikation fehlgeschlagen:\n\n'+String(e.message||e)+'\n\nNichts verändert.');return false}
+   finally{cloudBusy=false}
+ }
+ window.pushEntitySync=verify;
+ window.pullEntitySync=verify;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V236';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V236 reine Verifikation bereit')}catch(_e){}
+})();
+</script>
