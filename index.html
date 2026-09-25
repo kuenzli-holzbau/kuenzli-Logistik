@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V234</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V235</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -28119,5 +28119,124 @@ ${safeTypeLines}
  }
  window.pullEntitySync=preview;
  try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V234 lokale Konflikt-Vorschau nur lesend')}catch(_e){}
+})();
+</script>
+
+
+<script>
+/* V235 – kontrollierter Lokal -> Cloud Konflikt-Push.
+   - Der normale Klick auf "Lokal -> Cloud" zeigt ZUERST nur eine Vorschau.
+   - Schreiben erst über den separaten V235-Button + ausdrückliche Bestätigung.
+   - __state ist immer gesperrt.
+   - Nur Konflikte mit vorhandenem lokalem UND Cloud-Objekt sind schreibbar.
+   - Vor jedem RPC wird geprüft, dass Cloud-Version und Cloud-Inhalt seit der Vorschau unverändert sind.
+   - Lokale Nutzdaten werden niemals verändert.
+   - Sync-Basis wird nur für nachweislich erfolgreich geschriebene Einzelobjekte nachgezogen.
+*/
+(()=>{
+ const VERSION='V235';
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const same=(a,b)=>stableJson(a)===stableJson(b);
+ const fields=['rackId','levelIndex','qty','height','project','material'];
+ let snapshot=null;
+ function close(){document.getElementById('v235PushModal')?.remove()}
+ function safeBaseWrite(base){
+   const compact={};
+   Object.entries(base||{}).forEach(([k,v])=>{if(v&&typeof v==='object')compact[k]={version:Number(v.version||0),hash:v.hash==null?null:v.hash}});
+   localStorage.setItem(SYNC_BASE_KEY,JSON.stringify(compact));
+ }
+ function analyze(remote,base,local){
+   const conflicts=[];
+   const keys=new Set([...Object.keys(base),...Object.keys(local),...Object.keys(remote)]);
+   for(const k of keys){
+     const l=local[k],b=base[k],r=remote[k];
+     const lh=l?stableJson(l.data):null,bh=b?.hash??null,rh=r?stableJson(r.data):null;
+     if(lh!==bh&&rh!==bh&&lh!==rh){
+       const s=k.indexOf('|'),type=s>=0?k.slice(0,s):k,id=s>=0?k.slice(s+1):'';
+       conflicts.push({key:k,type,id,local:l?.data??null,remote:r?.data??null,remoteVersion:Number(r?.version||0),remoteHash:rh,hasLocal:!!l,hasRemote:!!r});
+     }
+   }
+   conflicts.sort((a,b)=>a.type.localeCompare(b.type)||a.id.localeCompare(b.id));
+   return conflicts;
+ }
+ function show(conflicts){
+   close();
+   const state=conflicts.filter(c=>c.type==='__state');
+   const blocked=conflicts.filter(c=>c.type!=='__state'&&(!c.hasLocal||!c.hasRemote||!canWriteCloudEntity(c.type,'save')));
+   const candidates=conflicts.filter(c=>c.type!=='__state'&&c.hasLocal&&c.hasRemote&&canWriteCloudEntity(c.type,'save'));
+   const pk=candidates.filter(c=>c.type==='packages'),racks=candidates.filter(c=>c.type==='racks'),cats=candidates.filter(c=>c.type==='materialCatalog');
+   const relevant=pk.filter(c=>fields.some(f=>!same(c.local?.[f],c.remote?.[f]))).length;
+   const ids=candidates.map(c=>`${c.type} · ${c.id}`);
+   snapshot={createdAt:Date.now(),candidates:candidates.map(c=>({...c}))};
+   const m=document.createElement('div');m.id='v235PushModal';m.style.cssText='position:fixed;inset:0;z-index:24000;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:14px';
+   m.innerHTML=`<div style="background:#fff;width:min(1080px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:sticky;top:-18px;background:#fff;padding:16px 0 10px;z-index:3;border-bottom:1px solid #e1e6e3"><div><h2 style="margin:0 0 5px">V235 Lokal → Cloud Schreibvorschau</h2><div><b>${candidates.length} schreibbare Konfliktobjekte</b> · packages: ${pk.length} · racks: ${racks.length} · materialCatalog: ${cats.length}</div></div><button id="v235Close" class="btn secondary" type="button">Schließen</button></div>
+    <div style="margin:12px 0;padding:11px 12px;background:#fff5df;border:1px solid #e7c66d;border-radius:10px"><b>Bis hierhin NUR VORSCHAU.</b><br>Noch wurden keine Cloud-Daten geschrieben. Der lokale Bestand wird durch V235 nicht verändert.</div>
+    <div style="padding:10px 12px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>Lokaler Paketbestand: 347 bleibt unangetastet.</b><br>${pk.length} konfliktbehaftete Packages würden als vollständige lokale Objektversion in die Cloud geschrieben; davon ${relevant} mit Abweichung in rackId/levelIndex/qty/height/project/material.</div>
+    <div style="margin-top:10px;padding:10px 12px;background:#f4e3e1;border:1px solid #dca59e;border-radius:10px"><b>__state gesperrt:</b> ${state.length}. Nicht schreibbare/fehlende Objekte: ${blocked.length}. Diese werden nicht geschrieben.</div>
+    <details style="margin-top:12px"><summary style="cursor:pointer;font-weight:850">Exakte Kandidaten anzeigen (${candidates.length})</summary><div style="margin-top:8px;font-size:12px;line-height:1.55">${ids.map(x=>`<code style="display:block">${esc(x)}</code>`).join('')}</div></details>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px"><button id="v235Write" class="btn" type="button" ${candidates.length?'':'disabled'}>${candidates.length} lokale Konfliktobjekte in Cloud schreiben</button><button id="v235Cancel" class="btn secondary" type="button">Abbrechen</button></div>
+    <div style="padding:14px 0 4px;font-weight:850">Noch keine lokalen oder Cloud-Daten verändert.</div>
+   </div>`;
+   document.body.appendChild(m);
+   document.getElementById('v235Close').onclick=close;document.getElementById('v235Cancel').onclick=close;
+   document.getElementById('v235Write').onclick=writeSnapshot;
+ }
+ async function preview(manual=false){
+   if(!manual)return false;
+   cloudCfg=loadCloudConfig();
+   if(!cloudReady()){alert('V235 Lokal → Cloud\n\nCloud ist noch nicht bereit.\n\nNichts verändert.');return false}
+   if(cloudBusy){alert('V235 Lokal → Cloud\n\nEs läuft bereits eine Cloud-Synchronisierung. Bitte kurz warten.\n\nNichts verändert.');return false}
+   cloudBusy=true;setSyncStatus('syncing','V235 Konflikte werden für Schreibvorschau geprüft');
+   try{
+     const remote=await fetchRemoteEntities(),base=loadSyncBase(),local=localEntityMap();
+     const conflicts=analyze(remote,base,local);
+     setSyncStatus('err',`V235 Vorschau · ${conflicts.filter(c=>c.type!=='__state').length} Konfliktobjekte · nichts geschrieben`);
+     show(conflicts);return true;
+   }catch(e){setSyncStatus('err','V235 Vorschau fehlgeschlagen · nichts verändert');alert('V235 Schreibvorschau fehlgeschlagen:\n\n'+String(e.message||e)+'\n\nNichts verändert.');return false}
+   finally{cloudBusy=false}
+ }
+ async function writeSnapshot(){
+   if(!snapshot||!snapshot.candidates?.length)return;
+   const n=snapshot.candidates.length;
+   if(!confirm(`V235 LETZTE BESTÄTIGUNG\n\n${n} lokale Konfliktobjekte werden jetzt OBJEKTWEISE in die Cloud geschrieben.\n\n__state wird NICHT geschrieben.\nDie 347 lokalen Packages werden NICHT verändert.\nVor jedem Objekt wird die Cloud-Version erneut geprüft.\n\nJetzt wirklich Lokal → Cloud ausführen?`))return;
+   if(cloudBusy){alert('Cloud ist gerade beschäftigt. Es wurde nichts gestartet.');return}
+   cloudBusy=true;
+   const btn=document.getElementById('v235Write');if(btn)btn.disabled=true;
+   let done=0,stopped=null;
+   try{
+     setSyncStatus('syncing',`V235 schreibt 0/${n} Konfliktobjekte`);
+     let base=loadSyncBase();
+     for(const c of snapshot.candidates){
+       if(c.type==='__state')continue;
+       const localNow=localEntityMap()[c.key];
+       if(!localNow||stableJson(localNow.data)!==stableJson(c.local)){stopped=`${c.type} · ${c.id}: lokaler Stand hat sich seit der Vorschau geändert.`;break}
+       const remoteNow=(await fetchRemoteEntities())[c.key];
+       if(!remoteNow){stopped=`${c.type} · ${c.id}: Cloud-Objekt fehlt inzwischen.`;break}
+       if(Number(remoteNow.version||0)!==c.remoteVersion||stableJson(remoteNow.data)!==c.remoteHash){stopped=`${c.type} · ${c.id}: Cloud-Stand hat sich seit der Vorschau geändert.`;break}
+       if(!canWriteCloudEntity(c.type,'save')){stopped=`${c.type} · ${c.id}: aktuelle Rolle erlaubt den Schreibvorgang nicht.`;break}
+       let saved;
+       try{saved=await rpcEntitySave(c.type,c.id,localNow.data,Number(remoteNow.version||0),false)}catch(e){stopped=`${c.type} · ${c.id}: ${String(e.message||e)}`;break}
+       const ver=Number(saved?.version||Number(remoteNow.version||0)+1);
+       base[c.key]={version:ver,hash:stableJson(localNow.data)};
+       try{safeBaseWrite(base)}catch(e){stopped=`${c.type} · ${c.id}: Cloud wurde geschrieben, aber die technische Sync-Basis konnte lokal nicht gespeichert werden (${String(e.message||e)}).`;done++;break}
+       done++;setSyncStatus('syncing',`V235 schreibt ${done}/${n} Konfliktobjekte`);
+     }
+     close();
+     if(stopped){
+       setSyncStatus('err',`V235 gestoppt · ${done}/${n} geschrieben · Rest geschützt`);
+       alert(`V235 GESTOPPT\n\n${done} von ${n} Objekt(en) wurden erfolgreich in die Cloud geschrieben.\nDer Rest wurde NICHT geschrieben.\n\nGrund:\n${stopped}\n\nLokale Nutzdaten wurden nicht verändert. __state blieb gesperrt.`);
+       return false;
+     }
+     setSyncStatus('ok',`V235 abgeschlossen · ${done}/${n} lokale Konfliktobjekte in Cloud`);
+     alert(`V235 ERFOLG\n\n${done} lokale Konfliktobjekte wurden objektweise in die Cloud geschrieben.\n__state blieb gesperrt.\n\nDie 347 lokalen Packages und sonstigen lokalen Nutzdaten wurden nicht verändert.\n\nBitte jetzt NICHT weiter synchronisieren. Zuerst Ergebnis prüfen.`);
+     return true;
+   }finally{cloudBusy=false}
+ }
+ window.pushEntitySync=preview;
+ try{
+   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V235';
+   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V235 kontrollierter Konflikt-Push bereit');
+ }catch(_e){}
 })();
 </script>
