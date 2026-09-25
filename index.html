@@ -27992,3 +27992,66 @@ ${safeTypeLines}
  try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V231 Konflikt-Feldanalyse nur lesend')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V232 – Wertevergleich der 56 Konflikte, NUR LESEND.
+   Keine lokalen Daten, Cloud-Daten, Sync-Basis oder Konflikte werden verändert.
+   __state bleibt gesperrt. */
+(()=>{
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const same=(a,b)=>stableJson(a)===stableJson(b);
+ const fields=['rackId','levelIndex','qty','height','project','material'];
+ const meta=['lastCheckedAt','lastCheckedBy'];
+ function fmt(v){if(v===undefined)return '∅';if(v===null)return 'null';if(typeof v==='string')return v===''?'(leer)':v;try{const s=stableJson(v);return s.length>220?s.slice(0,220)+' …':s}catch(_){return String(v)}}
+ function remove(){document.getElementById('v232ValueModal')?.remove()}
+ function cellPair(a,b){const changed=!same(a,b);return `<div style="${changed?'font-weight:850':''}"><span style="color:#5e6963">Lokal:</span> ${esc(fmt(a))}<br><span style="color:#5e6963">Cloud:</span> ${esc(fmt(b))}</div>`}
+ function show(conflicts,remoteCount,localCount){
+  remove();
+  const pk=conflicts.filter(c=>c.type==='packages');
+  const racks=conflicts.filter(c=>c.type==='racks');
+  const cats=conflicts.filter(c=>c.type==='materialCatalog');
+  const states=conflicts.filter(c=>c.type==='__state');
+  const counts={};for(const f of fields)counts[f]=pk.filter(c=>!same(c.local?.[f],c.remote?.[f])).length;
+  const pkgRows=pk.map(c=>`<tr><td><code>${esc(c.id)}</code></td>${fields.map(f=>`<td>${cellPair(c.local?.[f],c.remote?.[f])}</td>`).join('')}</tr>`).join('');
+  const otherRows=[...cats,...racks].map(c=>{
+   const keys=[...new Set([...Object.keys(c.local||{}),...Object.keys(c.remote||{})])].filter(k=>!same(c.local?.[k],c.remote?.[k])).sort();
+   return `<details style="border:1px solid #d8ded9;border-radius:9px;padding:9px;margin:8px 0"><summary style="cursor:pointer;font-weight:850">${esc(c.type)} · ${esc(c.id)} · ${keys.length} abweichende Hauptfelder</summary><table style="width:100%;border-collapse:collapse;margin-top:8px"><thead><tr><th style="text-align:left">Feld</th><th style="text-align:left">Lokal → Cloud</th></tr></thead><tbody>${keys.map(k=>`<tr><td style="padding:6px;border-bottom:1px solid #e7ebe8"><code>${esc(k)}</code></td><td style="padding:6px;border-bottom:1px solid #e7ebe8">${cellPair(c.local?.[k],c.remote?.[k])}</td></tr>`).join('')}</tbody></table></details>`;
+  }).join('');
+  const m=document.createElement('div');m.id='v232ValueModal';m.style.cssText='position:fixed;inset:0;z-index:22000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:14px';
+  m.innerHTML=`<div style="background:#fff;width:min(1450px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">
+   <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:sticky;top:-18px;background:#fff;padding:16px 0 10px;z-index:3;border-bottom:1px solid #e1e6e3"><div><h2 style="margin:0 0 5px">V232 Konflikt-Wertevergleich</h2><div><b>${conflicts.length} Konflikte</b> · packages: <b>${pk.length}</b> · racks: ${racks.length} · materialCatalog: ${cats.length} · __state: ${states.length} · Cloud: ${remoteCount} · lokal: ${localCount}</div></div><button id="v232Close" class="btn secondary" type="button">Schließen</button></div>
+   <div style="margin:12px 0;padding:10px 12px;background:#fff5df;border:1px solid #e7c66d;border-radius:10px"><b>Nur Analyse.</b> Keine lokalen Daten, keine Cloud-Daten, keine Sync-Basis und keine Konflikte werden verändert. <b>__state bleibt gesperrt.</b></div>
+   <h3>52 Package-Konflikte – fachlich relevante Werte Lokal → Cloud</h3>
+   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">${fields.map(f=>`<span style="padding:5px 9px;border:1px solid #d8ded9;border-radius:999px"><code>${f}</code>: <b>${counts[f]}</b></span>`).join('')}</div>
+   <div style="overflow:auto;border:1px solid #d8ded9;border-radius:10px"><table style="border-collapse:collapse;min-width:1320px;width:100%"><thead><tr><th style="text-align:left;position:sticky;left:0;background:#f8faf8">Package-ID</th>${fields.map(f=>`<th style="text-align:left">${f}</th>`).join('')}</tr></thead><tbody>${pkgRows}</tbody></table></div>
+   <details style="margin-top:12px"><summary style="cursor:pointer;font-weight:850">Prüf-Metadaten der Packages (${meta.join(', ')})</summary><div style="overflow:auto"><table style="border-collapse:collapse;min-width:900px;width:100%;margin-top:8px"><thead><tr><th style="text-align:left">Package-ID</th>${meta.map(f=>`<th style="text-align:left">${f}</th>`).join('')}</tr></thead><tbody>${pk.map(c=>`<tr><td><code>${esc(c.id)}</code></td>${meta.map(f=>`<td>${cellPair(c.local?.[f],c.remote?.[f])}</td>`).join('')}</tr>`).join('')}</tbody></table></div></details>
+   <details style="margin-top:10px"><summary style="cursor:pointer;font-weight:850">History nur als Diagnose anzeigen</summary>${pk.map(c=>!same(c.local?.history,c.remote?.history)?`<div style="padding:7px 0;border-bottom:1px solid #e7ebe8"><code>${esc(c.id)}</code><br>${cellPair(c.local?.history,c.remote?.history)}</div>`:'').join('')||'<p>Keine History-Unterschiede.</p>'}</details>
+   <h3>Rack- und MaterialCatalog-Konflikte</h3>${otherRows||'<p>Keine.</p>'}
+   <div style="margin-top:12px;padding:10px 12px;background:#f4e3e1;border:1px solid #dca59e;border-radius:10px"><b>__state:</b> ${states.length} Konflikt(e) erkannt. Werte werden absichtlich nicht zur Übernahme angeboten und bleiben gesperrt.</div>
+   <div style="padding:14px 0 4px;font-weight:850">Noch keine lokalen Daten verändert.</div>
+  </div>`;
+  document.body.appendChild(m);document.getElementById('v232Close').onclick=remove;
+ }
+ async function preview(manual=false){
+  if(!manual)return false;
+  cloudCfg=loadCloudConfig();
+  if(!cloudReady()){alert('V232 Konflikt-Wertevergleich\n\nCloud ist noch nicht bereit.\n\nNoch keine lokalen Daten verändert.');return false}
+  if(cloudBusy){alert('V232 Konflikt-Wertevergleich\n\nEs läuft bereits eine Cloud-Synchronisierung. Bitte kurz warten.\n\nNoch keine lokalen Daten verändert.');return false}
+  cloudBusy=true;setSyncStatus('syncing','V232 Konfliktwerte werden nur analysiert');
+  try{
+   const remote=await fetchRemoteEntities(),base=loadSyncBase(),local=localEntityMap();
+   const keys=new Set([...Object.keys(base),...Object.keys(local),...Object.keys(remote)]),conflicts=[];
+   for(const k of keys){
+    const l=local[k],b=base[k],r=remote[k],lh=l?stableJson(l.data):null,bh=b?.hash??null,rh=r?stableJson(r.data):null;
+    if(lh!==bh&&rh!==bh&&lh!==rh){const s=k.indexOf('|'),type=s>=0?k.slice(0,s):k,id=s>=0?k.slice(s+1):'';conflicts.push({type,id,local:l?.data??null,remote:r?.data??null});}
+   }
+   conflicts.sort((a,b)=>a.type.localeCompare(b.type)||a.id.localeCompare(b.id));
+   setSyncStatus(conflicts.length?'err':'ok',`V232 Wertevergleich · ${conflicts.length} Konflikt(e) · nichts verändert`);
+   show(conflicts,Object.keys(remote).length,Object.keys(local).length);return true;
+  }catch(e){setSyncStatus('err','V232 Analyse fehlgeschlagen · lokal unverändert');alert('V232 Konflikt-Wertevergleich\n\nAnalyse fehlgeschlagen:\n'+String(e.message||e)+'\n\nNoch keine lokalen Daten verändert.');return false}
+  finally{cloudBusy=false}
+ }
+ window.pullEntitySync=preview;
+ try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V232 Wertevergleich nur lesend')}catch(_e){}
+})();
+</script>
