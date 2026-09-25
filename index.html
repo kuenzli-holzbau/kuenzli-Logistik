@@ -4249,6 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V234</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -28082,11 +28083,11 @@ ${safeTypeLines}
    const dif=fields.filter(f=>!same(c.local?.[f],c.remote?.[f]));
    return `<details style="border:1px solid #d8ded9;border-radius:9px;padding:9px;margin:7px 0"><summary style="cursor:pointer;font-weight:850">${esc(c.id)} · ${dif.length?dif.map(esc).join(', '):'nur Prüf-Metadaten/History'}</summary>${dif.length?`<table style="width:100%;border-collapse:collapse;margin-top:8px"><tbody>${dif.map(f=>`<tr><td style="padding:6px;border-bottom:1px solid #e7ebe8"><code>${esc(f)}</code></td><td style="padding:6px;border-bottom:1px solid #e7ebe8">${pair(c.local?.[f],c.remote?.[f])}</td></tr>`).join('')}</tbody></table>`:'<div style="margin-top:8px">Keine Abweichung in rackId, levelIndex, qty, height, project oder material; Konflikt betrifft nur andere Felder.</div>'}</details>`;
   }).join('');
-  const other=[...cats,...racks].map(c=>`<div style="padding:7px 0"><b>${esc(c.type)} · ${esc(c.id)}</b> – lokale Objektversion wäre Kandidat, Cloud bleibt in V233 unverändert.</div>`).join('');
+  const other=[...cats,...racks].map(c=>`<div style="padding:7px 0"><b>${esc(c.type)} · ${esc(c.id)}</b> – lokale Objektversion wäre Kandidat, Cloud bleibt in V234 unverändert.</div>`).join('');
   const m=document.createElement('div');m.id='v233LocalWinsModal';m.style.cssText='position:fixed;inset:0;z-index:23000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:14px';
   m.innerHTML=`<div style="background:#fff;width:min(1150px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">
-   <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:sticky;top:-18px;background:#fff;padding:16px 0 10px;z-index:3;border-bottom:1px solid #e1e6e3"><div><h2 style="margin:0 0 5px">V233 Lokal → Cloud Konflikt-Vorschau</h2><div><b>${candidates.length} geschützte Kandidaten</b> · packages: ${pk.length} · racks: ${racks.length} · materialCatalog: ${cats.length} · __state gesperrt: ${state.length}</div></div><button id="v233Close" class="btn secondary" type="button">Schließen</button></div>
-   <div style="margin:12px 0;padding:11px 12px;background:#fff5df;border:1px solid #e7c66d;border-radius:10px"><b>NUR VORSCHAU – KEIN SCHREIBEN.</b><br>Diese Ansicht zeigt, welche Konfliktobjekte bei einer späteren, ausdrücklich bestätigten Aktion mit dem <b>lokalen Stand in die Cloud</b> geschrieben würden. In V233 wird nichts geschrieben, keine Sync-Basis geändert und kein Konflikt gelöscht. <b>__state bleibt gesperrt.</b></div>
+   <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:sticky;top:-18px;background:#fff;padding:16px 0 10px;z-index:3;border-bottom:1px solid #e1e6e3"><div><h2 style="margin:0 0 5px">V234 Lokal → Cloud Konflikt-Vorschau</h2><div><b>${candidates.length} geschützte Kandidaten</b> · packages: ${pk.length} · racks: ${racks.length} · materialCatalog: ${cats.length} · __state gesperrt: ${state.length}</div></div><button id="v233Close" class="btn secondary" type="button">Schließen</button></div>
+   <div style="margin:12px 0;padding:11px 12px;background:#fff5df;border:1px solid #e7c66d;border-radius:10px"><b>NUR VORSCHAU – KEIN SCHREIBEN.</b><br>Diese Ansicht zeigt, welche Konfliktobjekte bei einer späteren, ausdrücklich bestätigten Aktion mit dem <b>lokalen Stand in die Cloud</b> geschrieben würden. In V234 wird nichts geschrieben, keine Sync-Basis geändert und kein Konflikt gelöscht. <b>__state bleibt gesperrt.</b></div>
    <div style="padding:10px 12px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>347 lokale Packages bleiben unverändert.</b> V233 verändert weder Packages noch Bestände auf diesem Gerät.</div>
    <h3>Package-Kandidaten</h3><div>52 Konflikt-Packages insgesamt · ${relevantPk.length} mit Abweichung in mindestens einem fachlichen Vergleichsfeld · ${metadataOnlyPk.length} nur mit anderen Feldern/Metadaten.</div>
    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">${fields.map(f=>`<span style="padding:5px 9px;border:1px solid #d8ded9;border-radius:999px"><code>${f}</code>: <b>${counts[f]}</b></span>`).join('')}</div>
@@ -28100,9 +28101,9 @@ ${safeTypeLines}
  async function preview(manual=false){
   if(!manual)return false;
   cloudCfg=loadCloudConfig();
-  if(!cloudReady()){alert('V233 Lokal → Cloud Konflikt-Vorschau\n\nCloud ist noch nicht bereit.\n\nNichts verändert.');return false}
-  if(cloudBusy){alert('V233 Lokal → Cloud Konflikt-Vorschau\n\nEs läuft bereits eine Cloud-Synchronisierung. Bitte kurz warten.\n\nNichts verändert.');return false}
-  cloudBusy=true;setSyncStatus('syncing','V233 Konflikt-Kandidaten werden nur analysiert');
+  if(!cloudReady()){alert('V234 Lokal → Cloud Konflikt-Vorschau\n\nCloud ist noch nicht bereit.\n\nNichts verändert.');return false}
+  if(cloudBusy){alert('V234 Lokal → Cloud Konflikt-Vorschau\n\nEs läuft bereits eine Cloud-Synchronisierung. Bitte kurz warten.\n\nNichts verändert.');return false}
+  cloudBusy=true;setSyncStatus('syncing','V234 Konflikt-Kandidaten werden nur analysiert');
   try{
    const remote=await fetchRemoteEntities(),base=loadSyncBase(),local=localEntityMap();
    const keys=new Set([...Object.keys(base),...Object.keys(local),...Object.keys(remote)]),conflicts=[];
@@ -28111,12 +28112,12 @@ ${safeTypeLines}
     if(lh!==bh&&rh!==bh&&lh!==rh){const s=k.indexOf('|'),type=s>=0?k.slice(0,s):k,id=s>=0?k.slice(s+1):'';conflicts.push({type,id,local:l?.data??null,remote:r?.data??null});}
    }
    conflicts.sort((a,b)=>a.type.localeCompare(b.type)||a.id.localeCompare(b.id));
-   setSyncStatus('err',`V233 Vorschau · ${conflicts.filter(c=>c.type!=='__state').length} lokale Konflikt-Kandidaten · nichts verändert`);
+   setSyncStatus('err',`V234 Vorschau · ${conflicts.filter(c=>c.type!=='__state').length} lokale Konflikt-Kandidaten · nichts verändert`);
    show(conflicts,Object.keys(remote).length,Object.keys(local).length);return true;
-  }catch(e){setSyncStatus('err','V233 Vorschau fehlgeschlagen · nichts verändert');alert('V233 Lokal → Cloud Konflikt-Vorschau\n\nAnalyse fehlgeschlagen:\n'+String(e.message||e)+'\n\nNichts verändert.');return false}
+  }catch(e){setSyncStatus('err','V234 Vorschau fehlgeschlagen · nichts verändert');alert('V234 Lokal → Cloud Konflikt-Vorschau\n\nAnalyse fehlgeschlagen:\n'+String(e.message||e)+'\n\nNichts verändert.');return false}
   finally{cloudBusy=false}
  }
  window.pullEntitySync=preview;
- try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V233 lokale Konflikt-Vorschau nur lesend')}catch(_e){}
+ try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V234 lokale Konflikt-Vorschau nur lesend')}catch(_e){}
 })();
 </script>
