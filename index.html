@@ -27488,22 +27488,13 @@ try{
   window.renderSyncConflicts=v224RenderConflicts;
 
   // In V224 niemals automatisch Cloud-Daten auf lokale Lagerdaten anwenden.
+  /* V226: Login exakt wie im nachweislich funktionierenden V223 lassen.
+     signInCloud() ruft nach erfolgreicher Membership-Pruefung pullEntitySync(false) auf.
+     Dieser automatische Pull darf beim Login KEINEN weiteren Cloud-Request starten.
+     Cloud -> Geraet bleibt weiterhin gesperrt. */
   window.pullEntitySync=async function(manual=false){
-    try{
-      cloudCfg=loadCloudConfig();
-      if(!cloudReady())return false;
-      if(!await ensureFreshSession())return false;
-      const remote=await fetchRemoteEntities();
-      lastCloudUpdatedAt=Object.values(remote).map(x=>x.updated_at||'').sort().pop()||lastCloudUpdatedAt||'';
-      try{saveCloudMetaV210({lastRemoteUpdatedAt:lastCloudUpdatedAt,observedAt:new Date().toISOString()})}catch(_e){}
-      setSyncStatus('ok','Cloud erreichbar · lokaler Bestand geschützt');
-      if(manual)alert('V225 Sicherheitsmodus: Cloud wurde geprüft. Es wurden keine Cloud-Daten auf das Gerät übernommen.');
-      return true;
-    }catch(e){
-      try{noteCloudFailureV210(e.status,String(e.message||e))}catch(_e){}
-      setSyncStatus('err','Cloud momentan nicht erreichbar · lokale Daten unverändert');
-      return false;
-    }
+    if(manual) alert('V226 Sicherheitsmodus: Cloud → Gerät ist gesperrt. Lokale Lagerdaten bleiben unverändert.');
+    return false;
   };
 
   async function v224Push(manual=false){
@@ -27553,16 +27544,16 @@ try{
 
       if(conflicts.length){
         setSyncStatus('err',`${changed} übertragen · ${conflicts.length} Konflikt(e) geschützt`);
-        if(manual)alert(`V225 abgeschlossen.\n\n${changed} lokale Änderung(en) wurden übertragen.\n${conflicts.length} Konflikt(e) wurden NICHT überschrieben.\n\nLokaler Bestand bleibt unverändert.`);
+        if(manual)alert(`V226 abgeschlossen.\n\n${changed} lokale Änderung(en) wurden übertragen.\n${conflicts.length} Konflikt(e) wurden NICHT überschrieben.\n\nLokaler Bestand bleibt unverändert.`);
         return true;
       }
       setSyncStatus('ok',changed?`${changed} lokale Änderung(en) übertragen`:'Cloud synchron · keine lokale Änderung');
-      if(manual)alert(`V225 erfolgreich.\n\n${changed} lokale Änderung(en) wurden übertragen.${skipped?`\n${skipped} nicht berechtigte Änderung(en) übersprungen.`:''}\n\nLokaler Bestand blieb unverändert.`);
+      if(manual)alert(`V226 erfolgreich.\n\n${changed} lokale Änderung(en) wurden übertragen.${skipped?`\n${skipped} nicht berechtigte Änderung(en) übersprungen.`:''}\n\nLokaler Bestand blieb unverändert.`);
       return true;
     }catch(e){
       try{noteCloudFailureV210(e.status,String(e.message||e))}catch(_e){}
       setSyncStatus('err','Cloud-Sync gestoppt · lokale Daten unverändert');
-      if(manual)alert('V225 Synchronisierung gestoppt:\n\n'+String(e.message||e)+'\n\nLokale Daten wurden nicht überschrieben.');
+      if(manual)alert('V226 Synchronisierung gestoppt:\n\n'+String(e.message||e)+'\n\nLokale Daten wurden nicht überschrieben.');
       return false;
     }finally{cloudBusy=false}
   }
@@ -27572,7 +27563,7 @@ try{
   // Konfliktauflösung in V224 nur in Richtung lokal -> Cloud.
   window.resolveSyncConflict=async function(index,choice){
     const c=v224Conflicts[index];if(!c)return;
-    if(choice!=='local'){alert('V225 Schutz: Cloud → Gerät ist deaktiviert.');return}
+    if(choice!=='local'){alert('V226 Schutz: Cloud → Gerät ist deaktiviert.');return}
     if(!confirm('Lokale Version wirklich in die Cloud schreiben?\n\n'+v224ConflictLabel(c)+'\n\nDie lokale Version bleibt maßgebend.'))return;
     try{
       const local=localEntityMap(),k=cloudKey(c.type,c.id),l=local[k];
@@ -27598,7 +27589,7 @@ try{
   try{
     cloudPushPendingV214=false;clearTimeout(cloudTimer);
     v224RenderConflicts();
-    if(cloudReady())setSyncStatus('ok','Cloud aktiv · V225 lokaler Bestand geschützt');
+    if(cloudReady())setSyncStatus('ok','Cloud aktiv · V226 lokaler Bestand geschützt');
   }catch(_e){}
 })();
 </script>
