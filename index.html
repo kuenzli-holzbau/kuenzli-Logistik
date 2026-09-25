@@ -27372,3 +27372,87 @@ try{
   }
 }catch(_e){}
 </script>
+
+
+<script>
+/* ================================================================
+   BV2026-1-222 · sicherer Cloud-Schreibtest
+   Zweck: genau EIN kontrollierter Schreibtest mit dem lokalen Projekt
+   "Baumgartner TEST 2". Keine Pakete, Inventuren oder sonstigen
+   Lagerdaten werden geschrieben. Automatische Cloud-Pushes sind in
+   dieser Testversion deaktiviert. Cloud -> Gerät ist gesperrt.
+   ================================================================ */
+(function(){
+  const V222_PROJECT_TEST_NAME='Baumgartner TEST 2';
+
+  // In dieser Testversion niemals automatisch lokale Daten in die Cloud schreiben.
+  window.queueCloudSync=function(){
+    try{
+      cloudCfg=loadCloudConfig();
+      if(cloudReady() && !cloudPollTimer) startCloudPolling();
+      setSyncStatus('ok','Cloud erreichbar · V222 Testmodus · Auto-Push aus');
+    }catch(_e){}
+  };
+  window.scheduleCloudPushV214=function(){
+    try{ clearTimeout(cloudTimer); }catch(_e){}
+    cloudPushPendingV214=false;
+  };
+
+  // Schutz: in V222 niemals Cloud-Daten auf den lokalen Lagerbestand anwenden.
+  window.pullEntitySync=async function(manual=false){
+    if(manual) alert('V222 Sicherheitsmodus: Cloud → Gerät ist für diesen Test gesperrt. Lokale Lagerdaten bleiben unverändert.');
+    return false;
+  };
+
+  async function v222ProjectProbe(){
+    cloudCfg=loadCloudConfig();
+    if(!cloudReady()) throw new Error('Cloud ist nicht bereit. Anmeldung/Mitgliedschaft prüfen.');
+    if(!await ensureFreshSession()) throw new Error('Cloud-Sitzung konnte nicht bestätigt werden.');
+
+    const local=localEntityMap();
+    const entries=Object.entries(local).filter(([k,x])=>x && x.type==='projects' && String(x.data?.name||'').trim()===V222_PROJECT_TEST_NAME);
+    if(entries.length!==1) throw new Error('Sicherheitstest abgebrochen: Projekt "'+V222_PROJECT_TEST_NAME+'" wurde lokal '+entries.length+'× gefunden. Es wurde nichts geschrieben.');
+
+    const [key,item]=entries[0];
+    const before=await fetchRemoteEntities();
+    const remote=before[key];
+    if(!remote) throw new Error('Sicherheitstest abgebrochen: Dasselbe Projekt wurde in der Cloud nicht gefunden. Es wurde nichts geschrieben.');
+
+    const oldName=String(remote.data?.name||'');
+    const id=item.id;
+    const ok=confirm('V222 sicherer Cloud-Test\n\nEs wird NUR dieses Projekt geschrieben:\n'+oldName+'  →  '+V222_PROJECT_TEST_NAME+'\n\nProjekt-ID: '+id+'\n\nPakete, Inventur und Materialbestand werden NICHT geschrieben.\n\nTest jetzt ausführen?');
+    if(!ok) return false;
+
+    setSyncStatus('syncing','V222 · Projekt-Schreibtest läuft');
+    await rpcEntitySave('projects',id,item.data,Number(remote.version||0),false);
+
+    const after=await fetchRemoteEntities();
+    const saved=after[key];
+    if(!saved || stableJson(saved.data)!==stableJson(item.data)) throw new Error('Cloud-Schreibvorgang antwortete, aber die Rückleseprüfung stimmt nicht überein. Keine weiteren Daten werden geschrieben.');
+
+    lastCloudUpdatedAt=saved.updated_at||lastCloudUpdatedAt||'';
+    setSyncStatus('ok','Cloud-Schreibweg bestätigt · V222');
+    alert('V222 ERFOLG\n\nCloud-Schreibweg ist bestätigt.\nProjekt: '+V222_PROJECT_TEST_NAME+'\n\nEs wurden keine Pakete, Inventurdaten oder Materialbestände übertragen.\n\nBitte jetzt NICHT Cloud → Gerät drücken. Als Nächstes kann der normale sichere Sync freigeschaltet werden.');
+    return true;
+  }
+
+  // Der vorhandene "Lokal → Cloud"-Button führt in V222 ausschließlich den obigen Einzeltest aus.
+  window.pushEntitySync=async function(manual=false){
+    if(!manual) return false;
+    if(cloudBusy){ alert('Cloud ist gerade beschäftigt. Bitte 5 Sekunden warten und nochmals Lokal → Cloud drücken.'); return false; }
+    cloudBusy=true;
+    try{ return await v222ProjectProbe(); }
+    catch(e){
+      setSyncStatus('err','V222 Test fehlgeschlagen · '+String(e?.message||e));
+      alert('V222 Cloud-Test fehlgeschlagen:\n\n'+String(e?.message||e)+'\n\nEs wurden keine weiteren lokalen Daten übertragen.');
+      return false;
+    }finally{ cloudBusy=false; }
+  };
+
+  try{
+    cloudPushPendingV214=false;
+    clearTimeout(cloudTimer);
+    if(cloudReady()) setSyncStatus('ok','Cloud erreichbar · V222 Testmodus');
+  }catch(_e){}
+})();
+</script>
