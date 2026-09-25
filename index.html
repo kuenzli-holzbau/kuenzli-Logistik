@@ -28810,3 +28810,61 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V244';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V244 kontrollierter Mehrfachsync bereit')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V245 – Cloud → Gerät: ausschließlich sichere, lesende Vorschau.
+   Zeigt exakte Cloud-Änderungen, lokale Änderungen und Konflikte objektweise.
+   Keine lokalen Nutzdaten, keine Sync-Basis, keine Konflikte und keine Cloud-Daten werden verändert.
+   __state bleibt ausdrücklich gesperrt. */
+(()=>{
+ const VERSION='V245', EXPECT_PACKAGES=347;
+ function e245(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+ function close245(){document.getElementById('v245Modal')?.remove()}
+ function analyze245(remote,local){
+   const base=loadSyncBase(),keys=new Set([...Object.keys(base),...Object.keys(local),...Object.keys(remote)]),localChanged=[],cloudChanged=[],conflicts=[],identical=[],localOnly=[],cloudOnly=[];
+   for(const k of keys){
+     if(k==='__state|main')continue;
+     const l=local[k],r=remote[k],b=base[k],lh=l?stableJson(l.data):null,rh=r?stableJson(r.data):null,bh=b?.hash??null;
+     if(!l&&r){cloudOnly.push({k,l,r,b,lh,rh,bh});continue}
+     if(l&&!r){localOnly.push({k,l,r,b,lh,rh,bh});continue}
+     if(lh===rh){identical.push({k,l,r,b,lh,rh,bh});continue}
+     const lc=lh!==bh,rc=rh!==bh;
+     if(lc&&rc)conflicts.push({k,l,r,b,lh,rh,bh});
+     else if(lc&&!rc)localChanged.push({k,l,r,b,lh,rh,bh});
+     else if(!lc&&rc)cloudChanged.push({k,l,r,b,lh,rh,bh});
+     else conflicts.push({k,l,r,b,lh,rh,bh});
+   }
+   return {localChanged,cloudChanged,conflicts,identical,localOnly,cloudOnly};
+ }
+ function modal245(html){close245();const m=document.createElement('div');m.id='v245Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1120px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${html}</div>`;document.body.appendChild(m);document.getElementById('v245Close')?.addEventListener('click',close245);return m}
+ function rows245(list,label){if(!list.length)return '<div style="padding:7px 0">Keine.</div>';return list.map((x,i)=>`<div style="padding:7px 0;border-top:1px solid #e5e8e6"><b>${i+1}. ${e245(x.k)}</b><br><small>${label} · Sync-Basis Version ${Number(x.b?.version||0)} · Cloud-Version ${Number(x.r?.version||0)}</small></div>`).join('')}
+ async function pull245(manual=false){
+   if(!manual)return false;cloudCfg=loadCloudConfig();
+   if(!cloudReady()){alert('V245 Cloud → Gerät\n\nCloud ist nicht bereit. Nichts verändert.');return false}
+   if(cloudBusy){alert('V245 Cloud → Gerät\n\nCloud ist beschäftigt. Nichts verändert.');return false}
+   cloudBusy=true;setSyncStatus('syncing','V245 liest Cloud → Gerät nur zur Vorschau');
+   try{
+     const remote=await fetchRemoteEntities(),local=localEntityMap(),a=analyze245(remote,local);
+     const lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;
+     const sd=stableJson(local['__state|main']?.data)!==stableJson(remote['__state|main']?.data);
+     const cloudCandidates=[...a.cloudChanged,...a.cloudOnly];
+     const pkgCandidates=cloudCandidates.filter(x=>x.k.startsWith('packages|')).length;
+     const safePicture=lp===EXPECT_PACKAGES&&rp===EXPECT_PACKAGES;
+     modal245(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V245 Cloud → Gerät – sichere Vorschau</h2><div><b>NUR LESEND</b> · keine automatische Übernahme</div></div><button id="v245Close" class="btn secondary">Schließen</button></div>
+       <div style="margin-top:12px;padding:11px;background:${safePicture?'#eef7ef':'#fff4e5'};border:1px solid ${safePicture?'#b7d3bb':'#e3c38e'};border-radius:10px"><b>Packages:</b> lokal <b>${lp}</b> · Cloud <b>${rp}</b>. <b>Die ${lp} lokalen Packages werden durch V245 nicht verändert.</b></div>
+       <div style="margin-top:10px;padding:11px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>Identisch:</b> ${a.identical.length} · <b>nur Cloud geändert:</b> ${a.cloudChanged.length} · <b>nur Cloud vorhanden:</b> ${a.cloudOnly.length}.<br>Potenzielle Cloud→Gerät-Kandidaten: <b>${cloudCandidates.length}</b> · Packages davon: <b>${pkgCandidates}</b>.</div>
+       <div style="margin-top:10px;padding:11px;background:${a.localChanged.length||a.conflicts.length||a.localOnly.length?'#fff4e5':'#eef7ef'};border:1px solid ${a.localChanged.length||a.conflicts.length||a.localOnly.length?'#e3c38e':'#b7d3bb'};border-radius:10px"><b>Lokale Änderungen:</b> ${a.localChanged.length} · <b>Konflikte:</b> ${a.conflicts.length} · <b>nur lokal vorhanden:</b> ${a.localOnly.length}. Diese Objekte würden niemals automatisch überschrieben.</div>
+       <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt gesperrt.</b> Aktuelle __state-Abweichung: ${sd?'1':'0'}.</div>
+       <details style="margin-top:12px" ${cloudCandidates.length?'open':''}><summary style="cursor:pointer;font-weight:800">Exakte Cloud→Gerät-Kandidaten (${cloudCandidates.length})</summary>${rows245(cloudCandidates,'Cloud-Stand weicht von Sync-Basis ab')}</details>
+       <details style="margin-top:10px"><summary style="cursor:pointer;font-weight:800">Geschützte lokale Änderungen (${a.localChanged.length})</summary>${rows245(a.localChanged,'lokal geändert')}</details>
+       <details style="margin-top:10px"><summary style="cursor:pointer;font-weight:800">Geschützte Konflikte (${a.conflicts.length})</summary>${rows245(a.conflicts,'lokal und Cloud geändert')}</details>
+       <div style="margin-top:14px;padding:11px;background:#f5f6f5;border:1px solid #d8ded9;border-radius:10px"><b>V245 schreibt nichts.</b> Keine Packages/Nutzdaten, keine Cloud-Daten, keine Sync-Basis und kein Konfliktspeicher werden verändert.</div>`);
+     setSyncStatus('ok','V245 Cloud → Gerät Vorschau · '+cloudCandidates.length+' Kandidat(en) · '+a.conflicts.length+' Konflikt(e)');return true;
+   }catch(e){setSyncStatus('err','V245 Vorschau fehlgeschlagen · nichts verändert');alert('V245 Cloud → Gerät Vorschau fehlgeschlagen:\n\n'+String(e.message||e)+'\n\nNichts verändert.');return false}
+   finally{cloudBusy=false}
+ }
+ // Lokal→Cloud bleibt der bereits erfolgreich getestete V244-Mehrfachsync.
+ window.pullEntitySync=pull245;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V245';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V245 Cloud → Gerät Vorschau bereit')}catch(_e){}
+})();
+</script>
