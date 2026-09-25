@@ -19949,7 +19949,154 @@ async function exportInventoryPDF(){
 .inventoryDimensionInputV538{width:92px;min-width:72px;padding:7px 8px;border:1px solid #8aa99b;border-radius:7px;background:#fff;font:inherit;text-align:right}
 .inventoryDimensionInputV538:focus{outline:2px solid rgba(21,88,63,.2);border-color:#15583f}
 </style>
-</head><body><h1>Holzlager – Gesamtinventar</h1><p>Export: ${escHtml(formatDateTime(new Date().toISOString()))} · Positionen: ${body.length}</p>${table}</body></html>`);
+</head><body><h1>Holzlager – Gesamtinventar</h1><p>Export: ${escHtml(formatDateTime(new Date().toISOString()))} · Positionen: ${body.length}</p>${table}
+<script>
+/* ================================================================
+   BV2026-1-224 · produktiver, lokaldatensicherer Cloud-Push
+   - lokaler Bestand bleibt unangetastet
+   - kein automatisches Cloud -> Gerät
+   - Konflikte nur im Arbeitsspeicher (kein Quota-Schreibfehler)
+   - nicht konfliktbehaftete lokale Änderungen werden objektweise geschrieben
+   - Konflikte bleiben blockiert, bis sie ausdrücklich lokal bestätigt werden
+   ================================================================ */
+(function(){
+  let v224Conflicts=[];
+
+  function v224ConflictLabel(c){
+    try{return conflictLabel(c)}catch(_){return (c.type||'?')+' · '+(c.id||'?')}
+  }
+  function v224RenderConflicts(){
+    const box=E('syncConflictBox'),list=E('syncConflictList');
+    if(!box||!list)return;
+    box.style.display=v224Conflicts.length?'':'none';
+    list.innerHTML=v224Conflicts.map((c,i)=>{
+      const allowed=canWriteCloudEntity(c.type,c.deletedLocal?'delete':'save');
+      return `<div class="conflictRow"><div><b>${esc(v224ConflictLabel(c))}</b><div class="syncDetail">Cloud und lokaler Stand unterscheiden sich. V224 überschreibt nichts automatisch.</div></div><div class="toolbar">${allowed?`<button class="btn" onclick="resolveSyncConflict(${i},'local')">Lokale Änderung behalten</button>`:''}</div></div>`;
+    }).join('');
+  }
+
+  // Keine großen Konflikt-Snapshots mehr in localStorage schreiben.
+  window.loadSyncConflicts=function(){ return v224Conflicts.slice(); };
+  window.saveSyncConflicts=function(v){ v224Conflicts=Array.isArray(v)?v.slice():[]; v224RenderConflicts(); };
+  window.renderSyncConflicts=v224RenderConflicts;
+
+  // In V224 niemals automatisch Cloud-Daten auf lokale Lagerdaten anwenden.
+  window.pullEntitySync=async function(manual=false){
+    try{
+      cloudCfg=loadCloudConfig();
+      if(!cloudReady())return false;
+      if(!await ensureFreshSession())return false;
+      const remote=await fetchRemoteEntities();
+      lastCloudUpdatedAt=Object.values(remote).map(x=>x.updated_at||'').sort().pop()||lastCloudUpdatedAt||'';
+      try{saveCloudMetaV210({lastRemoteUpdatedAt:lastCloudUpdatedAt,observedAt:new Date().toISOString()})}catch(_e){}
+      setSyncStatus('ok','Cloud erreichbar · lokaler Bestand geschützt');
+      if(manual)alert('V224 Sicherheitsmodus: Cloud wurde geprüft. Es wurden keine Cloud-Daten auf das Gerät übernommen.');
+      return true;
+    }catch(e){
+      try{noteCloudFailureV210(e.status,String(e.message||e))}catch(_e){}
+      setSyncStatus('err','Cloud momentan nicht erreichbar · lokale Daten unverändert');
+      return false;
+    }
+  };
+
+  async function v224Push(manual=false){
+    cloudCfg=loadCloudConfig();
+    if(!cloudReady()){if(manual)alert('Cloud ist noch nicht bereit.');return false}
+    if(cloudBusy)return false;
+    cloudBusy=true;setSyncStatus('syncing',manual?'Lokal → Cloud wird sicher übertragen':'Lokale Änderungen werden sicher übertragen');
+    try{
+      const remote=await fetchRemoteEntities();
+      const base=loadSyncBase();
+      const local=localEntityMap();
+      const keys=new Set([...Object.keys(base),...Object.keys(local),...Object.keys(remote)]);
+      const conflicts=[]; let changed=0, skipped=0;
+
+      for(const k of keys){
+        const l=local[k],b=base[k],r=remote[k];
+        const lh=l?stableJson(l.data):null, bh=b?.hash??null, rh=r?stableJson(r.data):null;
+        const localChanged=lh!==bh, remoteChanged=rh!==bh;
+        if(!localChanged)continue;
+        const [type,id]=k.split('|');
+        const action=l?'save':'delete';
+        if(!canWriteCloudEntity(type,action)){skipped++;continue}
+        if(remoteChanged && lh!==rh){
+          conflicts.push({type,id,local:l?.data||null,remote:r?.data||null,remoteVersion:r?.version||0,remoteBy:r?.updated_by||'',deletedLocal:!l,deletedRemote:!r});
+          continue;
+        }
+        try{
+          if(l)await rpcEntitySave(type,id,l.data,r?.version||b?.version||0,false);
+          else if(r)await rpcEntityDelete(type,id,r.version||b?.version||0,false);
+          changed++;
+        }catch(e){
+          if(!e.syncConflict)throw e;
+          const now=(await fetchRemoteEntities())[k];
+          conflicts.push({type,id,local:l?.data||null,remote:now?.data||null,remoteVersion:now?.version||0,remoteBy:now?.updated_by||'anderem Gerät',deletedLocal:!l,deletedRemote:!now});
+        }
+      }
+
+      const fresh=await fetchRemoteEntities();
+      // Sync-Basis aktualisieren, Konflikt-Schlüssel aber bewusst auf alter Basis lassen.
+      const next={};
+      Object.entries(fresh).forEach(([k,x])=>{next[k]={version:Number(x.version||0),hash:stableJson(x.data)}});
+      for(const c of conflicts){const k=cloudKey(c.type,c.id);if(base[k])next[k]=base[k];else delete next[k]}
+      saveSyncBase(next);
+      v224Conflicts=conflicts;v224RenderConflicts();
+      lastCloudUpdatedAt=Object.values(fresh).map(x=>x.updated_at||'').sort().pop()||'';
+      try{noteCloudSuccessV210();saveCloudMetaV210({lastRemoteUpdatedAt:lastCloudUpdatedAt,pushedAt:new Date().toISOString()})}catch(_e){}
+
+      if(conflicts.length){
+        setSyncStatus('err',`${changed} übertragen · ${conflicts.length} Konflikt(e) geschützt`);
+        if(manual)alert(`V224 abgeschlossen.\n\n${changed} lokale Änderung(en) wurden übertragen.\n${conflicts.length} Konflikt(e) wurden NICHT überschrieben.\n\nLokaler Bestand bleibt unverändert.`);
+        return true;
+      }
+      setSyncStatus('ok',changed?`${changed} lokale Änderung(en) übertragen`:'Cloud synchron · keine lokale Änderung');
+      if(manual)alert(`V224 erfolgreich.\n\n${changed} lokale Änderung(en) wurden übertragen.${skipped?`\n${skipped} nicht berechtigte Änderung(en) übersprungen.`:''}\n\nLokaler Bestand blieb unverändert.`);
+      return true;
+    }catch(e){
+      try{noteCloudFailureV210(e.status,String(e.message||e))}catch(_e){}
+      setSyncStatus('err','Cloud-Sync gestoppt · lokale Daten unverändert');
+      if(manual)alert('V224 Synchronisierung gestoppt:\n\n'+String(e.message||e)+'\n\nLokale Daten wurden nicht überschrieben.');
+      return false;
+    }finally{cloudBusy=false}
+  }
+
+  window.pushEntitySync=v224Push;
+
+  // Konfliktauflösung in V224 nur in Richtung lokal -> Cloud.
+  window.resolveSyncConflict=async function(index,choice){
+    const c=v224Conflicts[index];if(!c)return;
+    if(choice!=='local'){alert('V224 Schutz: Cloud → Gerät ist deaktiviert.');return}
+    if(!confirm('Lokale Version wirklich in die Cloud schreiben?\n\n'+v224ConflictLabel(c)+'\n\nDie lokale Version bleibt maßgebend.'))return;
+    try{
+      const local=localEntityMap(),k=cloudKey(c.type,c.id),l=local[k];
+      const remote=await fetchRemoteEntities(),r=remote[k];
+      if(!canWriteCloudEntity(c.type,l?'save':'delete'))throw new Error('Cloud-Rolle erlaubt diese Änderung nicht.');
+      if(l)await rpcEntitySave(c.type,c.id,l.data,r?.version||0,false);else if(r)await rpcEntityDelete(c.type,c.id,r.version||0,false);
+      v224Conflicts.splice(index,1);v224RenderConflicts();
+      const fresh=await fetchRemoteEntities();syncBaseFromRemote(fresh);
+      lastCloudUpdatedAt=Object.values(fresh).map(x=>x.updated_at||'').sort().pop()||'';
+      setSyncStatus('ok','Lokale Konfliktversion in Cloud übernommen');
+    }catch(e){alert('Konflikt wurde nicht geschrieben:\n'+String(e.message||e))}
+  };
+
+  // Auto-Push wieder aktiv, aber ausschließlich über den sicheren V224-Pfad.
+  window.queueCloudSync=function(){
+    cloudCfg=loadCloudConfig();
+    if(!cloudReady()||!cloudCfg.autoSync)return;
+    cloudPushPendingV214=true;
+    scheduleCloudPushV214(10000);
+    if(!cloudPollTimer)startCloudPolling();
+  };
+
+  try{
+    cloudPushPendingV214=false;clearTimeout(cloudTimer);
+    v224RenderConflicts();
+    if(cloudReady())setSyncStatus('ok','Cloud aktiv · V224 lokaler Bestand geschützt');
+  }catch(_e){}
+})();
+</script>
+
+</body></html>`);
    win.document.close();
    win.onload=()=>setTimeout(()=>win.print(),300);
  }
@@ -27374,85 +27521,4 @@ try{
 </script>
 
 
-<script>
-/* ================================================================
-   BV2026-1-222 · sicherer Cloud-Schreibtest
-   Zweck: genau EIN kontrollierter Schreibtest mit dem lokalen Projekt
-   "Baumgartner TEST 2". Keine Pakete, Inventuren oder sonstigen
-   Lagerdaten werden geschrieben. Automatische Cloud-Pushes sind in
-   dieser Testversion deaktiviert. Cloud -> Gerät ist gesperrt.
-   ================================================================ */
-(function(){
-  const V222_PROJECT_TEST_NAME='Baumgartner TEST 2';
 
-  // In dieser Testversion niemals automatisch lokale Daten in die Cloud schreiben.
-  window.queueCloudSync=function(){
-    try{
-      cloudCfg=loadCloudConfig();
-      if(cloudReady() && !cloudPollTimer) startCloudPolling();
-      setSyncStatus('ok','Cloud erreichbar · V222 Testmodus · Auto-Push aus');
-    }catch(_e){}
-  };
-  window.scheduleCloudPushV214=function(){
-    try{ clearTimeout(cloudTimer); }catch(_e){}
-    cloudPushPendingV214=false;
-  };
-
-  // Schutz: in V222 niemals Cloud-Daten auf den lokalen Lagerbestand anwenden.
-  window.pullEntitySync=async function(manual=false){
-    if(manual) alert('V222 Sicherheitsmodus: Cloud → Gerät ist für diesen Test gesperrt. Lokale Lagerdaten bleiben unverändert.');
-    return false;
-  };
-
-  async function v222ProjectProbe(){
-    cloudCfg=loadCloudConfig();
-    if(!cloudReady()) throw new Error('Cloud ist nicht bereit. Anmeldung/Mitgliedschaft prüfen.');
-    if(!await ensureFreshSession()) throw new Error('Cloud-Sitzung konnte nicht bestätigt werden.');
-
-    const local=localEntityMap();
-    const entries=Object.entries(local).filter(([k,x])=>x && x.type==='projects' && String(x.data?.name||'').trim()===V222_PROJECT_TEST_NAME);
-    if(entries.length!==1) throw new Error('Sicherheitstest abgebrochen: Projekt "'+V222_PROJECT_TEST_NAME+'" wurde lokal '+entries.length+'× gefunden. Es wurde nichts geschrieben.');
-
-    const [key,item]=entries[0];
-    const before=await fetchRemoteEntities();
-    const remote=before[key];
-    if(!remote) throw new Error('Sicherheitstest abgebrochen: Dasselbe Projekt wurde in der Cloud nicht gefunden. Es wurde nichts geschrieben.');
-
-    const oldName=String(remote.data?.name||'');
-    const id=item.id;
-    const ok=confirm('V222 sicherer Cloud-Test\n\nEs wird NUR dieses Projekt geschrieben:\n'+oldName+'  →  '+V222_PROJECT_TEST_NAME+'\n\nProjekt-ID: '+id+'\n\nPakete, Inventur und Materialbestand werden NICHT geschrieben.\n\nTest jetzt ausführen?');
-    if(!ok) return false;
-
-    setSyncStatus('syncing','V222 · Projekt-Schreibtest läuft');
-    await rpcEntitySave('projects',id,item.data,Number(remote.version||0),false);
-
-    const after=await fetchRemoteEntities();
-    const saved=after[key];
-    if(!saved || stableJson(saved.data)!==stableJson(item.data)) throw new Error('Cloud-Schreibvorgang antwortete, aber die Rückleseprüfung stimmt nicht überein. Keine weiteren Daten werden geschrieben.');
-
-    lastCloudUpdatedAt=saved.updated_at||lastCloudUpdatedAt||'';
-    setSyncStatus('ok','Cloud-Schreibweg bestätigt · V222');
-    alert('V222 ERFOLG\n\nCloud-Schreibweg ist bestätigt.\nProjekt: '+V222_PROJECT_TEST_NAME+'\n\nEs wurden keine Pakete, Inventurdaten oder Materialbestände übertragen.\n\nBitte jetzt NICHT Cloud → Gerät drücken. Als Nächstes kann der normale sichere Sync freigeschaltet werden.');
-    return true;
-  }
-
-  // Der vorhandene "Lokal → Cloud"-Button führt in V222 ausschließlich den obigen Einzeltest aus.
-  window.pushEntitySync=async function(manual=false){
-    if(!manual) return false;
-    if(cloudBusy){ alert('Cloud ist gerade beschäftigt. Bitte 5 Sekunden warten und nochmals Lokal → Cloud drücken.'); return false; }
-    cloudBusy=true;
-    try{ return await v222ProjectProbe(); }
-    catch(e){
-      setSyncStatus('err','V222 Test fehlgeschlagen · '+String(e?.message||e));
-      alert('V222 Cloud-Test fehlgeschlagen:\n\n'+String(e?.message||e)+'\n\nEs wurden keine weiteren lokalen Daten übertragen.');
-      return false;
-    }finally{ cloudBusy=false; }
-  };
-
-  try{
-    cloudPushPendingV214=false;
-    clearTimeout(cloudTimer);
-    if(cloudReady()) setSyncStatus('ok','Cloud erreichbar · V222 Testmodus');
-  }catch(_e){}
-})();
-</script>
