@@ -27828,3 +27828,98 @@ ${safeTypeLines}
  try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V229 Sync-Basis-Bereinigung bereit')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V230 – Konfliktanalyse NUR LESEND.
+   Keine Sync-Basis, Konflikte, Packages, Bestände oder sonstigen Nutzdaten werden verändert. */
+(()=>{
+ const v230Esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const v230Short=(v,max=700)=>{let s;try{s=stableJson(v)}catch(_){s=String(v)}return s.length>max?s.slice(0,max)+' …':s};
+ function v230DiffPaths(a,b,path='',out=[]){
+  if(out.length>=250)return out;
+  if(stableJson(a)===stableJson(b))return out;
+  const ao=a&&typeof a==='object',bo=b&&typeof b==='object';
+  if(!ao||!bo||Array.isArray(a)!==Array.isArray(b)){
+   out.push(path||'(Objekt)');return out;
+  }
+  if(Array.isArray(a)&&Array.isArray(b)){
+   const n=Math.max(a.length,b.length);
+   for(let i=0;i<n&&out.length<250;i++)v230DiffPaths(a[i],b[i],`${path}[${i}]`,out);
+   return out;
+  }
+  const keys=new Set([...Object.keys(a||{}),...Object.keys(b||{})]);
+  for(const k of [...keys].sort()){
+   if(out.length>=250)break;
+   v230DiffPaths(a?.[k],b?.[k],path?`${path}.${k}`:k,out);
+  }
+  return out;
+ }
+ function v230RemoveModal(){const old=document.getElementById('v230ConflictModal');if(old)old.remove()}
+ function v230ShowReport(conflicts,remoteCount,localCount){
+  v230RemoveModal();
+  const byType={};for(const c of conflicts)byType[c.type]=(byType[c.type]||0)+1;
+  const packageConflicts=byType.packages||0;
+  const typeSummary=Object.entries(byType).sort((a,b)=>a[0].localeCompare(b[0])).map(([t,n])=>`<span style="display:inline-block;margin:3px 8px 3px 0;padding:4px 8px;border:1px solid #d8ded9;border-radius:999px"><b>${v230Esc(t)}</b>: ${n}</span>`).join('')||'keine';
+  const rows=conflicts.map((c,i)=>{
+   const paths=v230DiffPaths(c.local,c.remote);
+   const pathText=paths.length?paths.map(p=>`<code style="display:inline-block;margin:2px 4px 2px 0">${v230Esc(p)}</code>`).join(''):'(keine Feldpfade ermittelbar)';
+   const baseInfo=c.base?`Version ${Number(c.base.version||0)} · Hash vorhanden: ${c.base.hash==null?'nein':'ja'}`:'keine Sync-Basis vorhanden';
+   return `<details style="border:1px solid #d8ded9;border-radius:10px;padding:10px;margin:9px 0;background:#fff">
+    <summary style="cursor:pointer;font-weight:850">${i+1}. ${v230Esc(c.type)} · ${v230Esc(c.id)} · ${paths.length}${paths.length>=250?'+':''} Unterschied(e)</summary>
+    <div style="margin-top:10px;font-size:13px;line-height:1.45">
+     <div><b>Geänderte Feldpfade Local ↔ Cloud:</b><br>${pathText}</div>
+     <div style="margin-top:9px"><b>Sync-Basis:</b> ${v230Esc(baseInfo)}<br><span style="color:#66706a">Die bestehende Sync-Basis speichert nur Hash/Version, keine alten Nutzdatenwerte. Deshalb können Basiswerte nicht rekonstruiert werden.</span></div>
+     <div style="margin-top:9px"><b>Lokal:</b><pre style="white-space:pre-wrap;word-break:break-word;background:#f6f8f7;padding:8px;border-radius:8px">${v230Esc(v230Short(c.local))}</pre></div>
+     <div><b>Cloud:</b> Version ${Number(c.remoteVersion||0)}${c.remoteBy?` · geändert von ${v230Esc(c.remoteBy)}`:''}<pre style="white-space:pre-wrap;word-break:break-word;background:#f6f8f7;padding:8px;border-radius:8px">${v230Esc(v230Short(c.remote))}</pre></div>
+    </div>
+   </details>`;
+  }).join('');
+  const modal=document.createElement('div');modal.id='v230ConflictModal';
+  modal.style.cssText='position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:18px';
+  modal.innerHTML=`<div style="background:#fff;width:min(1000px,96vw);max-height:92vh;overflow:auto;border-radius:16px;padding:20px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">
+   <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:sticky;top:-20px;background:#fff;padding:18px 0 10px;z-index:1;border-bottom:1px solid #e1e6e3">
+    <div><h2 style="margin:0 0 6px">V230 Konflikt-Vorschau</h2><div><b>${conflicts.length} Konflikte</b> · davon packages: <b>${packageConflicts}</b> · Cloud-Objekte: ${remoteCount} · lokale Objekte: ${localCount}</div></div>
+    <button id="v230Close" class="btn secondary" type="button">Schließen</button>
+   </div>
+   <div style="padding:12px 0"><b>Konflikte nach entity_type:</b><br>${typeSummary}</div>
+   <div style="padding:10px 12px;background:#fff5df;border:1px solid #e7c66d;border-radius:10px"><b>Nur Analyse.</b> Keine lokalen Daten, keine Cloud-Daten, keine Sync-Basis und keine Konflikte werden verändert.</div>
+   <div>${rows||'<p>Keine Konflikte gefunden.</p>'}</div>
+   <div style="padding:14px 0 4px;font-weight:850">Noch keine lokalen Daten verändert.</div>
+  </div>`;
+  document.body.appendChild(modal);
+  document.getElementById('v230Close').onclick=v230RemoveModal;
+ }
+ async function v230ConflictPreview(manual=false){
+  if(!manual)return false;
+  cloudCfg=loadCloudConfig();
+  if(!cloudReady()){alert('V230 Konflikt-Vorschau\n\nCloud ist noch nicht bereit.\n\nNoch keine lokalen Daten verändert.');return false}
+  if(cloudBusy){alert('V230 Konflikt-Vorschau\n\nEs läuft bereits eine Cloud-Synchronisierung. Bitte kurz warten.\n\nNoch keine lokalen Daten verändert.');return false}
+  cloudBusy=true;setSyncStatus('syncing','V230 Konflikte werden nur analysiert');
+  try{
+   const remote=await fetchRemoteEntities();
+   const base=loadSyncBase();
+   const local=localEntityMap();
+   const keys=new Set([...Object.keys(base),...Object.keys(local),...Object.keys(remote)]);
+   const conflicts=[];
+   for(const k of keys){
+    const l=local[k],b=base[k],r=remote[k];
+    const lh=l?stableJson(l.data):null,bh=b?.hash??null,rh=r?stableJson(r.data):null;
+    const localChanged=lh!==bh,remoteChanged=rh!==bh;
+    if(localChanged&&remoteChanged&&lh!==rh){
+     const sep=k.indexOf('|'),type=sep>=0?k.slice(0,sep):k,id=sep>=0?k.slice(sep+1):'';
+     conflicts.push({key:k,type,id,local:l?.data??null,remote:r?.data??null,base:b||null,remoteVersion:r?.version||0,remoteBy:r?.updated_by||'',deletedLocal:!l,deletedRemote:!r});
+    }
+   }
+   conflicts.sort((a,b)=>a.type.localeCompare(b.type)||a.id.localeCompare(b.id));
+   setSyncStatus(conflicts.length?'err':'ok',`V230 Vorschau · ${conflicts.length} Konflikt(e) · nichts verändert`);
+   v230ShowReport(conflicts,Object.keys(remote).length,Object.keys(local).length);
+   return true;
+  }catch(e){
+   setSyncStatus('err','V230 Vorschau fehlgeschlagen · lokal unverändert');
+   alert('V230 Konflikt-Vorschau\n\nAnalyse fehlgeschlagen:\n'+String(e.message||e)+'\n\nNoch keine lokalen Daten verändert.');return false;
+  }finally{cloudBusy=false}
+ }
+ window.pullEntitySync=v230ConflictPreview;
+ try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V230 Konfliktanalyse nur lesend')}catch(_e){}
+})();
+</script>
