@@ -28868,3 +28868,95 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V245';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V245 Cloud → Gerät Vorschau bereit')}catch(_e){}
 })();
 </script>
+<script>
+/* V246 – kontrollierte Cloud→Gerät-Übernahme.
+   Nur eindeutig cloudseitig geänderte bzw. nur in der Cloud vorhandene Nicht-__state-Objekte.
+   Immer Vorschau + explizite Bestätigung + erneute Sicherheitsprüfung + objektweise lokale Anwendung
+   + lokale Verifikation + Sync-Basis-Aktualisierung. Keine lokalen Änderungen/Konflikte überschreiben.
+   __state bleibt gesperrt. Keine Cloud-Schreiboperation. Keine Löschungen. */
+(()=>{
+ const VERSION='V246', EXPECT_PACKAGES=347;
+ function e246(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+ function close246(){document.getElementById('v246Modal')?.remove()}
+ function analyze246(remote,local){
+   const base=loadSyncBase(),keys=new Set([...Object.keys(base),...Object.keys(local),...Object.keys(remote)]),localChanged=[],cloudChanged=[],conflicts=[],identical=[],localOnly=[],cloudOnly=[];
+   for(const k of keys){
+     if(k==='__state|main')continue;
+     const l=local[k],r=remote[k],b=base[k],lh=l?stableJson(l.data):null,rh=r?stableJson(r.data):null,bh=b?.hash??null;
+     if(!l&&r){cloudOnly.push({k,l,r,b,lh,rh,bh});continue}
+     if(l&&!r){localOnly.push({k,l,r,b,lh,rh,bh});continue}
+     if(lh===rh){identical.push({k,l,r,b,lh,rh,bh});continue}
+     const lc=lh!==bh,rc=rh!==bh;
+     if(lc&&rc)conflicts.push({k,l,r,b,lh,rh,bh});
+     else if(lc&&!rc)localChanged.push({k,l,r,b,lh,rh,bh});
+     else if(!lc&&rc)cloudChanged.push({k,l,r,b,lh,rh,bh});
+     else conflicts.push({k,l,r,b,lh,rh,bh});
+   }
+   return {localChanged,cloudChanged,conflicts,identical,localOnly,cloudOnly};
+ }
+ function sig246(list){return list.map(x=>x.k+'#'+(x.lh||'')+'#'+(x.rh||'')+'#'+Number(x.r?.version||0)).sort().join('\n')}
+ function modal246(html){close246();const m=document.createElement('div');m.id='v246Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1120px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${html}</div>`;document.body.appendChild(m);document.getElementById('v246Close')?.addEventListener('click',close246);return m}
+ function applyOne246(x){
+   if(!x||!x.r||x.k==='__state|main')throw new Error('Ungültiger oder gesperrter Cloud-Kandidat.');
+   const type=x.r.type,id=String(x.r.id),data=JSON.parse(JSON.stringify(x.r.data));
+   if(type==='projects'){
+     loadProjects();let arr=(projectStore.projects||[]).filter(p=>p&&typeof p==='object'),ix=arr.findIndex(p=>String(p.id)===id);if(ix>=0)arr[ix]=data;else arr.push(data);projectStore.projects=arr;localStorage.setItem(PROJECTS_KEY,JSON.stringify(projectStore));return;
+   }
+   if(type==='smallOrders'){
+     loadSmallOrders();let rr=Object.assign({},data,{cloudSync:true}),arr=(smallOrderStore.reports||[]).filter(r=>r&&typeof r==='object'),ix=arr.findIndex(r=>r.cloudSync===true&&String(r.id)===id);if(ix>=0)arr[ix]=rr;else arr.push(rr);smallOrderStore.reports=arr;localStorage.setItem(SMALL_ORDERS_KEY,JSON.stringify(smallOrderStore));return;
+   }
+   if(type==='platforms'){
+     if(id!=='main')throw new Error('Unbekannter platforms-Schlüssel: '+id);platformStore=normalizePlatformStoreData(data||{});localStorage.setItem(PLATFORM_KEY,JSON.stringify(platformStore));return;
+   }
+   if(type==='toolsContainers'){
+     if(id!=='main')throw new Error('Unbekannter toolsContainers-Schlüssel: '+id);let d=Object.assign({},data);delete d.id;if(!Array.isArray(d.containers))d.containers=[];localStorage.setItem('kuenzli_tools_white_container_v1',JSON.stringify(d));try{window.renderWhiteContainerV413?.()}catch(_e){}return;
+   }
+   if(type==='__state')throw new Error('__state ist gesperrt.');
+   if(!entityCollections().includes(type))throw new Error('Nicht unterstützter Objekttyp: '+type);
+   let next=JSON.parse(JSON.stringify(st)),arr=Array.isArray(next[type])?next[type]:[],ix=arr.findIndex((o,i)=>entityId(type,o,i)===id);if(ix>=0)arr[ix]=data;else arr.push(data);next[type]=arr;ensureV24();st=next;ensureV24();localStorage.setItem(KEY,JSON.stringify(st));
+ }
+ async function pull246(manual=false){
+   if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V246 Cloud → Gerät\n\nCloud ist nicht bereit. Nichts verändert.');return false}if(cloudBusy){alert('V246 Cloud → Gerät\n\nCloud ist beschäftigt. Nichts verändert.');return false}
+   cloudBusy=true;setSyncStatus('syncing','V246 prüft Cloud → Gerät zur Vorschau');
+   try{
+     const remote=await fetchRemoteEntities(),local=localEntityMap(),a=analyze246(remote,local),c=[...a.cloudChanged,...a.cloudOnly],lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length,sd=stableJson(local['__state|main']?.data)!==stableJson(remote['__state|main']?.data),safe=lp===EXPECT_PACKAGES&&rp===EXPECT_PACKAGES&&a.localChanged.length===0&&a.conflicts.length===0&&a.localOnly.length===0;
+     const rows=c.map((x,i)=>`<div style="padding:7px 0;border-top:1px solid #e5e8e6"><b>${i+1}. ${e246(x.k)}</b><br><small>${x.l?'Cloud geändert':'nur Cloud vorhanden'} · Cloud-Version ${Number(x.r?.version||0)}</small></div>`).join('')||'<div style="padding:8px 0">Keine Cloud→Gerät-Änderung vorhanden.</div>';
+     const snap=sig246(c);
+     modal246(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V246 Cloud → Gerät – kontrollierte Übernahme</h2><div><b>ZUERST NUR VORSCHAU</b> · kein automatisches Überschreiben</div></div><button id="v246Close" class="btn secondary">Schließen</button></div>
+       <div style="margin-top:12px;padding:11px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal ${lp} · Cloud ${rp}. Vor der Übernahme müssen beide weiterhin 347 sein.</div>
+       <div style="margin-top:10px;padding:11px;background:${safe?'#eef7ef':'#fff4e5'};border:1px solid ${safe?'#b7d3bb':'#e3c38e'};border-radius:10px"><b>Cloud→Gerät-Kandidaten: ${c.length}</b> · lokale Änderungen: ${a.localChanged.length} · Konflikte: ${a.conflicts.length} · nur lokal: ${a.localOnly.length}.<br>${safe?'Übernahme ist nur für die exakt aufgeführten Cloud-Kandidaten freigegeben.':'Übernahme gesperrt. Lokale Änderungen/Konflikte/nur-lokale Objekte werden niemals überschrieben.'}</div>
+       <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt gesperrt.</b> Abweichung: ${sd?'1':'0'}.</div>
+       <details style="margin-top:12px" open><summary style="cursor:pointer;font-weight:800">Exakte Cloud→Gerät-Kandidaten (${c.length})</summary>${rows}</details>
+       ${safe&&c.length?`<button id="v246Apply" class="btn" style="margin-top:14px;background:#173f32;color:white">Diese ${c.length} Cloud-Änderung(en) objektweise aufs Gerät übernehmen</button>`:''}
+       <button id="v246Cancel" class="btn secondary" style="margin:14px 0 0 8px">Abbrechen</button>
+       <div id="v246Out" style="margin-top:12px;font-weight:800">Noch nichts verändert.</div>`);
+     document.getElementById('v246Cancel').onclick=close246;if(safe&&c.length)document.getElementById('v246Apply').onclick=()=>apply246(c,snap);
+     setSyncStatus('ok','V246 Vorschau · '+c.length+' Cloud→Gerät-Kandidat(en)');return true;
+   }catch(e){setSyncStatus('err','V246 Vorschau fehlgeschlagen · nichts verändert');alert('V246 Cloud → Gerät Vorschau fehlgeschlagen:\n\n'+String(e.message||e)+'\n\nNichts verändert.');return false}finally{cloudBusy=false}
+ }
+ async function apply246(original,snap){
+   const n=original.length;if(!confirm(`V246 Sicherheitsabfrage\n\n${n} exakt aufgeführte Cloud-Änderung(en) werden objektweise auf dieses Gerät übernommen.\nLokale Änderungen/Konflikte werden nicht überschrieben. __state bleibt gesperrt.\nEs wird NICHT in die Cloud geschrieben.\n\nFortfahren?`))return;
+   const out=document.getElementById('v246Out');if(cloudBusy){if(out)out.textContent='Abbruch: Cloud ist beschäftigt.';return}cloudBusy=true;let done=0;
+   try{
+     let remote=await fetchRemoteEntities(),local=localEntityMap(),a=analyze246(remote,local),c=[...a.cloudChanged,...a.cloudOnly],lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;
+     if(!(lp===EXPECT_PACKAGES&&rp===EXPECT_PACKAGES&&a.localChanged.length===0&&a.conflicts.length===0&&a.localOnly.length===0&&sig246(c)===snap))throw new Error('Sicherheitsbild hat sich seit der Vorschau verändert. Abbruch ohne Übernahme.');
+     for(const s of original){
+       remote=await fetchRemoteEntities();local=localEntityMap();a=analyze246(remote,local);const now=[...a.cloudChanged,...a.cloudOnly].find(x=>x.k===s.k);
+       if(!now||now.k==='__state|main'||now.rh!==s.rh||Number(now.r?.version||0)!==Number(s.r?.version||0))throw new Error(s.k+': Cloud-/Lokalsituation hat sich verändert. Abbruch vor diesem Objekt.');
+       if(a.localChanged.length||a.conflicts.length||a.localOnly.length)throw new Error('Neue lokale Änderung oder Konflikt erkannt. Abbruch vor '+s.k+'.');
+       applyOne246(now);
+       const after=localEntityMap()[s.k];if(!after||stableJson(after.data)!==s.rh)throw new Error(s.k+': lokale Übernahme konnte nicht eindeutig verifiziert werden.');
+       const base=loadSyncBase();base[s.k]={version:Number(s.r?.version||0),hash:s.rh};saveSyncBase(base);done++;
+       if(out)out.textContent=`${done}/${n} Cloud-Objekt(e) lokal übernommen, verifiziert und Sync-Referenz aktualisiert …`;
+     }
+     const finalRemote=await fetchRemoteEntities(),finalLocal=localEntityMap(),fa=analyze246(finalRemote,finalLocal),fp=Object.keys(finalLocal).filter(k=>k.startsWith('packages|')).length;
+     if(fp!==EXPECT_PACKAGES)throw new Error('Abschlussprüfung: lokale Package-Anzahl ist nicht 347. Keine weitere Aktion ausführen.');
+     if(fa.localChanged.length||fa.cloudChanged.length||fa.conflicts.length||fa.localOnly.length||fa.cloudOnly.length)throw new Error('Übernahme abgeschlossen, aber Abschlussprüfung zeigt noch Nicht-__state-Abweichungen. Bitte nicht weiter synchronisieren.');
+     if(out)out.innerHTML=`<span style="color:#176b3a">V246 ERFOLG: ${done}/${n} Cloud-Änderung(en) objektweise aufs Gerät übernommen, lokal verifiziert und deren Sync-Referenzen aktualisiert. Abschlussprüfung: alle Nicht-__state-Objekte identisch; 347 lokale Packages vorhanden. __state blieb gesperrt. Es wurde nichts in die Cloud geschrieben.<br>Bitte Ergebnis fotografieren.</span>`;
+     setSyncStatus('ok','V246 Cloud → Gerät erfolgreich · '+done+' Objekt(e)');
+   }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V246 ABBRUCH/FEHLER nach ${done}/${n} erfolgreich übernommenen Objekt(en): ${e246(String(e.message||e))}<br>Keine weiteren Objekte werden übernommen. Bitte nicht weiter synchronisieren.</span>`;setSyncStatus('err','V246 Cloud → Gerät gestoppt · '+done+'/'+n)}finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pull246;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V246';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V246 kontrollierte Cloud → Gerät Übernahme bereit')}catch(_e){}
+})();
+</script>
