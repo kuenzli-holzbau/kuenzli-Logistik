@@ -29162,3 +29162,53 @@ ${safeTypeLines}
  window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V249';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V249 kontrollierte Fortsetzung bereit')}catch(_e){}
 })();
 </script>
+<script>
+/* V250 – read-only Diagnose des einen nur-lokalen Objekts vor Fortsetzung der Cloud→Gerät-Übernahme.
+   Keine lokalen Schreib-/Löschoperationen, keine Cloud-Schreiboperationen, keine Sync-Basis-Änderung. */
+(()=>{
+ const VERSION='V250';
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function close(){document.getElementById('v250Modal')?.remove()}
+ function diff(remote,local){
+   const keys=new Set([...Object.keys(local),...Object.keys(remote)]),mismatch=[],localOnly=[],cloudOnly=[],identical=[];
+   for(const k of keys){
+     if(k==='__state|main')continue;
+     const l=local[k],r=remote[k];
+     if(l&&!r){localOnly.push({k,l,r});continue}
+     if(!l&&r){cloudOnly.push({k,l,r});mismatch.push({k,l,r});continue}
+     const lh=stableJson(l.data),rh=stableJson(r.data);
+     if(lh===rh)identical.push({k,l,r});else mismatch.push({k,l,r,lh,rh});
+   }
+   return {mismatch,localOnly,cloudOnly,identical};
+ }
+ function modal(html){close();const m=document.createElement('div');m.id='v250Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1140px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${html}</div>`;document.body.appendChild(m);document.getElementById('v250Close')?.addEventListener('click',close)}
+ async function pull(manual=false){
+   if(!manual)return false;
+   cloudCfg=loadCloudConfig();
+   if(!cloudReady()){alert('V250: Cloud nicht bereit. Nichts verändert.');return false}
+   if(cloudBusy)return false;
+   cloudBusy=true;setSyncStatus('syncing','V250 analysiert nur-lokales Objekt');
+   try{
+     const remote=await fetchRemoteEntities(),local=localEntityMap(),d=diff(remote,local);
+     const lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;
+     const sd=stableJson(local['__state|main']?.data)!==stableJson(remote['__state|main']?.data);
+     const localRows=d.localOnly.map((x,i)=>{
+       let json='';try{json=JSON.stringify(x.l?.data??null,null,2)}catch(_e){json='[nicht darstellbar]'}
+       return `<div style="margin-top:10px;padding:11px;border:1px solid #dfb1b1;border-radius:10px;background:#fff7f7"><b>${i+1}. ${esc(x.k)}</b><br><small>Typ: ${esc(x.l?.type||'')} · ID: ${esc(x.l?.id||'')}</small><details style="margin-top:8px"><summary style="cursor:pointer;font-weight:700">Lokalen Inhalt anzeigen</summary><pre style="white-space:pre-wrap;word-break:break-word;background:#f6f7f6;padding:10px;border-radius:8px;max-height:360px;overflow:auto">${esc(json)}</pre></details></div>`;
+     }).join('')||'<div style="padding:10px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px">Kein nur-lokales Objekt mehr vorhanden.</div>';
+     const mismatchRows=d.mismatch.map((x,i)=>`<div style="padding:5px 0;border-top:1px solid #eee">${i+1}. <b>${esc(x.k)}</b>${x.r?' · Cloud-Version '+Number(x.r.version||0):''}</div>`).join('');
+     modal(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V250 Diagnose vor Cloud → Gerät</h2><div><b>NUR LESEND</b> · identifiziert das geschützte nur-lokale Objekt</div></div><button id="v250Close" class="btn secondary">Schließen</button></div>
+       <div style="margin-top:12px;padding:11px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal ${lp} · Cloud ${rp}. <b>V250 verändert keine Packages.</b></div>
+       <div style="margin-top:10px;padding:11px;background:#fff4e6;border:1px solid #e5bf84;border-radius:10px"><b>Nur lokal ohne Cloud-Gegenstück: ${d.localOnly.length}</b> · verbleibende Nicht-__state-Abweichungen: ${d.mismatch.length} · bereits identisch: ${d.identical.length}.</div>
+       <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt gesperrt.</b> Abweichung: ${sd?'1':'0'}.</div>
+       <h3 style="margin:16px 0 6px">Nur-lokales Objekt</h3>${localRows}
+       <details style="margin-top:14px"><summary style="cursor:pointer;font-weight:800">Verbleibende Cloud-Abweichungen (${d.mismatch.length})</summary>${mismatchRows||'<div style="padding:8px 0">Keine.</div>'}</details>
+       <div style="margin-top:14px;font-weight:800">V250 hat nichts geschrieben, gelöscht oder synchronisiert. Bitte dieses Ergebnis fotografieren.</div>`);
+     setSyncStatus('ok','V250 Diagnose bereit · '+d.localOnly.length+' nur lokal');return true;
+   }catch(e){alert('V250 Diagnose fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V250 Diagnose fehlgeschlagen');return false}
+   finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pull;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V250';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V250 Diagnose bereit')}catch(_e){}
+})();
+</script>
