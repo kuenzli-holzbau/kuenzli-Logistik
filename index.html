@@ -28507,3 +28507,54 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V239';setSyncStatus('ok','V239 Backup- & Sync-Speicheranalyse bereit · nur lesend')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V240 – kontrollierte Backup-Speicherbereinigung.
+   Ändert ausschließlich die zwei technischen Backup-Arrays. Keine Nutzdaten/Cloud/Sync-Basis/Konflikte.
+   Standardplan: jeweils den neuesten Sicherungspunkt behalten, ältere Sicherungspunkte entfernen.
+   Vor Ausführung erneute Cloud-/Lokalsicherheitsprüfung und explizite Bestätigung. */
+(()=>{
+ const VERSION='V240', PBK='holzlager_platform_backups_v286';
+ const EXPECT_IDENT=814, EXPECT_PACKAGES=347;
+ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+ function num(n){return Number(n||0).toLocaleString('de-CH')}
+ function mib(chars){return ((Number(chars||0)*2)/(1024*1024)).toFixed(3)}
+ function arr(key){try{const x=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(x)?x:[]}catch(_e){return []}}
+ function chars(x){try{return JSON.stringify(x).length}catch(_e){return 0}}
+ function ts(x){const n=Date.parse(x?.at||x?.createdAt||x?.date||'');return Number.isFinite(n)?n:0}
+ function dt(x){const n=ts(x);return n?new Date(n).toLocaleString('de-CH'):'–'}
+ function newestFirst(a){return a.map((x,i)=>({x,i,t:ts(x)})).sort((p,q)=>q.t-p.t||p.i-q.i)}
+ function totalChars(){let n=0;for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i)||'';let v='';try{v=localStorage.getItem(k)||''}catch(_e){}n+=k.length+v.length}return n}
+ function analyzeMaps(remote,local){const keys=[...new Set([...Object.keys(local),...Object.keys(remote)])],id=[],dif=[],lo=[],co=[];for(const k of keys){const l=local[k],r=remote[k];if(l&&r){(stableJson(l.data)===stableJson(r.data)?id:dif).push(k)}else if(l)lo.push(k);else co.push(k)}return {eligible:id.filter(k=>!k.startsWith('__state|')),stateDiff:dif.filter(k=>k.startsWith('__state|')).length,nonStateDiff:dif.filter(k=>!k.startsWith('__state|')).length,lo,co}}
+ function planFor(key,label){const old=arr(key),ordered=newestFirst(old),keep=ordered.length?[ordered[0].x]:[],remove=ordered.slice(1).map(z=>z.x);return {key,label,old,keep,remove,oldChars:chars(old),newChars:chars(keep),freed:chars(old)-chars(keep)}}
+ function close(){document.getElementById('v240Modal')?.remove()}
+ function rowList(p){return p.remove.length?p.remove.map((x,i)=>`<tr><td style="padding:5px;border-bottom:1px solid #edf0ee">${i+1}</td><td style="padding:5px;border-bottom:1px solid #edf0ee">${esc(dt(x))}</td><td style="padding:5px;border-bottom:1px solid #edf0ee">${esc(x?.reason||'–')}</td><td style="padding:5px;text-align:right;border-bottom:1px solid #edf0ee">${num(chars(x))}</td></tr>`).join(''):'<tr><td colspan="4" style="padding:7px">Keine älteren Backups zu entfernen.</td></tr>'}
+ function details(p){const kept=p.keep[0];return `<details style="margin-top:9px"><summary style="cursor:pointer;font-weight:800">${esc(p.label)} · ${p.remove.length} alte Backup(s) entfernen</summary><div style="margin:7px 0;padding:8px;background:#eef7ef;border-radius:8px"><b>Bleibt erhalten:</b> ${kept?esc(dt(kept))+' · '+esc(kept.reason||'–'):'kein Eintrag vorhanden'}.</div><div style="overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:.86em"><thead><tr><th>#</th><th>Datum</th><th>Grund</th><th style="text-align:right">Zeichen</th></tr></thead><tbody>${rowList(p)}</tbody></table></div></details>`}
+ function render(remote,local){close();const a=analyzeMaps(remote,local),pkg=a.eligible.filter(k=>k.startsWith('packages|')).length,safe=a.eligible.length===EXPECT_IDENT&&pkg===EXPECT_PACKAGES&&a.nonStateDiff===0&&a.stateDiff===1&&a.lo.length===0&&a.co.length===0;
+  const p1=planFor(BACKUP_KEY,'holzlager_backups_v54'),p2=planFor(PBK,'holzlager_platform_backups_v286'),freed=p1.freed+p2.freed,before=totalChars();
+  const m=document.createElement('div');m.id='v240Modal';m.style.cssText='position:fixed;inset:0;z-index:29000;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:14px';
+  m.innerHTML=`<div style="background:#fff;width:min(1100px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)"><div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V240 Backup-Bereinigung – Vorschau</h2><div><b>ZUERST NUR VORSCHAU</b> · ausschließlich technische Backups</div></div><button id="v240Close" class="btn secondary">Schließen</button></div>
+  <div style="margin:12px 0;padding:10px 12px;background:${safe?'#eef7ef':'#f4e3e1'};border:1px solid ${safe?'#b7d3bb':'#dca59e'};border-radius:10px"><b>${safe?'Sicherheitsprüfung erfüllt.':'STOPP – Sicherheitsprüfung nicht erfüllt.'}</b><br>Identische Nicht-__state-Objekte: <b>${a.eligible.length}</b> · Packages: <b>${pkg}</b> · Nicht-__state-Abweichungen: <b>${a.nonStateDiff}</b> · __state-Abweichungen: <b>${a.stateDiff}</b>.</div>
+  <div style="padding:10px 12px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>347 lokale Packages und alle Nutzdaten bleiben unangetastet.</b><br>Keine Cloud-Daten, keine Sync-Basis und kein Konfliktspeicher werden verändert. __state bleibt gesperrt.</div>
+  <h3 style="margin:15px 0 6px">Geplanter technischer Speicherabbau</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:9px"><div style="padding:10px;border:1px solid #d8ded9;border-radius:10px"><b>${p1.label}</b><br>${p1.old.length} → ${p1.keep.length} Backup(s)<br>Freigabe ca. <b>${mib(p1.freed)} MiB</b></div><div style="padding:10px;border:1px solid #d8ded9;border-radius:10px"><b>${p2.label}</b><br>${p2.old.length} → ${p2.keep.length} Backup(s)<br>Freigabe ca. <b>${mib(p2.freed)} MiB</b></div></div>
+  ${details(p1)}${details(p2)}
+  <div style="margin-top:12px;padding:10px 12px;background:#fff5df;border:1px solid #e7c66d;border-radius:10px">Aktuell gemessen: <b>${mib(before)} MiB</b>. Geplant frei: ca. <b>${mib(freed)} MiB</b>. Nach Bestätigung wird <b>nur</b> dieser Backup-Plan gespeichert und anschließend der localStorage erneut gemessen. <b>V240 aktualisiert die Sync-Basis noch nicht.</b></div>
+  <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:14px"><button id="v240Run" class="btn" ${safe&&freed>0?'':'disabled'}>${p1.remove.length+p2.remove.length} alte technische Backups entfernen</button><button id="v240Cancel" class="btn secondary">Abbrechen</button></div><div id="v240Result" style="margin-top:10px;font-weight:800">Noch nichts verändert.</div></div>`;
+  document.body.appendChild(m);document.getElementById('v240Close').onclick=close;document.getElementById('v240Cancel').onclick=close;
+  document.getElementById('v240Run').onclick=async()=>{if(!confirm(`V240 Sicherheitsabfrage\n\n${p1.remove.length+p2.remove.length} ALTE technische Backups entfernen?\n\nErhalten bleibt jeweils das neueste Backup.\n347 Packages, Nutzdaten, Cloud, Sync-Basis, Konflikte und __state werden NICHT verändert.`))return;
+   const btn=document.getElementById('v240Run');btn.disabled=true;const out=document.getElementById('v240Result');out.textContent='Sicherheitsprüfung wird unmittelbar vor der Bereinigung wiederholt …';
+   try{const r2=await fetchRemoteEntities(),l2=localEntityMap(),a2=analyzeMaps(r2,l2),pkg2=a2.eligible.filter(k=>k.startsWith('packages|')).length;if(!(a2.eligible.length===EXPECT_IDENT&&pkg2===EXPECT_PACKAGES&&a2.nonStateDiff===0&&a2.stateDiff===1&&a2.lo.length===0&&a2.co.length===0))throw new Error('Sicherheitsbild hat sich seit der Vorschau verändert. Abbruch ohne Bereinigung.');
+    const q1=planFor(BACKUP_KEY,'holzlager_backups_v54'),q2=planFor(PBK,'holzlager_platform_backups_v286');
+    // Atomic per key from the app perspective: replace only with the newest already-existing backup.
+    localStorage.setItem(BACKUP_KEY,JSON.stringify(q1.keep));
+    try{localStorage.setItem(PBK,JSON.stringify(q2.keep))}catch(e){try{localStorage.setItem(BACKUP_KEY,JSON.stringify(q1.old))}catch(_restore){}throw e}
+    const after=totalChars(),now1=arr(BACKUP_KEY),now2=arr(PBK);if(now1.length!==q1.keep.length||now2.length!==q2.keep.length)throw new Error('Backup-Nachprüfung fehlgeschlagen.');
+    out.innerHTML=`<span style="color:#176c31">V240 ERFOLG:</span> Nur alte technische Backups wurden bereinigt. ${q1.old.length}→${now1.length} und ${q2.old.length}→${now2.length}. localStorage jetzt ca. <b>${mib(after)} MiB</b> (vorher ${mib(before)} MiB). <b>347 Packages/Nutzdaten/Cloud/Sync-Basis/Konflikte/__state unverändert.</b> Bitte jetzt NICHT weiter synchronisieren und Ergebnis fotografieren.`;setSyncStatus('ok','V240 Backup-Bereinigung erfolgreich · Sync-Basis noch unverändert');
+   }catch(e){out.innerHTML=`<span style="color:#9b2c23">V240 ABBRUCH/FEHLER:</span> ${esc(e.message||e)}<br>Keine Cloud- oder Nutzdatenänderung. Bitte nicht erneut drücken.`;setSyncStatus('err','V240 abgebrochen/fehlgeschlagen · keine Cloud-/Nutzdatenänderung')}
+  };
+ }
+ async function run(manual=false){if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V240\n\nCloud ist nicht bereit. Nichts verändert.');return false}if(cloudBusy){alert('V240\n\nCloud ist beschäftigt. Nichts verändert.');return false}cloudBusy=true;setSyncStatus('syncing','V240 erstellt nur die Backup-Bereinigungsvorschau');try{const r=await fetchRemoteEntities(),l=localEntityMap();render(r,l);return true}catch(e){setSyncStatus('err','V240 Vorschau fehlgeschlagen · nichts verändert');alert('V240 Vorschau fehlgeschlagen:\n\n'+String(e.message||e)+'\n\nNichts verändert.');return false}finally{cloudBusy=false}}
+ window.pushEntitySync=run;window.pullEntitySync=run;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V240';setSyncStatus('ok','V240 kontrollierte Backup-Bereinigung bereit')}catch(_e){}
+})();
+</script>
