@@ -28605,3 +28605,45 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V241';setSyncStatus('ok','V241 sichere Sync-Referenz-Bereinigung bereit')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V242 – reine Abschluss-Verifikation nach V241.
+   Liest Cloud, lokale Nutzdaten, Sync-Basis und Konfliktspeicher.
+   Schreibt/löscht nichts. __state bleibt gesperrt. */
+(()=>{
+ const VERSION='V242', EXPECT_IDENT=814, EXPECT_PACKAGES=347;
+ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+ function close(){document.getElementById('v242Modal')?.remove()}
+ function conflicts(){try{const a=JSON.parse(localStorage.getItem(SYNC_CONFLICT_KEY)||'[]');return Array.isArray(a)?a:[]}catch(_e){return []}}
+ function isStateConflict(c){return c?.type==='__state'||c?.entity_type==='__state'||String(c?.key||'').startsWith('__state|')||String(c?.id||'')==='__state|main'}
+ function analyze(remote,local){
+   const keys=[...new Set([...Object.keys(local),...Object.keys(remote)])];
+   const identical=[],different=[],localOnly=[],cloudOnly=[];
+   for(const k of keys){const l=local[k],r=remote[k];if(l&&r){(stableJson(l.data)===stableJson(r.data)?identical:different).push(k)}else if(l)localOnly.push(k);else cloudOnly.push(k)}
+   const eligible=identical.filter(k=>!k.startsWith('__state|'));
+   return {identical,different,localOnly,cloudOnly,eligible,stateDifferent:different.filter(k=>k.startsWith('__state|')),nonStateDifferent:different.filter(k=>!k.startsWith('__state|'))};
+ }
+ function verifyBase(remote,local,a){
+   const base=loadSyncBase()||{};let ok=0,missing=0,badVersion=0,badHash=0;
+   for(const k of a.eligible){const b=base[k];if(!b){missing++;continue}const rv=Number(remote[k]?.version||0),bv=Number(b.version||0);if(bv!==rv){badVersion++;continue}if(b.hash!==stableJson(local[k].data)){badHash++;continue}ok++}
+   return {ok,missing,badVersion,badHash,total:Object.keys(base).length,stateKeys:Object.keys(base).filter(k=>k.startsWith('__state|')).length};
+ }
+ function render(remote,local){
+   close();const a=analyze(remote,local),pkg=a.eligible.filter(k=>k.startsWith('packages|')).length,b=verifyBase(remote,local,a),cs=conflicts(),stateCs=cs.filter(isStateConflict),nonStateCs=cs.filter(c=>!isStateConflict(c));
+   const safe=a.eligible.length===EXPECT_IDENT&&pkg===EXPECT_PACKAGES&&a.nonStateDifferent.length===0&&a.stateDifferent.length===1&&a.localOnly.length===0&&a.cloudOnly.length===0&&b.ok===EXPECT_IDENT&&b.missing===0&&b.badVersion===0&&b.badHash===0&&cs.length===1&&stateCs.length===1&&nonStateCs.length===0;
+   const m=document.createElement('div');m.id='v242Modal';m.style.cssText='position:fixed;inset:0;z-index:31000;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:14px';
+   m.innerHTML=`<div style="background:#fff;width:min(1080px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)"><div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V242 Abschluss-Verifikation</h2><div><b>NUR LESEND</b> · keine lokalen/Cloud-/Sync-Daten werden verändert</div></div><button id="v242Close" class="btn secondary">Schließen</button></div>
+   <div style="margin:12px 0;padding:11px 12px;background:${safe?'#eef7ef':'#f4e3e1'};border:1px solid ${safe?'#b7d3bb':'#dca59e'};border-radius:10px"><b>${safe?'ABSCHLUSSPRÜFUNG ERFOLGREICH.':'STOPP – Abschlussprüfung nicht vollständig erfüllt.'}</b><br>${safe?'Der bereinigte Sync-Stand ist technisch konsistent.':'Bitte nichts weiter synchronisieren; Ergebnis prüfen.'}</div>
+   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px"><div style="padding:10px;border:1px solid #d8ded9;border-radius:10px">Lokal: <b>${Object.keys(local).length}</b></div><div style="padding:10px;border:1px solid #d8ded9;border-radius:10px">Cloud: <b>${Object.keys(remote).length}</b></div><div style="padding:10px;border:1px solid #d8ded9;border-radius:10px">Identisch: <b>${a.identical.length}</b></div><div style="padding:10px;border:1px solid #d8ded9;border-radius:10px">Abweichend: <b>${a.different.length}</b></div></div>
+   <div style="margin-top:10px;padding:10px 12px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal ${Object.keys(local).filter(k=>k.startsWith('packages|')).length} · Cloud ${Object.keys(remote).filter(k=>k.startsWith('packages|')).length} · identisch <b>${pkg}</b> · abweichend ${a.nonStateDifferent.filter(k=>k.startsWith('packages|')).length}.<br><b>Die 347 lokalen Packages wurden durch V242 nicht verändert.</b></div>
+   <div style="margin-top:10px;padding:10px 12px;border:1px solid #b7d3bb;background:#eef7ef;border-radius:10px"><b>Sync-Basis:</b> ${b.ok}/${EXPECT_IDENT} verifizierte Nicht-__state-Referenzen korrekt.<br>Fehlend: <b>${b.missing}</b> · falsche Cloud-Version: <b>${b.badVersion}</b> · falscher Inhalts-Hash: <b>${b.badHash}</b>.</div>
+   <div style="margin-top:10px;padding:10px 12px;background:#f4e3e1;border:1px solid #dca59e;border-radius:10px"><b>__state bleibt gesperrt:</b> Cloud-Abweichungen ${a.stateDifferent.length}. Konfliktspeicher gesamt: <b>${cs.length}</b> · davon __state: <b>${stateCs.length}</b> · andere: <b>${nonStateCs.length}</b>.</div>
+   <div style="margin-top:10px">Nicht-__state-Abweichungen: <b>${a.nonStateDifferent.length}</b> · Nur lokal: <b>${a.localOnly.length}</b> · Nur Cloud: <b>${a.cloudOnly.length}</b>.</div>
+   <div style="padding:14px 0 4px;font-weight:850">V242 hat nichts geschrieben, gelöscht oder synchronisiert.</div></div>`;
+   document.body.appendChild(m);document.getElementById('v242Close').onclick=close;setSyncStatus(safe?'ok':'err',safe?'V242 Abschlussprüfung erfolgreich · 814 Referenzen · 347 Packages · nur __state offen':'V242 Abschlussprüfung mit Abweichung · nichts verändert');
+ }
+ async function run(manual=false){if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V242 Abschluss-Verifikation\n\nCloud ist nicht bereit. Nichts verändert.');return false}if(cloudBusy){alert('V242 Abschluss-Verifikation\n\nCloud ist beschäftigt. Nichts verändert.');return false}cloudBusy=true;setSyncStatus('syncing','V242 liest Cloud und technische Sync-Daten nur zur Abschlussprüfung');try{const r=await fetchRemoteEntities(),l=localEntityMap();render(r,l);return true}catch(e){setSyncStatus('err','V242 Prüfung fehlgeschlagen · nichts verändert');alert('V242 Prüfung fehlgeschlagen:\n\n'+String(e.message||e)+'\n\nNichts verändert.');return false}finally{cloudBusy=false}}
+ window.pushEntitySync=run;window.pullEntitySync=run;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V242';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V242 reine Abschluss-Verifikation bereit')}catch(_e){}
+})();
+</script>
