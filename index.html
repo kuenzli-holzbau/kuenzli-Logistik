@@ -28558,3 +28558,50 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V240';setSyncStatus('ok','V240 kontrollierte Backup-Bereinigung bereit')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V241 – verifizierte Sync-Basis nachziehen, mit kontrollierter Konfliktspeicher-Kompaktierung.
+   Voraussetzungen: 814 identische Nicht-__state-Objekte, davon 347 Packages; nur __state abweichend.
+   Vor dem Schreiben nur Vorschau. Bei Bestätigung wird der alte Konfliktspeicher auf __state reduziert
+   und danach die technische Sync-Basis geschrieben. Nutzdaten und Cloud werden nie verändert. */
+(()=>{
+ const VERSION='V241', EXPECT_IDENT=814, EXPECT_PACKAGES=347;
+ let snap=null;
+ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+ function mib(chars){return ((Number(chars||0)*2)/(1024*1024)).toFixed(3)}
+ function totalChars(){let n=0;for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i)||'';let v='';try{v=localStorage.getItem(k)||''}catch(_e){}n+=k.length+v.length}return n}
+ function analyze(remote,local){const keys=[...new Set([...Object.keys(local),...Object.keys(remote)])],id=[],dif=[],lo=[],co=[];for(const k of keys){const l=local[k],r=remote[k];if(l&&r){(stableJson(l.data)===stableJson(r.data)?id:dif).push(k)}else if(l)lo.push(k);else co.push(k)}return {eligible:id.filter(k=>!k.startsWith('__state|')),stateDiff:dif.filter(k=>k.startsWith('__state|')).length,nonStateDiff:dif.filter(k=>!k.startsWith('__state|')).length,lo,co}}
+ function conflicts(){try{const a=JSON.parse(localStorage.getItem(SYNC_CONFLICT_KEY)||'[]');return Array.isArray(a)?a:[]}catch(_e){return []}}
+ function isStateConflict(c){return c?.type==='__state'||c?.entity_type==='__state'||String(c?.key||'').startsWith('__state|')||String(c?.id||'')==='__state|main'}
+ function compactBase(remote,local,a){const old=loadSyncBase(),out={};Object.entries(old||{}).forEach(([k,v])=>{if(k.startsWith('__state|')&&v&&typeof v==='object')out[k]={version:Number(v.version||0),hash:v.hash==null?null:v.hash}});for(const k of a.eligible)out[k]={version:Number(remote[k].version||0),hash:stableJson(local[k].data)};return out}
+ function signature(remote,local,a){return a.eligible.map(k=>k+'\n'+stableJson(local[k].data)+'\n'+Number(remote[k].version||0)).join('\n---\n')}
+ function close(){document.getElementById('v241Modal')?.remove()}
+ function render(remote,local){close();const a=analyze(remote,local),pkg=a.eligible.filter(k=>k.startsWith('packages|')).length,safe=a.eligible.length===EXPECT_IDENT&&pkg===EXPECT_PACKAGES&&a.nonStateDiff===0&&a.stateDiff===1&&a.lo.length===0&&a.co.length===0;
+   const oldC=conflicts(),stateC=oldC.filter(isStateConflict),newBase=compactBase(remote,local,a),oldBaseRaw=localStorage.getItem(SYNC_BASE_KEY)||'',oldCRaw=localStorage.getItem(SYNC_CONFLICT_KEY)||'[]',newBaseRaw=JSON.stringify(newBase),newCRaw=JSON.stringify(stateC),before=totalChars(),projected=before-oldBaseRaw.length-oldCRaw.length+newBaseRaw.length+newCRaw.length;
+   snap={signature:signature(remote,local,a),before,projected,oldCCount:oldC.length,stateCCount:stateC.length,newBaseChars:newBaseRaw.length};
+   const m=document.createElement('div');m.id='v241Modal';m.style.cssText='position:fixed;inset:0;z-index:30000;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:14px';
+   m.innerHTML=`<div style="background:#fff;width:min(1080px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)"><div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V241 Sync-Referenzen – sichere Vorschau</h2><div><b>ZUERST NUR VORSCHAU</b> · keine Nutzdaten / kein Cloud-Schreiben</div></div><button id="v241Close" class="btn secondary">Schließen</button></div>
+   <div style="margin:12px 0;padding:10px 12px;background:${safe?'#eef7ef':'#f4e3e1'};border:1px solid ${safe?'#b7d3bb':'#dca59e'};border-radius:10px"><b>${safe?'Sicherheitsprüfung erfüllt.':'STOPP – Sicherheitsprüfung nicht erfüllt.'}</b><br>Identische Nicht-__state-Objekte: <b>${a.eligible.length}</b> · Packages: <b>${pkg}</b> · Nicht-__state-Abweichungen: <b>${a.nonStateDiff}</b> · __state-Abweichungen: <b>${a.stateDiff}</b>.</div>
+   <div style="padding:10px 12px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>347 lokale Packages und alle Nutzdaten bleiben unangetastet.</b><br>Cloud-Daten werden nicht geschrieben. __state bleibt gesperrt und seine Sync-Basis bleibt unverändert.</div>
+   <div style="margin-top:10px;padding:10px 12px;border:1px solid #d8ded9;border-radius:10px"><b>Technischer Plan:</b><br>1) Alter Konfliktspeicher: <b>${oldC.length}</b> Einträge → nur <b>${stateC.length}</b> __state-Eintrag bleibt erhalten.<br>2) Sync-Basis: <b>${a.eligible.length}</b> verifizierte Referenzen werden auf den aktuellen identischen Stand gesetzt.<br><b>Keine Konfliktdaten werden entfernt, solange die Sicherheitsprüfung nicht erneut erfolgreich war.</b></div>
+   <div style="margin-top:10px;padding:10px 12px;background:#fff5df;border:1px solid #e7c66d;border-radius:10px">Gemessener localStorage jetzt: <b>${mib(before)} MiB</b>.<br>Projiziert nach Konflikt-Kompaktierung + neuer Sync-Basis: ca. <b>${mib(projected)} MiB</b>.<br>Neue Sync-Basis: ca. <b>${mib(newBaseRaw.length)} MiB</b>.</div>
+   <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:14px"><button id="v241Run" class="btn" ${safe?'':'disabled'}>814 Sync-Referenzen sicher aktualisieren</button><button id="v241Cancel" class="btn secondary">Abbrechen</button></div><div id="v241Result" style="margin-top:10px;font-weight:800">Noch nichts verändert.</div></div>`;
+   document.body.appendChild(m);document.getElementById('v241Close').onclick=close;document.getElementById('v241Cancel').onclick=close;document.getElementById('v241Run').onclick=apply;setSyncStatus(safe?'ok':'err','V241 Vorschau · noch nichts verändert');
+ }
+ async function preview(manual=false){if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V241\n\nCloud ist nicht bereit. Nichts verändert.');return false}if(cloudBusy){alert('V241\n\nCloud ist beschäftigt. Nichts verändert.');return false}cloudBusy=true;setSyncStatus('syncing','V241 liest Cloud zur Sicherheitsprüfung');try{const r=await fetchRemoteEntities(),l=localEntityMap();render(r,l);return true}catch(e){setSyncStatus('err','V241 Vorschau fehlgeschlagen · nichts verändert');alert('V241 Vorschau fehlgeschlagen:\n\n'+String(e.message||e)+'\n\nNichts verändert.');return false}finally{cloudBusy=false}}
+ async function apply(){if(!snap)return;if(!confirm(`V241 LETZTE BESTÄTIGUNG\n\n814 technische Sync-Referenzen aktualisieren?\n\nDie bereits verifizierten alten Konfliktkopien werden dabei auf den weiterhin gesperrten __state-Konflikt reduziert.\n\n347 Packages/Nutzdaten/Cloud werden NICHT verändert.`))return;if(cloudBusy)return;cloudBusy=true;const btn=document.getElementById('v241Run');if(btn)btn.disabled=true;const out=document.getElementById('v241Result');
+   try{out.textContent='Erneute Sicherheitsprüfung läuft …';const r=await fetchRemoteEntities(),l=localEntityMap(),a=analyze(r,l),pkg=a.eligible.filter(k=>k.startsWith('packages|')).length,sig=signature(r,l,a);if(!(a.eligible.length===EXPECT_IDENT&&pkg===EXPECT_PACKAGES&&a.nonStateDiff===0&&a.stateDiff===1&&a.lo.length===0&&a.co.length===0&&sig===snap.signature))throw new Error('Sicherheitsbild hat sich seit der Vorschau verändert. Abbruch ohne Änderung.');
+     const oldCRaw=localStorage.getItem(SYNC_CONFLICT_KEY)||'[]',oldBRaw=localStorage.getItem(SYNC_BASE_KEY)||'',oldC=conflicts(),stateC=oldC.filter(isStateConflict),newCRaw=JSON.stringify(stateC),newBRaw=JSON.stringify(compactBase(r,l,a));
+     // Erst verifizierte, inzwischen erledigte Konfliktkopien kompaktieren, damit Safari genug Platz für die Basis hat.
+     localStorage.setItem(SYNC_CONFLICT_KEY,newCRaw);
+     try{localStorage.setItem(SYNC_BASE_KEY,newBRaw)}catch(e){try{localStorage.setItem(SYNC_CONFLICT_KEY,oldCRaw)}catch(_restore){}throw e}
+     // Exakte Nachprüfung der technischen Writes.
+     if((localStorage.getItem(SYNC_BASE_KEY)||'')!==newBRaw||(localStorage.getItem(SYNC_CONFLICT_KEY)||'')!==newCRaw){try{localStorage.setItem(SYNC_BASE_KEY,oldBRaw);localStorage.setItem(SYNC_CONFLICT_KEY,oldCRaw)}catch(_restore){}throw new Error('Technische Nachprüfung fehlgeschlagen; Wiederherstellung wurde versucht.');}
+     const after=totalChars();out.innerHTML=`<span style="color:#176c31">V241 ERFOLG:</span> 814 Sync-Referenzen aktualisiert; Konfliktspeicher auf ${stateC.length} gesperrten __state-Eintrag reduziert. localStorage jetzt ca. <b>${mib(after)} MiB</b>. <b>347 Packages/Nutzdaten/Cloud unverändert.</b> Bitte jetzt NICHT weiter synchronisieren und Ergebnis fotografieren.`;setSyncStatus('ok','V241 erfolgreich · 814 Referenzen aktualisiert · __state gesperrt');
+   }catch(e){out.innerHTML=`<span style="color:#9b2c23">V241 ABBRUCH/FEHLER:</span> ${esc(e.message||e)}<br>Keine Cloud- oder Nutzdatenänderung. Bitte nicht erneut drücken.`;setSyncStatus('err','V241 abgebrochen/fehlgeschlagen · keine Cloud-/Nutzdatenänderung')}
+   finally{cloudBusy=false}
+ }
+ window.pushEntitySync=preview;window.pullEntitySync=preview;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V241';setSyncStatus('ok','V241 sichere Sync-Referenz-Bereinigung bereit')}catch(_e){}
+})();
+</script>
