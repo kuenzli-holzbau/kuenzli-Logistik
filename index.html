@@ -27754,3 +27754,77 @@ ${safeTypeLines}
  try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V228 Cloud → Gerät nur Vorschau')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V229 – Sync-Basis nur für lokal/Cloud nachweislich identische Objekte nachziehen.
+   Keine Nutzdaten werden angewendet, gelöscht oder überschrieben. Konflikte bleiben unangetastet. */
+(()=>{
+ async function v229ReconcileIdenticalBase(manual=false){
+  if(!manual)return false;
+  cloudCfg=loadCloudConfig();
+  if(!cloudReady()){alert('V229 Sync-Basis Vorschau\n\nCloud ist noch nicht bereit.\n\nKeine lokalen Nutzdaten verändert.');return false}
+  if(cloudBusy){alert('V229 Sync-Basis Vorschau\n\nEs läuft bereits eine Cloud-Synchronisierung. Bitte kurz warten.\n\nKeine lokalen Nutzdaten verändert.');return false}
+  cloudBusy=true;
+  setSyncStatus('syncing','V229 identische Objekte werden geprüft');
+  try{
+   const remote=await fetchRemoteEntities();
+   const base=loadSyncBase();
+   const local=localEntityMap();
+   const identicalKeys=[];
+   const conflicts=[];
+   const identicalByType={};
+
+   for(const [k,r] of Object.entries(remote)){
+    if(!r)continue;
+    const l=local[k];
+    if(!l)continue;
+    const lh=stableJson(l.data),rh=stableJson(r.data);
+    if(lh===rh){
+     identicalKeys.push(k);
+     const type=k.split('|')[0];
+     identicalByType[type]=(identicalByType[type]||0)+1;
+     continue;
+    }
+    const b=base[k],bh=b?.hash??null;
+    const localChanged=lh!==bh,remoteChanged=rh!==bh;
+    if(localChanged&&remoteChanged){conflicts.push(k)}
+   }
+
+   const packageIdentical=identicalKeys.filter(k=>k.split('|')[0]==='packages').length;
+   const typeLines=Object.entries(identicalByType).sort((a,b)=>a[0].localeCompare(b[0])).map(([t,n])=>`• ${t}: ${n}`).join('\n')||'• keine';
+   const preview=`V229 Sync-Basis Vorschau\n\n`+
+    `Identische lokale/Cloud-Objekte: ${identicalKeys.length}\n`+
+    `davon packages: ${packageIdentical}\n`+
+    `Erkannte Konflikte: ${conflicts.length}\n\n`+
+    `Identische Objekte nach entity_type:\n${typeLines}\n\n`+
+    `Es werden ausschließlich Sync-Referenzen für diese identischen Objekte aktualisiert.\n`+
+    `Keine Packages, Bestände oder sonstigen Nutzdaten werden geändert.\n`+
+    `Konflikte und __state-Nutzdaten werden nicht überschrieben.\n\n`+
+    `Jetzt Sync-Basis für die identischen Objekte nachziehen?`;
+
+   if(!confirm(preview)){
+    setSyncStatus('ok','V229 abgebrochen · Nutzdaten unverändert');
+    return false;
+   }
+
+   /* Nur Metadaten der Sync-Basis für nachweislich identische Objekte ändern. */
+   const next=Object.assign({},base);
+   for(const k of identicalKeys){
+    const r=remote[k];
+    next[k]={version:Number(r.version||0),hash:stableJson(r.data)};
+   }
+   saveSyncBase(next);
+
+   setSyncStatus(conflicts.length?'err':'ok',`V229 Sync-Basis: ${identicalKeys.length} identische Referenzen aktualisiert · ${conflicts.length} Konflikt(e) geschützt`);
+   alert(`V229 abgeschlossen.\n\n${identicalKeys.length} Sync-Referenz(en) für identische Objekte wurden aktualisiert.\nDavon packages: ${packageIdentical}.\n${conflicts.length} Konflikt(e) blieben unangetastet.\n\nKeine Packages, Bestände oder sonstigen Nutzdaten wurden verändert.`);
+   return true;
+  }catch(e){
+   setSyncStatus('err','V229 gestoppt · Nutzdaten unverändert');
+   alert('V229 Sync-Basis\n\nVorgang gestoppt:\n'+String(e.message||e)+'\n\nKeine lokalen Nutzdaten verändert.');
+   return false;
+  }finally{cloudBusy=false}
+ }
+ window.pullEntitySync=v229ReconcileIdenticalBase;
+ try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V229 Sync-Basis-Bereinigung bereit')}catch(_e){}
+})();
+</script>
