@@ -5,7 +5,7 @@
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; form-action 'self'; img-src 'self' data: blob: https://*.supabase.co; connect-src 'self' https://*.supabase.co; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; font-src 'self' data:; media-src 'self' data: blob:; worker-src 'self' blob:; upgrade-insecure-requests">
 <!-- V406: Transporte direkt unter der Projekterfassung -->
-<title>Künzli Lagerverwaltung V345 · BV2026-1-175</title>
+<title>Künzli Lagerverwaltung · BV2026-1-228</title>
 <style>
 :root{--g:#173f32;--bg:#f3f5f3;--line:#d8ded9;--mut:#6a746e;--red:#df3428}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:#17201c}button,input,select,textarea{font:inherit}
@@ -27646,5 +27646,111 @@ try{
  }
  window.pullEntitySync=v227SafePull;
  try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V227 sicherer Zwei-Wege-Sync bereit')}catch(_e){}
+})();
+</script>
+
+<script>
+/* V228 – Cloud -> Gerät: NUR Vorschau/Analyse. Keine Cloud-Daten lokal anwenden. */
+(()=>{
+ async function v228CloudPullPreview(manual=false){
+  /* Automatische Aufrufe (Login/Polling) bleiben absichtlich ohne Cloud-Pull. */
+  if(!manual)return false;
+  cloudCfg=loadCloudConfig();
+  if(!cloudReady()){alert('V228 Cloud → Gerät Vorschau\n\nCloud ist noch nicht bereit.\n\nNoch keine lokalen Daten verändert.');return false}
+  if(cloudBusy){alert('V228 Cloud → Gerät Vorschau\n\nEs läuft bereits eine Cloud-Synchronisierung. Bitte kurz warten und die Vorschau erneut öffnen.\n\nNoch keine lokalen Daten verändert.');return false}
+  cloudBusy=true;
+  setSyncStatus('syncing','V228 Cloud → Gerät Vorschau wird geladen');
+  try{
+   const remote=await fetchRemoteEntities();
+   const base=loadSyncBase();
+   const local=localEntityMap();
+   const keys=new Set([...Object.keys(base),...Object.keys(local),...Object.keys(remote)]);
+   let identical=0, safe=0, localChangedCount=0, conflicts=0, stateProtected=0;
+   const byType={};
+   const safeByType={};
+
+   for(const k of keys){
+    const l=local[k],b=base[k],r=remote[k];
+    const lh=l?stableJson(l.data):null;
+    const bh=b?.hash??null;
+    const rh=r?stableJson(r.data):null;
+    const localChanged=lh!==bh;
+    const remoteChanged=rh!==bh;
+    const same=lh===rh;
+    const type=k.split('|')[0];
+
+    if(l&&r&&same)identical++;
+    if(localChanged)localChangedCount++;
+
+    if(localChanged&&remoteChanged&&!same){
+     conflicts++;
+     continue;
+    }
+    if(k==='__state|main'){
+     if(remoteChanged)stateProtected++;
+     continue;
+    }
+    if(remoteChanged&&!localChanged){
+     safe++;
+     safeByType[type]=(safeByType[type]||0)+1;
+    }
+   }
+
+   for(const [k,r] of Object.entries(remote)){
+    if(!r)continue;
+    const type=k.split('|')[0];
+    byType[type]=(byType[type]||0)+1;
+   }
+
+   const cloudObjects=Object.keys(remote).length;
+   const cloudPackages=Object.keys(remote).filter(k=>k.split('|')[0]==='packages').length;
+   const safePackages=safeByType.packages||0;
+   const typeLines=Object.entries(byType).sort((a,b)=>a[0].localeCompare(b[0])).map(([t,n])=>`• ${t}: ${n}`).join('\n')||'• keine Cloud-Objekte';
+   const safeTypeLines=Object.entries(safeByType).sort((a,b)=>a[0].localeCompare(b[0])).map(([t,n])=>`• ${t}: ${n}`).join('\n')||'• keine';
+
+   setSyncStatus(conflicts?'err':'ok',`V228 Vorschau · ${safe} sicher übernehmbar · ${conflicts} Konflikt(e)`);
+   alert(
+`V228 Cloud → Gerät Vorschau
+
+`+
+`Cloud-Objekte: ${cloudObjects}
+`+
+`Identische Objekte: ${identical}
+`+
+`Cloud-only / sicher übernehmbar: ${safe}
+`+
+`Lokal geänderte Objekte: ${localChangedCount}
+`+
+`Konflikte: ${conflicts}
+`+
+`Geschützter __state mit Cloud-Änderung: ${stateProtected}
+`+
+`packages in der Cloud: ${cloudPackages}
+`+
+`davon packages sicher übernehmbar: ${safePackages}
+
+`+
+`Cloud-Objekte nach entity_type:
+${typeLines}
+
+`+
+`Sicher übernehmbare Änderungen nach entity_type:
+${safeTypeLines}
+
+`+
+`Noch keine lokalen Daten verändert.`
+   );
+   return true;
+  }catch(e){
+   setSyncStatus('err','V228 Vorschau fehlgeschlagen · lokal unverändert');
+   alert('V228 Cloud → Gerät Vorschau\n\nVorschau fehlgeschlagen:\n'+String(e.message||e)+'\n\nNoch keine lokalen Daten verändert.');
+   return false;
+  }finally{cloudBusy=false}
+ }
+
+ /* Der bestehende Button ruft pullEntitySync(true) auf. Dieser Override steht als
+    letzter ausführbarer Sync-Override in der Datei und gewinnt daher für den Button. */
+ window.pullEntitySync=v228CloudPullPreview;
+ try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V228 Cloud → Gerät nur Vorschau')}catch(_e){}
 })();
 </script>
