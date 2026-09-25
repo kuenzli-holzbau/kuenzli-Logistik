@@ -6619,7 +6619,7 @@ function saveAuthSession(s){
  renderAuthUI();renderUserHeader();
 }
 async function authFetch(path,body){
- cloudCfg=loadCloudConfig(); if(manual)syncDiagLogV216('1 KONFIG','Cloud-Konfiguration geladen');
+ cloudCfg=loadCloudConfig();
  if(!cloudCfg.url||!cloudCfg.anonKey)throw new Error('Cloud-Einstellungen fehlen.');
  let r=await fetch(String(cloudCfg.url).replace(/\/+$/,'')+'/auth/v1/'+path,{
    method:'POST',
