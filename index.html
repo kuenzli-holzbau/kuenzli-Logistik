@@ -27923,3 +27923,72 @@ ${safeTypeLines}
  try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V230 Konfliktanalyse nur lesend')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V231 – Feldanalyse der verbleibenden Konflikte, NUR LESEND.
+   Keine lokalen Daten, Cloud-Daten, Sync-Basis oder Konflikte werden verändert. */
+(()=>{
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const eq=(a,b)=>stableJson(a)===stableJson(b);
+ function diff(a,b,path='',out=[]){
+  if(out.length>=500||eq(a,b))return out;
+  const ao=a!==null&&typeof a==='object',bo=b!==null&&typeof b==='object';
+  if(!ao||!bo||Array.isArray(a)!==Array.isArray(b)){out.push(path||'(Objekt)');return out}
+  if(Array.isArray(a)){
+   const n=Math.max(a.length,b.length);
+   for(let i=0;i<n&&out.length<500;i++)diff(a[i],b[i],`${path}[${i}]`,out);
+   return out;
+  }
+  const keys=new Set([...Object.keys(a||{}),...Object.keys(b||{})]);
+  for(const k of [...keys].sort())diff(a?.[k],b?.[k],path?`${path}.${k}`:k,out);
+  return out;
+ }
+ function rootField(p){return String(p||'(Objekt)').replace(/^\[(\d+)\].*$/,'[$1]').split('.')[0]}
+ function remove(){document.getElementById('v231FieldModal')?.remove()}
+ function show(conflicts,remoteCount,localCount){
+  remove();
+  const byType={},fieldCounts={},packageFieldCounts={};
+  for(const c of conflicts){
+   byType[c.type]=(byType[c.type]||0)+1;
+   const roots=[...new Set(c.paths.map(rootField))];
+   for(const f of roots)fieldCounts[f]=(fieldCounts[f]||0)+1;
+   if(c.type==='packages')for(const f of roots)packageFieldCounts[f]=(packageFieldCounts[f]||0)+1;
+  }
+  const typeHtml=Object.entries(byType).sort((a,b)=>a[0].localeCompare(b[0])).map(([k,n])=>`<span style="display:inline-block;margin:3px 7px 3px 0;padding:4px 8px;border:1px solid #d8ded9;border-radius:999px"><b>${esc(k)}</b>: ${n}</span>`).join('')||'keine';
+  const table=(obj)=>Object.entries(obj).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).map(([f,n])=>`<tr><td style="padding:6px 8px;border-bottom:1px solid #e7ebe8"><code>${esc(f)}</code></td><td style="padding:6px 8px;border-bottom:1px solid #e7ebe8;text-align:right"><b>${n}</b></td></tr>`).join('')||'<tr><td colspan="2">keine</td></tr>';
+  const rows=conflicts.map((c,i)=>`<details style="border:1px solid #d8ded9;border-radius:9px;padding:9px;margin:7px 0"><summary style="cursor:pointer;font-weight:800">${i+1}. ${esc(c.type)} · ${esc(c.id)} · ${c.paths.length} Feldpfad(e)</summary><div style="margin-top:8px;font-size:12px;line-height:1.45">${c.paths.map(p=>`<code style="display:inline-block;margin:2px 4px 2px 0">${esc(p)}</code>`).join('')||'(keine)'}</div></details>`).join('');
+  const m=document.createElement('div');m.id='v231FieldModal';m.style.cssText='position:fixed;inset:0;z-index:21000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:18px';
+  m.innerHTML=`<div style="background:#fff;width:min(1050px,96vw);max-height:92vh;overflow:auto;border-radius:16px;padding:20px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">
+   <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:sticky;top:-20px;background:#fff;padding:18px 0 10px;z-index:2;border-bottom:1px solid #e1e6e3"><div><h2 style="margin:0 0 6px">V231 Konflikt-Feldanalyse</h2><div><b>${conflicts.length} Konflikte</b> · packages: <b>${byType.packages||0}</b> · Cloud: ${remoteCount} · lokal: ${localCount}</div></div><button id="v231Close" class="btn secondary" type="button">Schließen</button></div>
+   <div style="padding:12px 0"><b>Konflikte nach entity_type:</b><br>${typeHtml}</div>
+   <div style="padding:10px 12px;background:#fff5df;border:1px solid #e7c66d;border-radius:10px"><b>Nur Analyse.</b> Keine lokalen Daten, keine Cloud-Daten, keine Sync-Basis und keine Konflikte werden verändert. <b>__state bleibt gesperrt.</b></div>
+   <h3>Abweichende Hauptfelder – alle Konflikte</h3><table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left">Feld</th><th style="text-align:right">Objekte</th></tr></thead><tbody>${table(fieldCounts)}</tbody></table>
+   <h3>Abweichende Hauptfelder – nur packages (${byType.packages||0})</h3><table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left">Feld</th><th style="text-align:right">Packages</th></tr></thead><tbody>${table(packageFieldCounts)}</tbody></table>
+   <h3>Konflikte mit Feldpfaden</h3>${rows}
+   <div style="padding:14px 0 4px;font-weight:850">Noch keine lokalen Daten verändert.</div>
+  </div>`;
+  document.body.appendChild(m);document.getElementById('v231Close').onclick=remove;
+ }
+ async function preview(manual=false){
+  if(!manual)return false;
+  cloudCfg=loadCloudConfig();
+  if(!cloudReady()){alert('V231 Konflikt-Feldanalyse\n\nCloud ist noch nicht bereit.\n\nNoch keine lokalen Daten verändert.');return false}
+  if(cloudBusy){alert('V231 Konflikt-Feldanalyse\n\nEs läuft bereits eine Cloud-Synchronisierung. Bitte kurz warten.\n\nNoch keine lokalen Daten verändert.');return false}
+  cloudBusy=true;setSyncStatus('syncing','V231 Konfliktfelder werden nur analysiert');
+  try{
+   const remote=await fetchRemoteEntities(),base=loadSyncBase(),local=localEntityMap();
+   const keys=new Set([...Object.keys(base),...Object.keys(local),...Object.keys(remote)]),conflicts=[];
+   for(const k of keys){
+    const l=local[k],b=base[k],r=remote[k],lh=l?stableJson(l.data):null,bh=b?.hash??null,rh=r?stableJson(r.data):null;
+    if(lh!==bh&&rh!==bh&&lh!==rh){const s=k.indexOf('|'),type=s>=0?k.slice(0,s):k,id=s>=0?k.slice(s+1):'';conflicts.push({type,id,paths:diff(l?.data??null,r?.data??null)});}
+   }
+   conflicts.sort((a,b)=>a.type.localeCompare(b.type)||a.id.localeCompare(b.id));
+   setSyncStatus(conflicts.length?'err':'ok',`V231 Feldanalyse · ${conflicts.length} Konflikt(e) · nichts verändert`);
+   show(conflicts,Object.keys(remote).length,Object.keys(local).length);return true;
+  }catch(e){setSyncStatus('err','V231 Analyse fehlgeschlagen · lokal unverändert');alert('V231 Konflikt-Feldanalyse\n\nAnalyse fehlgeschlagen:\n'+String(e.message||e)+'\n\nNoch keine lokalen Daten verändert.');return false}
+  finally{cloudBusy=false}
+ }
+ window.pullEntitySync=preview;
+ try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V231 Konflikt-Feldanalyse nur lesend')}catch(_e){}
+})();
+</script>
