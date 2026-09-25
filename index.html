@@ -28302,3 +28302,94 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V236';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V236 reine Verifikation bereit')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V237 – Sync-Referenzen für aktuell verifizierte identische Objekte nachziehen.
+   - Zuerst nur Vorschau.
+   - Erst nach ausdrücklicher Bestätigung werden ausschließlich technische Sync-Basis-Einträge geändert.
+   - Lokale Nutzdaten und Cloud-Daten bleiben unverändert.
+   - __state bleibt gesperrt und seine Sync-Referenz wird NICHT verändert.
+   - Nur Objekte, die beim unmittelbar davor ausgeführten Cloud-Lesecheck lokal === Cloud sind, werden übernommen.
+*/
+(()=>{
+ const VERSION='V237';
+ let snap=null;
+ function close(){document.getElementById('v237BaseModal')?.remove()}
+ function splitKey(k){const s=k.indexOf('|');return {type:s>=0?k.slice(0,s):k,id:s>=0?k.slice(s+1):''}}
+ function writeCompactBase(base){
+   const compact={};
+   Object.entries(base||{}).forEach(([k,v])=>{if(v&&typeof v==='object')compact[k]={version:Number(v.version||0),hash:v.hash==null?null:v.hash}});
+   localStorage.setItem(SYNC_BASE_KEY,JSON.stringify(compact));
+ }
+ function analyze(remote,local){
+   const keys=[...new Set([...Object.keys(local),...Object.keys(remote)])].sort();
+   const identical=[],different=[],localOnly=[],cloudOnly=[];
+   for(const k of keys){
+     const l=local[k],r=remote[k];
+     if(l&&r){(stableJson(l.data)===stableJson(r.data)?identical:different).push(k)}
+     else if(l)localOnly.push(k);else cloudOnly.push(k);
+   }
+   const eligible=identical.filter(k=>!k.startsWith('__state|'));
+   const stateIdentical=identical.filter(k=>k.startsWith('__state|'));
+   const stateDifferent=different.filter(k=>k.startsWith('__state|'));
+   const nonStateDifferent=different.filter(k=>!k.startsWith('__state|'));
+   return {identical,different,localOnly,cloudOnly,eligible,stateIdentical,stateDifferent,nonStateDifferent};
+ }
+ function show(remote,local,a){
+   close();
+   const pkgEligible=a.eligible.filter(k=>k.startsWith('packages|')).length;
+   const safe=a.eligible.length===814&&pkgEligible===347&&a.nonStateDifferent.length===0&&a.localOnly.length===0&&a.cloudOnly.length===0&&a.stateDifferent.length===1;
+   snap={remote,local,analysis:a,signature:a.eligible.map(k=>k+'\n'+stableJson(local[k].data)+'\n'+Number(remote[k].version||0)).join('\n---\n')};
+   const m=document.createElement('div');m.id='v237BaseModal';m.style.cssText='position:fixed;inset:0;z-index:26000;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:14px';
+   m.innerHTML=`<div style="background:#fff;width:min(1050px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V237 Sync-Referenzen bereinigen</h2><div><b>ZUERST NUR VORSCHAU</b> · keine Nutzdaten werden verändert</div></div><button id="v237Close" class="btn secondary" type="button">Schließen</button></div>
+    <div style="margin:12px 0;padding:11px 12px;background:${safe?'#eef7ef':'#fff5df'};border:1px solid ${safe?'#b7d3bb':'#e7c66d'};border-radius:10px"><b>${safe?'Sicherheitsprüfung erfüllt.':'Sicherheitsprüfung NICHT erfüllt.'}</b><br>Aktuell identisch: <b>${a.identical.length}</b> · für Sync-Referenz freigegeben: <b>${a.eligible.length}</b> · Packages davon: <b>${pkgEligible}</b>.</div>
+    <div style="padding:10px 12px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>347 lokale Packages bleiben unangetastet.</b><br>V237 schreibt keine Packages, Bestände oder sonstigen Nutzdaten – weder lokal noch in die Cloud.</div>
+    <div style="margin-top:10px;padding:10px 12px;background:#f4e3e1;border:1px solid #dca59e;border-radius:10px"><b>__state bleibt gesperrt.</b> Abweichend: ${a.stateDifferent.length}. Seine Sync-Referenz wird nicht verändert.</div>
+    <div style="margin-top:10px">Nicht-__state-Abweichungen: <b>${a.nonStateDifferent.length}</b> · Nur lokal: <b>${a.localOnly.length}</b> · Nur Cloud: <b>${a.cloudOnly.length}</b>.</div>
+    <div style="margin-top:12px;padding:10px 12px;border:1px solid #d8ded9;border-radius:10px">Bei Bestätigung werden ausschließlich die technischen Sync-Basis-Einträge der <b>${a.eligible.length}</b> aktuell identischen Objekte auf deren aktuelle Cloud-Version und den identischen Inhalts-Hash gesetzt. Alte Konfliktspeicher werden nicht gelöscht.</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button id="v237Apply" class="btn" type="button" ${safe?'':'disabled'}>${a.eligible.length} Sync-Referenzen aktualisieren</button><button id="v237Cancel" class="btn secondary" type="button">Abbrechen</button></div>
+    <div style="padding:14px 0 4px;font-weight:850">Noch keine lokalen Nutzdaten, Cloud-Daten oder Sync-Referenzen verändert.</div>
+   </div>`;
+   document.body.appendChild(m);
+   document.getElementById('v237Close').onclick=close;document.getElementById('v237Cancel').onclick=close;document.getElementById('v237Apply').onclick=apply;
+   setSyncStatus(safe?'ok':'err',`V237 Vorschau · ${a.eligible.length} identische Sync-Referenzen · noch nichts geändert`);
+ }
+ async function preview(manual=false){
+   if(!manual)return false;
+   cloudCfg=loadCloudConfig();
+   if(!cloudReady()){alert('V237 Sync-Referenzen\n\nCloud ist noch nicht bereit.\n\nNichts verändert.');return false}
+   if(cloudBusy){alert('V237 Sync-Referenzen\n\nEs läuft bereits eine Cloud-Synchronisierung. Bitte kurz warten.\n\nNichts verändert.');return false}
+   cloudBusy=true;setSyncStatus('syncing','V237 liest Cloud zur Sicherheitsprüfung');
+   try{const remote=await fetchRemoteEntities(),local=localEntityMap(),a=analyze(remote,local);show(remote,local,a);return true}
+   catch(e){setSyncStatus('err','V237 Prüfung fehlgeschlagen · nichts verändert');alert('V237 Prüfung fehlgeschlagen:\n\n'+String(e.message||e)+'\n\nNichts verändert.');return false}
+   finally{cloudBusy=false}
+ }
+ async function apply(){
+   if(!snap)return;
+   const a=snap.analysis,n=a.eligible.length;
+   if(!(n===814&&a.eligible.filter(k=>k.startsWith('packages|')).length===347&&a.nonStateDifferent.length===0&&a.localOnly.length===0&&a.cloudOnly.length===0&&a.stateDifferent.length===1)){
+     alert('V237 Sicherheitsstopp\n\nDie erwartete geprüfte Konstellation liegt nicht vor. Es wurde nichts verändert.');return;
+   }
+   if(!confirm(`V237 LETZTE BESTÄTIGUNG\n\n${n} technische Sync-Referenzen für bereits identische Objekte aktualisieren?\n\n347 lokale Packages bleiben unverändert.\nCloud-Daten bleiben unverändert.\n__state bleibt gesperrt und wird NICHT angefasst.`))return;
+   if(cloudBusy){alert('Cloud ist gerade beschäftigt. Es wurde nichts geändert.');return}
+   cloudBusy=true;const btn=document.getElementById('v237Apply');if(btn)btn.disabled=true;
+   try{
+     setSyncStatus('syncing','V237 verifiziert unmittelbar vor der Referenz-Aktualisierung erneut');
+     const remoteNow=await fetchRemoteEntities(),localNow=localEntityMap(),aNow=analyze(remoteNow,localNow);
+     const sigNow=aNow.eligible.map(k=>k+'\n'+stableJson(localNow[k].data)+'\n'+Number(remoteNow[k].version||0)).join('\n---\n');
+     const ok=aNow.eligible.length===814&&aNow.eligible.filter(k=>k.startsWith('packages|')).length===347&&aNow.nonStateDifferent.length===0&&aNow.localOnly.length===0&&aNow.cloudOnly.length===0&&aNow.stateDifferent.length===1&&sigNow===snap.signature;
+     if(!ok){setSyncStatus('err','V237 Sicherheitsstopp · Stand hat sich geändert');alert('V237 SICHERHEITSSTOPP\n\nSeit der Vorschau hat sich der geprüfte Stand geändert oder die erwarteten 814/347/1 Werte stimmen nicht mehr.\n\nEs wurden keine Sync-Referenzen verändert.');return false}
+     const base=loadSyncBase();
+     for(const k of aNow.eligible){base[k]={version:Number(remoteNow[k].version||0),hash:stableJson(localNow[k].data)}}
+     writeCompactBase(base);
+     close();setSyncStatus('ok','V237 abgeschlossen · 814 Sync-Referenzen aktualisiert · __state gesperrt');
+     alert('V237 ERFOLG\n\n814 Sync-Referenzen für nachweislich identische Objekte wurden aktualisiert.\nDavon Packages: 347.\n\n__state blieb gesperrt und unverändert.\nCloud-Daten und lokale Nutzdaten wurden nicht verändert.\n\nBitte jetzt NICHT weiter synchronisieren. Zuerst Ergebnis prüfen.');
+     return true;
+   }catch(e){setSyncStatus('err','V237 fehlgeschlagen · Nutzdaten unverändert');alert('V237 FEHLER\n\n'+String(e.message||e)+'\n\nCloud-Daten und lokale Nutzdaten wurden nicht verändert.');return false}
+   finally{cloudBusy=false}
+ }
+ window.pushEntitySync=preview;window.pullEntitySync=preview;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V237';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V237 Sync-Referenz-Bereinigung bereit')}catch(_e){}
+})();
+</script>
