@@ -28442,3 +28442,68 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V238';setSyncStatus('ok','V238 Safari-Speicheranalyse bereit · nur lesend')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V239 – reine Backup- und Sync-Basis-Kapazitätsanalyse.
+   NUR LESEND: keine localStorage set/remove/clear, keine Cloud-Schreiboperationen.
+   Analysiert lokale Backup-Speicher und berechnet die exakte JSON-Größe einer projizierten
+   kompakten Sync-Basis für aktuell identische Nicht-__state-Objekte. */
+(()=>{
+ const VERSION='V239', PLATFORM_BACKUP_KEY_V239='holzlager_platform_backups_v286';
+ function close(){document.getElementById('v239AnalyzeModal')?.remove()}
+ function esc2(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+ function num(n){return Number(n||0).toLocaleString('de-CH')}
+ function mib(chars){return ((Number(chars||0)*2)/(1024*1024)).toFixed(3)}
+ function parseArr(key){try{const x=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(x)?x:[]}catch(_e){return []}}
+ function itemSize(x){try{return JSON.stringify(x).length}catch(_e){return 0}}
+ function dateVal(x){const t=Date.parse(x?.at||x?.createdAt||x?.date||'');return Number.isFinite(t)?t:0}
+ function fmtDate(x){const t=dateVal(x);return t?new Date(t).toLocaleString('de-CH'):'–'}
+ function summarize(arr,kind){
+   const rows=arr.map((x,i)=>({i,date:fmtDate(x),ts:dateVal(x),reason:x?.reason||x?.name||'–',chars:itemSize(x),score:x?.score}));
+   const dated=rows.filter(r=>r.ts).sort((a,b)=>a.ts-b.ts);
+   return {kind,count:arr.length,chars:itemSize(arr),oldest:dated[0]?.date||'–',newest:dated.at(-1)?.date||'–',rows:rows.sort((a,b)=>b.ts-a.ts)};
+ }
+ function localChars(){let n=0;for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i)||'';let v='';try{v=localStorage.getItem(k)||''}catch(_e){}n+=k.length+v.length}return n}
+ function analyzeMaps(remote,local){
+   const keys=[...new Set([...Object.keys(local),...Object.keys(remote)])].sort(), identical=[],different=[],localOnly=[],cloudOnly=[];
+   for(const k of keys){const l=local[k],r=remote[k];if(l&&r){(stableJson(l.data)===stableJson(r.data)?identical:different).push(k)}else if(l)localOnly.push(k);else cloudOnly.push(k)}
+   const eligible=identical.filter(k=>!k.startsWith('__state|'));
+   return {identical,different,localOnly,cloudOnly,eligible,stateDiff:different.filter(k=>k.startsWith('__state|')).length,nonStateDiff:different.filter(k=>!k.startsWith('__state|')).length};
+ }
+ function projectedBase(remote,local,a){
+   const existing=loadSyncBase(), compact={};
+   Object.entries(existing||{}).forEach(([k,v])=>{if(v&&typeof v==='object'&&!k.startsWith('__state|'))compact[k]={version:Number(v.version||0),hash:v.hash==null?null:v.hash}});
+   // Preserve __state exactly as-is; V239 only estimates and never writes it.
+   Object.entries(existing||{}).forEach(([k,v])=>{if(k.startsWith('__state|')&&v&&typeof v==='object')compact[k]={version:Number(v.version||0),hash:v.hash==null?null:v.hash}});
+   for(const k of a.eligible)compact[k]={version:Number(remote[k].version||0),hash:stableJson(local[k].data)};
+   return JSON.stringify(compact);
+ }
+ function backupTable(s){
+   const rows=s.rows.slice(0,20).map(r=>`<tr><td style="padding:5px;border-bottom:1px solid #edf0ee">${r.i+1}</td><td style="padding:5px;border-bottom:1px solid #edf0ee">${esc2(r.date)}</td><td style="padding:5px;border-bottom:1px solid #edf0ee">${esc2(r.reason)}</td><td style="padding:5px;text-align:right;border-bottom:1px solid #edf0ee">${num(r.chars)}</td></tr>`).join('');
+   return `<details style="margin-top:10px"><summary style="cursor:pointer;font-weight:800">${esc2(s.kind)}: ${s.count} Einträge anzeigen</summary><div style="margin:8px 0">Ältester: <b>${esc2(s.oldest)}</b> · Neuester: <b>${esc2(s.newest)}</b> · JSON gesamt: <b>${num(s.chars)}</b> Zeichen ≈ ${mib(s.chars)} MiB</div><div style="overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:.86em"><thead><tr><th>#</th><th>Datum</th><th>Grund</th><th style="text-align:right">Zeichen</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
+ }
+ function show(remote,local){
+   close();const normal=summarize(parseArr(BACKUP_KEY),'holzlager_backups_v54'), platform=summarize(parseArr(PLATFORM_BACKUP_KEY_V239),'holzlager_platform_backups_v286');
+   const a=analyzeMaps(remote,local), currentRaw=localStorage.getItem(SYNC_BASE_KEY)||'', projected=projectedBase(remote,local,a), total=localChars(), delta=projected.length-currentRaw.length;
+   const pkg=a.eligible.filter(k=>k.startsWith('packages|')).length;
+   const safe=a.eligible.length===814&&pkg===347&&a.nonStateDiff===0&&a.localOnly.length===0&&a.cloudOnly.length===0&&a.stateDiff===1;
+   const m=document.createElement('div');m.id='v239AnalyzeModal';m.style.cssText='position:fixed;inset:0;z-index:28000;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:14px';
+   m.innerHTML=`<div style="background:#fff;width:min(1100px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V239 Backup- & Sync-Speicheranalyse</h2><div><b>NUR LESEND</b> · keine Löschung, keine Speicherung, kein Cloud-Schreiben</div></div><button id="v239Close" class="btn secondary" type="button">Schließen</button></div>
+    <div style="margin:12px 0;padding:11px 12px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>347 lokale Packages bleiben unangetastet.</b><br>V239 liest nur localStorage und den aktuellen Cloud-Stand.</div>
+    <div style="padding:10px 12px;background:${safe?'#eef7ef':'#fff5df'};border:1px solid ${safe?'#b7d3bb':'#e7c66d'};border-radius:10px"><b>${safe?'Cloud-Sicherheitsbild weiterhin korrekt.':'Cloud-Sicherheitsbild weicht vom erwarteten Stand ab.'}</b><br>Freigegebene identische Nicht-__state-Objekte: <b>${a.eligible.length}</b> · Packages: <b>${pkg}</b> · Nicht-__state-Abweichungen: <b>${a.nonStateDiff}</b> · __state-Abweichungen: <b>${a.stateDiff}</b>.</div>
+    <h3 style="margin:16px 0 6px">Backup-Speicher</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:9px"><div style="padding:10px;border:1px solid #d8ded9;border-radius:10px"><b>holzlager_backups_v54</b><br>${normal.count} Backup(s) · ${num(normal.chars)} Zeichen ≈ ${mib(normal.chars)} MiB<br>${esc2(normal.oldest)} → ${esc2(normal.newest)}</div><div style="padding:10px;border:1px solid #d8ded9;border-radius:10px"><b>holzlager_platform_backups_v286</b><br>${platform.count} Backup(s) · ${num(platform.chars)} Zeichen ≈ ${mib(platform.chars)} MiB<br>${esc2(platform.oldest)} → ${esc2(platform.newest)}</div></div>
+    ${backupTable(normal)}${backupTable(platform)}
+    <h3 style="margin:16px 0 6px">Projizierte kompakte Sync-Basis – nur Berechnung</h3>
+    <div style="padding:10px 12px;border:1px solid #d8ded9;border-radius:10px">Aktuelle Sync-Basis: <b>${num(currentRaw.length)}</b> Zeichen ≈ ${mib(currentRaw.length)} MiB.<br>Projizierte Sync-Basis für den jetzt verifizierten Stand: <b>${num(projected.length)}</b> Zeichen ≈ ${mib(projected.length)} MiB.<br>Differenz beim Ersetzen: <b>${delta>=0?'+':''}${num(delta)}</b> Zeichen ≈ ${delta>=0?'+':''}${mib(Math.abs(delta))} MiB ${delta<0?'weniger':'zusätzlich'}.</div>
+    <div style="margin-top:10px;padding:10px 12px;background:#fff5df;border:1px solid #e7c66d;border-radius:10px">Gemessener localStorage aktuell: <b>${num(total)}</b> Zeichen ≈ ${mib(total)} MiB. Diese Werte dienen nur dazu, V240 gezielt zu planen. <b>V239 entfernt keine Backups und verändert keine Sync-Referenz.</b></div>
+    <div style="margin-top:10px;padding:10px 12px;background:#f4e3e1;border:1px solid #dca59e;border-radius:10px"><b>__state bleibt gesperrt.</b> Keine lokale Nutzdaten-, Cloud-Daten-, Backup- oder Sync-Basis-Änderung.</div>
+   </div>`;
+   document.body.appendChild(m);document.getElementById('v239Close').onclick=close;setSyncStatus('ok','V239 Analyse abgeschlossen · nur lesend · nichts verändert');
+ }
+ async function run(manual=false){if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V239 Analyse\n\nCloud ist noch nicht bereit. Nichts verändert.');return false}if(cloudBusy){alert('V239 Analyse\n\nCloud ist gerade beschäftigt. Nichts verändert.');return false}cloudBusy=true;setSyncStatus('syncing','V239 liest Backups und Cloud nur zur Analyse');try{const remote=await fetchRemoteEntities(),local=localEntityMap();show(remote,local);return true}catch(e){setSyncStatus('err','V239 Analyse fehlgeschlagen · nichts verändert');alert('V239 Analyse fehlgeschlagen:\n\n'+String(e.message||e)+'\n\nNichts verändert.');return false}finally{cloudBusy=false}}
+ window.pushEntitySync=run;window.pullEntitySync=run;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V239';setSyncStatus('ok','V239 Backup- & Sync-Speicheranalyse bereit · nur lesend')}catch(_e){}
+})();
+</script>
