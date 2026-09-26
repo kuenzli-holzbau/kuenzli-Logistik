@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V235</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V287</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -5435,15 +5435,7 @@ window.APP_RELEASE = {
      <label class="permissionCheck"><input type="checkbox" id="permArchive"> Archiv</label>
      <label class="permissionCheck"><input type="checkbox" id="permDefects"> Mängel</label>
      <label class="permissionCheck"><input type="checkbox" id="permTransfers"> Umbuchungen</label>
-    </div>
-   </div>
-
-   <div class="permissionGroupV108" data-perm-group="settings">
-    <div class="permissionGroupHeadV108">
-     <label class="permissionCheck permissionMainV108"><input type="checkbox" id="permManage"> Verwaltung &amp; Einstellungen</label>
-    </div>
-    <div class="permissionChildrenV108">
-     <div class="muted" style="padding:4px 0 2px">Zugriff auf Benutzer, Cloud und allgemeine Verwaltung.</div>
+     <label class="permissionCheck"><input type="checkbox" id="permManage"> Verwalten &amp; Einstellungen</label>
     </div>
    </div>
 
@@ -5516,8 +5508,8 @@ window.APP_RELEASE = {
  </div>
  <div class="toolbar" style="justify-content:flex-end;margin-top:14px">
   <button class="btn secondary" type="button" onclick="closeM('permissionModal')">Abbrechen</button>
-  <div id="permSettingsExplicitV282" style="margin:14px 0;padding:14px;border:2px solid #173f34;border-radius:12px;background:#f7faf8">
-<label class="permissionCheck permissionMainV108" style="font-size:16px;font-weight:900"><input type="checkbox" id="permManageExplicitV282" onchange="permManageExplicitChangeV282(this.checked)"> Verwaltung &amp; Einstellungen</label>
+  <div id="permSettingsV286" style="margin:14px 0;padding:14px;border:2px solid #173f34;border-radius:12px;background:#f7faf8">
+<label class="permissionCheck permissionMainV108" style="font-size:16px;font-weight:900"><input type="checkbox" id="permManageV286"> Verwaltung &amp; Einstellungen</label>
 <div class="muted" style="margin-top:5px">Zugriff auf Benutzer, Cloud und allgemeine Verwaltung.</div>
 </div>
 <button class="btn" id="permissionSaveBtnV121" type="button" onclick="savePermissionEditorV121(event)">Berechtigungen speichern</button>
@@ -10985,7 +10977,7 @@ async function pullEntitySyncV186(manual=false){
    let remote=await fetchRemoteEntities();
    syncStageV154='lokale Daten aufbereiten';
    let base=loadSyncBase(),local=localEntityMap(),conflicts=[];
-   let keys=new Set([...Object.keys(remote),...Object.keys(base),...Object.keys(local)]);
+   let keys=new Set([...Object.keys(remote),...Object.keys(base),...Object.keys(local)].filter(k=>!String(k).startsWith('permissionSets|')));
    for(let k of keys){
      let l=local[k],b=base[k],r=remote[k],localHash=l?stableJson(l.data):null,baseHash=b?.hash??null,remoteHash=r?stableJson(r.data):null;
      if(localHash!==baseHash && remoteHash!==baseHash && localHash!==remoteHash){
@@ -28280,7 +28272,7 @@ ${safeTypeLines}
  }
  window.pushEntitySync=preview;
  try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V235';
+   const v=document.getElementById('currentBuildV234');if(v){};
    if(cloudReady())setSyncStatus('ok','Cloud aktiv · V235 kontrollierter Konflikt-Push bereit');
  }catch(_e){}
 })();
@@ -28344,7 +28336,7 @@ ${safeTypeLines}
  }
  window.pushEntitySync=verify;
  window.pullEntitySync=verify;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V236';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V236 reine Verifikation bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V236 reine Verifikation bereit')}catch(_e){}
 })();
 </script>
 
@@ -28435,7 +28427,7 @@ ${safeTypeLines}
    finally{cloudBusy=false}
  }
  window.pushEntitySync=preview;window.pullEntitySync=preview;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V237';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V237 Sync-Referenz-Bereinigung bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V237 Sync-Referenz-Bereinigung bereit')}catch(_e){}
 })();
 </script>
 
@@ -28484,7 +28476,7 @@ ${safeTypeLines}
  }
  async function analyze(manual=false){if(!manual)return false;show();return true}
  window.pushEntitySync=analyze;window.pullEntitySync=analyze;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V238';setSyncStatus('ok','V238 Safari-Speicheranalyse bereit · nur lesend')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};setSyncStatus('ok','V238 Safari-Speicheranalyse bereit · nur lesend')}catch(_e){}
 })();
 </script>
 
@@ -28549,7 +28541,7 @@ ${safeTypeLines}
  }
  async function run(manual=false){if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V239 Analyse\n\nCloud ist noch nicht bereit. Nichts verändert.');return false}if(cloudBusy){alert('V239 Analyse\n\nCloud ist gerade beschäftigt. Nichts verändert.');return false}cloudBusy=true;setSyncStatus('syncing','V239 liest Backups und Cloud nur zur Analyse');try{const remote=await fetchRemoteEntities(),local=localEntityMap();show(remote,local);return true}catch(e){setSyncStatus('err','V239 Analyse fehlgeschlagen · nichts verändert');alert('V239 Analyse fehlgeschlagen:\n\n'+String(e.message||e)+'\n\nNichts verändert.');return false}finally{cloudBusy=false}}
  window.pushEntitySync=run;window.pullEntitySync=run;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V239';setSyncStatus('ok','V239 Backup- & Sync-Speicheranalyse bereit · nur lesend')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};setSyncStatus('ok','V239 Backup- & Sync-Speicheranalyse bereit · nur lesend')}catch(_e){}
 })();
 </script>
 
@@ -28600,7 +28592,7 @@ ${safeTypeLines}
  }
  async function run(manual=false){if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V240\n\nCloud ist nicht bereit. Nichts verändert.');return false}if(cloudBusy){alert('V240\n\nCloud ist beschäftigt. Nichts verändert.');return false}cloudBusy=true;setSyncStatus('syncing','V240 erstellt nur die Backup-Bereinigungsvorschau');try{const r=await fetchRemoteEntities(),l=localEntityMap();render(r,l);return true}catch(e){setSyncStatus('err','V240 Vorschau fehlgeschlagen · nichts verändert');alert('V240 Vorschau fehlgeschlagen:\n\n'+String(e.message||e)+'\n\nNichts verändert.');return false}finally{cloudBusy=false}}
  window.pushEntitySync=run;window.pullEntitySync=run;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V240';setSyncStatus('ok','V240 kontrollierte Backup-Bereinigung bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};setSyncStatus('ok','V240 kontrollierte Backup-Bereinigung bereit')}catch(_e){}
 })();
 </script>
 
@@ -28647,7 +28639,7 @@ ${safeTypeLines}
    finally{cloudBusy=false}
  }
  window.pushEntitySync=preview;window.pullEntitySync=preview;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V241';setSyncStatus('ok','V241 sichere Sync-Referenz-Bereinigung bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};setSyncStatus('ok','V241 sichere Sync-Referenz-Bereinigung bereit')}catch(_e){}
 })();
 </script>
 
@@ -28689,7 +28681,7 @@ ${safeTypeLines}
  }
  async function run(manual=false){if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V242 Abschluss-Verifikation\n\nCloud ist nicht bereit. Nichts verändert.');return false}if(cloudBusy){alert('V242 Abschluss-Verifikation\n\nCloud ist beschäftigt. Nichts verändert.');return false}cloudBusy=true;setSyncStatus('syncing','V242 liest Cloud und technische Sync-Daten nur zur Abschlussprüfung');try{const r=await fetchRemoteEntities(),l=localEntityMap();render(r,l);return true}catch(e){setSyncStatus('err','V242 Prüfung fehlgeschlagen · nichts verändert');alert('V242 Prüfung fehlgeschlagen:\n\n'+String(e.message||e)+'\n\nNichts verändert.');return false}finally{cloudBusy=false}}
  window.pushEntitySync=run;window.pullEntitySync=run;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V242';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V242 reine Abschluss-Verifikation bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V242 reine Abschluss-Verifikation bereit')}catch(_e){}
 })();
 </script>
 
@@ -28767,7 +28759,7 @@ ${safeTypeLines}
    try{const remote=await fetchRemoteEntities(),local=localEntityMap(),a=analyze(remote,local),pkg=Object.keys(local).filter(k=>k.startsWith('packages|')).length;modal(`<div style="display:flex;justify-content:space-between"><div><h2 style="margin:0">V243 Cloud → Gerät – Vorschau</h2><div><b>NUR LESEND</b> · Cloud wird niemals automatisch auf das Gerät angewendet</div></div><button id="v243Close" class="btn secondary">Schließen</button></div><div style="margin-top:14px;padding:12px;background:#eef7ef;border-radius:10px"><b>Lokale Packages: ${pkg}</b> · identische Nicht-__state-Objekte: ${a.same.length}.</div><div style="margin-top:10px;padding:12px;background:#fff4e5;border-radius:10px">Lokale Änderungen: ${a.changed.length} · Konflikte: ${a.conflicts.length} · nur Cloud geändert: ${a.remoteOnly.length}.<br><b>Es wurde nichts auf das Gerät übernommen.</b></div><div style="margin-top:10px;padding:12px;background:#fff0f0;border-radius:10px"><b>__state bleibt gesperrt.</b></div>`);setSyncStatus('ok','V243 Cloud → Gerät Vorschau · nichts angewendet');return true}catch(e){alert('V243 Cloud → Gerät Vorschau fehlgeschlagen:\n'+String(e.message||e));return false}finally{cloudBusy=false}
  }
  window.pushEntitySync=pushPreview;window.pullEntitySync=pullPreview;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V243';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V243 kontrollierter Ein-Objekt-Test bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V243 kontrollierter Ein-Objekt-Test bereit')}catch(_e){}
 })();
 </script>
 
@@ -28852,7 +28844,7 @@ ${safeTypeLines}
    try{const remote=await fetchRemoteEntities(),local=localEntityMap(),a=analyze244(remote,local),pkg=Object.keys(local).filter(k=>k.startsWith('packages|')).length;modal244(`<div style="display:flex;justify-content:space-between"><div><h2 style="margin:0">V244 Cloud → Gerät – Vorschau</h2><div><b>NUR LESEND</b> · keine automatische Übernahme</div></div><button id="v244Close" class="btn secondary">Schließen</button></div><div style="margin-top:14px;padding:12px;background:#eef7ef;border-radius:10px"><b>Lokale Packages: ${pkg}</b> · identische Nicht-__state-Objekte: ${a.same.length}.</div><div style="margin-top:10px;padding:12px;background:#fff4e5;border-radius:10px">Lokale Änderungen: ${a.changed.length} · Konflikte: ${a.conflicts.length} · nur Cloud geändert: ${a.remoteOnly.length}.<br><b>Es wurde nichts auf das Gerät übernommen.</b></div><div style="margin-top:10px;padding:12px;background:#fff0f0;border-radius:10px"><b>__state bleibt gesperrt.</b></div>`);setSyncStatus('ok','V244 Cloud → Gerät Vorschau · nichts angewendet');return true}catch(e){alert('V244 Cloud → Gerät Vorschau fehlgeschlagen:\n'+String(e.message||e));return false}finally{cloudBusy=false}
  }
  window.pushEntitySync=push244;window.pullEntitySync=pull244;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V244';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V244 kontrollierter Mehrfachsync bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V244 kontrollierter Mehrfachsync bereit')}catch(_e){}
 })();
 </script>
 
@@ -28910,7 +28902,7 @@ ${safeTypeLines}
  }
  // Lokal→Cloud bleibt der bereits erfolgreich getestete V244-Mehrfachsync.
  window.pullEntitySync=pull245;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V245';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V245 Cloud → Gerät Vorschau bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V245 Cloud → Gerät Vorschau bereit')}catch(_e){}
 })();
 </script>
 <script>
@@ -29002,7 +28994,7 @@ ${safeTypeLines}
    }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V246 ABBRUCH/FEHLER nach ${done}/${n} erfolgreich übernommenen Objekt(en): ${e246(String(e.message||e))}<br>Keine weiteren Objekte werden übernommen. Bitte nicht weiter synchronisieren.</span>`;setSyncStatus('err','V246 Cloud → Gerät gestoppt · '+done+'/'+n)}finally{cloudBusy=false}
  }
  window.pullEntitySync=pull246;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V246';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V246 kontrollierte Cloud → Gerät Übernahme bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V246 kontrollierte Cloud → Gerät Übernahme bereit')}catch(_e){}
 })();
 </script>
 <script>
@@ -29089,7 +29081,7 @@ ${safeTypeLines}
    }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V247 ABBRUCH/FEHLER nach ${done}/${n} erfolgreich übernommenen Objekt(en): ${esc247(String(e.message||e))}<br>Keine weiteren Objekte werden übernommen. Bitte Ergebnis fotografieren und nicht weiter synchronisieren.</span>`;setSyncStatus('err','V247 gestoppt · '+done+'/'+n)}finally{cloudBusy=false}
  }
  window.pullEntitySync=pull247;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V247';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V247 kontrollierte Direktübernahme bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V247 kontrollierte Direktübernahme bereit')}catch(_e){}
 })();
 </script>
 
@@ -29137,7 +29129,7 @@ ${safeTypeLines}
      const fr=await fetchRemoteEntities(),fl=localEntityMap(),fa=analyze(fr,fl),fp=Object.keys(fl).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(fr).filter(k=>k.startsWith('packages|')).length;if(fp!==EXPECT||rp!==EXPECT)throw new Error(`Abschluss: Packages ${fp}/${rp}, erwartet 347/347.`);if(fa.localChanged.length||fa.cloudChanged.length||fa.conflicts.length||fa.localOnly.length||fa.cloudOnly.length)throw new Error(`Abschluss noch nicht identisch: lokal geändert ${fa.localChanged.length}, Cloud geändert ${fa.cloudChanged.length}, Konflikte ${fa.conflicts.length}, nur lokal ${fa.localOnly.length}, nur Cloud ${fa.cloudOnly.length}.`);if(out)out.innerHTML='<span style="color:#176b3a">V248 ERFOLG: Cloud-Stand vollständig übernommen. <b>347 lokal / 347 Cloud Packages</b>. Alle Nicht-__state-Objekte sind identisch und sauber mit der Sync-Basis verknüpft. __state blieb gesperrt. Nichts wurde in die Cloud geschrieben.<br>Bitte Ergebnis fotografieren.</span>';setSyncStatus('ok','V248 erfolgreich · 347/347 Packages');
    }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V248 STOPP nach ${done} neu übernommenen Objekt(en): ${esc(String(e.message||e))}<br>Keine weiteren Objekte wurden verarbeitet. Bitte Ergebnis fotografieren.</span>`;setSyncStatus('err','V248 gestoppt · '+done)}finally{cloudBusy=false}
  }
- window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V248';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V248 Fortsetzung bereit')}catch(_e){}
+ window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V248 Fortsetzung bereit')}catch(_e){}
 })();
 </script>
 <script>
@@ -29204,7 +29196,7 @@ ${safeTypeLines}
      if(out)out.innerHTML='<span style="color:#176b3a">V249 ERFOLG: Cloud-Stand vollständig auf dieses Gerät übernommen. <b>347 lokal / 347 Cloud Packages</b>. Alle Nicht-__state-Objekte sind identisch und ihre Sync-Referenzen wurden auf den verifizierten Cloud-Stand gesetzt. __state blieb gesperrt. Nichts wurde in die Cloud geschrieben.<br>Bitte Ergebnis fotografieren.</span>';setSyncStatus('ok','V249 erfolgreich · 347/347 Packages');
    }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V249 STOPP nach ${done} neu verifizierten Objekt(en): ${esc(String(e.message||e))}<br>Keine weiteren Objekte wurden verarbeitet. Bitte Ergebnis fotografieren.</span>`;setSyncStatus('err','V249 gestoppt · '+done)}finally{cloudBusy=false}
  }
- window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V249';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V249 kontrollierte Fortsetzung bereit')}catch(_e){}
+ window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V249 kontrollierte Fortsetzung bereit')}catch(_e){}
 })();
 </script>
 <script>
@@ -29254,7 +29246,7 @@ ${safeTypeLines}
    finally{cloudBusy=false}
  }
  window.pullEntitySync=pull;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V250';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V250 Diagnose bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V250 Diagnose bereit')}catch(_e){}
 })();
 </script>
 <script>
@@ -29331,7 +29323,7 @@ ${safeTypeLines}
      if(out)out.innerHTML=`<span style="color:#176b3a">V251 ERFOLG: Cloud-Stand vollständig und verifiziert auf diesem Gerät. <b>347 lokale / 347 Cloud-Packages</b>. Alle Nicht-__state-Objekte sind identisch. Sync-Referenzen wurden auf den verifizierten Cloud-Stand gesetzt. __state blieb gesperrt. Es wurde nichts in die Cloud geschrieben.<br>Bitte Ergebnis fotografieren.</span>`;setSyncStatus('ok','V251 erfolgreich · 347/347 Packages');
    }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V251 STOPP nach ${done} übernommenen Cloud-Abweichung(en): ${esc(String(e.message||e))}<br>Keine weiteren Objekte wurden verarbeitet. Bitte Ergebnis fotografieren und nicht weiter synchronisieren.</span>`;setSyncStatus('err','V251 gestoppt · '+done)}finally{cloudBusy=false}
  }
- window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V251';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V251 kontrollierter Abschluss bereit')}catch(_e){}
+ window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V251 kontrollierter Abschluss bereit')}catch(_e){}
 })();
 </script>
 <script>
@@ -29373,7 +29365,7 @@ ${safeTypeLines}
      setSyncStatus('ok','V252 Analyse bereit · '+after.length+' Referenz(en) nach Simulation');return true;
    }catch(e){alert('V252 Analyse fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V252 Analyse fehlgeschlagen');return false}finally{cloudBusy=false}
  }
- window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V252';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V252 Abhängigkeitsanalyse bereit')}catch(_e){}
+ window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V252 Abhängigkeitsanalyse bereit')}catch(_e){}
 })();
 </script>
 <script>
@@ -29441,7 +29433,7 @@ ${safeTypeLines}
      if(out)out.innerHTML=`<span style="color:#176b3a">V253 ERFOLG: kontrollierter Cloud→Gerät-Abschluss vollständig verifiziert.<br><b>Packages: 347 lokal / 347 Cloud.</b> Alle Nicht-__state-Objekte sind identisch. Das unreferenzierte nur-lokale MaterialCatalog-Objekt wurde entfernt. Sync-Basis wurde auf den verifizierten Cloud-Stand gesetzt. <b>__state blieb gesperrt.</b> Es wurde nichts in die Cloud geschrieben.<br>Bitte Ergebnis fotografieren.</span>`;setSyncStatus('ok','V253 erfolgreich · 347/347 · Sync-Basis sauber');
    }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V253 STOPP nach ${done} erfolgreich übernommenen Cloud-Abweichung(en): ${esc(String(e.message||e))}<br>Keine weiteren Schritte werden ausgeführt. Bitte Ergebnis fotografieren und nicht weiter synchronisieren.</span>`;setSyncStatus('err','V253 gestoppt · '+done)}finally{cloudBusy=false}
  }
- window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V253';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V253 kontrollierter Abschluss bereit')}catch(_e){}
+ window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V253 kontrollierter Abschluss bereit')}catch(_e){}
 })();
 </script>
 <script>
@@ -29510,7 +29502,7 @@ ${safeTypeLines}
      if(out)out.innerHTML=`<span style="color:#176b3a">V254 ERFOLG: kontrollierter Cloud→Gerät-Abschluss vollständig verifiziert.<br><b>Packages: 347 lokal / 347 Cloud.</b> Alle Nicht-__state-Objekte sind identisch. Das unreferenzierte nur-lokale MaterialCatalog-Objekt wurde entfernt. Sync-Basis wurde auf den verifizierten Cloud-Stand gesetzt. <b>__state blieb gesperrt.</b> Es wurde nichts in die Cloud geschrieben.<br>Bitte Ergebnis fotografieren.</span>`;setSyncStatus('ok','V254 erfolgreich · 347/347 · Sync-Basis sauber');
    }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V254 STOPP nach ${done} erfolgreich übernommenen Cloud-Abweichung(en): ${esc(String(e.message||e))}<br>Keine weiteren Schritte werden ausgeführt. Bitte Ergebnis fotografieren und nicht weiter synchronisieren.</span>`;setSyncStatus('err','V254 gestoppt · '+done)}finally{cloudBusy=false}
  }
- window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V254';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V254 kontrollierter Abschluss bereit')}catch(_e){}
+ window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V254 kontrollierter Abschluss bereit')}catch(_e){}
 })();
 </script>
 <script>
@@ -29545,7 +29537,7 @@ ${safeTypeLines}
    setSyncStatus('ok','V255 Diagnose bereit · '+fd.length+' simulierte Feldabweichung(en)');return true;
   }catch(e){alert('V255 Diagnose fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V255 Diagnose fehlgeschlagen');return false}finally{cloudBusy=false}
  }
- window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V255';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V255 Diagnose bereit')}catch(_e){}
+ window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V255 Diagnose bereit')}catch(_e){}
 })();
 </script>
 
@@ -29638,7 +29630,7 @@ ${safeTypeLines}
  }
  window.pullEntitySync=pull256;
  try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V256';
+   const v=document.getElementById('currentBuildV234');if(v){};
    if(cloudReady())setSyncStatus('ok','Cloud aktiv · V256 Diagnose bereit');
  }catch(_e){}
 })();
@@ -29749,7 +29741,7 @@ ${safeTypeLines}
    }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V257 STOPP nach ${done} erfolgreich übernommenen Cloud-Abweichung(en): ${esc257(String(e.message||e))}<br>Keine weiteren Schritte wurden ausgeführt. Bitte Ergebnis fotografieren und nicht weiter synchronisieren.</span>`;setSyncStatus('err','V257 gestoppt · '+done)}finally{cloudBusy=false}
  }
  window.pullEntitySync=pull257;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V257';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V257 verifizierter Abschluss bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V257 verifizierter Abschluss bereit')}catch(_e){}
 })();
 </script>
 
@@ -29837,7 +29829,7 @@ ${safeTypeLines}
    }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V258 STOPP nach ${done} erfolgreich übernommenen Cloud-Abweichung(en): ${esc(String(e.message||e))}<br>Keine weiteren Schritte wurden ausgeführt. Bitte Ergebnis fotografieren und nicht weiter synchronisieren.</span>`;setSyncStatus('err','V258 gestoppt · '+done)}finally{cloudBusy=false}
  }
  window.pullEntitySync=pull;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V258';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V258 korrigierter Abschluss bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V258 korrigierter Abschluss bereit')}catch(_e){}
 })();
 </script>
 
@@ -29886,7 +29878,7 @@ ${safeTypeLines}
    }catch(e){alert('V259 Diagnose fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V259 Diagnose fehlgeschlagen');return false}finally{cloudBusy=false}
  }
  window.pullEntitySync=pull;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V259';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V259 Diagnose bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V259 Diagnose bereit')}catch(_e){}
 })();
 </script>
 
@@ -29954,7 +29946,7 @@ ${safeTypeLines}
    }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V260 STOPP nach ${done} erfolgreich RAW-verifizierten MaterialCatalog-Objekt(en): ${esc(String(e.message||e))}<br>Keine weiteren Schritte wurden ausgeführt. Bitte Ergebnis fotografieren und nicht weiter synchronisieren.</span>`;setSyncStatus('err','V260 gestoppt · '+done)}finally{cloudBusy=false}
  }
  window.pullEntitySync=pull;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V260';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V260 RAW-Abschluss bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V260 RAW-Abschluss bereit')}catch(_e){}
 })();
 </script>
 
@@ -29986,7 +29978,7 @@ ${safeTypeLines}
  }
  async function run(){if(!confirm('V261 KONTROLLIERTE RAW-FORTSETZUNG\n\nNur die aktuell abweichenden Cloud-materialCatalog-Objekte werden lokal auf den Cloud-Stand gesetzt und jeweils RAW verifiziert.\n\nNur-lokale Objekte bleiben unangetastet. 347 Packages bleiben erhalten. __state bleibt gesperrt. Keine Sync-Basis-Änderung. Kein Cloud-Schreiben.\n\nFortfahren?'))return;if(cloudBusy)return;cloudBusy=true;let done=0;const out=document.getElementById('v261Out');try{let remote=await fetchRemoteEntities(),local=rawMap(rawState()),d=diff(remote,local),mats=d.mismatch.filter(x=>x.k.startsWith('materialCatalog|')),others=d.mismatch.filter(x=>!x.k.startsWith('materialCatalog|'));const lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;if(lp!==EXPECT||rp!==EXPECT||others.length||!mats.length)throw new Error('Sicherheitsbild hat sich geändert. Nichts ausgeführt.');for(const x of mats){writeMat(x);done++;if(out)out.textContent=`${done}/${mats.length} RAW übernommen und verifiziert …`}remote=await fetchRemoteEntities();local=rawMap(rawState());d=diff(remote,local);const lp2=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp2=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;if(lp2!==EXPECT||rp2!==EXPECT)throw new Error(`Package-Sicherheitsgrenze verletzt: ${lp2}/${rp2}.`);if(d.mismatch.length)throw new Error('Nach Übernahme verbleiben '+d.mismatch.length+' Cloud-Abweichung(en).');if(out)out.innerHTML=`<span style="color:#176b3a">V261 ERFOLG: ${done} Cloud-materialCatalog-Objekt(e) RAW übernommen und verifiziert.<br><b>Packages: 347 lokal / 347 Cloud.</b> Verbleibende Cloud-Abweichungen: 0. Nur-lokale Objekte: <b>${d.localOnly.length}</b> – diese wurden ausdrücklich nicht verändert. <b>Sync-Basis wurde noch nicht geändert; __state blieb gesperrt.</b><br>Bitte Ergebnis fotografieren.</span>`;setSyncStatus('ok','V261 erfolgreich · Cloud-Abweichungen 0 · '+d.localOnly.length+' nur lokal')}catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V261 STOPP nach ${done} erfolgreich übernommenen Objekt(en): ${esc(String(e.message||e))}<br>Keine weiteren Objekte wurden verarbeitet. Bitte Ergebnis fotografieren.</span>`;setSyncStatus('err','V261 gestoppt · '+done)}finally{cloudBusy=false}}
  window.pullEntitySync=pull;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V261';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V261 RAW-Fortsetzung bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V261 RAW-Fortsetzung bereit')}catch(_e){}
 })();
 </script>
 
@@ -30023,7 +30015,7 @@ ${safeTypeLines}
   }catch(e){alert('V262 Diagnose fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V262 Diagnose fehlgeschlagen');return false}finally{cloudBusy=false}
  }
  window.pullEntitySync=pull;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V262';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V262 Diagnose bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V262 Diagnose bereit')}catch(_e){}
 })();
 </script>
 
@@ -30069,7 +30061,7 @@ ${safeTypeLines}
   }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V263 STOPP: ${esc(String(e.message||e))}<br>Bitte Ergebnis fotografieren und nicht weiter synchronisieren.</span>`;setSyncStatus('err','V263 gestoppt')}finally{cloudBusy=false}
  }
  window.pullEntitySync=pull;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V263';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V263 Dublettenbereinigung bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V263 Dublettenbereinigung bereit')}catch(_e){}
 })();
 </script>
 
@@ -30117,7 +30109,7 @@ ${safeTypeLines}
   }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V264 STOPP: ${esc(String(e.message||e))}<br>Bitte Ergebnis fotografieren und nicht weiter synchronisieren.</span>`;setSyncStatus('err','V264 gestoppt')}finally{cloudBusy=false}
  }
  window.pullEntitySync=pull;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V264';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V264 Dublettenbereinigung bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V264 Dublettenbereinigung bereit')}catch(_e){}
 })();
 </script>
 
@@ -30163,7 +30155,7 @@ ${safeTypeLines}
   }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V265 STOPP: ${esc(String(e.message||e))}<br>Bitte Ergebnis fotografieren und nicht weiter synchronisieren.</span>`;setSyncStatus('err','V265 gestoppt')}finally{cloudBusy=false}
  }
  window.pullEntitySync=pull;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V265';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V265 eindeutige Dublettenbereinigung bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V265 eindeutige Dublettenbereinigung bereit')}catch(_e){}
 })();
 </script>
 
@@ -30290,7 +30282,7 @@ ${safeTypeLines}
  }
  window.pullEntitySync=pull;
  try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V266';
+   const v=document.getElementById('currentBuildV234');if(v){};
    if(cloudReady())setSyncStatus('ok','Cloud aktiv · V266 Diagnose bereit');
  }catch(_e){}
 })();
@@ -30333,7 +30325,7 @@ ${safeTypeLines}
    setSyncStatus('ok',`V267 Diagnose · ${exact}/${lm.length} eindeutige Material-Paarungen`);return true;
   }catch(e){alert('V267 Diagnose fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V267 Diagnose fehlgeschlagen');return false}finally{cloudBusy=false}
  }
- window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V267';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V267 Zuordnungsdiagnose bereit')}catch(_e){}
+ window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V267 Zuordnungsdiagnose bereit')}catch(_e){}
 })();
 </script>
 
@@ -30430,7 +30422,7 @@ ${safeTypeLines}
    }finally{cloudBusy=false}
  }
  window.pullEntitySync=pull;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V268';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V268 autoritativer Materialabschluss bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V268 autoritativer Materialabschluss bereit')}catch(_e){}
 })();
 </script>
 
@@ -30469,7 +30461,7 @@ ${safeTypeLines}
    finally{cloudBusy=false}
  }
  window.pullEntitySync=pull;
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V269';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V269 Abschlusskontrolle bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V269 Abschlusskontrolle bereit')}catch(_e){}
 })();
 </script>
 
@@ -30548,7 +30540,7 @@ ${safeTypeLines}
  window.pushEntitySync=sync;
  // Cloud→Gerät bleibt bewusst die verifizierte, nur lesende V269-Abschlusskontrolle.
  try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V270';
+   const v=document.getElementById('currentBuildV234');if(v){};
    if(cloudReady())setSyncStatus('ok','Cloud aktiv · V270 Auto-Sync nach Änderungen bereit');
  }catch(_e){}
 })();
@@ -30621,7 +30613,7 @@ ${safeTypeLines}
 
  // V270 bleibt der aktive Cloud-Schreibpfad; V271 ergänzt nur das automatische lokale Speichern.
  try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V271';
+   const v=document.getElementById('currentBuildV234');if(v){};
    if(cloudReady())setSyncStatus('ok','Cloud aktiv · V271 Auto-Save + verifizierter Auto-Sync bereit');
  }catch(_e){}
 })();
@@ -30794,7 +30786,7 @@ ${safeTypeLines}
  document.addEventListener('visibilitychange',()=>{if(!document.hidden){try{if(cloudReady()&&authSession&&cloudMember)setTimeout(()=>pullSafe(false),150)}catch(_e){}}});
 
  try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V272';
+   const v=document.getElementById('currentBuildV234');if(v){};
    if(cloudReady())setSyncStatus('ok','Cloud aktiv · V272 Auto-Sync in beide Richtungen bereit');
  }catch(_e){}
 })();
@@ -30926,7 +30918,7 @@ ${safeTypeLines}
  window.discoverSharedProjectsV273=discoverSharedProjects;
 
  try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V273';
+   const v=document.getElementById('currentBuildV234');if(v){};
    if(cloudReady())setSyncStatus('ok','Cloud aktiv · V273 Projektfreigaben bereit');
  }catch(_e){}
 })();
@@ -30949,7 +30941,7 @@ ${safeTypeLines}
    try{return await prior(manual)}
    finally{running=false;if(again){again=false;setTimeout(()=>window.pushEntitySync(false),900)}}
  };
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V275';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V275 bereit')}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v){};if(cloudReady())setSyncStatus('ok','Cloud aktiv · V275 bereit')}catch(_e){}
 })();
 </script>
 
@@ -30963,506 +30955,140 @@ ${safeTypeLines}
 /* V276 – Versionsmarker. Die Änderungen sitzen direkt in V186/Cloud-Funktionen. */
 (()=>{
  try{
-  const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V276';
+  const v=document.getElementById('currentBuildV234');if(v){};
   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V276 Inventur + Pins bereit');
  }catch(_e){}
 })();
 </script>
 
 <script>
-/* V277 – Pin-Sync-Basis reparieren.
-   Problem: Bereits identische Pins auf Gerät und Cloud konnten ohne Sync-Basis
-   existieren. Die nächste iPad-Bearbeitung sah dann fälschlich wie ein
-   beidseitiger Konflikt aus.
-   V277 ergänzt die Basis ausschließlich für Pins, die frisch gelesen und
-   byte-inhaltlich identisch sind. Keine Pin-/Package-Daten werden dabei geändert. */
+/* V287 – konsolidierter Berechtigungspfad.
+   Basis V276: keine V277–V285 Runtime-Kette.
+   permissionSets werden nur gezielt gelesen/geschrieben; der generische Sync
+   ignoriert sie. Login-Funktionen werden NICHT überschrieben. */
 (()=>{
- let pinBaseRepairRunningV277=false;
- async function repairPinSyncBaseV277(){
-   if(pinBaseRepairRunningV277||!cloudReady()||!authSession||!cloudMember)return false;
-   pinBaseRepairRunningV277=true;
-   try{
-     const beforePackages=(st.packages||[]).length;
-     if(beforePackages!==347)throw new Error('Package-Sicherheitsgrenze: '+beforePackages+' statt 347.');
-     const remote=await fetchRemoteEntities(),local=localEntityMap(),base=loadSyncBase();
-     let added=0;
-     const keys=new Set([...Object.keys(remote||{}),...Object.keys(local||{})]);
-     for(const k of keys){
-       if(!k.startsWith('materialPinsV552|'))continue;
-       const r=remote[k],l=local[k];
-       if(!r||!l)continue;
-       const rh=stableJson(r.data),lh=stableJson(l.data);
-       if(rh!==lh)continue; // niemals Unterschiede "weg-baselinen"
-       const b=base[k];
-       if(!b||b.hash!==lh||Number(b.version||0)!==Number(r.version||0)){
-         base[k]={version:Number(r.version||0),hash:lh};added++;
-       }
-     }
-     if(added)saveSyncBase(base);
-     if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze nach Prüfung verletzt.');
-     if(added)setSyncStatus('ok','V277 Pin-Sync-Basis · '+added+' identische Pin(s) verknüpft');
-     return true;
-   }catch(e){
-     setSyncStatus('err','V277 Pin-Basis Schutzstopp · '+String(e?.message||e||''));
-     return false;
-   }finally{pinBaseRepairRunningV277=false}
- }
- window.repairPinSyncBaseV277=repairPinSyncBaseV277;
+ const CACHE='kuenzli_permission_cache_v286';
+ let pullBusy=false, saveBusy=false;
 
- // Vor einer Pin-Speicherung zuerst nur die identischen Pin-Basen reparieren.
- const oldSavePinV277=window.saveMaterialPinV552||saveMaterialPinV552;
- window.saveMaterialPinV552=async function(e){
-   try{e?.preventDefault?.()}catch(_e){}
-   await repairPinSyncBaseV277();
-   return oldSavePinV277(e);
- };
- // Inline onsubmit kann die lexikalische Funktion aufrufen: auch diese Definition ersetzen.
- saveMaterialPinV552=window.saveMaterialPinV552;
-
- // Bei Login/Seitenstart ebenfalls einmalig reparieren; keine aggressive Abfrage.
- window.addEventListener('load',()=>setTimeout(repairPinSyncBaseV277,1600));
- window.addEventListener('focus',()=>setTimeout(repairPinSyncBaseV277,500));
-
- try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V277';
-   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V277 Pin-Sync bereit');
- }catch(_e){}
-})();
-</script>
-
-<script>
-/* V278 – Pins benutzen einen eigenen seriellen Cloud-Pfad.
-   Dadurch kann eine Pin-Bearbeitung nicht mehr am globalen Sync von Packages,
-   Controls, Projekten usw. scheitern. Bestehender globaler Auto-Sync wird für
-   den unmittelbar folgenden persist() des Pins einmal unterdrückt. */
-(()=>{
- let pinFlightV278=Promise.resolve();
-
- function pinKeyV278(id){return 'materialPinsV552|'+String(id)}
- function localPinV278(id){return ensureMaterialPinsV552().find(x=>String(x.id)===String(id))||null}
- function transientV278(e){return /\b(503|504)\b|PGRST003|timeout|timed out|Failed to fetch|NetworkError|Load failed/i.test(String(e?.message||e||''))}
-
- async function syncPinSaveV278(id){
-   if(!cloudReady()||!authSession||!cloudMember)return false;
-   if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' statt 347.');
-   const k=pinKeyV278(id), local=localPinV278(id);
-   if(!local)throw new Error('Pin lokal nicht gefunden.');
-   let remote=await fetchRemoteEntities(),r=remote[k],base=loadSyncBase(),b=base[k];
-   const lh=stableJson(local),rh=r?stableJson(r.data):null,bh=b?.hash??null;
-
-   if(rh===lh){
-     base[k]={version:Number(r?.version||b?.version||0),hash:lh};saveSyncBase(base);return true;
-   }
-
-   // Falls für einen Alt-Pin noch keine Basis existiert, darf nur dann eine Basis
-   // hergestellt werden, wenn die Cloud-Version dem lokalen Stand VOR der Bearbeitung
-   // entsprach. Dieser Vorher-Hash wird vom Save-Handler mitgegeben.
-   const beforeHash=window.__pinBeforeHashV278||null;
-   if(!b && r && beforeHash && rh===beforeHash){
-     b={version:Number(r.version||0),hash:rh};base[k]=b;saveSyncBase(base);
-   }
-
-   // Neue Pins: Cloud darf noch keinen Datensatz haben.
-   if(!r){
-     if(b)throw new Error('Pin fehlt in Cloud, obwohl eine Sync-Basis existiert.');
-     await rpcEntitySave('materialPinsV552',String(id),local,0,false);
-   }else{
-     b=loadSyncBase()[k];
-     if(!b)throw new Error('Pin-Sync-Basis fehlt; Cloud wurde nicht überschrieben.');
-     if(rh!==b.hash)throw new Error('Pin wurde in Cloud parallel geändert; nichts überschrieben.');
-     await rpcEntitySave('materialPinsV552',String(id),local,Number(r.version||b.version||0),false);
-   }
-
-   const fresh=(await fetchRemoteEntities())[k],cur=localPinV278(id);
-   if(!fresh||!cur||stableJson(fresh.data)!==stableJson(cur))throw new Error('Cloud-Verifikation des Pins fehlgeschlagen.');
-   base=loadSyncBase();base[k]={version:Number(fresh.version||0),hash:stableJson(cur)};saveSyncBase(base);
-   setSyncStatus('ok','V278 Pin Cloud-verifiziert');
-   return true;
- }
-
- function enqueuePinV278(id,beforeHash){
-   const run=async()=>{
-     window.__pinBeforeHashV278=beforeHash||null;
-     try{return await syncPinSaveV278(id)}
-     catch(e){
-       setSyncStatus('err',(transientV278(e)?'V278 Cloud vorübergehend nicht erreichbar':'V278 Pin Schutzstopp')+' · '+String(e?.message||e||''));
-       return false;
-     }finally{window.__pinBeforeHashV278=null}
-   };
-   pinFlightV278=pinFlightV278.then(run,run);
-   return pinFlightV278;
- }
-
- // Globalen queueCloudSync genau für den persist() eines Pins aussetzen.
- const oldQueueV278=queueCloudSync;
- queueCloudSync=function(){
-   if(window.__pinPersistV278)return;
-   return oldQueueV278.apply(this,arguments);
- };
-
- // Direkt die tatsächlich aufgerufene Pin-Speicherfunktion ersetzen.
- saveMaterialPinV552=function(e){
-   e?.preventDefault?.();
-   let id=E('materialPinIdV552').value,arr=ensureMaterialPinsV552(),p=arr.find(x=>x.id===id);
-   const beforeHash=p?stableJson(p):null,now=new Date().toISOString();
-   if(!p){p={id:'mp'+Date.now()+Math.random().toString(16).slice(2),createdAt:now};arr.push(p);id=p.id}
-   p.x=Number(E('materialPinXV552').value);p.y=Number(E('materialPinYV552').value);p.material=E('materialPinMaterialV552').value.trim();
-   p.commission=E('materialPinCommissionV552').value||'';p.note=E('materialPinNoteV552').value.trim();p.updatedAt=now;
-   window.__pinPersistV278=true;
-   try{persist()}finally{window.__pinPersistV278=false}
-   closeM('materialPinModalV552');renderAreas();
-   setSyncStatus('syncing','V278 Pin wird synchronisiert…');
-   enqueuePinV278(id,beforeHash);
- };
- window.saveMaterialPinV552=saveMaterialPinV552;
-
- try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V278';
-   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V278 Pin-Direktsync bereit');
- }catch(_e){}
-})();
-</script>
-
-<script>
-/* V279 – Benutzerberechtigungen als eigene Cloud-Entitäten.
-   Hintergrund: userPermissions lag historisch in __state; __state ist aus
-   Sicherheitsgründen bewusst vom Sync ausgeschlossen. Deshalb kamen Rechte wie
-   "Verwalten" auf anderen Geräten nicht an.
-   V279 synchronisiert nur den Berechtigungssatz eines Benutzers unter
-   permissionSets|<permission-key>. __state und Packages bleiben unangetastet. */
-(()=>{
- let permFlightV279=Promise.resolve();
-
- function permCloudKeyV279(key){return 'permissionSets|'+String(key)}
- function cloneV279(v){return JSON.parse(JSON.stringify(v))}
- function permissionDataV279(key){
-   ensurePermissionStore();
-   const p=st.userPermissions?.[key];
-   return p&&typeof p==='object'?cloneV279(p):null;
- }
- async function pushPermissionV279(key){
-   if(!key||!cloudReady()||!authSession||!cloudMember)return false;
-   if(!canAdmin())throw new Error('Nur Administratoren dürfen Berechtigungen synchronisieren.');
-   if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' statt 347.');
-   const data=permissionDataV279(key);
-   if(!data)throw new Error('Berechtigungssatz nicht gefunden.');
-   const k=permCloudKeyV279(key),remote=await fetchRemoteEntities(),r=remote[k];
-   // Administrator ist für diesen gezielten Berechtigungssatz die Schreibquelle.
-   await rpcEntitySave('permissionSets',String(key),data,Number(r?.version||0),false);
-   const fresh=(await fetchRemoteEntities())[k];
-   if(!fresh||stableJson(fresh.data)!==stableJson(data))throw new Error('Cloud-Verifikation der Berechtigungen fehlgeschlagen.');
-   setSyncStatus('ok','V279 Berechtigungen Cloud-verifiziert');
-   return true;
- }
- async function pullMyPermissionV279(){
-   if(!cloudReady()||!authSession||!cloudMember)return false;
-   if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' statt 347.');
-   const key=currentPermissionKey(),k=permCloudKeyV279(key),remote=await fetchRemoteEntities(),r=remote[k];
-   if(!r||!r.data||typeof r.data!=='object')return false;
-   ensurePermissionStore();
-   const before=stableJson(st.userPermissions?.[key]||null),after=stableJson(r.data);
-   if(before===after)return true;
-   st.userPermissions[key]=cloneV279(r.data);
-   // Nur lokales Hauptobjekt sichern. Kein globaler Cloud-Push und kein __state-Sync.
-   ensureV24();
-   localStorage.setItem(KEY,JSON.stringify(st));
-   refreshPermissionVisibility();
-   try{refresh()}catch(_e){}
-   setSyncStatus('ok','V279 Berechtigungen aktualisiert');
-   return true;
- }
- window.pullMyPermissionV279=pullMyPermissionV279;
-
- // Bestehendes Berechtigungs-Speichern bleibt UI-seitig erhalten.
- // Direkt danach wird genau der bearbeitete Berechtigungssatz separat übertragen.
- const oldSavePermV279=window.savePermissionEditorV121;
- if(typeof oldSavePermV279==='function'){
-   window.savePermissionEditorV121=function(ev){
-     const key=permissionEditorKey;
-     const result=oldSavePermV279.apply(this,arguments);
-     if(key&&canAdmin()){
-       const run=()=>pushPermissionV279(key).catch(e=>setSyncStatus('err','V279 Berechtigungs-Sync · '+String(e?.message||e||'')));
-       permFlightV279=permFlightV279.then(run,run);
-     }
-     return result;
-   };
- }
-
- // Auch ältere Inline-Aufrufe/Funktionen können den globalen Namen benutzen.
- try{savePermissionEditorV121=window.savePermissionEditorV121}catch(_e){}
-
- // Empfänger lädt ausschließlich seinen eigenen Berechtigungssatz.
- window.addEventListener('load',()=>setTimeout(()=>pullMyPermissionV279().catch(()=>{}),1800));
- window.addEventListener('focus',()=>setTimeout(()=>pullMyPermissionV279().catch(()=>{}),450));
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>pullMyPermissionV279().catch(()=>{}),450)});
-
- // Login-Hook: nach bestätigter Anmeldung eigene Rechte frisch holen.
- const oldSignInV279=signInCloud;
- signInCloud=async function(){
-   await oldSignInV279();
-   if(cloudReady()&&cloudMember)await pullMyPermissionV279().catch(e=>setSyncStatus('err','V279 Rechte laden · '+String(e?.message||e||'')));
- };
-
- try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V279';
-   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V279 Berechtigungs-Sync bereit');
- }catch(_e){}
-})();
-</script>
-
-<script>
-/* V280 – Hauptbereich "Verwaltung & Einstellungen" an permManage binden.
-   Das Recht existiert bereits im Berechtigungsmodell; bisher wurde aber nur die
-   alte Lager-Navigation "Verwalten" damit gesteuert. Die Startseiten-Kachel und
-   der direkte Moduleinstieg waren nicht daran gebunden. */
-(()=>{
- function settingsAllowedV280(){
-   return canAdmin() || currentPermissions().manage===true;
- }
- function applySettingsPermissionV280(){
-   const tile=document.getElementById('moduleSettingsTile');
-   if(tile)tile.style.display=settingsAllowedV280()?'':'none';
-   if(activeMainModule==='settings'&&!settingsAllowedV280()){
-     const gs=document.getElementById('globalSettingsHome');if(gs)gs.style.display='none';
-     showModuleHome();
-   }
- }
- const oldRefreshV280=window.refreshPermissionVisibility||refreshPermissionVisibility;
- window.refreshPermissionVisibility=function(){
-   const r=oldRefreshV280.apply(this,arguments);
-   applySettingsPermissionV280();
-   return r;
- };
- try{refreshPermissionVisibility=window.refreshPermissionVisibility}catch(_e){}
-
- const oldOpenSettingsV280=window.openGlobalSettingsModule||openGlobalSettingsModule;
- window.openGlobalSettingsModule=function(){
-   if(!settingsAllowedV280()){
-     alert('Für Verwaltung & Einstellungen besteht keine Freigabe.');
-     return;
-   }
-   return oldOpenSettingsV280.apply(this,arguments);
- };
- try{openGlobalSettingsModule=window.openGlobalSettingsModule}catch(_e){}
-
- // Nach V279-Rechte-Pull Sichtbarkeit unmittelbar aktualisieren.
- const oldPullPermV280=window.pullMyPermissionV279;
- if(typeof oldPullPermV280==='function'){
-   window.pullMyPermissionV279=async function(){
-     const r=await oldPullPermV280.apply(this,arguments);
-     applySettingsPermissionV280();
-     return r;
-   };
- }
- document.addEventListener('DOMContentLoaded',()=>setTimeout(applySettingsPermissionV280,0));
- setTimeout(applySettingsPermissionV280,250);
-
- try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V280';
-   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V280 Verwaltungsberechtigung bereit');
- }catch(_e){}
-})();
-</script>
-
-<script>
-/* V281 – Berechtigung sichtbar + tatsächlichen Speichern-Handler synchronisieren.
-   V279 hatte savePermissionEditorV121 gehookt; der aktive Handler heißt
-   savePermissionEditor(). Deshalb wurde die Cloud-Berechtigung beim Speichern
-   nicht übertragen. */
-(()=>{
- let permSaveFlightV281=Promise.resolve();
-
- async function pushPermissionSetV281(key){
-   if(!key||!cloudReady()||!authSession||!cloudMember)return false;
-   if(!canAdmin())throw new Error('Nur Administratoren dürfen Berechtigungen synchronisieren.');
-   if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' statt 347.');
-   ensurePermissionStore();
-   const data=st.userPermissions?.[key];
-   if(!data||typeof data!=='object')throw new Error('Berechtigungssatz nicht gefunden.');
-   const k='permissionSets|'+String(key),remote=await fetchRemoteEntities(),r=remote[k];
-   await rpcEntitySave('permissionSets',String(key),JSON.parse(JSON.stringify(data)),Number(r?.version||0),false);
-   const fresh=(await fetchRemoteEntities())[k];
-   if(!fresh||stableJson(fresh.data)!==stableJson(data))throw new Error('Cloud-Verifikation der Berechtigungen fehlgeschlagen.');
-   setSyncStatus('ok','V281 Berechtigungen Cloud-verifiziert');
-   return true;
- }
-
- const oldSaveV281=savePermissionEditor;
- savePermissionEditor=function(){
-   const key=permissionEditorKey;
-   const r=oldSaveV281.apply(this,arguments);
-   if(key&&canAdmin()){
-     const run=()=>pushPermissionSetV281(key).catch(e=>setSyncStatus('err','V281 Berechtigungs-Sync · '+String(e?.message||e||'')));
-     permSaveFlightV281=permSaveFlightV281.then(run,run);
-   }
-   return r;
- };
- window.savePermissionEditor=savePermissionEditor;
-
- // Die neue Hauptgruppe soll niemals als Kind der Lagerverwaltung behandelt werden.
- // Sichtbarkeit der Kachel weiterhin direkt an permManage.
- function applyV281(){
-   const tile=document.getElementById('moduleSettingsTile');
-   if(tile)tile.style.display=(canAdmin()||currentPermissions().manage===true)?'':'none';
- }
- const oldRefreshV281=window.refreshPermissionVisibility||refreshPermissionVisibility;
- window.refreshPermissionVisibility=function(){const r=oldRefreshV281.apply(this,arguments);applyV281();return r};
- try{refreshPermissionVisibility=window.refreshPermissionVisibility}catch(_e){}
- setTimeout(applyV281,100);
-
- try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V281';
-   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V281 Berechtigungen bereit');
- }catch(_e){}
-})();
-</script>
-
-<script>
-/* V282 – aktive V121-Berechtigungsmaske: Verwaltungsrecht garantiert sichtbar und Cloud-synchron. */
-(()=>{
- function syncManageV282(){const a=document.getElementById('permManage'),b=document.getElementById('permManageExplicitV282');if(a&&b)b.checked=!!a.checked}
- window.permManageExplicitChangeV282=function(v){const a=document.getElementById('permManage');if(a)a.checked=!!v};
- const oldOpenV282=openPermissionEditor;
- openPermissionEditor=function(){const r=oldOpenV282.apply(this,arguments);setTimeout(syncManageV282,0);return r};
- window.openPermissionEditor=openPermissionEditor;
- const oldSave121V282=window.savePermissionEditorV121;
- window.savePermissionEditorV121=async function(ev){
-  try{ev?.preventDefault?.()}catch(_e){}
-  const a=document.getElementById('permManage'),b=document.getElementById('permManageExplicitV282');if(a&&b)a.checked=!!b.checked;
-  const key=permissionEditorKey;
-  const result=await oldSave121V282.apply(this,arguments);
-  if(key&&canAdmin()&&cloudReady()&&authSession&&cloudMember){
-   try{
-    if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze verletzt.');
-    ensurePermissionStore();const data=st.userPermissions?.[key];if(!data)throw new Error('Berechtigungssatz fehlt.');
-    const k='permissionSets|'+String(key),remote=await fetchRemoteEntities(),r=remote[k];
-    await rpcEntitySave('permissionSets',String(key),JSON.parse(JSON.stringify(data)),Number(r?.version||0),false);
-    const fresh=(await fetchRemoteEntities())[k];
-    if(!fresh||stableJson(fresh.data)!==stableJson(data))throw new Error('Cloud-Verifikation fehlgeschlagen.');
-    setSyncStatus('ok','V282 Berechtigungen Cloud-verifiziert');
-   }catch(e){setSyncStatus('err','V282 Berechtigungs-Sync · '+String(e?.message||e||''))}
-  }
-  return result;
- };
- try{savePermissionEditorV121=window.savePermissionEditorV121}catch(_e){}
- try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V282';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V282 Berechtigungsfeld bereit')}catch(_e){}
-})();
-</script>
-
-<script>
-/* V283 – Empfänger-Seite der Benutzerberechtigungen.
-   Frischer Cloud-Read nach Login/Fokus, exakter Key-Abgleich und sichtbare Diagnose.
-   Keine Package-/__state-Cloud-Schreiboperation. */
-(()=>{
- let permPullV283=false;
- async function pullOwnPermissionV283(showMissing=false){
-   if(permPullV283||!cloudReady()||!authSession||!cloudMember)return false;
-   permPullV283=true;
-   try{
-     if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' statt 347.');
-     const username=cleanUsername(cloudMember?.username||authUsername());
-     const key=permissionKeyForCloud(username);
-     const entityKey='permissionSets|'+key;
-     const remote=await fetchRemoteEntities();
-     const r=remote[entityKey];
-     if(!r||!r.data||typeof r.data!=='object'){
-       if(showMissing)setSyncStatus('err','V283 Rechte fehlen in Cloud · '+entityKey);
-       return false;
-     }
-     ensurePermissionStore();
-     st.userPermissions[key]=JSON.parse(JSON.stringify(r.data));
-     // Nur lokal sichern. __state wird weiterhin nicht als Cloud-Entität geschrieben.
-     localStorage.setItem(KEY,JSON.stringify(st));
-
-     // Sichtbarkeit unmittelbar aus dem frisch gelesenen Satz setzen.
-     const p=currentPermissions();
-     refreshPermissionVisibility();
-     const tile=document.getElementById('moduleSettingsTile');
-     if(tile)tile.style.display=(canAdmin()||p.manage===true)?'':'none';
-     try{refresh()}catch(_e){}
-     setSyncStatus('ok','V283 Rechte geladen · '+key+' · Verwaltung '+(p.manage===true?'JA':'NEIN'));
-     return true;
-   }catch(e){
-     setSyncStatus('err','V283 Rechte laden · '+String(e?.message||e||''));
-     return false;
-   }finally{permPullV283=false}
-   }
- window.pullOwnPermissionV283=pullOwnPermissionV283;
-
- // Nach vollständigem Login nochmals explizit laden.
- const oldSignInV283=signInCloud;
- signInCloud=async function(){
-   await oldSignInV283.apply(this,arguments);
-   await pullOwnPermissionV283(true);
- };
-
- window.addEventListener('load',()=>setTimeout(()=>pullOwnPermissionV283(true),2200));
- window.addEventListener('focus',()=>setTimeout(()=>pullOwnPermissionV283(false),600));
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>pullOwnPermissionV283(false),600)});
-
- try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V283';
-   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V283 Rechte-Empfang bereit');
- }catch(_e){}
-})();
-</script>
-
-<script>
-/* V285 – Notfallkorrektur nach V284.
-   Basis ist V283 (Login funktionierte). Keine Überschreibung von signInCloud,
-   currentPermissions oder dem generischen Sync.
-   Nur: Nach bereits erfolgreichem Login den frisch geladenen eigenen
-   permissionSets-Datensatz separat cachen und die Verwaltungskachel stabil halten. */
-(()=>{
- const CACHE='kuenzli_own_permission_v285';
- function myKey(){
+ function userKeyV286(){
    try{return permissionKeyForCloud(cleanUsername(cloudMember?.username||authUsername()))}catch(_e){return ''}
  }
- function cached(){
+ function cacheReadV286(){
    try{
      const x=JSON.parse(localStorage.getItem(CACHE)||'null');
-     return x&&x.key===myKey()&&x.data&&typeof x.data==='object'?x.data:null;
+     return x&&x.key===userKeyV286()&&x.data&&typeof x.data==='object'?x.data:null;
    }catch(_e){return null}
  }
- function applyCached(){
-   const p=cached(); if(!p)return false;
-   const key=myKey(); if(!key)return false;
+ function cacheWriteV286(key,data){
+   localStorage.setItem(CACHE,JSON.stringify({key,data:JSON.parse(JSON.stringify(data))}));
+ }
+ function injectOwnV286(){
+   const key=userKeyV286(),p=cacheReadV286();
+   if(!key||!p)return null;
    ensurePermissionStore();
    st.userPermissions[key]=JSON.parse(JSON.stringify(p));
+   return p;
+ }
+ function applyOwnV286(){
+   const p=injectOwnV286();
+   if(!p)return false;
    const tile=document.getElementById('moduleSettingsTile');
    if(tile)tile.style.display=(canAdmin()||p.manage===true)?'':'none';
    return true;
  }
- async function refreshOwn(){
-   // Wichtig: läuft ausschließlich NACH bestehender, erfolgreicher Anmeldung.
-   if(!cloudReady()||!authSession||!cloudMember)return false;
-   if((st.packages||[]).length!==347)return false;
-   try{
-     const key=myKey(); if(!key)return false;
-     const remote=await fetchRemoteEntities(),r=remote['permissionSets|'+key];
-     if(!r?.data)return false;
-     localStorage.setItem(CACHE,JSON.stringify({key,data:r.data}));
-     applyCached();
-     setSyncStatus('ok','V285 Rechte geladen · Verwaltung '+(r.data.manage===true?'JA':'NEIN'));
-     return true;
-   }catch(_e){return false}
- }
- // Kein Login-Hook: verhindert, dass die Anmeldung erneut beschädigt wird.
- window.addEventListener('load',()=>setTimeout(refreshOwn,2600));
- window.addEventListener('focus',()=>setTimeout(refreshOwn,700));
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(refreshOwn,700)});
 
- // Nur Sichtbarkeit nach bestehenden Refreshes erneut aus dem Cache anwenden.
- const oldRefresh=window.refreshPermissionVisibility||refreshPermissionVisibility;
+ async function pullOwnV286(showStatus=false){
+   if(pullBusy||!cloudReady()||!authSession||!cloudMember)return false;
+   pullBusy=true;
+   try{
+     if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' statt 347.');
+     const key=userKeyV286(); if(!key)return false;
+     const remote=await fetchRemoteEntities(),r=remote['permissionSets|'+key];
+     if(!r?.data){
+       if(showStatus)setSyncStatus('err','V286 Rechte fehlen in Cloud · '+key);
+       return false;
+     }
+     cacheWriteV286(key,r.data);
+     injectOwnV286();
+     // Nur lokale Kopie sichern. Kein __state-Cloud-Schreiben.
+     localStorage.setItem(KEY,JSON.stringify(st));
+     const tile=document.getElementById('moduleSettingsTile');
+     if(tile)tile.style.display=(canAdmin()||r.data.manage===true)?'':'none';
+     setSyncStatus('ok','V286 Rechte geladen · '+key+' · Verwaltung '+(r.data.manage===true?'JA':'NEIN'));
+     return true;
+   }catch(e){
+     if(showStatus)setSyncStatus('err','V286 Rechte laden · '+String(e?.message||e||''));
+     return false;
+   }finally{pullBusy=false}
+ }
+ window.pullOwnPermissionsV286=pullOwnV286;
+
+ // Bestehende Sichtbarkeitslogik darf den frisch geladenen Cloud-Satz nicht mehr verdrängen.
+ const oldRefreshPermV286=window.refreshPermissionVisibility||refreshPermissionVisibility;
  window.refreshPermissionVisibility=function(){
-   const r=oldRefresh.apply(this,arguments);
-   applyCached();
+   injectOwnV286();
+   const r=oldRefreshPermV286.apply(this,arguments);
+   applyOwnV286();
    return r;
  };
  try{refreshPermissionVisibility=window.refreshPermissionVisibility}catch(_e){}
 
- try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V285';
- }catch(_e){}
+ // Editor: neues Feld mit bestehendem manage-Recht verbinden.
+ const oldOpenPermV286=openPermissionEditor;
+ openPermissionEditor=function(){
+   const r=oldOpenPermV286.apply(this,arguments);
+   setTimeout(()=>{
+     const old=document.getElementById('permManage'),neu=document.getElementById('permManageV286');
+     if(neu)neu.checked=!!old?.checked;
+   },0);
+   return r;
+ };
+ window.openPermissionEditor=openPermissionEditor;
+
+ // Tatsächlich aktiver V121-Speicherhandler.
+ const oldSave121V286=window.savePermissionEditorV121;
+ window.savePermissionEditorV121=async function(ev){
+   if(saveBusy)return;
+   const key=permissionEditorKey;
+   const old=document.getElementById('permManage'),neu=document.getElementById('permManageV286');
+   if(old&&neu)old.checked=!!neu.checked;
+
+   // Erst bestehenden lokalen Berechtigungs-Speicherpfad ausführen.
+   const result=await oldSave121V286.apply(this,arguments);
+
+   if(!key||!canAdmin()||!cloudReady()||!authSession||!cloudMember)return result;
+   saveBusy=true;
+   try{
+     if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze verletzt.');
+     ensurePermissionStore();
+     const data=st.userPermissions?.[key];
+     if(!data)throw new Error('Berechtigungssatz fehlt.');
+     const remote=await fetchRemoteEntities(),r=remote['permissionSets|'+key];
+     await rpcEntitySave('permissionSets',String(key),JSON.parse(JSON.stringify(data)),Number(r?.version||0),false);
+     const fresh=(await fetchRemoteEntities())['permissionSets|'+key];
+     if(!fresh||stableJson(fresh.data)!==stableJson(data))throw new Error('Cloud-Verifikation fehlgeschlagen.');
+     setSyncStatus('ok','V286 Berechtigungen Cloud-verifiziert');
+   }catch(e){
+     setSyncStatus('err','V286 Berechtigungs-Sync · '+String(e?.message||e||''));
+   }finally{saveBusy=false}
+   return result;
+ };
+ try{savePermissionEditorV121=window.savePermissionEditorV121}catch(_e){}
+
+ // Kein signInCloud-Override. Erst NACH erfolgreichem Login/Seitenstart lesen.
+ window.addEventListener('load',()=>setTimeout(()=>pullOwnV286(true),2400));
+ window.addEventListener('focus',()=>setTimeout(()=>pullOwnV286(false),700));
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>pullOwnV286(false),700)});
+
+ // Einzige Versionsanzeige.
+ const setVersionV286=()=>{
+   const v=document.getElementById('currentBuildV234');
+   if(v)v.textContent='Aktuelle Version: V287';
+ };
+ document.addEventListener('DOMContentLoaded',setVersionV286);
+ setVersionV286();
+ setTimeout(setVersionV286,0);
+
+ try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V287 konsolidiert')}catch(_e){}
 })();
 </script>
