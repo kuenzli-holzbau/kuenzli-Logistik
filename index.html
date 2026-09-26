@@ -31017,3 +31017,96 @@ ${safeTypeLines}
  }catch(_e){}
 })();
 </script>
+
+<script>
+/* V278 – Pins benutzen einen eigenen seriellen Cloud-Pfad.
+   Dadurch kann eine Pin-Bearbeitung nicht mehr am globalen Sync von Packages,
+   Controls, Projekten usw. scheitern. Bestehender globaler Auto-Sync wird für
+   den unmittelbar folgenden persist() des Pins einmal unterdrückt. */
+(()=>{
+ let pinFlightV278=Promise.resolve();
+
+ function pinKeyV278(id){return 'materialPinsV552|'+String(id)}
+ function localPinV278(id){return ensureMaterialPinsV552().find(x=>String(x.id)===String(id))||null}
+ function transientV278(e){return /\b(503|504)\b|PGRST003|timeout|timed out|Failed to fetch|NetworkError|Load failed/i.test(String(e?.message||e||''))}
+
+ async function syncPinSaveV278(id){
+   if(!cloudReady()||!authSession||!cloudMember)return false;
+   if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' statt 347.');
+   const k=pinKeyV278(id), local=localPinV278(id);
+   if(!local)throw new Error('Pin lokal nicht gefunden.');
+   let remote=await fetchRemoteEntities(),r=remote[k],base=loadSyncBase(),b=base[k];
+   const lh=stableJson(local),rh=r?stableJson(r.data):null,bh=b?.hash??null;
+
+   if(rh===lh){
+     base[k]={version:Number(r?.version||b?.version||0),hash:lh};saveSyncBase(base);return true;
+   }
+
+   // Falls für einen Alt-Pin noch keine Basis existiert, darf nur dann eine Basis
+   // hergestellt werden, wenn die Cloud-Version dem lokalen Stand VOR der Bearbeitung
+   // entsprach. Dieser Vorher-Hash wird vom Save-Handler mitgegeben.
+   const beforeHash=window.__pinBeforeHashV278||null;
+   if(!b && r && beforeHash && rh===beforeHash){
+     b={version:Number(r.version||0),hash:rh};base[k]=b;saveSyncBase(base);
+   }
+
+   // Neue Pins: Cloud darf noch keinen Datensatz haben.
+   if(!r){
+     if(b)throw new Error('Pin fehlt in Cloud, obwohl eine Sync-Basis existiert.');
+     await rpcEntitySave('materialPinsV552',String(id),local,0,false);
+   }else{
+     b=loadSyncBase()[k];
+     if(!b)throw new Error('Pin-Sync-Basis fehlt; Cloud wurde nicht überschrieben.');
+     if(rh!==b.hash)throw new Error('Pin wurde in Cloud parallel geändert; nichts überschrieben.');
+     await rpcEntitySave('materialPinsV552',String(id),local,Number(r.version||b.version||0),false);
+   }
+
+   const fresh=(await fetchRemoteEntities())[k],cur=localPinV278(id);
+   if(!fresh||!cur||stableJson(fresh.data)!==stableJson(cur))throw new Error('Cloud-Verifikation des Pins fehlgeschlagen.');
+   base=loadSyncBase();base[k]={version:Number(fresh.version||0),hash:stableJson(cur)};saveSyncBase(base);
+   setSyncStatus('ok','V278 Pin Cloud-verifiziert');
+   return true;
+ }
+
+ function enqueuePinV278(id,beforeHash){
+   const run=async()=>{
+     window.__pinBeforeHashV278=beforeHash||null;
+     try{return await syncPinSaveV278(id)}
+     catch(e){
+       setSyncStatus('err',(transientV278(e)?'V278 Cloud vorübergehend nicht erreichbar':'V278 Pin Schutzstopp')+' · '+String(e?.message||e||''));
+       return false;
+     }finally{window.__pinBeforeHashV278=null}
+   };
+   pinFlightV278=pinFlightV278.then(run,run);
+   return pinFlightV278;
+ }
+
+ // Globalen queueCloudSync genau für den persist() eines Pins aussetzen.
+ const oldQueueV278=queueCloudSync;
+ queueCloudSync=function(){
+   if(window.__pinPersistV278)return;
+   return oldQueueV278.apply(this,arguments);
+ };
+
+ // Direkt die tatsächlich aufgerufene Pin-Speicherfunktion ersetzen.
+ saveMaterialPinV552=function(e){
+   e?.preventDefault?.();
+   let id=E('materialPinIdV552').value,arr=ensureMaterialPinsV552(),p=arr.find(x=>x.id===id);
+   const beforeHash=p?stableJson(p):null,now=new Date().toISOString();
+   if(!p){p={id:'mp'+Date.now()+Math.random().toString(16).slice(2),createdAt:now};arr.push(p);id=p.id}
+   p.x=Number(E('materialPinXV552').value);p.y=Number(E('materialPinYV552').value);p.material=E('materialPinMaterialV552').value.trim();
+   p.commission=E('materialPinCommissionV552').value||'';p.note=E('materialPinNoteV552').value.trim();p.updatedAt=now;
+   window.__pinPersistV278=true;
+   try{persist()}finally{window.__pinPersistV278=false}
+   closeM('materialPinModalV552');renderAreas();
+   setSyncStatus('syncing','V278 Pin wird synchronisiert…');
+   enqueuePinV278(id,beforeHash);
+ };
+ window.saveMaterialPinV552=saveMaterialPinV552;
+
+ try{
+   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V278';
+   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V278 Pin-Direktsync bereit');
+ }catch(_e){}
+})();
+</script>
