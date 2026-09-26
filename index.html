@@ -10985,7 +10985,7 @@ async function pullEntitySyncV186(manual=false){
    let remote=await fetchRemoteEntities();
    syncStageV154='lokale Daten aufbereiten';
    let base=loadSyncBase(),local=localEntityMap(),conflicts=[];
-   let keys=new Set([...Object.keys(remote),...Object.keys(base),...Object.keys(local)]).filter(k=>!String(k).startsWith('permissionSets|')));
+   let keys=new Set([...Object.keys(remote),...Object.keys(base),...Object.keys(local)]);
    for(let k of keys){
      let l=local[k],b=base[k],r=remote[k],localHash=l?stableJson(l.data):null,baseHash=b?.hash??null,remoteHash=r?stableJson(r.data):null;
      if(localHash!==baseHash && remoteHash!==baseHash && localHash!==remoteHash){
@@ -31408,87 +31408,61 @@ ${safeTypeLines}
 </script>
 
 <script>
-/* V284 – Berechtigungen dauerhaft getrennt vom Haupt-State halten.
-   V283 zeigte die Kachel kurz: der Cloud-Rechtesatz kam an, wurde danach aber
-   durch einen späteren Haupt-State/Legacy-Refresh wieder verdrängt.
-   V284 cached den eigenen Cloud-Rechtesatz separat und macht ihn für
-   currentPermissions() maßgeblich. permissionSets bleiben aus dem generischen
-   Objekt-Sync ausgeschlossen und werden nur über den gezielten Rechtepfad gelesen. */
+/* V285 – Notfallkorrektur nach V284.
+   Basis ist V283 (Login funktionierte). Keine Überschreibung von signInCloud,
+   currentPermissions oder dem generischen Sync.
+   Nur: Nach bereits erfolgreichem Login den frisch geladenen eigenen
+   permissionSets-Datensatz separat cachen und die Verwaltungskachel stabil halten. */
 (()=>{
- const OWN_PERM_CACHE_V284='kuenzli_own_cloud_permissions_v284';
- function ownKeyV284(){
+ const CACHE='kuenzli_own_permission_v285';
+ function myKey(){
    try{return permissionKeyForCloud(cleanUsername(cloudMember?.username||authUsername()))}catch(_e){return ''}
  }
- function readOwnV284(){
+ function cached(){
    try{
-     const x=JSON.parse(localStorage.getItem(OWN_PERM_CACHE_V284)||'null');
-     return x&&x.key===ownKeyV284()&&x.data&&typeof x.data==='object'?x.data:null;
+     const x=JSON.parse(localStorage.getItem(CACHE)||'null');
+     return x&&x.key===myKey()&&x.data&&typeof x.data==='object'?x.data:null;
    }catch(_e){return null}
  }
- function writeOwnV284(key,data){
-   localStorage.setItem(OWN_PERM_CACHE_V284,JSON.stringify({key,data,at:new Date().toISOString()}));
- }
- const oldCurrentV284=currentPermissions;
- currentPermissions=function(){
-   if(cloudAuthEnabled()&&cloudMember){
-     const p=readOwnV284();
-     if(p){
-       const out={};
-       Object.keys(permissionFieldMap()).forEach(k=>out[k]=p[k]===true);
-       out.allProjects=p.allProjects===true;
-       out.projectIds=Array.isArray(p.projectIds)?p.projectIds.slice():[];
-       return out;
-     }
-   }
-   return oldCurrentV284.apply(this,arguments);
- };
- window.currentPermissions=currentPermissions;
-
- async function pullStableV284(show=false){
-   if(!cloudReady()||!authSession||!cloudMember)return false;
-   if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' statt 347.');
-   const key=ownKeyV284(),remote=await fetchRemoteEntities(),r=remote['permissionSets|'+key];
-   if(!r?.data){
-     if(show)setSyncStatus('err','V284 Rechte fehlen in Cloud · '+key);
-     return false;
-   }
-   writeOwnV284(key,JSON.parse(JSON.stringify(r.data)));
+ function applyCached(){
+   const p=cached(); if(!p)return false;
+   const key=myKey(); if(!key)return false;
    ensurePermissionStore();
-   st.userPermissions[key]=JSON.parse(JSON.stringify(r.data));
-   localStorage.setItem(KEY,JSON.stringify(st));
-   refreshPermissionVisibility();
+   st.userPermissions[key]=JSON.parse(JSON.stringify(p));
    const tile=document.getElementById('moduleSettingsTile');
-   if(tile)tile.style.display=(canAdmin()||currentPermissions().manage===true)?'':'none';
-   setSyncStatus('ok','V284 Rechte stabil geladen · Verwaltung '+(currentPermissions().manage===true?'JA':'NEIN'));
+   if(tile)tile.style.display=(canAdmin()||p.manage===true)?'':'none';
    return true;
  }
- window.pullStablePermissionsV284=pullStableV284;
+ async function refreshOwn(){
+   // Wichtig: läuft ausschließlich NACH bestehender, erfolgreicher Anmeldung.
+   if(!cloudReady()||!authSession||!cloudMember)return false;
+   if((st.packages||[]).length!==347)return false;
+   try{
+     const key=myKey(); if(!key)return false;
+     const remote=await fetchRemoteEntities(),r=remote['permissionSets|'+key];
+     if(!r?.data)return false;
+     localStorage.setItem(CACHE,JSON.stringify({key,data:r.data}));
+     applyCached();
+     setSyncStatus('ok','V285 Rechte geladen · Verwaltung '+(r.data.manage===true?'JA':'NEIN'));
+     return true;
+   }catch(_e){return false}
+ }
+ // Kein Login-Hook: verhindert, dass die Anmeldung erneut beschädigt wird.
+ window.addEventListener('load',()=>setTimeout(refreshOwn,2600));
+ window.addEventListener('focus',()=>setTimeout(refreshOwn,700));
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(refreshOwn,700)});
 
- // V283-Aufrufe auf den stabilen Pfad umlenken.
- window.pullOwnPermissionV283=pullStableV284;
-
- const oldSignInV284=signInCloud;
- signInCloud=async function(){
-   await oldSignInV284.apply(this,arguments);
-   await pullStableV284(true).catch(e=>setSyncStatus('err','V284 Rechte laden · '+String(e?.message||e||'')));
- };
- window.addEventListener('load',()=>setTimeout(()=>pullStableV284(true).catch(()=>{}),2400));
- window.addEventListener('focus',()=>setTimeout(()=>pullStableV284(false).catch(()=>{}),700));
-
- // Jede spätere Sichtbarkeitsberechnung benutzt durch currentPermissions()
- // weiterhin den separaten, frisch gelesenen Rechtesatz.
- const oldRefreshV284=window.refreshPermissionVisibility||refreshPermissionVisibility;
+ // Nur Sichtbarkeit nach bestehenden Refreshes erneut aus dem Cache anwenden.
+ const oldRefresh=window.refreshPermissionVisibility||refreshPermissionVisibility;
  window.refreshPermissionVisibility=function(){
-   const r=oldRefreshV284.apply(this,arguments);
-   const tile=document.getElementById('moduleSettingsTile');
-   if(tile)tile.style.display=(canAdmin()||currentPermissions().manage===true)?'':'none';
+   const r=oldRefresh.apply(this,arguments);
+   applyCached();
    return r;
  };
  try{refreshPermissionVisibility=window.refreshPermissionVisibility}catch(_e){}
 
  try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V284';
-   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V284 Rechte stabil');
+   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V285';
  }catch(_e){}
 })();
 </script>
