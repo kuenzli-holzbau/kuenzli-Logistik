@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V287</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V288</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31083,12 +31083,129 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V287';
+   if(v)v.textContent='Aktuelle Version: V288';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
  setTimeout(setVersionV286,0);
 
  try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V287 konsolidiert')}catch(_e){}
+})();
+</script>
+
+<script>
+/* V288 – read-only Berechtigungs- und Cloudfehler-Diagnose.
+   Keine Cloud-Schreiboperation, kein Login-Override, keine Bestandsänderung. */
+(()=>{
+ const LOGKEY='kuenzli_v288_last_sync_error';
+ const snapshots=[];
+
+ function safeV288(fn,fallback=null){try{return fn()}catch(_e){return fallback}}
+ function keyV288(){
+   return safeV288(()=>permissionKeyForCloud(cleanUsername(cloudMember?.username||authUsername())),'')||'';
+ }
+ function cacheV288(){
+   return safeV288(()=>JSON.parse(localStorage.getItem('kuenzli_permission_cache_v286')||'null'),null);
+ }
+ function tileStateV288(){
+   const el=document.getElementById('moduleSettingsTile');
+   return {
+     found:!!el,
+     inline:el?.style?.display??null,
+     computed:el?safeV288(()=>getComputedStyle(el).display,null):null
+   };
+ }
+ function localPermV288(){
+   const k=keyV288();
+   return safeV288(()=>st.userPermissions?.[k],null);
+ }
+ function currentV288(){return safeV288(()=>currentPermissions(),null)}
+ function rememberErrorV288(kind,msg){
+   if(kind!=='err')return;
+   try{localStorage.setItem(LOGKEY,JSON.stringify({at:new Date().toISOString(),message:String(msg||'')}))}catch(_e){}
+ }
+ // Observe only: retain the exact message that the app itself sends to Cloud-Fehler.
+ const oldStatusV288=window.setSyncStatus||setSyncStatus;
+ window.setSyncStatus=function(kind,msg){
+   rememberErrorV288(kind,msg);
+   return oldStatusV288.apply(this,arguments);
+ };
+ try{setSyncStatus=window.setSyncStatus}catch(_e){}
+
+ async function snapshotV288(label,withFreshCloud=false){
+   const k=keyV288(),lp=localPermV288(),cp=currentV288(),ca=cacheV288(),tile=tileStateV288();
+   let cloud={checked:false,exists:null,manage:null,version:null,error:null,keys:null};
+   if(withFreshCloud&&safeV288(()=>cloudReady()&&!!authSession&&!!cloudMember,false)){
+     cloud.checked=true;
+     try{
+       const all=await fetchRemoteEntities(), row=all['permissionSets|'+k];
+       cloud.exists=!!row;
+       cloud.manage=row?.data?.manage;
+       cloud.version=row?.version??null;
+       cloud.keys=row?.data?Object.keys(row.data).sort():null;
+     }catch(e){cloud.error=String(e?.message||e||'')}
+   }
+   const snap={
+     label,at:new Date().toISOString(),packages:safeV288(()=>(st.packages||[]).length,null),
+     cloudReady:safeV288(()=>cloudReady(),false),user:safeV288(()=>cleanUsername(cloudMember?.username||authUsername()),''),
+     role:safeV288(()=>cloudMember?.role||'', ''),key:k,
+     localManage:lp?.manage, currentManage:cp?.manage,
+     cacheKey:ca?.key??null, cacheManage:ca?.data?.manage,
+     tile,cloud,lastError:safeV288(()=>JSON.parse(localStorage.getItem(LOGKEY)||'null'),null)
+   };
+   snapshots.push(snap);
+   window.__v288Snapshots=snapshots;
+   return snap;
+ }
+
+ function escV288(x){return String(x??'—').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+ function renderV288(snap){
+   let box=document.getElementById('diagV288');
+   if(!box){
+     box=document.createElement('div'); box.id='diagV288';
+     box.style.cssText='position:fixed;z-index:999999;left:12px;right:12px;bottom:12px;max-height:68vh;overflow:auto;background:#fff;border:3px solid #173f34;border-radius:14px;padding:14px;box-shadow:0 8px 30px #0005;font:14px/1.35 system-ui';
+     document.body.appendChild(box);
+   }
+   const c=snap.cloud||{}, t=snap.tile||{}, e=snap.lastError;
+   box.innerHTML=`<div style="display:flex;justify-content:space-between;gap:12px;align-items:center">
+   <b style="font-size:17px">V288 Diagnose – ${escV288(snap.label)}</b>
+   <button type="button" id="closeDiagV288" style="font-size:18px">✕</button></div>
+   <div style="margin-top:10px"><b>Pakete:</b> ${escV288(snap.packages)} &nbsp; <b>Cloud aktiv:</b> ${escV288(snap.cloudReady)}</div>
+   <div><b>Benutzer:</b> ${escV288(snap.user)} &nbsp; <b>Rolle:</b> ${escV288(snap.role)}</div>
+   <div><b>Permission-Key:</b> ${escV288(snap.key)}</div>
+   <hr><div><b>manage lokal:</b> ${escV288(snap.localManage)}</div>
+   <div><b>manage currentPermissions:</b> ${escV288(snap.currentManage)}</div>
+   <div><b>Cache-Key:</b> ${escV288(snap.cacheKey)}</div>
+   <div><b>manage Cache:</b> ${escV288(snap.cacheManage)}</div>
+   <div><b>Verwaltung-Karte:</b> gefunden ${escV288(t.found)} · inline ${escV288(t.inline)} · computed ${escV288(t.computed)}</div>
+   <hr><div><b>Cloud permissionSets:</b> geprüft ${escV288(c.checked)} · vorhanden ${escV288(c.exists)} · manage ${escV288(c.manage)} · Version ${escV288(c.version)}</div>
+   <div><b>Cloud-Fetch-Fehler:</b> ${escV288(c.error)}</div>
+   <div><b>Letzter echter Cloud-Fehler:</b> ${escV288(e?.message)}</div>
+   <div><b>Zeit:</b> ${escV288(snap.at)}</div>`;
+   document.getElementById('closeDiagV288').onclick=()=>box.remove();
+ }
+
+ window.runV288Diagnostic=async function(){
+   const snap=await snapshotV288('manuell',true); renderV288(snap); return snap;
+ };
+
+ function addButtonV288(){
+   if(document.getElementById('diagBtnV288'))return;
+   const b=document.createElement('button');
+   b.id='diagBtnV288'; b.type='button'; b.className='btn';
+   b.textContent='V288 Rechte + Cloudfehler prüfen';
+   b.style.cssText='position:fixed;right:12px;bottom:12px;z-index:999998';
+   b.onclick=()=>window.runV288Diagnostic();
+   document.body.appendChild(b);
+ }
+ document.addEventListener('DOMContentLoaded',addButtonV288);
+ setTimeout(addButtonV288,0);
+
+ // Three passive snapshots only; no polling and no cloud write.
+ window.addEventListener('load',()=>{
+   setTimeout(()=>snapshotV288('Start +0.5s',false),500);
+   setTimeout(()=>snapshotV288('Start +1.5s',false),1500);
+   setTimeout(()=>snapshotV288('Start +3.5s',false),3500);
+ });
 })();
 </script>
