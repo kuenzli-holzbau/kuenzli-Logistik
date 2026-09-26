@@ -30027,3 +30027,51 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V263';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V263 Dublettenbereinigung bereit')}catch(_e){}
 })();
 </script>
+
+
+<script>
+/* V264 – gezielte Dublettenbereinigung mit wertbasierter Identifikation.
+   Behält exakt die aktuelle Cloud-Version von mc_pkg_excelv479_row_4.
+   Entfernt ausschließlich den zweiten Eintrag derselben ID, wenn dessen gelesener Name
+   exakt "100mm / WFP N+K WALL 140" ist. Keine Cloud-/Sync-Basis-Aenderung. */
+(()=>{
+ const VERSION='V264', EXPECT=347, TYPE='materialCatalog', ID='mc_pkg_excelv479_row_4', KEYX=TYPE+'|'+ID;
+ const GOOD_NAME='100mm / WFP N+K WALL 140 vorverputzt', BAD_NAME='100mm / WFP N+K WALL 140';
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function close(){document.getElementById('v264Modal')?.remove()}
+ function modal(h){close();const m=document.createElement('div');m.id='v264Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1180px,98vw);max-height:95vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${h}</div>`;document.body.appendChild(m);document.getElementById('v264Close')?.addEventListener('click',close)}
+ function rawState(){const r=localStorage.getItem(KEY);if(!r)throw new Error('Lokaler Hauptzustand fehlt.');const p=JSON.parse(r);if(!p||!Array.isArray(p.packages)||!Array.isArray(p.materialCatalog))throw new Error('Lokaler Hauptzustand unlesbar.');return p}
+ function rawMap(p){const old=st;try{st=p;return localEntityMap()}finally{st=old}}
+ function hits(p){const out=[];(p.materialCatalog||[]).forEach((o,i)=>{if(o&&typeof o==='object'&&String(o.id??'')===ID)out.push({i,o})});return out}
+ function classify(p,remote){const hs=hits(p),r=remote[KEYX];if(!r)throw new Error(KEYX+' fehlt in der Cloud.');const cloud=hs.filter(x=>stableJson(x.o)===stableJson(r.data));const bad=hs.filter(x=>String(x.o?.name??'')===BAD_NAME);return {hs,r,cloud,bad}}
+ async function inspect(){const before=localStorage.getItem(KEY),p=rawState(),remote=await fetchRemoteEntities(),after=localStorage.getItem(KEY);if(before!==after)throw new Error('Hauptzustand änderte sich während der Prüfung.');const local=rawMap(p),lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length,c=classify(p,remote);return {p,remote,local,lp,rp,...c}}
+ async function pull(manual=false){
+  if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V264: Cloud nicht bereit. Nichts verändert.');return false}if(cloudBusy)return false;cloudBusy=true;setSyncStatus('syncing','V264 prüft bestätigte Dublette');
+  try{const x=await inspect();const goodName=String(x.r.data?.name??'');const safe=x.lp===EXPECT&&x.rp===EXPECT&&x.hs.length===2&&x.cloud.length===1&&x.bad.length===1&&x.cloud[0].i!==x.bad[0].i&&goodName===GOOD_NAME;
+   modal(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V264 bestätigte Material-Dublettenbereinigung</h2><div><b>ZUERST PRÜFUNG</b> · wertbasierte Identifikation der falschen Dublette</div></div><button id="v264Close" class="btn secondary">Schließen</button></div>
+   <div style="margin-top:12px;padding:11px;background:${x.lp===EXPECT&&x.rp===EXPECT?'#eef7ef':'#fff0f0'};border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal <b>${x.lp}</b> · Cloud <b>${x.rp}</b>. Sicherheitsgrenze <b>347/347</b>.</div>
+   <div style="margin-top:10px;padding:11px;background:${safe?'#eef7ef':'#fff0f0'};border:1px solid ${safe?'#b7d3bb':'#dfb1b1'};border-radius:10px"><b>Ziel-ID:</b> ${ID}<br>Lokale Treffer: <b>${x.hs.length}</b> · exakt Cloud-korrekt: <b>${x.cloud.length}</b> · Name exakt falsche Variante: <b>${x.bad.length}</b>.</div>
+   ${x.cloud.length===1?`<div style="margin-top:10px;padding:11px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>BEHALTEN:</b> materialCatalog[${x.cloud[0].i}] · ${esc(x.cloud[0].o.name)} · exakt Cloud-Version ${Number(x.r.version||0)}</div>`:''}
+   ${x.bad.length===1?`<div style="margin-top:10px;padding:11px;background:#fff4e6;border:1px solid #e5bf84;border-radius:10px"><b>ENTFERNEN:</b> materialCatalog[${x.bad[0].i}] · ${esc(x.bad[0].o.name)}<br>Identifiziert anhand der tatsächlich gelesenen ID + des exakt bestätigten falschen Namens.</div>`:''}
+   <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt gesperrt.</b> Kein Cloud-Schreiben und keine Sync-Basis-Änderung.</div>
+   ${safe?'<button id="v264Apply" class="btn" style="margin-top:14px;background:#173f32;color:white">Nur materialCatalog[164] / falsche WALL-140-Dublette entfernen</button>':''}<button id="v264Cancel" class="btn secondary" style="margin:14px 0 0 8px">Abbrechen</button><div id="v264Out" style="margin-top:12px;font-weight:800">Noch nichts verändert.</div>`);
+   document.getElementById('v264Cancel').onclick=close;if(safe)document.getElementById('v264Apply').onclick=run;setSyncStatus(safe?'ok':'err',safe?'V264 sicher freigegeben':'V264 Sicherheitsprüfung nicht erfüllt');return true
+  }catch(e){alert('V264 Vorbereitung fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V264 Vorbereitung fehlgeschlagen');return false}finally{cloudBusy=false}
+ }
+ async function run(){
+  if(!confirm('V264 GEZIELTE DUBLETTENBEREINIGUNG\n\nBEHALTEN: '+GOOD_NAME+' – exakt aktuelle Cloud-Version.\nENTFERNEN: '+BAD_NAME+' – nur der zweite Eintrag derselben ID.\n\n347 Packages müssen vorher und nachher erhalten bleiben. __state und Sync-Basis bleiben unangetastet. Kein Cloud-Schreiben.\n\nFortfahren?'))return;
+  if(cloudBusy)return;cloudBusy=true;const out=document.getElementById('v264Out');try{
+   const x=await inspect();if(x.lp!==EXPECT||x.rp!==EXPECT||x.hs.length!==2||x.cloud.length!==1||x.bad.length!==1||x.cloud[0].i===x.bad[0].i||String(x.r.data?.name??'')!==GOOD_NAME)throw new Error('Sicherheitsbild hat sich geändert. Nichts entfernt.');
+   const p=rawState(),c=classify(p,x.remote);if(c.hs.length!==2||c.cloud.length!==1||c.bad.length!==1||c.cloud[0].i===c.bad[0].i)throw new Error('Unmittelbare Vorprüfung nicht eindeutig. Nichts entfernt.');
+   const removeIndex=c.bad[0].i,keepIndex=c.cloud[0].i;if(removeIndex!==164||keepIndex!==73)throw new Error('Arraypositionen sind nicht mehr 73/164. Sicherheitsstopp ohne Änderung.');
+   p.materialCatalog.splice(removeIndex,1);localStorage.setItem(KEY,JSON.stringify(p));
+   const q=rawState(),qmap=rawMap(q),qh=hits(q),lp2=Object.keys(qmap).filter(k=>k.startsWith('packages|')).length;if(lp2!==EXPECT)throw new Error('Package-Sicherheitsgrenze nach Bereinigung verletzt: '+lp2+'.');if(qh.length!==1)throw new Error('Nach Bereinigung ist die Ziel-ID nicht genau einmal vorhanden: '+qh.length+'.');if(stableJson(qh[0].o)!==stableJson(x.r.data))throw new Error('Verbleibendes MaterialCatalog-Objekt ist nicht exakt Cloud-identisch.');
+   st=q;const remote2=await fetchRemoteEntities(),rp2=Object.keys(remote2).filter(k=>k.startsWith('packages|')).length;if(rp2!==EXPECT)throw new Error('Cloud-Package-Sicherheitsgrenze nach Prüfung verletzt: '+rp2+'.');const r2=remote2[KEYX];if(!r2||stableJson(qh[0].o)!==stableJson(r2.data))throw new Error('Abschlussprüfung gegen erneut gelesene Cloud ist nicht exakt identisch.');
+   const mism=[];for(const [k,r] of Object.entries(remote2)){if(k==='__state')continue;const l=qmap[k];if(l&&stableJson(l.data)!==stableJson(r.data))mism.push(k)}
+   if(out)out.innerHTML=`<span style="color:#176b3a">V264 ERFOLG: ausschließlich materialCatalog[164] mit <b>${esc(BAD_NAME)}</b> wurde entfernt.<br><b>Behalten:</b> ${esc(r2.data.name)} – exakt Cloud-identisch.<br><b>Packages: 347 lokal / 347 Cloud.</b> Verbleibende Cloud-Abweichungen: <b>${mism.length}</b>. Sync-Basis unverändert; __state unangetastet.<br>Bitte Ergebnis fotografieren.</span>`;setSyncStatus('ok','V264 erfolgreich · bestätigte Dublette entfernt · '+mism.length+' Cloud-Abweichungen verbleiben');
+  }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V264 STOPP: ${esc(String(e.message||e))}<br>Bitte Ergebnis fotografieren und nicht weiter synchronisieren.</span>`;setSyncStatus('err','V264 gestoppt')}finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pull;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V264';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V264 Dublettenbereinigung bereit')}catch(_e){}
+})();
+</script>
