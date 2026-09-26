@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V292</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V293</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -5512,7 +5512,7 @@ window.APP_RELEASE = {
 <label class="permissionCheck permissionMainV108" style="font-size:16px;font-weight:900"><input type="checkbox" id="permManageV286"> Verwaltung &amp; Einstellungen</label>
 <div class="muted" style="margin-top:5px">Zugriff auf Benutzer, Cloud und allgemeine Verwaltung.</div>
 </div>
-<button class="btn" id="permissionSaveBtnV121" type="button" onclick="savePermissionEditorV121(event); setTimeout(()=>window.diagnosePermissionSaveV291&&window.diagnosePermissionSaveV291(),0)">Berechtigungen speichern</button>
+<button class="btn" id="permissionSaveBtnV121" type="button" onclick="savePermissionEditorV121(event)">Berechtigungen speichern</button>
  </div>
 </div></div>
 
@@ -31083,7 +31083,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V292';
+   if(v)v.textContent='Aktuelle Version: V293';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -31547,5 +31547,87 @@ ${safeTypeLines}
      storeV292(x); showV292(x);
    },2500);
  },true);
+})();
+</script>
+
+<script>
+/* V293 – ein konsolidierter Berechtigungs-Speicherpfad.
+   Behebt zusätzlich den in V292 nachgewiesenen Fall, dass ein lokaler Benutzer
+   statt seines Cloud-Kontos editiert wurde. */
+(()=>{
+ let busyV293=false;
+
+ async function resolvePermissionTargetV293(key,label){
+   key=String(key||'').trim();
+   if(key.startsWith('cloud:'))return {key,source:'cloud'};
+   if(!key.startsWith('local:') || !cloudReady())return {key,source:'local'};
+   try{
+     const r=await fetch(inviteBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+
+       '&select=username,name,role,active',{headers:cloudHeaders()});
+     if(!r.ok)throw new Error((await r.text())||('HTTP '+r.status));
+     const rows=await r.json();
+     const norm=x=>String(x||'').trim().toLocaleLowerCase();
+     const matches=rows.filter(x=>norm(x.name)===norm(label));
+     if(matches.length===1)return {key:permissionKeyForCloud(matches[0].username),source:'cloud-name-match',username:matches[0].username};
+   }catch(_e){}
+   return {key,source:'local'};
+ }
+
+ window.savePermissionEditorV121=async function(ev){
+   if(ev){ev.preventDefault();ev.stopPropagation();}
+   if(busyV293)return false;
+   busyV293=true;
+   try{
+     const packages=(st.packages||[]).length;
+     if(packages!==347)throw new Error('Package-Sicherheitsgrenze: '+packages+' statt 347.');
+     if(!permissionEditorKey)throw new Error('Kein Benutzer für die Berechtigungen ausgewählt.');
+
+     const originalKey=String(permissionEditorKey);
+     const target=await resolvePermissionTargetV293(originalKey,permissionEditorLabel);
+     const targetKey=target.key;
+
+     ensurePermissionStore();
+     const p={};
+     Object.entries(permissionFieldMap()).forEach(([k,id])=>{
+       const el=document.getElementById(id);
+       p[k]=!!(el&&el.checked);
+     });
+     const explicit=document.getElementById('permManageV286');
+     if(explicit)p.manage=!!explicit.checked;
+     p.allProjects=!!document.getElementById('permAllProjects')?.checked;
+     p.projectIds=Array.from(document.querySelectorAll('.permProjectCheck:checked')).map(x=>x.value);
+
+     // Local state: target cloud key is authoritative. Keep original local entry only if no cloud mapping exists.
+     st.userPermissions[targetKey]=JSON.parse(JSON.stringify(p));
+     localStorage.setItem(KEY,JSON.stringify(st));
+
+     if(targetKey.startsWith('cloud:')){
+       if(!canAdmin())throw new Error('Administrator erforderlich.');
+       if(!cloudReady()||!authSession||!cloudMember)throw new Error('Cloud nicht bereit.');
+       const ek='permissionSets|'+targetKey;
+       const before=(await fetchRemoteEntities())[ek];
+       await rpcEntitySave('permissionSets',targetKey,JSON.parse(JSON.stringify(p)),Number(before?.version||0),false);
+       const after=(await fetchRemoteEntities())[ek];
+       if(!after)throw new Error(ek+' wurde nach dem Speichern nicht gefunden.');
+       if(stableJson(after.data)!==stableJson(p))throw new Error('Cloud-Verifikation weicht von der Freigabe ab.');
+       setSyncStatus('ok','V293 Rechte Cloud-verifiziert · '+targetKey+' · Verwaltung '+(p.manage?'JA':'NEIN'));
+     }else{
+       try{persist()}catch(_e){}
+       setSyncStatus('ok','V293 lokale Berechtigungen gespeichert · '+targetKey);
+     }
+
+     try{closeM('permissionModal')}catch(_e){}
+     try{renderCloudUsers?.()}catch(_e){}
+     try{renderManage?.()}catch(_e){}
+     try{refreshPermissionVisibility?.()}catch(_e){}
+     alert('Berechtigungen gespeichert'+(target.source==='cloud-name-match'?' · Cloud-Konto '+targetKey:'')+'.');
+     return true;
+   }catch(e){
+     setSyncStatus('err','V293 Berechtigungs-Sync · '+String(e?.message||e||''));
+     alert('Berechtigungen konnten nicht vollständig gespeichert werden:\n'+String(e?.message||e||''));
+     return false;
+   }finally{busyV293=false}
+ };
+ try{savePermissionEditorV121=window.savePermissionEditorV121}catch(_e){}
 })();
 </script>
