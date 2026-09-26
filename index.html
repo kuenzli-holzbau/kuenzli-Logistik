@@ -30956,3 +30956,64 @@ ${safeTypeLines}
  }catch(_e){}
 })();
 </script>
+
+<script>
+/* V277 – Pin-Sync-Basis reparieren.
+   Problem: Bereits identische Pins auf Gerät und Cloud konnten ohne Sync-Basis
+   existieren. Die nächste iPad-Bearbeitung sah dann fälschlich wie ein
+   beidseitiger Konflikt aus.
+   V277 ergänzt die Basis ausschließlich für Pins, die frisch gelesen und
+   byte-inhaltlich identisch sind. Keine Pin-/Package-Daten werden dabei geändert. */
+(()=>{
+ let pinBaseRepairRunningV277=false;
+ async function repairPinSyncBaseV277(){
+   if(pinBaseRepairRunningV277||!cloudReady()||!authSession||!cloudMember)return false;
+   pinBaseRepairRunningV277=true;
+   try{
+     const beforePackages=(st.packages||[]).length;
+     if(beforePackages!==347)throw new Error('Package-Sicherheitsgrenze: '+beforePackages+' statt 347.');
+     const remote=await fetchRemoteEntities(),local=localEntityMap(),base=loadSyncBase();
+     let added=0;
+     const keys=new Set([...Object.keys(remote||{}),...Object.keys(local||{})]);
+     for(const k of keys){
+       if(!k.startsWith('materialPinsV552|'))continue;
+       const r=remote[k],l=local[k];
+       if(!r||!l)continue;
+       const rh=stableJson(r.data),lh=stableJson(l.data);
+       if(rh!==lh)continue; // niemals Unterschiede "weg-baselinen"
+       const b=base[k];
+       if(!b||b.hash!==lh||Number(b.version||0)!==Number(r.version||0)){
+         base[k]={version:Number(r.version||0),hash:lh};added++;
+       }
+     }
+     if(added)saveSyncBase(base);
+     if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze nach Prüfung verletzt.');
+     if(added)setSyncStatus('ok','V277 Pin-Sync-Basis · '+added+' identische Pin(s) verknüpft');
+     return true;
+   }catch(e){
+     setSyncStatus('err','V277 Pin-Basis Schutzstopp · '+String(e?.message||e||''));
+     return false;
+   }finally{pinBaseRepairRunningV277=false}
+ }
+ window.repairPinSyncBaseV277=repairPinSyncBaseV277;
+
+ // Vor einer Pin-Speicherung zuerst nur die identischen Pin-Basen reparieren.
+ const oldSavePinV277=window.saveMaterialPinV552||saveMaterialPinV552;
+ window.saveMaterialPinV552=async function(e){
+   try{e?.preventDefault?.()}catch(_e){}
+   await repairPinSyncBaseV277();
+   return oldSavePinV277(e);
+ };
+ // Inline onsubmit kann die lexikalische Funktion aufrufen: auch diese Definition ersetzen.
+ saveMaterialPinV552=window.saveMaterialPinV552;
+
+ // Bei Login/Seitenstart ebenfalls einmalig reparieren; keine aggressive Abfrage.
+ window.addEventListener('load',()=>setTimeout(repairPinSyncBaseV277,1600));
+ window.addEventListener('focus',()=>setTimeout(repairPinSyncBaseV277,500));
+
+ try{
+   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V277';
+   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V277 Pin-Sync bereit');
+ }catch(_e){}
+})();
+</script>
