@@ -5435,7 +5435,15 @@ window.APP_RELEASE = {
      <label class="permissionCheck"><input type="checkbox" id="permArchive"> Archiv</label>
      <label class="permissionCheck"><input type="checkbox" id="permDefects"> Mängel</label>
      <label class="permissionCheck"><input type="checkbox" id="permTransfers"> Umbuchungen</label>
+    </div>
+   </div>
+
+   <div class="permissionGroupV108" data-perm-group="settings">
+    <div class="permissionGroupHeadV108">
      <label class="permissionCheck permissionMainV108"><input type="checkbox" id="permManage"> Verwaltung &amp; Einstellungen</label>
+    </div>
+    <div class="permissionChildrenV108">
+     <div class="muted" style="padding:4px 0 2px">Zugriff auf Benutzer, Cloud und allgemeine Verwaltung.</div>
     </div>
    </div>
 
@@ -31248,6 +31256,59 @@ ${safeTypeLines}
  try{
    const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V280';
    if(cloudReady())setSyncStatus('ok','Cloud aktiv · V280 Verwaltungsberechtigung bereit');
+ }catch(_e){}
+})();
+</script>
+
+<script>
+/* V281 – Berechtigung sichtbar + tatsächlichen Speichern-Handler synchronisieren.
+   V279 hatte savePermissionEditorV121 gehookt; der aktive Handler heißt
+   savePermissionEditor(). Deshalb wurde die Cloud-Berechtigung beim Speichern
+   nicht übertragen. */
+(()=>{
+ let permSaveFlightV281=Promise.resolve();
+
+ async function pushPermissionSetV281(key){
+   if(!key||!cloudReady()||!authSession||!cloudMember)return false;
+   if(!canAdmin())throw new Error('Nur Administratoren dürfen Berechtigungen synchronisieren.');
+   if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' statt 347.');
+   ensurePermissionStore();
+   const data=st.userPermissions?.[key];
+   if(!data||typeof data!=='object')throw new Error('Berechtigungssatz nicht gefunden.');
+   const k='permissionSets|'+String(key),remote=await fetchRemoteEntities(),r=remote[k];
+   await rpcEntitySave('permissionSets',String(key),JSON.parse(JSON.stringify(data)),Number(r?.version||0),false);
+   const fresh=(await fetchRemoteEntities())[k];
+   if(!fresh||stableJson(fresh.data)!==stableJson(data))throw new Error('Cloud-Verifikation der Berechtigungen fehlgeschlagen.');
+   setSyncStatus('ok','V281 Berechtigungen Cloud-verifiziert');
+   return true;
+ }
+
+ const oldSaveV281=savePermissionEditor;
+ savePermissionEditor=function(){
+   const key=permissionEditorKey;
+   const r=oldSaveV281.apply(this,arguments);
+   if(key&&canAdmin()){
+     const run=()=>pushPermissionSetV281(key).catch(e=>setSyncStatus('err','V281 Berechtigungs-Sync · '+String(e?.message||e||'')));
+     permSaveFlightV281=permSaveFlightV281.then(run,run);
+   }
+   return r;
+ };
+ window.savePermissionEditor=savePermissionEditor;
+
+ // Die neue Hauptgruppe soll niemals als Kind der Lagerverwaltung behandelt werden.
+ // Sichtbarkeit der Kachel weiterhin direkt an permManage.
+ function applyV281(){
+   const tile=document.getElementById('moduleSettingsTile');
+   if(tile)tile.style.display=(canAdmin()||currentPermissions().manage===true)?'':'none';
+ }
+ const oldRefreshV281=window.refreshPermissionVisibility||refreshPermissionVisibility;
+ window.refreshPermissionVisibility=function(){const r=oldRefreshV281.apply(this,arguments);applyV281();return r};
+ try{refreshPermissionVisibility=window.refreshPermissionVisibility}catch(_e){}
+ setTimeout(applyV281,100);
+
+ try{
+   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V281';
+   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V281 Berechtigungen bereit');
  }catch(_e){}
 })();
 </script>
