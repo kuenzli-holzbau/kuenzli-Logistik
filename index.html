@@ -30121,3 +30121,132 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V265';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V265 eindeutige Dublettenbereinigung bereit')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V266 – rein lesende Diagnose der letzten Nicht-__state-Abweichung.
+   Keine lokale Übernahme, keine Löschung, kein Cloud-Schreiben, keine Sync-Basis-Änderung. */
+(()=>{
+ const VERSION='V266', EXPECT=347;
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function close(){document.getElementById('v266Modal')?.remove()}
+ function modal(h){
+   close();
+   const m=document.createElement('div');
+   m.id='v266Modal';
+   m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:12px';
+   m.innerHTML=`<div style="background:#fff;width:min(1180px,98vw);max-height:95vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${h}</div>`;
+   document.body.appendChild(m);
+   document.getElementById('v266Close')?.addEventListener('click',close);
+ }
+ function rawState(){
+   const r=localStorage.getItem(KEY);
+   if(!r)throw new Error('Lokaler Hauptzustand fehlt.');
+   const p=JSON.parse(r);
+   if(!p||!Array.isArray(p.packages))throw new Error('Lokaler Hauptzustand unlesbar.');
+   return p;
+ }
+ function rawMap(p){const old=st;try{st=p;return localEntityMap()}finally{st=old}}
+ function isStateKey(k){return k==='__state'||k==='__state|main'||String(k).startsWith('__state|')}
+ function fieldDiff(a,b,path='',out=[]){
+   if(out.length>=80)return out;
+   if(stableJson(a)===stableJson(b))return out;
+   const ao=a&&typeof a==='object', bo=b&&typeof b==='object';
+   if(!ao||!bo||Array.isArray(a)!==Array.isArray(b)){
+     out.push({path:path||'(Objekt)',local:a,cloud:b}); return out;
+   }
+   if(Array.isArray(a)){
+     const n=Math.max(a.length,b.length);
+     for(let i=0;i<n&&out.length<80;i++)fieldDiff(a[i],b[i],`${path}[${i}]`,out);
+     return out;
+   }
+   const keys=new Set([...Object.keys(a||{}),...Object.keys(b||{})]);
+   for(const k of keys){
+     if(out.length>=80)break;
+     fieldDiff(a?.[k],b?.[k],path?`${path}.${k}`:k,out);
+   }
+   return out;
+ }
+ function short(v){
+   let s;
+   try{s=JSON.stringify(v)}catch(_e){s=String(v)}
+   if(s===undefined)s='undefined';
+   return esc(s.length>420?s.slice(0,417)+'…':s);
+ }
+ function compare(remote,local){
+   const keys=new Set([...Object.keys(remote),...Object.keys(local)]);
+   const mismatch=[],localOnly=[],cloudOnly=[],identical=[],states=[];
+   for(const k of keys){
+     const l=local[k],r=remote[k];
+     if(isStateKey(k)){states.push({k,l,r});continue}
+     if(l&&!r){localOnly.push({k,l});continue}
+     if(!l&&r){cloudOnly.push({k,r});continue}
+     if(stableJson(l.data)===stableJson(r.data))identical.push({k,l,r});
+     else mismatch.push({k,l,r,diffs:fieldDiff(l.data,r.data)});
+   }
+   return{mismatch,localOnly,cloudOnly,identical,states};
+ }
+ function baseCheck(remote,local){
+   const base=loadSyncBase(),bad=[],missing=[];
+   for(const [k,r] of Object.entries(remote)){
+     if(isStateKey(k))continue;
+     const l=local[k];
+     if(!l||stableJson(l.data)!==stableJson(r.data))continue;
+     const b=base?.[k];
+     if(!b){missing.push(k);continue}
+     if(Number(b.version||0)!==Number(r.version||0)||b.hash!==stableJson(r.data))bad.push({k,b,r});
+   }
+   return{base,bad,missing};
+ }
+ async function pull(manual=false){
+   if(!manual)return false;
+   cloudCfg=loadCloudConfig();
+   if(!cloudReady()){alert('V266: Cloud nicht bereit. Nichts verändert.');return false}
+   if(cloudBusy)return false;
+   cloudBusy=true; setSyncStatus('syncing','V266 diagnostiziert letzte Abweichung');
+   try{
+     const before=localStorage.getItem(KEY);
+     const p=rawState(), local=rawMap(p), remote=await fetchRemoteEntities();
+     const after=localStorage.getItem(KEY);
+     if(before!==after)throw new Error('Lokaler Hauptzustand änderte sich während der rein lesenden Diagnose.');
+     const c=compare(remote,local), bc=baseCheck(remote,local);
+     const lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length;
+     const rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;
+     const mismatchRows=c.mismatch.map((x,i)=>`
+       <div style="margin-top:10px;padding:11px;border:1px solid #e5bf84;background:#fff4e6;border-radius:10px">
+         <b>${i+1}. ${esc(x.k)}</b> · Cloud-Version ${Number(x.r?.version||0)}
+         <div style="margin-top:7px"><b>Feldabweichungen (${x.diffs.length}${x.diffs.length>=80?'+':''})</b></div>
+         ${x.diffs.length?x.diffs.map(d=>`<div style="padding:5px 0;border-top:1px solid #ead9bc"><code>${esc(d.path)}</code><br>lokal: <code>${short(d.local)}</code><br>Cloud: <code>${short(d.cloud)}</code></div>`).join(''):'<div>Keine auflösbare Feldabweichung.</div>'}
+       </div>`).join('');
+     modal(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px">
+       <div><h2 style="margin:0 0 5px">V266 Diagnose der letzten Cloud-Abweichung</h2><div><b>NUR LESEND</b> · keine Übernahme · keine Löschung · kein Cloud-Schreiben · keine Sync-Basis-Änderung</div></div>
+       <button id="v266Close" class="btn secondary">Schließen</button></div>
+       <div style="margin-top:12px;padding:11px;background:${lp===EXPECT&&rp===EXPECT?'#eef7ef':'#fff0f0'};border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal <b>${lp}</b> · Cloud <b>${rp}</b>. V266 verändert keine Packages.</div>
+       <div style="margin-top:10px;padding:11px;background:${c.mismatch.length===1&&!c.localOnly.length&&!c.cloudOnly.length?'#eef7ef':'#fff4e6'};border:1px solid #e5bf84;border-radius:10px">
+         <b>Nicht-__state:</b> identisch <b>${c.identical.length}</b> · abweichend <b>${c.mismatch.length}</b> · nur lokal <b>${c.localOnly.length}</b> · nur Cloud <b>${c.cloudOnly.length}</b>.
+       </div>
+       <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt unangetastet.</b> Erkannte __state-Einträge: ${c.states.length}.</div>
+       <h3 style="margin:16px 0 4px">Verbleibende Inhaltsabweichung(en)</h3>
+       ${mismatchRows||'<div style="padding:10px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>Keine.</b></div>'}
+       ${c.localOnly.length?`<details style="margin-top:12px" open><summary style="font-weight:800">Nur lokal (${c.localOnly.length})</summary>${c.localOnly.map(x=>`<div style="padding:5px 0;border-top:1px solid #eee">${esc(x.k)}</div>`).join('')}</details>`:''}
+       ${c.cloudOnly.length?`<details style="margin-top:12px" open><summary style="font-weight:800">Nur Cloud (${c.cloudOnly.length})</summary>${c.cloudOnly.map(x=>`<div style="padding:5px 0;border-top:1px solid #eee">${esc(x.k)} · Cloud-Version ${Number(x.r?.version||0)}</div>`).join('')}</details>`:''}
+       <div style="margin-top:14px;padding:11px;background:${bc.bad.length||bc.missing.length?'#fff4e6':'#eef7ef'};border:1px solid ${bc.bad.length||bc.missing.length?'#e5bf84':'#b7d3bb'};border-radius:10px">
+         <b>Sync-Basis für bereits identische Nicht-__state-Objekte:</b> fehlend ${bc.missing.length} · falsch/veraltet ${bc.bad.length}.
+         <br>V266 korrigiert diese Referenzen ausdrücklich noch nicht.
+       </div>
+       ${(bc.missing.length||bc.bad.length)?`<details style="margin-top:10px"><summary style="font-weight:800">Betroffene Sync-Referenzen anzeigen (${bc.missing.length+bc.bad.length})</summary>${[...bc.missing.map(k=>({k,t:'fehlend'})),...bc.bad.map(x=>({k:x.k,t:'falsch/veraltet'}))].slice(0,100).map(x=>`<div style="padding:5px 0;border-top:1px solid #eee"><b>${esc(x.k)}</b> · ${x.t}</div>`).join('')}</details>`:''}
+       <div style="margin-top:14px;font-weight:800">V266 hat nichts geschrieben, gelöscht oder synchronisiert. Bitte Ergebnis fotografieren.</div>`);
+     setSyncStatus('ok',`V266 Diagnose · ${c.mismatch.length} Abweichung(en) · ${c.localOnly.length} nur lokal · ${c.cloudOnly.length} nur Cloud`);
+     return true;
+   }catch(e){
+     alert('V266 Diagnose fehlgeschlagen:\n\n'+String(e.message||e));
+     setSyncStatus('err','V266 Diagnose fehlgeschlagen');
+     return false;
+   }finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pull;
+ try{
+   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V266';
+   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V266 Diagnose bereit');
+ }catch(_e){}
+})();
+</script>
