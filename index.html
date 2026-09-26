@@ -31348,3 +31348,61 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V282';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V282 Berechtigungsfeld bereit')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V283 – Empfänger-Seite der Benutzerberechtigungen.
+   Frischer Cloud-Read nach Login/Fokus, exakter Key-Abgleich und sichtbare Diagnose.
+   Keine Package-/__state-Cloud-Schreiboperation. */
+(()=>{
+ let permPullV283=false;
+ async function pullOwnPermissionV283(showMissing=false){
+   if(permPullV283||!cloudReady()||!authSession||!cloudMember)return false;
+   permPullV283=true;
+   try{
+     if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' statt 347.');
+     const username=cleanUsername(cloudMember?.username||authUsername());
+     const key=permissionKeyForCloud(username);
+     const entityKey='permissionSets|'+key;
+     const remote=await fetchRemoteEntities();
+     const r=remote[entityKey];
+     if(!r||!r.data||typeof r.data!=='object'){
+       if(showMissing)setSyncStatus('err','V283 Rechte fehlen in Cloud · '+entityKey);
+       return false;
+     }
+     ensurePermissionStore();
+     st.userPermissions[key]=JSON.parse(JSON.stringify(r.data));
+     // Nur lokal sichern. __state wird weiterhin nicht als Cloud-Entität geschrieben.
+     localStorage.setItem(KEY,JSON.stringify(st));
+
+     // Sichtbarkeit unmittelbar aus dem frisch gelesenen Satz setzen.
+     const p=currentPermissions();
+     refreshPermissionVisibility();
+     const tile=document.getElementById('moduleSettingsTile');
+     if(tile)tile.style.display=(canAdmin()||p.manage===true)?'':'none';
+     try{refresh()}catch(_e){}
+     setSyncStatus('ok','V283 Rechte geladen · '+key+' · Verwaltung '+(p.manage===true?'JA':'NEIN'));
+     return true;
+   }catch(e){
+     setSyncStatus('err','V283 Rechte laden · '+String(e?.message||e||''));
+     return false;
+   }finally{permPullV283=false}
+   }
+ window.pullOwnPermissionV283=pullOwnPermissionV283;
+
+ // Nach vollständigem Login nochmals explizit laden.
+ const oldSignInV283=signInCloud;
+ signInCloud=async function(){
+   await oldSignInV283.apply(this,arguments);
+   await pullOwnPermissionV283(true);
+ };
+
+ window.addEventListener('load',()=>setTimeout(()=>pullOwnPermissionV283(true),2200));
+ window.addEventListener('focus',()=>setTimeout(()=>pullOwnPermissionV283(false),600));
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>pullOwnPermissionV283(false),600)});
+
+ try{
+   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V283';
+   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V283 Rechte-Empfang bereit');
+ }catch(_e){}
+})();
+</script>
