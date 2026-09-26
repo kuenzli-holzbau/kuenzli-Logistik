@@ -29468,3 +29468,38 @@ ${safeTypeLines}
  window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V254';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V254 kontrollierter Abschluss bereit')}catch(_e){}
 })();
 </script>
+<script>
+/* V255 – reine Diagnose des V254-Verifikationsstopps bei materialCatalog|mc_pkg_excelv479_row_4.
+   Keine lokalen/Cloud-/Sync-Schreibvorgänge. Simuliert nur die MaterialCatalog-Normalisierung im Arbeitsspeicher. */
+(()=>{
+ const VERSION='V255', KEYX='materialCatalog|mc_pkg_excelv479_row_4', IDX='mc_pkg_excelv479_row_4';
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function close(){document.getElementById('v255Modal')?.remove()}
+ function modal(html){close();const m=document.createElement('div');m.id='v255Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1160px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${html}</div>`;document.body.appendChild(m);document.getElementById('v255Close')?.addEventListener('click',close)}
+ function flatDiff(a,b,path='',out=[]){if(stableJson(a)===stableJson(b))return out;if(a===null||b===null||typeof a!=='object'||typeof b!=='object'||Array.isArray(a)!==Array.isArray(b)){out.push({path:path||'(Objekt)',a,b});return out}if(Array.isArray(a)){const n=Math.max(a.length,b.length);for(let i=0;i<n;i++)flatDiff(a[i],b[i],`${path}[${i}]`,out);return out}for(const k of new Set([...Object.keys(a||{}),...Object.keys(b||{})]))flatDiff(a?.[k],b?.[k],path?path+'.'+k:k,out);return out}
+ async function pull(manual=false){
+  if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V255: Cloud nicht bereit. Nichts verändert.');return false}if(cloudBusy)return false;cloudBusy=true;setSyncStatus('syncing','V255 diagnostiziert V254-Stopp – nur lesend');
+  try{
+   load();const remote=await fetchRemoteEntities(),local=localEntityMap(),r=remote[KEYX],l=local[KEYX];if(!r)throw new Error(KEYX+' fehlt in der Cloud.');
+   const currentCat=JSON.parse(JSON.stringify(st.materialCatalog||[])),packages=JSON.parse(JSON.stringify(st.packages||[])),deleted=JSON.parse(JSON.stringify(st.deletedMaterialCatalogNames||[]));
+   let sim=currentCat.filter((o,i)=>entityId('materialCatalog',o,i)!==IDX);sim.push(JSON.parse(JSON.stringify(r.data)));
+   const wasDeleted=name=>deleted.some(n=>String(n||'').toLowerCase()===String(name||'').toLowerCase());
+   const added=[];for(const p of packages){let name=String(p?.material||'').trim();if(!name)continue;if(!wasDeleted(name)&&!sim.some(x=>String(x?.name||'').toLowerCase()===name.toLowerCase())){const o={id:'mc_pkg_'+String(p.id||Date.now()),name,category:p.idCategory||'',active:true,height:p.height||'',width:p.width||'',length:p.length||''};sim.push(o);added.push({packageId:String(p.id||''),o})}}
+   const sameId=sim.filter((o,i)=>entityId('materialCatalog',o,i)===IDX),winner=sameId.length?sameId[sameId.length-1]:null,fd=flatDiff(r.data,winner||null),direct=flatDiff(r.data,l?.data||null);
+   const addSame=added.filter(x=>x.o.id===IDX),pkg=packages.find(p=>String(p?.id||'')==='excelv479_row_4');
+   const rows=fd.map(x=>`<div style="padding:7px 0;border-top:1px solid #eee"><b>${esc(x.path)}</b><br>Cloud: <code>${esc(JSON.stringify(x.a))}</code><br>Simulation lokal: <code>${esc(JSON.stringify(x.b))}</code></div>`).join('')||'<div style="padding:7px 0"><b>Keine Feldabweichung.</b></div>';
+   modal(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V255 Diagnose V254-Verifikationsstopp</h2><div><b>NUR LESEND</b> · keine lokale Übernahme, kein Cloud-Schreiben, keine Sync-Basis-Änderung</div></div><button id="v255Close" class="btn secondary">Schließen</button></div>
+   <div style="margin-top:12px;padding:11px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal ${packages.length} · Cloud ${Object.keys(remote).filter(k=>k.startsWith('packages|')).length}. <b>V255 verändert keine Packages.</b></div>
+   <div style="margin-top:10px;padding:11px;background:#fff4e6;border:1px solid #e5bf84;border-radius:10px"><b>Diagnoseobjekt:</b> ${esc(KEYX)} · Cloud-Version ${Number(r.version||0)}<br>Aktuell lokal vorhanden: <b>${l?'ja':'nein'}</b> · direkte Feldabweichungen Cloud↔aktuell lokal: <b>${direct.length}</b>.</div>
+   <div style="margin-top:10px;padding:11px;background:${addSame.length?'#fff0f0':'#eef7ef'};border:1px solid ${addSame.length?'#dfb1b1':'#b7d3bb'};border-radius:10px"><b>Simulation des V254-Schritts:</b> Cloud-Objekt einsetzen, danach ausschließlich die bestehende MaterialCatalog-Ergänzungslogik simulieren.<br>Neu erzeugte MaterialCatalog-Einträge insgesamt: <b>${added.length}</b> · davon mit derselben ID <b>${esc(IDX)}</b>: <b>${addSame.length}</b>.<br>Objekte mit dieser ID nach Simulation: <b>${sameId.length}</b>. Für localEntityMap wäre das <b>letzte Objekt mit dieser ID</b> maßgebend.</div>
+   <div style="margin-top:10px;padding:11px;background:#f6f7f6;border:1px solid #d8dedb;border-radius:10px"><b>Zugehöriges Package excelv479_row_4</b><br>material: <b>${esc(pkg?.material??'(nicht vorhanden)')}</b> · category: ${esc(pkg?.idCategory??'')} · Höhe/Breite/Länge: ${esc(pkg?.height??'')} / ${esc(pkg?.width??'')} / ${esc(pkg?.length??'')}</div>
+   <details style="margin-top:12px" open><summary style="font-weight:800">Cloud ↔ simuliertes localEntityMap-Ergebnis: Feldabweichungen (${fd.length})</summary>${rows}</details>
+   <details style="margin-top:10px"><summary style="font-weight:800">Alle Objekte mit ID ${esc(IDX)} nach Simulation (${sameId.length})</summary>${sameId.map((o,i)=>`<pre style="white-space:pre-wrap;border-top:1px solid #eee;padding:8px 0">#${i+1} ${esc(JSON.stringify(o,null,2))}</pre>`).join('')}</details>
+   <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt gesperrt.</b> V255 fasst weder __state noch andere Nutzdaten an.</div>
+   <div style="margin-top:14px;font-weight:800">V255 hat nichts geschrieben, gelöscht oder synchronisiert. Bitte Ergebnis fotografieren.</div>`);
+   setSyncStatus('ok','V255 Diagnose bereit · '+fd.length+' simulierte Feldabweichung(en)');return true;
+  }catch(e){alert('V255 Diagnose fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V255 Diagnose fehlgeschlagen');return false}finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V255';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V255 Diagnose bereit')}catch(_e){}
+})();
+</script>
