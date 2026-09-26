@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V294</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V295</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31083,7 +31083,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V294';
+   if(v)v.textContent='Aktuelle Version: V295';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -31699,5 +31699,57 @@ ${safeTypeLines}
 
  // Also expose for direct/manual use by existing openers.
  window.mapOpenPermissionToCloudV294=mapOpenPermissionToCloudV294;
+})();
+</script>
+
+<script>
+/* V295 – kompakte, read-only Cloud-Permission-Prüfung für den angemeldeten Benutzer.
+   Keine Cloud-Writes, keine Bestands-/Login-Änderung. */
+(()=>{
+ async function checkOwnPermissionV295(){
+   const n=(st.packages||[]).length;
+   if(n!==347){alert('V295 Sicherheitsstopp: '+n+' Packages statt 347.');return}
+   if(!cloudReady()||!authSession||!cloudMember){alert('V295: Cloud/Login nicht bereit.');return}
+   let key='';
+   try{key=permissionKeyForCloud(cleanUsername(cloudMember?.username||authUsername()))}catch(_e){}
+   if(!key){alert('V295: Permission-Key konnte nicht bestimmt werden.');return}
+   try{
+     const all=await fetchRemoteEntities();
+     const row=all['permissionSets|'+key];
+     const local=st.userPermissions?.[key];
+     const cur=(()=>{try{return currentPermissions()}catch(_e){return null}})();
+     const tile=document.getElementById('moduleSettingsTile');
+     alert(
+       'V295 Berechtigungsprüfung\n\n'+
+       'Benutzer: '+String(cloudMember?.username||authUsername()||'—')+'\n'+
+       'Key: '+key+'\n'+
+       'Cloud permissionSets: '+(row?'VORHANDEN':'FEHLT')+'\n'+
+       'Cloud manage: '+(row?.data?.manage===undefined?'—':String(row.data.manage))+'\n'+
+       'Cloud Version: '+String(row?.version??'—')+'\n'+
+       'Lokal manage: '+(local?.manage===undefined?'—':String(local.manage))+'\n'+
+       'currentPermissions manage: '+(cur?.manage===undefined?'—':String(cur.manage))+'\n'+
+       'Verwaltung-Karte: '+(tile?(getComputedStyle(tile).display==='none'?'AUSGEBLENDET':'SICHTBAR'):'NICHT GEFUNDEN')
+     );
+   }catch(e){
+     alert('V295 Cloud-Prüfung fehlgeschlagen:\n'+String(e?.message||e||''));
+   }
+ }
+ window.checkOwnPermissionV295=checkOwnPermissionV295;
+
+ function addV295Button(){
+   if(document.getElementById('checkPermissionV295'))return;
+   const anchor=document.querySelector('button[onclick*="permission"], #permissionCheckBtn, [data-action="permissions"]');
+   const b=document.createElement('button');
+   b.id='checkPermissionV295'; b.type='button'; b.className='btn';
+   b.textContent='Cloud-Rechte prüfen';
+   b.onclick=checkOwnPermissionV295;
+   if(anchor?.parentNode)anchor.parentNode.insertBefore(b,anchor.nextSibling);
+   else{
+     b.style.cssText='position:fixed;right:12px;bottom:12px;z-index:99999';
+     document.body.appendChild(b);
+   }
+ }
+ document.addEventListener('DOMContentLoaded',addV295Button);
+ window.addEventListener('load',()=>setTimeout(addV295Button,0));
 })();
 </script>
