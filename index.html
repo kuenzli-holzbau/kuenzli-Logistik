@@ -30754,3 +30754,135 @@ ${safeTypeLines}
  }catch(_e){}
 })();
 </script>
+
+<script>
+/* V273 – Projektfreigaben robust synchronisieren.
+   Ursache V272: ein beliebiges anderes Cloud-Objekt konnte V270 vor dem Schreiben
+   der lokalen Projektfreigabe stoppen. V273 synchronisiert Projekte gezielt und
+   unabhängig von fremden, nicht konfliktierenden Objekten.
+   Packages und __state werden durch diesen Zusatz nicht verändert. */
+(()=>{
+ const VERSION='V273';
+ let projectSyncFlight=false;
+
+ function projectKey(id){return 'projects|'+String(id)}
+ function projectLocal(id){
+   loadProjects();
+   const p=(projectStore.projects||[]).find(x=>x&&String(x.id)===String(id));
+   return p?{type:'projects',id:String(id),data:p}:null;
+ }
+ function myProjectKey(){return permissionKeyForCloud(cloudMember?.username||authUsername())}
+ function remoteProjectVisibleToMe(r){
+   if(!r||r.type!=='projects'||!r.data)return false;
+   if(currentRole()==='Administrator')return true;
+   const key=myProjectKey();
+   return String(r.data.createdByKey||'')===key ||
+     (Array.isArray(r.data.memberKeys)&&r.data.memberKeys.map(String).includes(key));
+ }
+ function putLocalProject(data){
+   loadProjects();
+   let arr=(projectStore.projects||[]).filter(p=>p&&typeof p==='object');
+   const ix=arr.findIndex(p=>String(p.id)===String(data.id));
+   if(ix>=0)arr[ix]=JSON.parse(JSON.stringify(data)); else arr.push(JSON.parse(JSON.stringify(data)));
+   projectStore.projects=arr;
+   localStorage.setItem(PROJECTS_KEY,JSON.stringify(projectStore));
+ }
+ async function syncOneProject(id,preferLocal=false){
+   if(!cloudReady()||!authSession||!cloudMember)return false;
+   const k=projectKey(id), remote=(await fetchRemoteEntities())[k], local=projectLocal(id), base=loadSyncBase()[k];
+   const lh=local?stableJson(local.data):null, rh=remote?stableJson(remote.data):null, bh=base?.hash??null;
+
+   if(lh===rh){
+     if(remote){const nb=loadSyncBase();nb[k]={version:Number(remote.version||0),hash:rh};saveSyncBase(nb)}
+     return true;
+   }
+
+   // Lokale Projektänderung (z.B. neue Freigabe) nur schreiben, wenn Cloud seit Basis unverändert ist.
+   if(local && (preferLocal || lh!==bh) && rh===bh){
+     if(!canWriteCloudEntity('projects','save'))throw new Error('Keine Cloud-Schreibberechtigung für Projekte.');
+     await rpcEntitySave('projects',String(id),local.data,Number(remote?.version||base?.version||0),false);
+     const fresh=(await fetchRemoteEntities())[k];
+     if(!fresh||stableJson(fresh.data)!==lh)throw new Error('Projektfreigabe wurde von der Cloud nicht bestätigt.');
+     const nb=loadSyncBase();nb[k]={version:Number(fresh.version||0),hash:lh};saveSyncBase(nb);
+     return true;
+   }
+
+   // Neu freigegebenes Projekt auf Empfängergerät: es existiert lokal noch nicht.
+   if(!local && remote && remoteProjectVisibleToMe(remote)){
+     putLocalProject(remote.data);
+     const verify=projectLocal(id);
+     if(!verify||stableJson(verify.data)!==rh)throw new Error('Lokale Projektübernahme konnte nicht verifiziert werden.');
+     const nb=loadSyncBase();nb[k]={version:Number(remote.version||0),hash:rh};saveSyncBase(nb);
+     return true;
+   }
+
+   // Bestehendes lokales Projekt darf Cloud→Gerät nur übernehmen, wenn lokal seit Basis unverändert ist.
+   if(local && remote && lh===bh && rh!==bh && remoteProjectVisibleToMe(remote)){
+     putLocalProject(remote.data);
+     const nb=loadSyncBase();nb[k]={version:Number(remote.version||0),hash:rh};saveSyncBase(nb);
+     return true;
+   }
+   return false;
+ }
+ async function discoverSharedProjects(){
+   if(projectSyncFlight||!cloudReady()||!authSession||!cloudMember)return 0;
+   projectSyncFlight=true;
+   try{
+     const remote=await fetchRemoteEntities();
+     let done=0;
+     for(const r of Object.values(remote)){
+       if(r?.type!=='projects'||!remoteProjectVisibleToMe(r))continue;
+       const before=projectLocal(r.id)?stableJson(projectLocal(r.id).data):null;
+       if(await syncOneProject(r.id,false)){
+         const after=projectLocal(r.id)?stableJson(projectLocal(r.id).data):null;
+         if(before!==after)done++;
+       }
+     }
+     refreshPermissionVisibility?.();renderProjectCards?.();renderPlatformProjectOverview?.();
+     if(done)setSyncStatus('ok','V273 Projektfreigabe · '+done+' Projekt(e) automatisch übernommen');
+     return done;
+   }catch(e){
+     setSyncStatus('err','V273 Projektfreigabe · '+String(e?.message||e||''));
+     return 0;
+   }finally{projectSyncFlight=false}
+ }
+
+ // Beim Erteilen einer Freigabe genau dieses Projekt sofort und verifiziert in die Cloud schreiben.
+ const oldAddProjectInviteKnownV273=addProjectInviteKnown;
+ addProjectInviteKnown=function(username,label){
+   oldAddProjectInviteKnownV273(username,label);
+   const id=projectAccessEditingId;
+   if(!id||!cloudReady())return;
+   setSyncStatus('syncing','V273 Projektfreigabe wird in Cloud gespeichert…');
+   setTimeout(async()=>{
+     try{
+       // Falls V270 wegen eines anderen Cloud-Objekts blockiert hat, wird nur dieses Projekt behandelt.
+       await syncOneProject(id,true);
+       setSyncStatus('ok','V273 Projektfreigabe Cloud-verifiziert');
+     }catch(e){setSyncStatus('err','V273 Projektfreigabe nicht synchronisiert · '+String(e?.message||e||''))}
+   },50);
+ };
+
+ // Manuelle Eingabe nutzt denselben verifizierten Pfad.
+ addProjectInviteByUsername=function(){
+   const v=(E('projectInviteUsername')?.value||'').trim();if(!v)return;
+   addProjectInviteKnown(v,v);
+ };
+
+ // Empfänger: beim Login/Fokus/Seitenstart gezielt nach freigegebenen Projekten suchen.
+ const oldSignInCloudV273=signInCloud;
+ signInCloud=async function(){
+   await oldSignInCloudV273();
+   if(cloudReady()&&cloudMember)await discoverSharedProjects();
+ };
+ window.addEventListener('focus',()=>setTimeout(discoverSharedProjects,350));
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(discoverSharedProjects,350)});
+ window.addEventListener('load',()=>setTimeout(discoverSharedProjects,1200));
+ window.discoverSharedProjectsV273=discoverSharedProjects;
+
+ try{
+   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V273';
+   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V273 Projektfreigaben bereit');
+ }catch(_e){}
+})();
+</script>
