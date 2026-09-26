@@ -29795,3 +29795,52 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V258';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V258 korrigierter Abschluss bereit')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V259 – NUR LESEND: exakte Post-Write-Diagnose des verbleibenden
+   materialCatalog-Verifikationsfehlers. Keine lokalen/Cloud-/Sync-Schreibvorgaenge. */
+(()=>{
+ const TARGET='materialCatalog|mc_pkg_excelv479_row_4', EXPECT=347;
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const fmt=v=>{try{return JSON.stringify(v)}catch(_e){return String(v)}};
+ function close(){document.getElementById('v259Modal')?.remove()}
+ function modal(h){close();const m=document.createElement('div');m.id='v259Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1200px,98vw);max-height:95vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${h}</div>`;document.body.appendChild(m);document.getElementById('v259Close')?.addEventListener('click',close)}
+ function reloadRead(){const raw=localStorage.getItem(KEY);if(!raw)throw new Error('Lokaler Hauptzustand fehlt.');const p=JSON.parse(raw);if(!p||!Array.isArray(p.packages))throw new Error('Lokaler Hauptzustand ist nicht lesbar.');return p}
+ function deepDiff(a,b,path='',out=[]){
+   if(Object.is(a,b))return out;
+   const ta=Array.isArray(a)?'array':a===null?'null':typeof a, tb=Array.isArray(b)?'array':b===null?'null':typeof b;
+   if(ta!==tb){out.push({path:path||'(Wurzel)',cloud:a,local:b,kind:`Typ ${ta} → ${tb}`});return out}
+   if(ta==='array'){
+     const n=Math.max(a.length,b.length);for(let i=0;i<n;i++){const p=`${path}[${i}]`;if(i>=a.length)out.push({path:p,cloud:undefined,local:b[i],kind:'nur lokal'});else if(i>=b.length)out.push({path:p,cloud:a[i],local:undefined,kind:'nur Cloud'});else deepDiff(a[i],b[i],p,out)}return out;
+   }
+   if(ta==='object'){
+     const keys=[...new Set([...Object.keys(a||{}),...Object.keys(b||{})])].sort();for(const k of keys){const p=path?`${path}.${k}`:k;if(!Object.prototype.hasOwnProperty.call(a,k))out.push({path:p,cloud:undefined,local:b[k],kind:'nur lokal'});else if(!Object.prototype.hasOwnProperty.call(b,k))out.push({path:p,cloud:a[k],local:undefined,kind:'nur Cloud'});else deepDiff(a[k],b[k],p,out)}return out;
+   }
+   out.push({path:path||'(Wurzel)',cloud:a,local:b,kind:'Wert'});return out;
+ }
+ async function pull(manual=false){
+   if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V259: Cloud nicht bereit. Nichts verändert.');return false}if(cloudBusy)return false;cloudBusy=true;setSyncStatus('syncing','V259 liest Diagnose');
+   try{
+     const rawBefore=localStorage.getItem(KEY);const state=reloadRead();const remote=await fetchRemoteEntities();const rawAfter=localStorage.getItem(KEY);
+     if(rawBefore!==rawAfter)throw new Error('Sicherheitsabbruch: localStorage-Hauptzustand änderte sich bereits während der reinen Leseprüfung.');
+     const oldSt=window.st; /* localEntityMap arbeitet auf st; nur temporaer im RAM, keine Speicherung */
+     window.st=state;const local=localEntityMap();window.st=oldSt;
+     const r=remote[TARGET],l=local[TARGET];if(!r)throw new Error(TARGET+' fehlt in der Cloud.');if(!l)throw new Error(TARGET+' fehlt lokal.');
+     const diffs=deepDiff(r.data,l.data);const lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;
+     const sameId=[];for(const [k,e] of Object.entries(local))if(k!==TARGET&&String(e?.id)==='mc_pkg_excelv479_row_4')sameId.push(k);
+     const rows=diffs.length?diffs.map((d,i)=>`<tr><td style="vertical-align:top;padding:7px;border-top:1px solid #ddd">${i+1}</td><td style="vertical-align:top;padding:7px;border-top:1px solid #ddd"><b>${esc(d.path)}</b><br><small>${esc(d.kind)}</small></td><td style="vertical-align:top;padding:7px;border-top:1px solid #ddd;word-break:break-word"><code>${esc(fmt(d.cloud))}</code></td><td style="vertical-align:top;padding:7px;border-top:1px solid #ddd;word-break:break-word"><code>${esc(fmt(d.local))}</code></td></tr>`).join(''):`<tr><td colspan="4" style="padding:10px"><b>Keine Feldabweichung – Cloud und aktueller lokaler Zustand sind exakt identisch.</b></td></tr>`;
+     modal(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V259 Diagnose materialCatalog-Verifikationsstopp</h2><div><b>NUR LESEND</b> · keine lokale Übernahme · kein Cloud-Schreiben · keine Sync-Basis-Änderung</div></div><button id="v259Close" class="btn secondary">Schließen</button></div>
+       <div style="margin-top:12px;padding:11px;background:${lp===EXPECT&&rp===EXPECT?'#eef7ef':'#fff4e6'};border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal ${lp} · Cloud ${rp}. <b>V259 verändert keine Packages.</b></div>
+       <div style="margin-top:10px;padding:11px;background:#fff4e6;border:1px solid #e5bf84;border-radius:10px"><b>Diagnoseobjekt:</b> ${esc(TARGET)} · Cloud-Version ${Number(r.version||0)}<br>Direkte Feldabweichungen Cloud ↔ aktuell lokal: <b>${diffs.length}</b> · weitere lokale Entity-Keys mit derselben ID: <b>${sameId.length}</b>${sameId.length?'<br>'+esc(sameId.join(' · ')):''}</div>
+       <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt unangetastet.</b> Diese Diagnose schreibt, löscht und synchronisiert nichts.</div>
+       <h3 style="margin:16px 0 6px">Exakter Feldvergleich</h3><div style="overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:14px"><thead><tr><th style="text-align:left;padding:7px">#</th><th style="text-align:left;padding:7px">Pfad</th><th style="text-align:left;padding:7px">Cloud</th><th style="text-align:left;padding:7px">Lokal nach V258</th></tr></thead><tbody>${rows}</tbody></table></div>
+       <details style="margin-top:14px"><summary style="font-weight:800">Cloud-Objekt vollständig anzeigen</summary><pre style="white-space:pre-wrap;word-break:break-word;background:#f6f7f6;padding:10px;border-radius:8px">${esc(JSON.stringify(r.data,null,2))}</pre></details>
+       <details style="margin-top:8px"><summary style="font-weight:800">Lokales Objekt vollständig anzeigen</summary><pre style="white-space:pre-wrap;word-break:break-word;background:#f6f7f6;padding:10px;border-radius:8px">${esc(JSON.stringify(l.data,null,2))}</pre></details>
+       <div style="margin-top:14px;font-weight:800">V259 hat nichts geschrieben, gelöscht oder synchronisiert. Bitte dieses Ergebnis fotografieren.</div>`);
+     setSyncStatus('ok','V259 Diagnose · '+diffs.length+' Feldabweichung(en)');return true;
+   }catch(e){alert('V259 Diagnose fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V259 Diagnose fehlgeschlagen');return false}finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pull;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V259';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V259 Diagnose bereit')}catch(_e){}
+})();
+</script>
