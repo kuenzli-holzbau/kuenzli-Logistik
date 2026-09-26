@@ -5435,7 +5435,7 @@ window.APP_RELEASE = {
      <label class="permissionCheck"><input type="checkbox" id="permArchive"> Archiv</label>
      <label class="permissionCheck"><input type="checkbox" id="permDefects"> Mängel</label>
      <label class="permissionCheck"><input type="checkbox" id="permTransfers"> Umbuchungen</label>
-     <label class="permissionCheck"><input type="checkbox" id="permManage"> Verwalten &amp; Einstellungen</label>
+     <label class="permissionCheck permissionMainV108"><input type="checkbox" id="permManage"> Verwaltung &amp; Einstellungen</label>
     </div>
    </div>
 
@@ -31194,6 +31194,60 @@ ${safeTypeLines}
  try{
    const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V279';
    if(cloudReady())setSyncStatus('ok','Cloud aktiv · V279 Berechtigungs-Sync bereit');
+ }catch(_e){}
+})();
+</script>
+
+<script>
+/* V280 – Hauptbereich "Verwaltung & Einstellungen" an permManage binden.
+   Das Recht existiert bereits im Berechtigungsmodell; bisher wurde aber nur die
+   alte Lager-Navigation "Verwalten" damit gesteuert. Die Startseiten-Kachel und
+   der direkte Moduleinstieg waren nicht daran gebunden. */
+(()=>{
+ function settingsAllowedV280(){
+   return canAdmin() || currentPermissions().manage===true;
+ }
+ function applySettingsPermissionV280(){
+   const tile=document.getElementById('moduleSettingsTile');
+   if(tile)tile.style.display=settingsAllowedV280()?'':'none';
+   if(activeMainModule==='settings'&&!settingsAllowedV280()){
+     const gs=document.getElementById('globalSettingsHome');if(gs)gs.style.display='none';
+     showModuleHome();
+   }
+ }
+ const oldRefreshV280=window.refreshPermissionVisibility||refreshPermissionVisibility;
+ window.refreshPermissionVisibility=function(){
+   const r=oldRefreshV280.apply(this,arguments);
+   applySettingsPermissionV280();
+   return r;
+ };
+ try{refreshPermissionVisibility=window.refreshPermissionVisibility}catch(_e){}
+
+ const oldOpenSettingsV280=window.openGlobalSettingsModule||openGlobalSettingsModule;
+ window.openGlobalSettingsModule=function(){
+   if(!settingsAllowedV280()){
+     alert('Für Verwaltung & Einstellungen besteht keine Freigabe.');
+     return;
+   }
+   return oldOpenSettingsV280.apply(this,arguments);
+ };
+ try{openGlobalSettingsModule=window.openGlobalSettingsModule}catch(_e){}
+
+ // Nach V279-Rechte-Pull Sichtbarkeit unmittelbar aktualisieren.
+ const oldPullPermV280=window.pullMyPermissionV279;
+ if(typeof oldPullPermV280==='function'){
+   window.pullMyPermissionV279=async function(){
+     const r=await oldPullPermV280.apply(this,arguments);
+     applySettingsPermissionV280();
+     return r;
+   };
+ }
+ document.addEventListener('DOMContentLoaded',()=>setTimeout(applySettingsPermissionV280,0));
+ setTimeout(applySettingsPermissionV280,250);
+
+ try{
+   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V280';
+   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V280 Verwaltungsberechtigung bereit');
  }catch(_e){}
 })();
 </script>
