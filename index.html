@@ -5516,7 +5516,11 @@ window.APP_RELEASE = {
  </div>
  <div class="toolbar" style="justify-content:flex-end;margin-top:14px">
   <button class="btn secondary" type="button" onclick="closeM('permissionModal')">Abbrechen</button>
-  <button class="btn" id="permissionSaveBtnV121" type="button" onclick="savePermissionEditorV121(event)">Berechtigungen speichern</button>
+  <div id="permSettingsExplicitV282" style="margin:14px 0;padding:14px;border:2px solid #173f34;border-radius:12px;background:#f7faf8">
+<label class="permissionCheck permissionMainV108" style="font-size:16px;font-weight:900"><input type="checkbox" id="permManageExplicitV282" onchange="permManageExplicitChangeV282(this.checked)"> Verwaltung &amp; Einstellungen</label>
+<div class="muted" style="margin-top:5px">Zugriff auf Benutzer, Cloud und allgemeine Verwaltung.</div>
+</div>
+<button class="btn" id="permissionSaveBtnV121" type="button" onclick="savePermissionEditorV121(event)">Berechtigungen speichern</button>
  </div>
 </div></div>
 
@@ -31310,5 +31314,37 @@ ${safeTypeLines}
    const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V281';
    if(cloudReady())setSyncStatus('ok','Cloud aktiv · V281 Berechtigungen bereit');
  }catch(_e){}
+})();
+</script>
+
+<script>
+/* V282 – aktive V121-Berechtigungsmaske: Verwaltungsrecht garantiert sichtbar und Cloud-synchron. */
+(()=>{
+ function syncManageV282(){const a=document.getElementById('permManage'),b=document.getElementById('permManageExplicitV282');if(a&&b)b.checked=!!a.checked}
+ window.permManageExplicitChangeV282=function(v){const a=document.getElementById('permManage');if(a)a.checked=!!v};
+ const oldOpenV282=openPermissionEditor;
+ openPermissionEditor=function(){const r=oldOpenV282.apply(this,arguments);setTimeout(syncManageV282,0);return r};
+ window.openPermissionEditor=openPermissionEditor;
+ const oldSave121V282=window.savePermissionEditorV121;
+ window.savePermissionEditorV121=async function(ev){
+  try{ev?.preventDefault?.()}catch(_e){}
+  const a=document.getElementById('permManage'),b=document.getElementById('permManageExplicitV282');if(a&&b)a.checked=!!b.checked;
+  const key=permissionEditorKey;
+  const result=await oldSave121V282.apply(this,arguments);
+  if(key&&canAdmin()&&cloudReady()&&authSession&&cloudMember){
+   try{
+    if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze verletzt.');
+    ensurePermissionStore();const data=st.userPermissions?.[key];if(!data)throw new Error('Berechtigungssatz fehlt.');
+    const k='permissionSets|'+String(key),remote=await fetchRemoteEntities(),r=remote[k];
+    await rpcEntitySave('permissionSets',String(key),JSON.parse(JSON.stringify(data)),Number(r?.version||0),false);
+    const fresh=(await fetchRemoteEntities())[k];
+    if(!fresh||stableJson(fresh.data)!==stableJson(data))throw new Error('Cloud-Verifikation fehlgeschlagen.');
+    setSyncStatus('ok','V282 Berechtigungen Cloud-verifiziert');
+   }catch(e){setSyncStatus('err','V282 Berechtigungs-Sync · '+String(e?.message||e||''))}
+  }
+  return result;
+ };
+ try{savePermissionEditorV121=window.savePermissionEditorV121}catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V282';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V282 Berechtigungsfeld bereit')}catch(_e){}
 })();
 </script>
