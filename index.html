@@ -30886,3 +30886,159 @@ ${safeTypeLines}
  }catch(_e){}
 })();
 </script>
+
+<style>
+/* V274 – Kategorieauswahl Element-ID in der Lagerkontrolle */
+#controlIdCategoryV274{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 8px}
+#controlIdCategoryV274 button{min-width:46px;padding:8px 12px;border:1px solid #c8d2cd;border-radius:9px;background:#fff;font-weight:900;cursor:pointer}
+#controlIdCategoryV274 button.active{background:#173f34;color:#fff;border-color:#173f34}
+</style>
+<script>
+/* V274 – Pins objektweise synchronisieren; Lagerkontroll-Sync robust gegen
+   Folgeänderungen; Element-ID = Kategorie + Nummer.
+   Packages werden niemals pauschal ersetzt; __state bleibt ausgeschlossen. */
+(()=>{
+ const VERSION='V274', EXPECT_PACKAGES=347;
+ let catV274='A', runV274=false, pendingV274=false;
+
+ // 1) Material-Pins sind ab V274 echte Cloud-Entitäten.
+ const oldEntityCollectionsV274=entityCollections;
+ entityCollections=function(){
+   const a=oldEntityCollectionsV274();
+   return a.includes('materialPinsV552')?a:[...a,'materialPinsV552'];
+ };
+ const oldCanWriteV274=canWriteCloudEntity;
+ canWriteCloudEntity=function(type,action='save'){
+   if(type==='materialPinsV552'){
+     const role=currentRole();
+     return role==='Administrator'||role==='Lagerverantwortlicher'||role==='Mitarbeiter';
+   }
+   return oldCanWriteV274(type,action);
+ };
+
+ function transientV274(e){return /\b(503|504)\b|PGRST003|timeout|timed out|Failed to fetch|NetworkError|Load failed/i.test(String(e?.message||e||''))}
+ function analyzeV274(remote,local){
+   const base=loadSyncBase(), keys=new Set([...Object.keys(base||{}),...Object.keys(local||{}),...Object.keys(remote||{})]);
+   const changed=[],remoteChanged=[],conflicts=[],deletions=[];
+   for(const k of keys){
+     if(k==='__state|main')continue;
+     const l=local[k],r=remote[k],b=base[k],lh=l?stableJson(l.data):null,rh=r?stableJson(r.data):null,bh=b?.hash??null;
+     if(lh===rh)continue;
+     const lc=lh!==bh,rc=rh!==bh;
+     if(lc&&!rc){(l?changed:deletions).push({k,l,r,b,lh,rh})}
+     else if(!lc&&rc)remoteChanged.push({k,l,r,b,lh,rh});
+     else conflicts.push({k,l,r,b,lh,rh});
+   }
+   return {changed,remoteChanged,conflicts,deletions};
+ }
+
+ // 2) Auto-Sync: eine während eines laufenden Lagerkontroll-Syncs erneut
+ // geänderte Entität erzeugt keinen Cloudfehler mehr, sondern einen Folgelauf.
+ async function syncV274(manual=false){
+   cloudCfg=loadCloudConfig();
+   if(!cloudReady()){if(manual)alert('Cloud ist nicht bereit. Lokale Daten bleiben gespeichert.');return false}
+   if(runV274||cloudBusy){pendingV274=true;return false}
+   if((st.packages||[]).length!==EXPECT_PACKAGES){
+     setSyncStatus('err','V274 Schutzstopp · '+(st.packages||[]).length+' Packages statt 347');return false;
+   }
+   runV274=true;cloudBusy=true;
+   try{
+     setSyncStatus('syncing','V274 synchronisiert Änderungen…');
+     let remote=await fetchRemoteEntities(),local=localEntityMap(),a=analyzeV274(remote,local);
+     if(a.conflicts.length||a.remoteChanged.length){
+       setSyncStatus('err',`V274 Schutzstopp · ${a.conflicts.length} Konflikt(e), ${a.remoteChanged.length} Cloud-Änderung(en)`);
+       return false;
+     }
+     // Löschungen bleiben grundsätzlich gesperrt; einzige neue Ausnahme sind Pins.
+     const forbiddenDeletes=a.deletions.filter(x=>x.l?.type!=='materialPinsV552'&&x.r?.type!=='materialPinsV552');
+     if(forbiddenDeletes.length){
+       setSyncStatus('err','V274 Schutzstopp · '+forbiddenDeletes.length+' Löschung(en) nicht automatisch übertragen');return false;
+     }
+     let done=0,needsRerun=false;
+     for(const s of a.changed){
+       remote=await fetchRemoteEntities();local=localEntityMap();
+       const l=local[s.k],r=remote[s.k],b=loadSyncBase()[s.k];
+       const lh=l?stableJson(l.data):null,rh=r?stableJson(r.data):null,bh=b?.hash??null;
+       if(!l){needsRerun=true;continue}
+       if(lh!==s.lh){needsRerun=true;continue} // Folgeänderung: nächster Lauf statt Fehler
+       if(rh!==s.rh||rh!==bh){throw new Error(s.k+': Cloud parallel geändert; nichts überschrieben.')}
+       if(!canWriteCloudEntity(l.type,'save'))continue;
+       await rpcEntitySave(l.type,l.id,l.data,Number(r?.version||b?.version||0),false);
+       const fresh=(await fetchRemoteEntities())[s.k],cur=localEntityMap()[s.k];
+       if(!fresh||!cur||stableJson(cur.data)!==lh||stableJson(fresh.data)!==lh){needsRerun=true;continue}
+       const nb=loadSyncBase();nb[s.k]={version:Number(fresh.version||0),hash:lh};saveSyncBase(nb);done++;
+     }
+     // Pin-Löschungen einzeln, versioniert und verifiziert.
+     for(const s of a.deletions.filter(x=>(x.r?.type||'')==='materialPinsV552')){
+       const fresh=(await fetchRemoteEntities())[s.k],cur=localEntityMap()[s.k];
+       if(cur){needsRerun=true;continue}
+       if(!fresh)continue;
+       const b=loadSyncBase()[s.k],bh=b?.hash??null,rh=stableJson(fresh.data);
+       if(rh!==bh)throw new Error(s.k+': Pin wurde in Cloud parallel geändert; Löschung gestoppt.');
+       await rpcEntityDelete('materialPinsV552',fresh.id,Number(fresh.version||b?.version||0),false);
+       if((await fetchRemoteEntities())[s.k])throw new Error(s.k+': Pin-Löschung nicht bestätigt.');
+       const nb=loadSyncBase();delete nb[s.k];saveSyncBase(nb);done++;
+     }
+     if((st.packages||[]).length!==EXPECT_PACKAGES)throw new Error('Package-Sicherheitsgrenze nach Sync verletzt.');
+     if(needsRerun){pendingV274=true;setSyncStatus('syncing','V274 Folgeänderung erkannt · nächster Sync läuft…')}
+     else setSyncStatus('ok','V274 synchron · '+done+' Änderung(en) Cloud-verifiziert');
+     return true;
+   }catch(e){
+     setSyncStatus('err',(transientV274(e)?'V274 Cloud vorübergehend nicht erreichbar':'V274 Schutzstopp')+' · '+String(e?.message||e||''));
+     return false;
+   }finally{
+     cloudBusy=false;runV274=false;
+     if(pendingV274){pendingV274=false;setTimeout(()=>syncV274(false),900)}
+   }
+ }
+ window.pushEntitySync=syncV274;
+
+ // 3) Lagerkontrolle: Kategorie wählen, im Feld nur Nummer eingeben.
+ const oldControlFindV274=window.controlFindV185;
+ function normalizeNumV274(v){
+   let x=String(v||'').trim().toUpperCase();
+   const m=x.match(/^(TB|A|B|C|D|E)\s*-\s*(\d+)$/);if(m){catV274=m[1];return m[2]}
+   return x.replace(/\D+/g,'');
+ }
+ function decorateControlIdV274(){
+   const inp=document.getElementById('ctrlElementV185');if(!inp)return;
+   let host=document.getElementById('controlIdCategoryV274');
+   if(!host){
+     host=document.createElement('div');host.id='controlIdCategoryV274';
+     host.innerHTML=['A','B','C','D','E','TB'].map(c=>`<button type="button" data-cat="${c}">${c}</button>`).join('');
+     inp.parentNode.insertBefore(host,inp);
+     host.addEventListener('click',e=>{
+       const b=e.target.closest('button[data-cat]');if(!b)return;
+       catV274=b.dataset.cat;paintCatV274();inp.focus();
+     });
+     inp.placeholder='nur Nummer, z. B. 438';inp.inputMode='numeric';
+     inp.addEventListener('input',()=>{const n=normalizeNumV274(inp.value);if(inp.value!==n)inp.value=n});
+   }
+   paintCatV274();
+ }
+ function paintCatV274(){
+   document.querySelectorAll('#controlIdCategoryV274 button').forEach(b=>b.classList.toggle('active',b.dataset.cat===catV274));
+ }
+ window.controlFindV185=function(){
+   const inp=document.getElementById('ctrlElementV185');if(!inp)return;
+   const n=normalizeNumV274(inp.value);
+   if(!n){alert('Bitte eine Nummer eingeben.');inp.focus();return}
+   inp.value=catV274+'-'+n;
+   const out=oldControlFindV274.apply(this,arguments);
+   setTimeout(()=>{const i=document.getElementById('ctrlElementV185');if(i&&!document.getElementById('ctrlEditorV185')?.querySelector('.controlEditV185'))i.value=n;decorateControlIdV274()},0);
+   return out;
+ };
+ const oldRenderFullV274=window.renderFullControl;
+ window.renderFullControl=function(){
+   const out=oldRenderFullV274.apply(this,arguments);
+   setTimeout(decorateControlIdV274,0);return out;
+ };
+ document.addEventListener('DOMContentLoaded',()=>setTimeout(decorateControlIdV274,0));
+ setTimeout(decorateControlIdV274,300);
+
+ try{
+   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V274';
+   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V274 Pins + Lagerkontrolle bereit');
+ }catch(_e){}
+})();
+</script>
