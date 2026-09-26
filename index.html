@@ -29707,3 +29707,91 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V257';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V257 verifizierter Abschluss bereit')}catch(_e){}
 })();
 </script>
+
+
+<script>
+/* V258 – behebt den konkret identifizierten V257-Fehler:
+   1) Packages zuerst, materialCatalog zuletzt.
+   2) Nach dem Einsetzen eines Cloud-materialCatalog-Objekts KEIN ensureV24(),
+      weil ensureV24 den gerade übernommenen Materialstamm erneut ableiten/mutieren kann.
+   3) Verifikation weiterhin gegen den neu aus localStorage eingelesenen Zustand.
+   Cloud ist Quelle; __state bleibt gesperrt; kein Cloud-Schreiben. */
+(()=>{
+ const EXPECT=347, MAT_KEY='materialCatalog|mc_pkg_p1790261063719', MAT_ID='mc_pkg_p1790261063719';
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function reload(){const raw=localStorage.getItem(KEY);if(!raw)throw new Error('Lokaler Hauptzustand fehlt.');const p=JSON.parse(raw);if(!p||!Array.isArray(p.packages))throw new Error('Lokaler Hauptzustand ist nicht lesbar.');st=p;loadProjects();loadSmallOrders();loadPlatformStore();return p}
+ function close(){document.getElementById('v258Modal')?.remove()}
+ function modal(h){close();const m=document.createElement('div');m.id='v258Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1160px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${h}</div>`;document.body.appendChild(m);document.getElementById('v258Close')?.addEventListener('click',close)}
+ function diff(remote,local){const keys=new Set([...Object.keys(local),...Object.keys(remote)]),mismatch=[],localOnly=[],identical=[];for(const k of keys){if(k==='__state|main')continue;const l=local[k],r=remote[k];if(l&&!r){localOnly.push({k,l});continue}if(!l&&r){mismatch.push({k,l,r});continue}if(stableJson(l.data)===stableJson(r.data))identical.push({k,l,r});else mismatch.push({k,l,r})}return{mismatch,localOnly,identical}}
+ function pri(x){const t=x.r?.type||x.k.split('|')[0];if(t==='packages')return 10;if(t==='materialCatalog')return 90;return 40}
+ function ordered(a){return [...a].sort((x,y)=>pri(x)-pri(y)||x.k.localeCompare(y.k))}
+ function refs(id,map,skip){const out=[];function walk(v,path,h){if(v==null)return;if(typeof v==='string'||typeof v==='number'){if(String(v)===id)h.push(path||'(Wert)');return}if(Array.isArray(v)){v.forEach((x,i)=>walk(x,`${path}[${i}]`,h));return}if(typeof v==='object')for(const [k,x] of Object.entries(v))walk(x,path?`${path}.${k}`:k,h)}for(const [k,e] of Object.entries(map)){if(k===skip||k==='__state|main')continue;const h=[];walk(e?.data,'',h);if(h.length)out.push({k,h})}return out}
+ function apply(x){
+   reload();const type=x.r.type,id=String(x.r.id),data=JSON.parse(JSON.stringify(x.r.data));
+   if(type==='projects'){let arr=(projectStore.projects||[]).filter(Boolean),ix=arr.findIndex(p=>String(p.id)===id);if(ix>=0)arr[ix]=data;else arr.push(data);projectStore.projects=arr;localStorage.setItem(PROJECTS_KEY,JSON.stringify(projectStore));return}
+   if(type==='smallOrders'){let rr=Object.assign({},data,{cloudSync:true}),arr=(smallOrderStore.reports||[]).filter(Boolean),ix=arr.findIndex(r=>r.cloudSync===true&&String(r.id)===id);if(ix>=0)arr[ix]=rr;else arr.push(rr);smallOrderStore.reports=arr;localStorage.setItem(SMALL_ORDERS_KEY,JSON.stringify(smallOrderStore));return}
+   if(type==='platforms'){if(id!=='main')throw new Error('Unbekannter platforms-Schlüssel.');platformStore=normalizePlatformStoreData(data||{});localStorage.setItem(PLATFORM_KEY,JSON.stringify(platformStore));return}
+   if(type==='toolsContainers'){if(id!=='main')throw new Error('Unbekannter toolsContainers-Schlüssel.');let d=Object.assign({},data);delete d.id;if(!Array.isArray(d.containers))d.containers=[];localStorage.setItem('kuenzli_tools_white_container_v1',JSON.stringify(d));return}
+   if(type==='__state')throw new Error('__state ist gesperrt.');
+   if(!entityCollections().includes(type))throw new Error('Nicht unterstützter Typ: '+type);
+   let next=JSON.parse(JSON.stringify(st)),arr=Array.isArray(next[type])?next[type]:[],ix=arr.findIndex((o,i)=>entityId(type,o,i)===id);
+   if(ix>=0)arr[ix]=data;else arr.push(data);next[type]=arr;st=next;
+   /* ENTSCHEIDENDE KORREKTUR: materialCatalog darf nach Cloud-Einsetzen nicht
+      durch ensureV24 erneut abgeleitet/verändert werden. Dieses Verhalten war bereits
+      in V249 korrekt und wurde in V257 versehentlich verloren. */
+   if(type!=='materialCatalog')ensureV24();
+   localStorage.setItem(KEY,JSON.stringify(st));
+ }
+ function verify(k,data){reload();const got=localEntityMap()[k];return !!got&&stableJson(got.data)===stableJson(data)}
+ function removeKnown(){reload();const before=(st.materialCatalog||[]).length;st.materialCatalog=(st.materialCatalog||[]).filter((o,i)=>entityId('materialCatalog',o,i)!==MAT_ID);if(st.materialCatalog.length!==before-1)throw new Error('Bekanntes nur-lokales MaterialCatalog-Objekt konnte nicht eindeutig entfernt werden.');localStorage.setItem(KEY,JSON.stringify(st));reload();if(localEntityMap()[MAT_KEY])throw new Error('Entfernung konnte nicht verifiziert werden.')}
+ async function pull(manual=false){
+   if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V258: Cloud nicht bereit. Nichts verändert.');return false}if(cloudBusy)return false;cloudBusy=true;setSyncStatus('syncing','V258 prüft Abschluss');
+   try{
+     reload();const remote=await fetchRemoteEntities();reload();const local=localEntityMap(),d=diff(remote,local),c=ordered(d.mismatch);
+     const lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length,rf=refs(MAT_ID,local,MAT_KEY),safe=rp===EXPECT&&d.localOnly.length===1&&d.localOnly[0].k===MAT_KEY&&rf.length===0&&c.length>0;
+     const by={};c.forEach(x=>{const t=x.k.split('|')[0];by[t]=(by[t]||0)+1});
+     modal(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V258 Cloud → Gerät – korrigierter Abschluss</h2><div><b>CLOUD IST DIE QUELLE</b> · Packages zuerst · materialCatalog zuletzt · Verifikation nach erneutem Einlesen</div></div><button id="v258Close" class="btn secondary">Schließen</button></div>
+     <div style="margin-top:12px;padding:11px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal ${lp} · Cloud <b>${rp}</b> · Ziel <b>347/347</b>.</div>
+     <div style="margin-top:10px;padding:11px;background:${safe?'#eef7ef':'#fff0f0'};border:1px solid ${safe?'#b7d3bb':'#dfb1b1'};border-radius:10px"><b>Cloud-Abweichungen: ${c.length}</b> · ${esc(Object.entries(by).map(([k,v])=>k+': '+v).join(' · '))}<br><b>Nur lokal:</b> ${d.localOnly.length} · ${esc(d.localOnly[0]?.k||'–')} · exakte ID-Referenzen: <b>${rf.length}</b>.</div>
+     <div style="margin-top:10px;padding:11px;background:#fff4e6;border:1px solid #e5bf84;border-radius:10px"><b>Fehlerursache behoben:</b> V257 rief beim Übernehmen eines materialCatalog-Objekts <code>ensureV24()</code> auf. Dadurch konnte der gerade gesetzte Cloud-Materialstamm vor der Verifikation wieder verändert werden. V258 verwendet für materialCatalog wieder den bereits in V249 bewährten direkten Schreibpfad <b>ohne ensureV24</b>.</div>
+     <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt gesperrt und wird nicht übernommen.</b></div>
+     <details style="margin-top:10px"><summary style="font-weight:800">Exakte Reihenfolge (${c.length})</summary>${c.map((x,i)=>`<div style="padding:6px 0;border-top:1px solid #eee">${i+1}. <b>${esc(x.k)}</b> · Cloud-Version ${Number(x.r?.version||0)}</div>`).join('')}</details>
+     ${safe?`<button id="v258Apply" class="btn" style="margin-top:14px;background:#173f32;color:white">${c.length} Cloud-Abweichungen kontrolliert übernehmen und Abschluss herstellen</button>`:''}<button id="v258Cancel" class="btn secondary" style="margin:14px 0 0 8px">Abbrechen</button><div id="v258Out" style="margin-top:12px;font-weight:800">Noch nichts verändert.</div>`);
+     document.getElementById('v258Cancel').onclick=close;if(safe)document.getElementById('v258Apply').onclick=run;
+     setSyncStatus('ok','V258 geprüft · '+c.length+' Cloud-Abweichungen');return true;
+   }catch(e){alert('V258 Vorbereitung fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V258 Vorbereitung fehlgeschlagen');return false}finally{cloudBusy=false}
+ }
+ async function run(){
+   if(!confirm('V258 KONTROLLIERTER CLOUD→GERÄT-ABSCHLUSS\n\nCloud ist die Quelle. Packages werden zuerst, materialCatalog zuletzt übernommen. materialCatalog wird ohne ensureV24-Nachmutation gespeichert. Jedes Objekt wird danach aus localStorage neu eingelesen und exakt gegen die Cloud verifiziert.\n\n__state bleibt gesperrt. Es wird nichts in die Cloud geschrieben.\n\nFortfahren?'))return;
+   const out=document.getElementById('v258Out');if(cloudBusy)return;cloudBusy=true;let done=0;
+   try{
+     reload();let remote=await fetchRemoteEntities();reload();let local=localEntityMap(),d=diff(remote,local),c=ordered(d.mismatch);
+     if(Object.keys(remote).filter(k=>k.startsWith('packages|')).length!==EXPECT||d.localOnly.length!==1||d.localOnly[0].k!==MAT_KEY||refs(MAT_ID,local,MAT_KEY).length)throw new Error('Sicherheitsbild hat sich vor Start verändert.');
+     const keys=c.map(x=>x.k);
+     for(const key of keys){
+       remote=await fetchRemoteEntities();reload();local=localEntityMap();d=diff(remote,local);
+       const x=d.mismatch.find(y=>y.k===key);if(!x)continue;if(key==='__state|main')throw new Error('__state wäre Kandidat – Sicherheitsabbruch.');
+       apply(x);
+       if(!verify(key,x.r.data))throw new Error(key+': gespeicherter lokaler Zustand stimmt nach erneutem Einlesen nicht exakt mit der Cloud überein.');
+       done++;if(out)out.textContent=`${done}/${keys.length} Cloud-Abweichung(en) übernommen und verifiziert …`;
+     }
+     remote=await fetchRemoteEntities();reload();local=localEntityMap();d=diff(remote,local);
+     if(d.mismatch.length)throw new Error('Nach Übernahme bestehen noch '+d.mismatch.length+' Cloud-Abweichung(en).');
+     if(d.localOnly.length!==1||d.localOnly[0].k!==MAT_KEY)throw new Error('Nur-lokales Sicherheitsbild unerwartet.');
+     if(refs(MAT_ID,local,MAT_KEY).length)throw new Error('Das bekannte nur-lokale MaterialCatalog-Objekt hat Referenzen und wird nicht entfernt.');
+     removeKnown();
+
+     remote=await fetchRemoteEntities();reload();local=localEntityMap();d=diff(remote,local);
+     const lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;
+     if(lp!==EXPECT||rp!==EXPECT||d.mismatch.length||d.localOnly.length)throw new Error(`Abschlussprüfung nicht sauber: Packages ${lp}/${rp}, Abweichungen ${d.mismatch.length}, nur lokal ${d.localOnly.length}. Sync-Basis bleibt unangetastet.`);
+     const base=loadSyncBase();delete base[MAT_KEY];for(const x of d.identical)base[x.k]={version:Number(x.r?.version||0),hash:stableJson(x.r?.data)};saveSyncBase(base);
+     const chk=loadSyncBase(),bad=d.identical.filter(x=>!chk[x.k]||Number(chk[x.k].version||0)!==Number(x.r?.version||0)||chk[x.k].hash!==stableJson(x.r?.data));
+     if(bad.length)throw new Error('Sync-Basis-Nachprüfung fehlgeschlagen bei '+bad.length+' Objekt(en).');
+     if(out)out.innerHTML='<span style="color:#176b3a">V258 ERFOLG: Cloud→Gerät vollständig abgeschlossen.<br><b>347 lokale Packages / 347 Cloud-Packages.</b> Alle Nicht-__state-Objekte sind identisch und die Sync-Basis wurde erst nach der Abschlussprüfung aktualisiert. <b>__state blieb gesperrt.</b> Es wurde nichts in die Cloud geschrieben.<br>Bitte Ergebnis fotografieren.</span>';
+     setSyncStatus('ok','V258 erfolgreich · 347/347 · sauber verknüpft');
+   }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V258 STOPP nach ${done} erfolgreich übernommenen Cloud-Abweichung(en): ${esc(String(e.message||e))}<br>Keine weiteren Schritte wurden ausgeführt. Bitte Ergebnis fotografieren und nicht weiter synchronisieren.</span>`;setSyncStatus('err','V258 gestoppt · '+done)}finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pull;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V258';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V258 korrigierter Abschluss bereit')}catch(_e){}
+})();
+</script>
