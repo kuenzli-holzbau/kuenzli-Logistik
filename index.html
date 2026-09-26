@@ -30427,3 +30427,84 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V269';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V269 Abschlusskontrolle bereit')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V270 – dauerhafter objektweiser Auto-Sync nach lokalen Änderungen.
+   Debounce kommt aus queueCloudSync(). Keine automatische Cloud→Gerät-Übernahme.
+   __state bleibt gesperrt. Keine automatischen Löschungen. Jede Cloud-Schreibung wird frisch verifiziert,
+   erst danach wird die Sync-Basis genau dieses Objekts aktualisiert. */
+(()=>{
+ const VERSION='V270';
+ let v270Running=false, v270Pending=false;
+ function isState(k){return k==='__state|main'}
+ function analyze(remote,local){
+   const base=loadSyncBase(), keys=new Set([...Object.keys(base||{}),...Object.keys(local||{}),...Object.keys(remote||{})]);
+   const changed=[], conflicts=[], remoteChanged=[], deletions=[], identical=[];
+   for(const k of keys){
+     if(isState(k))continue;
+     const l=local[k],r=remote[k],b=base[k],lh=l?stableJson(l.data):null,rh=r?stableJson(r.data):null,bh=b?.hash??null;
+     if(lh===rh){identical.push({k,l,r,b,lh,rh});continue}
+     const lc=lh!==bh, rc=rh!==bh;
+     if(lc&&!rc){ if(l)changed.push({k,l,r,b,lh,rh}); else deletions.push({k,l,r,b,lh,rh}); }
+     else if(!lc&&rc)remoteChanged.push({k,l,r,b,lh,rh});
+     else conflicts.push({k,l,r,b,lh,rh});
+   }
+   return {changed,conflicts,remoteChanged,deletions,identical};
+ }
+ function transient(e){const s=String(e?.message||e||'');return /\b(503|504)\b|PGRST003|timeout|timed out|Failed to fetch|NetworkError|Load failed/i.test(s)}
+ function statusErr(prefix,e){setSyncStatus('err',prefix+': '+String(e?.message||e||''))}
+ async function sync(manual=false){
+   cloudCfg=loadCloudConfig();
+   if(!cloudReady()){if(manual)alert('V270: Cloud ist nicht bereit. Lokale Daten bleiben gespeichert.');return false}
+   if(v270Running||cloudBusy){v270Pending=true;return false}
+   v270Running=true;cloudBusy=true;
+   try{
+     setSyncStatus('syncing',manual?'V270 prüft und synchronisiert objektweise':'Änderung gespeichert · V270 synchronisiert…');
+     let remote=await fetchRemoteEntities(), local=localEntityMap(), a=analyze(remote,local);
+     if(a.conflicts.length||a.remoteChanged.length){
+       const msg=`V270 Schutzstopp · ${a.conflicts.length} Konflikt(e), ${a.remoteChanged.length} Cloud-Änderung(en). Lokal wurde nichts überschrieben.`;
+       setSyncStatus('err',msg);if(manual)alert(msg+'\n\nBitte zuerst Cloud → Gerät prüfen.');return false;
+     }
+     if(a.deletions.length){
+       const msg=`V270 Schutzstopp · ${a.deletions.length} lokale Löschung(en) werden nicht automatisch in die Cloud übertragen.`;
+       setSyncStatus('err',msg);if(manual)alert(msg);return false;
+     }
+     if(!a.changed.length){setSyncStatus('ok','V270 synchron · keine offenen lokalen Änderungen');if(manual)alert('V270: Gerät und Cloud sind bereits synchron.');return true}
+     let done=0;
+     for(const s of a.changed){
+       if(isState(s.k))continue;
+       // Vor jedem Objekt Cloud und lokalen Zustand erneut prüfen: keine veraltete Vorschau überschreiben.
+       remote=await fetchRemoteEntities();local=localEntityMap();
+       const l=local[s.k],r=remote[s.k],base=loadSyncBase()[s.k],lh=l?stableJson(l.data):null,rh=r?stableJson(r.data):null,bh=base?.hash??null;
+       if(!l)throw new Error(s.k+': lokales Objekt ist während des Sync verschwunden.');
+       if(lh!==s.lh)throw new Error(s.k+': lokal während des Sync erneut geändert; neuer Lauf erforderlich.');
+       if(rh!==s.rh||rh!==bh)throw new Error(s.k+': Cloud hat sich parallel geändert; nichts überschrieben.');
+       if(!canWriteCloudEntity(l.type,'save'))throw new Error('Keine Cloud-Schreibberechtigung für '+l.type+'.');
+       await rpcEntitySave(l.type,l.id,l.data,Number(r?.version||base?.version||0),false);
+       const fresh=(await fetchRemoteEntities())[s.k], current=localEntityMap()[s.k], currentHash=current?stableJson(current.data):null;
+       if(!fresh||currentHash!==s.lh||stableJson(fresh.data)!==s.lh)throw new Error(s.k+': Cloud-Verifikation fehlgeschlagen; Sync-Basis bleibt für dieses Objekt unverändert.');
+       const nb=loadSyncBase();nb[s.k]={version:Number(fresh.version||0),hash:s.lh};saveSyncBase(nb);done++;
+       setSyncStatus('syncing',`V270 ${done}/${a.changed.length} Änderung(en) verifiziert…`);
+     }
+     // Abschlussread: nur Erfolg melden, wenn keine Nicht-__state-Abweichung mehr besteht.
+     remote=await fetchRemoteEntities();local=localEntityMap();a=analyze(remote,local);
+     if(a.changed.length||a.conflicts.length||a.remoteChanged.length||a.deletions.length)throw new Error(`Abschlussprüfung: lokal ${a.changed.length}, Konflikte ${a.conflicts.length}, Cloud ${a.remoteChanged.length}, Löschungen ${a.deletions.length}.`);
+     setSyncStatus('ok',`V270 synchron · ${done} Änderung(en) Cloud-verifiziert`);
+     if(manual)alert(`V270 ERFOLG\n\n${done} lokale Änderung(en) objektweise in die Cloud geschrieben und jeweils verifiziert.\nSync-Basis erst nach erfolgreicher Verifikation aktualisiert.\n__state blieb gesperrt.`);
+     return true;
+   }catch(e){
+     const p=transient(e)?'V270 Cloud vorübergehend nicht erreichbar · lokale Änderung bleibt erhalten':'V270 Schutzstopp';
+     statusErr(p,e);if(manual)alert(p+'\n\n'+String(e?.message||e)+'\n\nLokale Daten bleiben erhalten.');return false;
+   }finally{
+     cloudBusy=false;v270Running=false;
+     if(v270Pending){v270Pending=false;setTimeout(()=>sync(false),1200)}
+   }
+ }
+ window.pushEntitySync=sync;
+ // Cloud→Gerät bleibt bewusst die verifizierte, nur lesende V269-Abschlusskontrolle.
+ try{
+   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V270';
+   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V270 Auto-Sync nach Änderungen bereit');
+ }catch(_e){}
+})();
+</script>
