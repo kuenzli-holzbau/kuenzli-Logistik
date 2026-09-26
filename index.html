@@ -30388,3 +30388,42 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V268';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V268 autoritativer Materialabschluss bereit')}catch(_e){}
 })();
 </script>
+
+
+<script>
+/* V269 – reine Abschlusskontrolle nach V268.
+   Keine Nutzdaten-, Cloud-, Sync-Basis- oder Konfliktspeicher-Änderung. */
+(()=>{
+ const VERSION='V269', EXPECT=347;
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function isStateKey(k){return k==='__state'||k==='__state|main'||String(k).startsWith('__state|')}
+ function close(){document.getElementById('v269Modal')?.remove()}
+ function modal(h){close();const m=document.createElement('div');m.id='v269Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1220px,98vw);max-height:95vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${h}</div>`;document.body.appendChild(m);document.getElementById('v269Close')?.addEventListener('click',close)}
+ function rawState(){const r=localStorage.getItem(KEY);if(!r)throw new Error('Lokaler Hauptzustand fehlt.');const p=JSON.parse(r);if(!p||!Array.isArray(p.packages))throw new Error('Lokaler Hauptzustand unlesbar.');return p}
+ function rawMap(p){const old=st;try{st=p;return localEntityMap()}finally{st=old}}
+ function compare(local,remote){const keys=new Set([...Object.keys(local),...Object.keys(remote)]),mismatch=[],lo=[],co=[],ident=[];for(const k of keys){if(isStateKey(k))continue;const l=local[k],r=remote[k];if(l&&!r)lo.push(k);else if(!l&&r)co.push(k);else if(l&&r){if(stableJson(l.data)!==stableJson(r.data))mismatch.push(k);else ident.push(k)}}return {mismatch,lo,co,ident}}
+ function pkg(map){return Object.keys(map).filter(k=>k.startsWith('packages|')).length}
+ function baseCheck(remote){const b=loadSyncBase(),missing=[],bad=[],extra=[];for(const [k,r] of Object.entries(remote)){if(isStateKey(k))continue;const x=b[k];if(!x)missing.push(k);else if(Number(x.version||0)!==Number(r.version||0)||x.hash!==stableJson(r.data))bad.push(k)}for(const k of Object.keys(b||{})){if(isStateKey(k))continue;if(!remote[k])extra.push(k)}return {missing,bad,extra}}
+ async function pull(manual=false){
+   if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V269: Cloud nicht bereit. Nichts verändert.');return false}if(cloudBusy)return false;cloudBusy=true;setSyncStatus('syncing','V269 führt reine Abschlusskontrolle aus');
+   const before={state:localStorage.getItem(KEY),base:localStorage.getItem(SYNC_BASE_KEY),conf:localStorage.getItem(SYNC_CONFLICT_KEY)};
+   try{
+     const p=rawState(),local=rawMap(p),remote=await fetchRemoteEntities(),c=compare(local,remote),bc=baseCheck(remote),lp=pkg(local),rp=pkg(remote);
+     const after={state:localStorage.getItem(KEY),base:localStorage.getItem(SYNC_BASE_KEY),conf:localStorage.getItem(SYNC_CONFLICT_KEY)};
+     const untouched=before.state===after.state&&before.base===after.base&&before.conf===after.conf;
+     const ok=lp===EXPECT&&rp===EXPECT&&!c.mismatch.length&&!c.lo.length&&!c.co.length&&!bc.missing.length&&!bc.bad.length&&!bc.extra.length&&untouched;
+     modal(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V269 Abschlusskontrolle Cloud ↔ Gerät</h2><div><b>NUR LESEND</b> · frischer Cloud-Read · keine Datenänderung</div></div><button id="v269Close" class="btn secondary">Schließen</button></div>
+       <div style="margin-top:12px;padding:11px;background:${lp===EXPECT&&rp===EXPECT?'#eef7ef':'#fff0f0'};border:1px solid ${lp===EXPECT&&rp===EXPECT?'#b7d3bb':'#dfb1b1'};border-radius:10px"><b>Packages:</b> lokal <b>${lp}</b> · Cloud <b>${rp}</b> · Sicherheitsgrenze <b>347/347</b>.</div>
+       <div style="margin-top:10px;padding:11px;background:${!c.mismatch.length&&!c.lo.length&&!c.co.length?'#eef7ef':'#fff0f0'};border:1px solid ${!c.mismatch.length&&!c.lo.length&&!c.co.length?'#b7d3bb':'#dfb1b1'};border-radius:10px"><b>Nicht-__state Datenvergleich:</b> identisch <b>${c.ident.length}</b> · Inhaltsabweichungen <b>${c.mismatch.length}</b> · nur lokal <b>${c.lo.length}</b> · nur Cloud <b>${c.co.length}</b>.</div>
+       <div style="margin-top:10px;padding:11px;background:${!bc.missing.length&&!bc.bad.length&&!bc.extra.length?'#eef7ef':'#fff0f0'};border:1px solid ${!bc.missing.length&&!bc.bad.length&&!bc.extra.length?'#b7d3bb':'#dfb1b1'};border-radius:10px"><b>Sync-Basis:</b> fehlend <b>${bc.missing.length}</b> · falsch/veraltet <b>${bc.bad.length}</b> · zusätzliche Nicht-__state-Referenzen <b>${bc.extra.length}</b>.</div>
+       <div style="margin-top:10px;padding:11px;background:${untouched?'#eef7ef':'#fff0f0'};border:1px solid ${untouched?'#b7d3bb':'#dfb1b1'};border-radius:10px"><b>Schreibschutzprüfung:</b> ${untouched?'bestanden – Hauptzustand, Sync-Basis und Konfliktspeicher blieben bytegenau unverändert.':'FEHLER – mindestens ein lokaler Speicherbereich änderte sich während der Kontrolle.'}</div>
+       <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt ausdrücklich außerhalb dieser Abschlusskontrolle.</b> Es wird weder übernommen noch in die Cloud geschrieben.</div>
+       <div style="margin-top:14px;font-weight:900;color:${ok?'#176b3a':'#9b2525'}">${ok?'V269 ERFOLG: Gerät und Cloud sind für alle Nicht-__state-Objekte exakt identisch und die Sync-Basis ist vollständig korrekt verknüpft.':'V269 PRÜFUNG NICHT SAUBER: Keine Daten wurden verändert. Bitte Ergebnis fotografieren.'}</div>`);
+     setSyncStatus(ok?'ok':'err',ok?'V269 erfolgreich · Cloud ↔ Gerät sauber verknüpft':'V269 Abschlusskontrolle zeigt Abweichungen');return ok;
+   }catch(e){alert('V269 Abschlusskontrolle fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V269 Abschlusskontrolle fehlgeschlagen');return false}
+   finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pull;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V269';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V269 Abschlusskontrolle bereit')}catch(_e){}
+})();
+</script>
