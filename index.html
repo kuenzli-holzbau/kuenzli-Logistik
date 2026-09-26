@@ -29844,3 +29844,71 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V259';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V259 Diagnose bereit')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V260 – Abschluss nach V259: materialCatalog wird direkt im rohen Hauptzustand
+   geschrieben und direkt aus demselben localStorage-JSON verifiziert. Dadurch wird
+   keinerlei Material-Ableitungs-/Normalisierungslogik zwischen Schreiben und Prüfung
+   ausgeführt. Cloud ist Quelle; __state bleibt gesperrt; kein Cloud-Schreiben. */
+(()=>{
+ const VERSION='V260', EXPECT=347, TARGET='materialCatalog|mc_pkg_excelv479_row_4';
+ const OLD_LOCAL='materialCatalog|mc_pkg_p1790261063719', OLD_ID='mc_pkg_p1790261063719';
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function close(){document.getElementById('v260Modal')?.remove()}
+ function modal(h){close();const m=document.createElement('div');m.id='v260Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1180px,98vw);max-height:95vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${h}</div>`;document.body.appendChild(m);document.getElementById('v260Close')?.addEventListener('click',close)}
+ function rawState(){const raw=localStorage.getItem(KEY);if(!raw)throw new Error('Lokaler Hauptzustand fehlt.');const p=JSON.parse(raw);if(!p||!Array.isArray(p.packages))throw new Error('Lokaler Hauptzustand ist nicht lesbar.');return p}
+ function rawMap(p){const old=window.st;window.st=p;let m;try{m=localEntityMap()}finally{window.st=old}return m}
+ function rawEntity(p,type,id){const arr=Array.isArray(p[type])?p[type]:[];const hits=[];arr.forEach((o,i)=>{if(o&&typeof o==='object'&&String(entityId(type,o,i))===String(id))hits.push(o)});return hits}
+ function directMainWrite(type,id,data){
+   const p=rawState();if(!entityCollections().includes(type))throw new Error('Direkter Hauptzustands-Pfad unterstützt Typ '+type+' nicht.');
+   const arr=Array.isArray(p[type])?p[type]:[];const hits=[];arr.forEach((o,i)=>{if(o&&typeof o==='object'&&String(entityId(type,o,i))===String(id))hits.push(i)});
+   if(hits.length>1)throw new Error(type+'|'+id+': lokale ID ist mehrfach vorhanden.');
+   const copy=JSON.parse(JSON.stringify(data));if(hits.length===1)arr[hits[0]]=copy;else arr.push(copy);p[type]=arr;
+   localStorage.setItem(KEY,JSON.stringify(p));
+   const check=rawState(),got=rawEntity(check,type,id);if(got.length!==1)throw new Error(type+'|'+id+': nach direktem Speichern nicht genau einmal vorhanden.');
+   if(stableJson(got[0])!==stableJson(data))throw new Error(type+'|'+id+': RAW-Verifikation fehlgeschlagen.');
+   st=check;return true;
+ }
+ function removeOldDirect(){const p=rawState(),arr=Array.isArray(p.materialCatalog)?p.materialCatalog:[],keep=[],removed=[];arr.forEach((o,i)=>{if(o&&String(entityId('materialCatalog',o,i))===OLD_ID)removed.push(o);else keep.push(o)});if(removed.length!==1)throw new Error('Bekanntes nur-lokales MaterialCatalog-Objekt ist nicht genau einmal vorhanden.');p.materialCatalog=keep;localStorage.setItem(KEY,JSON.stringify(p));const q=rawState();if(rawEntity(q,'materialCatalog',OLD_ID).length)throw new Error('Entfernung des bekannten nur-lokalen Objekts konnte nicht verifiziert werden.');st=q}
+ function diff(remote,local){const keys=new Set([...Object.keys(local),...Object.keys(remote)]),mismatch=[],localOnly=[],identical=[];for(const k of keys){if(k==='__state|main')continue;const l=local[k],r=remote[k];if(l&&!r){localOnly.push({k,l});continue}if(!l&&r){mismatch.push({k,l,r});continue}if(stableJson(l.data)===stableJson(r.data))identical.push({k,l,r});else mismatch.push({k,l,r})}return{mismatch,localOnly,identical}}
+ function refs(id,map,skip){const out=[];function walk(v,path,h){if(v==null)return;if(typeof v==='string'||typeof v==='number'){if(String(v)===id)h.push(path||'(Wert)');return}if(Array.isArray(v)){v.forEach((x,i)=>walk(x,`${path}[${i}]`,h));return}if(typeof v==='object')for(const [k,x] of Object.entries(v))walk(x,path?`${path}.${k}`:k,h)}for(const [k,e] of Object.entries(map)){if(k===skip||k==='__state|main')continue;const h=[];walk(e?.data,'',h);if(h.length)out.push({k,h})}return out}
+ async function pull(manual=false){
+   if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V260: Cloud nicht bereit. Nichts verändert.');return false}if(cloudBusy)return false;cloudBusy=true;setSyncStatus('syncing','V260 prüft RAW-Abschluss');
+   try{
+     let p=rawState(),local=rawMap(p),remote=await fetchRemoteEntities(),d=diff(remote,local);const lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;
+     const mats=d.mismatch.filter(x=>x.k.startsWith('materialCatalog|')),others=d.mismatch.filter(x=>!x.k.startsWith('materialCatalog|'));
+     const safe=lp===EXPECT&&rp===EXPECT&&others.length===0&&mats.length>0&&d.localOnly.length===1&&d.localOnly[0].k===OLD_LOCAL&&refs(OLD_ID,local,OLD_LOCAL).length===0;
+     modal(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V260 Cloud → Gerät – RAW-Materialabschluss</h2><div><b>CLOUD IST DIE QUELLE</b> · direkter localStorage-Hauptzustand · keine Material-Normalisierung</div></div><button id="v260Close" class="btn secondary">Schließen</button></div>
+       <div style="margin-top:12px;padding:11px;background:${lp===EXPECT&&rp===EXPECT?'#eef7ef':'#fff0f0'};border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal <b>${lp}</b> · Cloud <b>${rp}</b> · Ziel <b>347/347</b>.</div>
+       <div style="margin-top:10px;padding:11px;background:${safe?'#eef7ef':'#fff0f0'};border:1px solid ${safe?'#b7d3bb':'#dfb1b1'};border-radius:10px"><b>Verbleibende Nicht-__state-Abweichungen:</b> ${d.mismatch.length} · materialCatalog: <b>${mats.length}</b> · andere Typen: <b>${others.length}</b>.<br><b>Nur lokal:</b> ${d.localOnly.length} · ${esc(d.localOnly[0]?.k||'–')}.</div>
+       <div style="margin-top:10px;padding:11px;background:#fff4e6;border:1px solid #e5bf84;border-radius:10px"><b>V259-Ursache berücksichtigt:</b> ${esc(TARGET)} wird nicht über <code>st</code>, <code>ensureV24()</code>, <code>persist()</code> oder UI-Logik geschrieben. V260 ersetzt das Cloud-Objekt direkt im rohen JSON von <code>${esc(KEY)}</code> und liest genau dieses JSON unmittelbar wieder ein. Erst bei exakter RAW-Übereinstimmung geht es zum nächsten Objekt.</div>
+       <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt gesperrt und wird nicht übernommen.</b> Es wird nichts in die Cloud geschrieben.</div>
+       <details style="margin-top:10px" open><summary style="font-weight:800">Exakte MaterialCatalog-Objekte (${mats.length})</summary>${mats.map((x,i)=>`<div style="padding:6px 0;border-top:1px solid #eee">${i+1}. <b>${esc(x.k)}</b> · Cloud-Version ${Number(x.r?.version||0)}</div>`).join('')}</details>
+       ${safe?`<button id="v260Apply" class="btn" style="margin-top:14px;background:#173f32;color:white">${mats.length} MaterialCatalog-Objekt(e) RAW übernehmen und Abschluss herstellen</button>`:''}<button id="v260Cancel" class="btn secondary" style="margin:14px 0 0 8px">Abbrechen</button><div id="v260Out" style="margin-top:12px;font-weight:800">Noch nichts verändert.</div>`);
+     document.getElementById('v260Cancel').onclick=close;if(safe)document.getElementById('v260Apply').onclick=run;setSyncStatus('ok','V260 geprüft · '+mats.length+' RAW-Materialobjekte');return true;
+   }catch(e){alert('V260 Vorbereitung fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V260 Vorbereitung fehlgeschlagen');return false}finally{cloudBusy=false}
+ }
+ async function run(){
+   if(!confirm('V260 KONTROLLIERTER RAW-ABSCHLUSS\n\nDie Cloud ist die Quelle. Nur die aktuell verbleibenden materialCatalog-Abweichungen werden direkt im lokalen Hauptzustand auf den Cloud-Inhalt gesetzt und jeweils unmittelbar aus localStorage verifiziert.\n\n347 Packages bleiben erhalten. __state bleibt gesperrt. Es wird nichts in die Cloud geschrieben.\n\nFortfahren?'))return;
+   if(cloudBusy)return;cloudBusy=true;let done=0;const out=document.getElementById('v260Out');try{
+     let remote=await fetchRemoteEntities(),p=rawState(),local=rawMap(p),d=diff(remote,local);let mats=d.mismatch.filter(x=>x.k.startsWith('materialCatalog|')),others=d.mismatch.filter(x=>!x.k.startsWith('materialCatalog|'));
+     const lp0=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp0=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;
+     if(lp0!==EXPECT||rp0!==EXPECT||others.length||d.localOnly.length!==1||d.localOnly[0].k!==OLD_LOCAL||refs(OLD_ID,local,OLD_LOCAL).length)throw new Error('Sicherheitsbild hat sich geändert. Nichts weiter ausgeführt.');
+     for(const x of mats){directMainWrite('materialCatalog',String(x.r.id),x.r.data);done++;if(out)out.textContent=`${done}/${mats.length} MaterialCatalog-Objekt(e) RAW übernommen und verifiziert …`}
+     remote=await fetchRemoteEntities();p=rawState();local=rawMap(p);d=diff(remote,local);
+     if(d.mismatch.length)throw new Error('Nach RAW-Übernahme bestehen noch '+d.mismatch.length+' Nicht-__state-Abweichung(en).');
+     if(d.localOnly.length!==1||d.localOnly[0].k!==OLD_LOCAL)throw new Error('Nur-lokales Sicherheitsbild unerwartet; bekanntes Objekt wird nicht entfernt.');
+     if(refs(OLD_ID,local,OLD_LOCAL).length)throw new Error('Bekanntes nur-lokales MaterialCatalog-Objekt hat Referenzen und wird nicht entfernt.');
+     removeOldDirect();
+     remote=await fetchRemoteEntities();p=rawState();local=rawMap(p);d=diff(remote,local);const lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;
+     if(lp!==EXPECT||rp!==EXPECT||d.mismatch.length||d.localOnly.length)throw new Error(`Abschlussprüfung nicht sauber: Packages ${lp}/${rp}, Abweichungen ${d.mismatch.length}, nur lokal ${d.localOnly.length}. Sync-Basis bleibt unangetastet.`);
+     const base=loadSyncBase();delete base[OLD_LOCAL];for(const x of d.identical)base[x.k]={version:Number(x.r?.version||0),hash:stableJson(x.r?.data)};saveSyncBase(base);
+     const chk=loadSyncBase(),bad=d.identical.filter(x=>!chk[x.k]||Number(chk[x.k].version||0)!==Number(x.r?.version||0)||chk[x.k].hash!==stableJson(x.r?.data));if(bad.length)throw new Error('Sync-Basis-Nachprüfung fehlgeschlagen bei '+bad.length+' Objekt(en).');
+     st=p;loadProjects();loadSmallOrders();loadPlatformStore();
+     if(out)out.innerHTML='<span style="color:#176b3a">V260 ERFOLG: Cloud→Gerät vollständig abgeschlossen und RAW-verifiziert.<br><b>347 lokale Packages / 347 Cloud-Packages.</b> Alle Nicht-__state-Objekte sind identisch. Das bekannte unreferenzierte nur-lokale MaterialCatalog-Objekt wurde entfernt. Die Sync-Basis wurde erst nach der vollständigen Abschlussprüfung aktualisiert. <b>__state blieb gesperrt.</b> Es wurde nichts in die Cloud geschrieben.<br>Bitte Ergebnis fotografieren.</span>';setSyncStatus('ok','V260 erfolgreich · 347/347 · sauber verknüpft');
+   }catch(e){if(out)out.innerHTML=`<span style="color:#9b2525">V260 STOPP nach ${done} erfolgreich RAW-verifizierten MaterialCatalog-Objekt(en): ${esc(String(e.message||e))}<br>Keine weiteren Schritte wurden ausgeführt. Bitte Ergebnis fotografieren und nicht weiter synchronisieren.</span>`;setSyncStatus('err','V260 gestoppt · '+done)}finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pull;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V260';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V260 RAW-Abschluss bereit')}catch(_e){}
+})();
+</script>
