@@ -29944,3 +29944,40 @@ ${safeTypeLines}
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V261';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V261 RAW-Fortsetzung bereit')}catch(_e){}
 })();
 </script>
+
+<script>
+/* V262 – NUR LESEND: Diagnose mehrfach vorhandener materialCatalog-ID.
+   Keine lokale/Cloud-/Sync-Schreiboperation. */
+(()=>{
+ const VERSION='V262', TARGET_ID='mc_pkg_excelv479_row_4', TARGET_KEY='materialCatalog|mc_pkg_excelv479_row_4', EXPECT=347;
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function close(){document.getElementById('v262Modal')?.remove()}
+ function modal(h){close();const m=document.createElement('div');m.id='v262Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1220px,98vw);max-height:95vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${h}</div>`;document.body.appendChild(m);document.getElementById('v262Close')?.addEventListener('click',close)}
+ function rawState(){const r=localStorage.getItem(KEY);if(!r)throw new Error('Lokaler Hauptzustand fehlt.');const p=JSON.parse(r);if(!p||!Array.isArray(p.packages))throw new Error('Lokaler Hauptzustand unlesbar.');return p}
+ function walk(v,path,out,seen){if(v===null||typeof v!=='object')return;if(seen.has(v))return;seen.add(v);if(!Array.isArray(v)&&String(v.id||'')===TARGET_ID)out.push({path,obj:v});if(Array.isArray(v)){v.forEach((x,i)=>walk(x,`${path}[${i}]`,out,seen));return}Object.keys(v).forEach(k=>walk(v[k],path?`${path}.${k}`:k,out,seen))}
+ async function pull(manual=false){
+  if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V262: Cloud nicht bereit. Nichts verändert.');return false}if(cloudBusy)return false;cloudBusy=true;setSyncStatus('syncing','V262 liest ID-Vorkommen');
+  try{
+   const before=localStorage.getItem(KEY),p=rawState(),arr=Array.isArray(p.materialCatalog)?p.materialCatalog:[],hits=[];
+   arr.forEach((o,i)=>{if(o&&typeof o==='object'&&String(entityId('materialCatalog',o,i))===TARGET_ID)hits.push({index:i,obj:o})});
+   const all=[];walk(p,'',all,new WeakSet());
+   const remote=await fetchRemoteEntities(),after=localStorage.getItem(KEY);if(before!==after)throw new Error('Sicherheitsabbruch: Hauptzustand änderte sich während der Leseprüfung.');
+   const old=st;let local;try{st=p;local=localEntityMap()}finally{st=old}
+   const lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length,r=remote[TARGET_KEY];
+   const exactRows=hits.length?hits.map((h,n)=>`<div style="padding:10px 0;border-top:1px solid #ddd"><b>${n+1}. materialCatalog[${h.index}]</b><br><small>entityId: ${esc(entityId('materialCatalog',h.obj,h.index))}</small><pre style="white-space:pre-wrap;word-break:break-word;background:#f6f7f6;padding:10px;border-radius:8px">${esc(JSON.stringify(h.obj,null,2))}</pre></div>`).join(''):'<b>Keine Treffer im materialCatalog-Array.</b>';
+   const pathRows=all.length?all.map((h,n)=>`<div style="padding:7px 0;border-top:1px solid #eee">${n+1}. <b>${esc(h.path||'(Wurzel)')}</b></div>`).join(''):'<b>Keine Objekte mit direktem id-Feld gefunden.</b>';
+   modal(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V262 Diagnose doppelte Material-ID</h2><div><b>NUR LESEND</b> · keine Übernahme · keine Löschung · keine Sync-Basis-Änderung</div></div><button id="v262Close" class="btn secondary">Schließen</button></div>
+    <div style="margin-top:12px;padding:11px;background:${lp===EXPECT&&rp===EXPECT?'#eef7ef':'#fff0f0'};border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal <b>${lp}</b> · Cloud <b>${rp}</b>. V262 verändert keine Packages.</div>
+    <div style="margin-top:10px;padding:11px;background:#fff4e6;border:1px solid #e5bf84;border-radius:10px"><b>Ziel-ID:</b> ${TARGET_ID}<br><b>Treffer direkt in materialCatalog:</b> ${hits.length}<br><b>Vorkommen als direktes id-Feld im gesamten Hauptzustand:</b> ${all.length}<br><b>Cloud-Objekt vorhanden:</b> ${r?'ja · Version '+Number(r.version||0):'nein'}</div>
+    <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt unangetastet.</b> V262 schreibt, löscht und synchronisiert nichts.</div>
+    <h3 style="margin:16px 0 5px">Exakte Treffer im materialCatalog-Array (${hits.length})</h3>${exactRows}
+    <details style="margin-top:12px" open><summary style="font-weight:800">Alle Pfade mit id = ${TARGET_ID} (${all.length})</summary>${pathRows}</details>
+    ${r?`<details style="margin-top:12px"><summary style="font-weight:800">Cloud-Objekt zum Vergleich</summary><pre style="white-space:pre-wrap;word-break:break-word;background:#f6f7f6;padding:10px;border-radius:8px">${esc(JSON.stringify(r.data,null,2))}</pre></details>`:''}
+    <div style="margin-top:14px;font-weight:800">V262 hat nichts geschrieben, gelöscht oder synchronisiert. Bitte dieses Ergebnis fotografieren.</div>`);
+   setSyncStatus('ok','V262 Diagnose · '+hits.length+' materialCatalog-Treffer');return true;
+  }catch(e){alert('V262 Diagnose fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V262 Diagnose fehlgeschlagen');return false}finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pull;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V262';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V262 Diagnose bereit')}catch(_e){}
+})();
+</script>
