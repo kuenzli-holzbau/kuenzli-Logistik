@@ -30508,3 +30508,76 @@ ${safeTypeLines}
  }catch(_e){}
 })();
 </script>
+
+<script>
+/* V271 – Auto-Save ohne zusätzlichen Speichern-Button.
+   Nach einer echten UI-Änderung wird der aktuelle Hauptzustand nach kurzer Ruhephase
+   lokal gesichert; danach startet V270s objektweiser, verifizierter Cloud-Sync.
+   Kein Refresh während des Tippens. Keine automatische Cloud→Gerät-Übernahme. */
+(()=>{
+ const VERSION='V271', WAIT=1200;
+ let timer=null, saving=false, lastMainRaw=localStorage.getItem(KEY)||'';
+ function relevantTarget(t){
+   if(!t||!t.closest)return false;
+   if(t.closest('#v257Modal,#v258Modal,#v259Modal,#v260Modal,#v261Modal,#v262Modal,#v263Modal,#v264Modal,#v265Modal,#v266Modal,#v267Modal,#v268Modal,#v269Modal,#v270Modal'))return false;
+   return !!t.closest('input,textarea,select,[contenteditable="true"]');
+ }
+ function currentRaw(){
+   try{return JSON.stringify(st)}catch(_e){return null}
+ }
+ function schedule(){
+   clearTimeout(timer);
+   timer=setTimeout(save,WAIT);
+ }
+ function save(){
+   if(saving)return;
+   const raw=currentRaw();
+   if(raw==null)return;
+   const stored=localStorage.getItem(KEY)||'';
+   // Nur bei einer wirklichen Änderung des Hauptzustands schreiben.
+   if(raw===stored){lastMainRaw=stored;return}
+   saving=true;
+   try{
+     maybeAutoBackup('Automatische Sicherung');
+     maybeAutoCloudBackup();
+     ensureV24();
+     const finalRaw=JSON.stringify(st);
+     localStorage.setItem(KEY,finalRaw);
+     lastMainRaw=finalRaw;
+     setSyncStatus('syncing','V271 automatisch gespeichert · Cloud-Sync startet…');
+     try{queueCloudSync()}catch(_e){}
+   }catch(e){
+     setSyncStatus('err','V271 Auto-Save fehlgeschlagen · '+String(e?.message||e||''));
+   }finally{saving=false}
+ }
+ // Bubble-Phase: bestehende Feld-Handler dürfen zuerst das Datenmodell aktualisieren.
+ document.addEventListener('input',e=>{if(relevantTarget(e.target))schedule()},false);
+ document.addEventListener('change',e=>{if(relevantTarget(e.target))schedule()},false);
+
+ // Für Änderungen über bestehende Buttons/Steuerelemente: nach dem Click prüfen,
+ // ob das Datenmodell vom gespeicherten Hauptzustand abweicht.
+ document.addEventListener('click',e=>{
+   const b=e.target?.closest?.('button,[role="button"],input[type="button"],input[type="submit"]');
+   if(!b)return;
+   setTimeout(()=>{
+     const raw=currentRaw(),stored=localStorage.getItem(KEY)||'';
+     if(raw!=null&&raw!==stored)schedule();
+   },0);
+ },false);
+
+ // Beim Verlassen der Seite eine bereits im Modell vorhandene Änderung sofort lokal sichern.
+ window.addEventListener('pagehide',()=>{
+   clearTimeout(timer);
+   try{
+     const raw=currentRaw(),stored=localStorage.getItem(KEY)||'';
+     if(raw!=null&&raw!==stored){ensureV24();localStorage.setItem(KEY,JSON.stringify(st))}
+   }catch(_e){}
+ });
+
+ // V270 bleibt der aktive Cloud-Schreibpfad; V271 ergänzt nur das automatische lokale Speichern.
+ try{
+   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V271';
+   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V271 Auto-Save + verifizierter Auto-Sync bereit');
+ }catch(_e){}
+})();
+</script>
