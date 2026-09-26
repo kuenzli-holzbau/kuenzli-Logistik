@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V293</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V294</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31083,7 +31083,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V293';
+   if(v)v.textContent='Aktuelle Version: V294';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -31629,5 +31629,75 @@ ${safeTypeLines}
    }finally{busyV293=false}
  };
  try{savePermissionEditorV121=window.savePermissionEditorV121}catch(_e){}
+})();
+</script>
+
+<script>
+/* V294 – UI-Bereinigung + Cloud-Key bereits beim Öffnen des Permission-Editors.
+   Entfernt Diagnose-/Loginanalyse-Overlays aus dem normalen Betrieb. */
+(()=>{
+ function removeOldDiagnosticsV294(){
+   ['diagV288','permissionTraceV291','runtimeDiagV292'].forEach(id=>document.getElementById(id)?.remove());
+   document.getElementById('diagBtnV288')?.remove();
+
+   // Login-Analyse-Fenster: remove only diagnostic/analyse UI, never the actual login form.
+   document.querySelectorAll('[id],[class]').forEach(el=>{
+     const sig=((el.id||'')+' '+(typeof el.className==='string'?el.className:'')+' '+(el.getAttribute?.('data-title')||'')).toLowerCase();
+     if((sig.includes('login') && (sig.includes('analyse')||sig.includes('analysis')||sig.includes('diagnos'))) &&
+        !sig.includes('form')) el.remove();
+   });
+ }
+ window.addEventListener('load',()=>setTimeout(removeOldDiagnosticsV294,0));
+ document.addEventListener('DOMContentLoaded',removeOldDiagnosticsV294);
+ setTimeout(removeOldDiagnosticsV294,0);
+
+ // Stop V292's capture diagnostic before it can create its overlay, while preserving normal button behavior.
+ document.addEventListener('click',ev=>{
+   const btn=ev.target?.closest?.('button');
+   if(btn?.id==='permissionSaveBtnV121'){
+     // V292 listener was registered earlier on document capture. We cannot unregister an anonymous listener,
+     // so remove its overlay after its delayed render as a UI cleanup only.
+     setTimeout(()=>document.getElementById('runtimeDiagV292')?.remove(),2600);
+   }
+ },true);
+
+ async function mapOpenPermissionToCloudV294(){
+   const original=String(permissionEditorKey||'').trim();
+   if(!original.startsWith('local:')||!cloudReady())return original;
+   try{
+     const label=String(permissionEditorLabel||'').trim().toLocaleLowerCase();
+     if(!label)return original;
+     const r=await fetch(inviteBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+
+       '&select=username,name,role,active',{headers:cloudHeaders()});
+     if(!r.ok)return original;
+     const rows=await r.json();
+     const matches=rows.filter(x=>String(x.name||'').trim().toLocaleLowerCase()===label);
+     if(matches.length!==1)return original;
+     const cloudKey=permissionKeyForCloud(matches[0].username);
+     ensurePermissionStore();
+     // If cloud-specific permissions already exist, show those; otherwise seed editor from local entry.
+     if(!st.userPermissions[cloudKey] && st.userPermissions[original])
+       st.userPermissions[cloudKey]=JSON.parse(JSON.stringify(st.userPermissions[original]));
+     permissionEditorKey=cloudKey;
+     window.permissionEditorKey=cloudKey;
+     const p=permissionsForKey(cloudKey);
+     Object.entries(permissionFieldMap()).forEach(([k,id])=>{
+       const el=document.getElementById(id); if(el)el.checked=!!p[k];
+     });
+     const explicit=document.getElementById('permManageV286');
+     if(explicit)explicit.checked=!!p.manage;
+     return cloudKey;
+   }catch(_e){return original}
+ }
+
+ // Map immediately after any permission-editor opener has established its local key.
+ document.addEventListener('click',ev=>{
+   const el=ev.target?.closest?.('[onclick]');
+   const oc=String(el?.getAttribute?.('onclick')||'');
+   if(/openPermissionEditor/i.test(oc))setTimeout(mapOpenPermissionToCloudV294,0);
+ },true);
+
+ // Also expose for direct/manual use by existing openers.
+ window.mapOpenPermissionToCloudV294=mapOpenPermissionToCloudV294;
 })();
 </script>
