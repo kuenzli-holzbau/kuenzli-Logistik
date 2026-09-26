@@ -29289,3 +29289,45 @@ ${safeTypeLines}
  window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V251';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V251 kontrollierter Abschluss bereit')}catch(_e){}
 })();
 </script>
+<script>
+/* V252 – reine Abhängigkeitsanalyse des nur-lokalen MaterialCatalog-Objekts.
+   Keine lokalen/Cloud-/Sync-Schreibvorgänge. Simuliert ausschließlich im Arbeitsspeicher,
+   welche Referenzen nach Übernahme des zugehörigen Cloud-Packages verbleiben würden. */
+(()=>{
+ const VERSION='V252', MAT_ID='mc_pkg_p1790261063719', PKG_ID='p1790261063719';
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function close(){document.getElementById('v252Modal')?.remove()}
+ function modal(html){close();const m=document.createElement('div');m.id='v252Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1160px,98vw);max-height:94vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${html}</div>`;document.body.appendChild(m);document.getElementById('v252Close')?.addEventListener('click',close)}
+ function findRefs(id,map,skipKey){const out=[];function walk(v,path,h){if(v==null)return;if(typeof v==='string'||typeof v==='number'){if(String(v)===id)h.push(path||'(Wert)');return}if(Array.isArray(v)){v.forEach((x,i)=>walk(x,`${path}[${i}]`,h));return}if(typeof v==='object')for(const [k,x] of Object.entries(v))walk(x,path?`${path}.${k}`:k,h)}for(const [k,e] of Object.entries(map)){if(k===skipKey||k==='__state|main')continue;const h=[];walk(e?.data,'',h);if(h.length)out.push({k,h})}return out}
+ function diff(remote,local){const keys=new Set([...Object.keys(local),...Object.keys(remote)]),mismatch=[],localOnly=[],identical=[];for(const k of keys){if(k==='__state|main')continue;const l=local[k],r=remote[k];if(l&&!r){localOnly.push({k,l,r});continue}if(!l&&r){mismatch.push({k,l,r});continue}if(stableJson(l.data)===stableJson(r.data))identical.push({k,l,r});else mismatch.push({k,l,r})}return{mismatch,localOnly,identical}}
+ async function pull(manual=false){
+   if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V252: Cloud nicht bereit. Nichts verändert.');return false}if(cloudBusy)return false;cloudBusy=true;setSyncStatus('syncing','V252 analysiert Abhängigkeiten – nur lesend');
+   try{
+     const remote=await fetchRemoteEntities(),local=localEntityMap(),d=diff(remote,local);
+     const mk='materialCatalog|'+MAT_ID,pk='packages|'+PKG_ID,mat=local[mk],lp=local[pk],rp=remote[pk];
+     const before=findRefs(MAT_ID,local,mk);
+     const simulated=Object.assign({},local);if(rp)simulated[pk]=JSON.parse(JSON.stringify(rp));
+     const after=findRefs(MAT_ID,simulated,mk);
+     const activeAfter=after.filter(x=>!x.k.startsWith('controls|'));
+     const histAfter=after.filter(x=>x.k.startsWith('controls|'));
+     const lpCount=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rpCount=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;
+     const sd=stableJson(local['__state|main']?.data)!==stableJson(remote['__state|main']?.data);
+     const pkgLocalMat=lp?.data?.material, pkgCloudMat=rp?.data?.material;
+     const rows=a=>a.map(x=>`<div style="padding:6px 0;border-top:1px solid #eee"><b>${esc(x.k)}</b> · ${esc(x.h.join(', '))}</div>`).join('')||'<div style="padding:7px 0"><b>Keine.</b></div>';
+     modal(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V252 Abhängigkeitsanalyse vor Cloud → Gerät</h2><div><b>NUR LESEND</b> · Simulation im Arbeitsspeicher, keine Übernahme</div></div><button id="v252Close" class="btn secondary">Schließen</button></div>
+       <div style="margin-top:12px;padding:11px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal ${lpCount} · Cloud ${rpCount}. <b>V252 verändert keine Packages.</b></div>
+       <div style="margin-top:10px;padding:11px;background:${mat?'#eef7ef':'#fff0f0'};border:1px solid ${mat?'#b7d3bb':'#dfb1b1'};border-radius:10px"><b>Zu prüfen:</b> materialCatalog|${MAT_ID}<br>Lokales MaterialCatalog-Objekt: <b>${mat?'vorhanden':'FEHLT'}</b>.</div>
+       <div style="margin-top:10px;padding:11px;background:${rp?'#eef7ef':'#fff0f0'};border:1px solid ${rp?'#b7d3bb':'#dfb1b1'};border-radius:10px"><b>Zugehöriges Package:</b> packages|${PKG_ID}<br>Lokal: <b>${lp?'vorhanden':'fehlt'}</b> · Cloud: <b>${rp?'vorhanden':'fehlt'}</b>${rp?' · Cloud-Version '+Number(rp.version||0):''}<br>material lokal: <b>${esc(pkgLocalMat??'(leer)')}</b><br>material Cloud: <b>${esc(pkgCloudMat??'(leer)')}</b></div>
+       <h3 style="margin:16px 0 5px">Referenzen aktuell (${before.length})</h3>${rows(before)}
+       <h3 style="margin:16px 0 5px">Simulation: nach Übernahme genau dieses Cloud-Packages</h3>
+       <div style="padding:11px;background:#fff4e6;border:1px solid #e5bf84;border-radius:10px"><b>Verbleibende aktive Nicht-Control-Referenzen: ${activeAfter.length}</b><br>Verbleibende Control-/Snapshot-Referenzen: <b>${histAfter.length}</b>.<br><b>Diese Simulation schreibt nichts.</b></div>
+       <details style="margin-top:10px" open><summary style="font-weight:800">Verbleibende Referenzen nach Simulation (${after.length})</summary>${rows(after)}</details>
+       <div style="margin-top:10px;padding:11px;background:#fff4e6;border:1px solid #e5bf84;border-radius:10px"><b>Gesamtbild:</b> Nicht-__state-Abweichungen ${d.mismatch.length} · nur lokal ${d.localOnly.length} · identisch ${d.identical.length}.</div>
+       <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt gesperrt.</b> Abweichung: ${sd?'1':'0'}.</div>
+       <div style="margin-top:14px;font-weight:800">V252 hat nichts geschrieben, gelöscht oder synchronisiert. Bitte dieses Ergebnis fotografieren.</div>`);
+     setSyncStatus('ok','V252 Analyse bereit · '+after.length+' Referenz(en) nach Simulation');return true;
+   }catch(e){alert('V252 Analyse fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V252 Analyse fehlgeschlagen');return false}finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V252';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V252 Abhängigkeitsanalyse bereit')}catch(_e){}
+})();
+</script>
