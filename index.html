@@ -11137,7 +11137,7 @@ function queueCloudSync(){
  cloudCfg=loadCloudConfig();
  if(!cloudReady()||!cloudCfg.autoSync)return;
  clearTimeout(cloudTimer);
- cloudTimer=setTimeout(()=>pushEntitySync(false),700);
+ cloudTimer=setTimeout(()=>pushEntitySync(false),window.__areaInventorySavingV276?1800:700);
  /* V488: den 8-Sekunden-Poller nicht bei jedem persist() neu starten. */
  if(!cloudPollTimer)startCloudPolling();
 }
@@ -17832,11 +17832,29 @@ function saveMaterialPinV552(e){
  p.commission=E('materialPinCommissionV552').value||'';p.note=E('materialPinNoteV552').value.trim();p.updatedAt=now;
  persist();closeM('materialPinModalV552');renderAreas();
 }
-function deleteMaterialPinV552(){
- let id=E('materialPinIdV552').value;if(!id)return;
- if(!confirm('Diesen Material-Pin löschen?'))return;
- st.materialPinsV552=ensureMaterialPinsV552().filter(x=>x.id!==id);persist();closeM('materialPinModalV552');renderAreas();
-}
+async function deleteMaterialPinV552(){
+  let id=E('materialPinIdV552').value;if(!id)return;
+  if(!confirm('Diesen Material-Pin löschen?'))return;
+  const k='materialPinsV552|'+String(id);
+  try{
+    if(cloudReady()&&authSession&&cloudMember){
+      const remote=await fetchRemoteEntities(),r=remote[k],b=loadSyncBase()[k];
+      if(r){
+        const rh=stableJson(r.data),bh=b?.hash??null;
+        if(bh!==null&&rh!==bh)throw new Error('Pin wurde in der Cloud parallel geändert. Löschung gestoppt.');
+        await rpcEntityDelete('materialPinsV552',String(id),Number(r.version||b?.version||0),false);
+        if((await fetchRemoteEntities())[k])throw new Error('Cloud hat die Pin-Löschung nicht bestätigt.');
+      }
+      const nb=loadSyncBase();delete nb[k];saveSyncBase(nb);
+    }
+    st.materialPinsV552=ensureMaterialPinsV552().filter(x=>x.id!==id);
+    persist();closeM('materialPinModalV552');renderAreas();
+    setSyncStatus('ok','V276 Pin gelöscht · Cloud-verifiziert');
+  }catch(e){
+    setSyncStatus('err','V276 Pin-Löschung Schutzstopp · '+String(e?.message||e||''));
+    alert('Pin wurde nicht gelöscht:\n'+String(e?.message||e||''));
+  }
+ }
 function openMaterialPinCommissionV552(){E('materialPinNewCommissionV552').value='';E('materialPinCommissionModalV552').classList.add('open');setTimeout(()=>E('materialPinNewCommissionV552')?.focus(),50)}
 function saveMaterialPinCommissionV552(e){
  e.preventDefault();let name=E('materialPinNewCommissionV552').value.trim();if(!name)return;ensureCommissions();
@@ -27167,7 +27185,10 @@ renderPlatformReservationGantt=function(from='',to=''){
  window.areaInvLevelV186=function(v){levelV186=v;pidV186='';renderAreaEditorV186();setTimeout(()=>document.getElementById('areaInvElementV186')?.focus(),0)};
  window.areaInvNewRackV186=function(){if(typeof requireStructure==='function'&&!requireStructure())return;const a=areas().find(x=>x.id===areaIdV186);if(!a)return;const name=prompt('Name des neuen Gestells / Regals:','Gestell');if(name===null||!name.trim())return;const id='r'+Date.now(),order=(st.racks||[]).filter(r=>r.areaId===areaIdV186).length;st.racks.push({id,areaId:areaIdV186,name:name.trim(),photo:'',levels:[],displayOrder:order});rackIdV186=id;levelV186='';persist();renderFullControl()};
  window.areaInvNewLevelV186=function(){if(typeof requireStructure==='function'&&!requireStructure())return;const r=(st.racks||[]).find(x=>x.id===rackIdV186);if(!r)return alert('Bitte zuerst ein Gestell / Regal wählen.');const name=prompt('Name der neuen Ebene:','Ebene '+((r.levels?.length||0)+1));if(name===null||!name.trim())return;if(!Array.isArray(r.levels))r.levels=[];r.levels.push({name:name.trim(),length:'',width:'',height:''});levelV186=String(r.levels.length-1);persist();renderFullControl()};
- window.areaInvFindV186=function(){const q=String(document.getElementById('areaInvElementV186')?.value||'').trim().toLowerCase();if(!q)return;const p=pkgActive().find(x=>String(x.elementId||'').trim().toLowerCase()===q);if(!p){pidV186='';renderAreaEditorV186();alert('Element-ID nicht gefunden: '+q);return}pidV186=p.id;renderAreaEditorV186();setTimeout(()=>document.getElementById('areaInvQtyV186')?.focus(),0)};
+ let areaInvCatSelectedV276='A';
+ window.areaInvCatV276=function(cat){areaInvCatSelectedV276=String(cat||'A').toUpperCase();document.querySelectorAll('#areaInvCatV276 .areaInvCatBtnV276').forEach(b=>b.classList.toggle('active',b.dataset.cat===areaInvCatSelectedV276));document.getElementById('areaInvElementV186')?.focus()};
+ function areaInvFullIdV276(raw){let q=String(raw||'').trim().toUpperCase(),m=q.match(/^(TB|A|B|C|D|E)\s*-?\s*(\d+)$/);if(m){areaInvCatSelectedV276=m[1];return m[1]+'-'+m[2]}let n=q.replace(/\D+/g,'');return n?areaInvCatSelectedV276+'-'+n:''}
+ window.areaInvFindV186=function(){const q=areaInvFullIdV276(document.getElementById('areaInvElementV186')?.value).toLowerCase();if(!q)return;const p=pkgActive().find(x=>String(x.elementId||'').trim().toLowerCase()===q);if(!p){pidV186='';renderAreaEditorV186();alert('Element-ID nicht gefunden: '+q.toUpperCase());return}pidV186=p.id;renderAreaEditorV186();setTimeout(()=>document.getElementById('areaInvQtyV186')?.focus(),0)};
  window.areaInvKeyV186=function(e){if(e.key==='Enter'){e.preventDefault();areaInvFindV186()}};
  function field(id){return document.getElementById(id)?.value??''} function num(v){return String(v??'').trim().replace(',','.')}
  window.areaInvConfirmV186=function(){
@@ -27179,7 +27200,7 @@ renderPlatformReservationGantt=function(from='',to=''){
   p.material=next.material;p.qty=next.qty;p.width=next.width;p.height=next.height;p.length=next.length;p.project=next.project;p.rackId=r.id;p.levelIndex=li;const now=new Date().toISOString(),by=currentUserName();p.lastCheckedAt=now;p.lastCheckedBy=by;
   let i=(c.items||[]).find(x=>x.packageId===p.id);if(!i){i={packageId:p.id,result:'',checkedAt:'',checkedBy:'',note:'',snapshot:snapshot(p)};(c.items||(c.items=[])).push(i)}i.result=changed?'Geändert':'Vorhanden';i.checkedAt=now;i.checkedBy=by;i.note=changed?`Kontrolliert / angepasst: ${oldLoc} → ${newLoc}`:'';
   try{addHistory(p,'Lagerkontrolle Fläche '+(c.areaNameV186||''),(changed?'Geändert':'Vorhanden')+' · '+oldLoc+' → '+newLoc+' · kontrolliert von '+by)}catch(_e){}
-  pidV186='';persist();renderFullControl();setTimeout(()=>document.getElementById('areaInvElementV186')?.focus(),0);
+  pidV186='';window.__areaInventorySavingV276=true;try{persist()}finally{window.__areaInventorySavingV276=false}renderFullControl();setTimeout(()=>document.getElementById('areaInvElementV186')?.focus(),0);
  };
  window.areaInvCancelV186=function(){pidV186='';renderAreaEditorV186();const e=document.getElementById('areaInvElementV186');if(e)e.value='';e?.focus()};
  window.areaInvAddFoundV186=function(){if(!rackIdV186)return alert('Bitte zuerst ein Gestell / Regal wählen.');window.addingFoundForControl=true;openMaterial(rackIdV186);setTimeout(()=>{const lv=document.getElementById('mLevel');if(lv)lv.value=levelV186},0)};
@@ -27193,7 +27214,7 @@ renderPlatformReservationGantt=function(from='',to=''){
  window.renderAreaEditorV186=function(){const box=document.getElementById('areaInvEditorV186');if(!box)return;const p=(st.packages||[]).find(x=>x.id===pidV186);if(!p){box.innerHTML='<div class="help">Element-ID eingeben. Erst nach der Bestätigung werden Lagerort oder Materialdaten geändert.</div>';return}const target=locText(rackIdV186,levelV186===''?null:+levelV186);box.innerHTML=`<div class="controlEditV185"><div class="controlFoundV185">Gefunden: <b>${esc(p.elementId||'–')}</b></div><div class="controlCompareV185"><div class="controlPlaceV185"><b>Bisheriger Lagerort</b>${esc(locText(p.rackId,p.levelIndex))}</div><div class="controlPlaceV185"><b>Gefunden bei</b>${esc(target)}</div></div><div class="controlFieldsV185"><label class="wideV185">Material<input id="areaInvMaterialV186" value="${ea(p.material||'')}"></label><label>Element-ID<input value="${ea(p.elementId||'')}" disabled></label><label>Menge<input id="areaInvQtyV186" inputmode="decimal" value="${ea(p.qty??'')}"></label><label>Breite (mm)<input id="areaInvWidthV186" inputmode="decimal" value="${ea(p.width??'')}"></label><label>Höhe (mm)<input id="areaInvHeightV186" inputmode="decimal" value="${ea(p.height??'')}"></label><label>Länge (mm)<input id="areaInvLengthV186" inputmode="decimal" value="${ea(p.length??'')}"></label><label class="wideV185">Kommission<select id="areaInvProjectV186">${commissionOptions(p.project||'')}</select></label></div><div class="controlActionsV185"><button class="btn controlPrimaryV185" onclick="areaInvConfirmV186()">✓ Bestätigen & nächstes Element</button><button class="btn secondary" onclick="areaInvCancelV186()">Abbrechen</button></div></div>`};
  window.renderAreaWorkV186=function(){
   const c=activeAreaControl(),box=document.getElementById('allControlBody');if(!c||!box){areaIdV186='';renderFullControl();return}normalize();const a=(st.areas||[]).find(x=>x.id===areaIdV186),rs=(st.racks||[]).filter(r=>r.areaId===areaIdV186),r=(st.racks||[]).find(x=>x.id===rackIdV186),done=(c.items||[]).filter(i=>i.result).length,total=(c.items||[]).length;
-  box.innerHTML=`<div class="areaInvTopV186"><button class="btn secondary" onclick="backAreaInventoryV186()">← Flächen</button><h3>Inventur: ${esc(a?.name||c.areaNameV186||'Fläche')}</h3><span class="controlPill">${done} / ${total} bestätigt</span><button class="btn" onclick="finishAreaInventoryV186()">Inventur Fläche abschliessen</button></div><div id="areaInvFinishV186"></div><div class="controlScanV185"><section class="controlLocationV185"><h3>1. Standort auf ${esc(a?.name||'Fläche')}</h3><div class="controlLocationGridV185" style="grid-template-columns:repeat(2,minmax(160px,1fr))"><label>Gestell / Regal<select onchange="areaInvRackV186(this.value)">${rs.map(x=>`<option value="${ea(x.id)}" ${x.id===rackIdV186?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label><label>Ebene (optional)<select onchange="areaInvLevelV186(this.value)"><option value="">– keine Ebene –</option>${(r?.levels||[]).map((l,i)=>`<option value="${i}" ${String(i)===String(levelV186)?'selected':''}>${esc(l.name||('Ebene '+(i+1)))}</option>`).join('')}</select></label></div><div class="controlActionsV185"><button class="btn secondary" onclick="areaInvNewRackV186()">+ Gestell / Regal</button><button class="btn secondary" onclick="areaInvNewLevelV186()">+ Ebene</button></div></section><section class="controlLookupV185"><h3>2. Element-ID</h3><input id="areaInvElementV186" class="controlIdV185" placeholder="Element-ID" autocomplete="off" onkeydown="areaInvKeyV186(event)"><div class="controlActionsV185"><button class="btn" onclick="areaInvFindV186()">Element laden</button><button class="btn secondary" onclick="areaInvAddFoundV186()">+ Paket ohne Element-ID gefunden</button></div></section><div id="areaInvEditorV186"></div></div>`;renderAreaEditorV186();setTimeout(()=>document.getElementById('areaInvElementV186')?.focus(),20)
+  box.innerHTML=`<div class="areaInvTopV186"><button class="btn secondary" onclick="backAreaInventoryV186()">← Flächen</button><h3>Inventur: ${esc(a?.name||c.areaNameV186||'Fläche')}</h3><span class="controlPill">${done} / ${total} bestätigt</span><button class="btn" onclick="finishAreaInventoryV186()">Inventur Fläche abschliessen</button></div><div id="areaInvFinishV186"></div><div class="controlScanV185"><section class="controlLocationV185"><h3>1. Standort auf ${esc(a?.name||'Fläche')}</h3><div class="controlLocationGridV185" style="grid-template-columns:repeat(2,minmax(160px,1fr))"><label>Gestell / Regal<select onchange="areaInvRackV186(this.value)">${rs.map(x=>`<option value="${ea(x.id)}" ${x.id===rackIdV186?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label><label>Ebene (optional)<select onchange="areaInvLevelV186(this.value)"><option value="">– keine Ebene –</option>${(r?.levels||[]).map((l,i)=>`<option value="${i}" ${String(i)===String(levelV186)?'selected':''}>${esc(l.name||('Ebene '+(i+1)))}</option>`).join('')}</select></label></div><div class="controlActionsV185"><button class="btn secondary" onclick="areaInvNewRackV186()">+ Gestell / Regal</button><button class="btn secondary" onclick="areaInvNewLevelV186()">+ Ebene</button></div></section><section class="controlLookupV185"><h3>2. Element-ID</h3><div id="areaInvCatV276" class="areaInvCatV276">${['A','B','C','D','E','TB'].map(c=>`<button type="button" class="areaInvCatBtnV276 ${c==='A'?'active':''}" data-cat="${c}" onclick="areaInvCatV276('${c}')">${c}</button>`).join('')}</div><input id="areaInvElementV186" class="controlIdV185" placeholder="nur Nummer, z. B. 438" inputmode="numeric" autocomplete="off" onkeydown="areaInvKeyV186(event)"><div class="controlActionsV185"><button class="btn" onclick="areaInvFindV186()">Element laden</button><button class="btn secondary" onclick="areaInvAddFoundV186()">+ Paket ohne Element-ID gefunden</button></div></section><div id="areaInvEditorV186"></div></div>`;renderAreaEditorV186();setTimeout(()=>document.getElementById('areaInvElementV186')?.focus(),20)
  };
  function renderOverview(){const box=document.getElementById('allControlBody');if(!box)return;box.innerHTML=`<h3>Inventur nach Lagerfläche</h3><p class="help">Starte die Inventur direkt bei der gewünschten Fläche. Beim Abschluss werden alle dort erwarteten, aber nicht bestätigten Materialien als Differenz aufgelistet.</p><div class="areaInvGridV186">${areas().map(a=>{const run=areaControl(a.id),last=latestDone(a.id),count=pkgActive().filter(p=>areaOfPkg(p)===a.id).length,miss=last?(last.items||[]).filter(i=>i.result==='Nicht gefunden').length:0;return `<div class="areaInvCardV186"><h3>${esc(a.name)}</h3><div class="areaInvMetaV186">${count} aktive Pakete aktuell auf dieser Fläche</div>${run?`<div class="areaInvStatusV186">● Inventur läuft · ${(run.items||[]).filter(i=>i.result).length}/${(run.items||[]).length} bestätigt</div><button class="btn" onclick="openAreaInventoryV186('${ea(a.id)}')">Inventur fortsetzen</button>`:`<div class="areaInvStatusV186">${last?'✓ Letzte Inventur abgeschlossen':'Noch keine Flächeninventur'}</div>${last?`<div class="areaInvMetaV186">${fmtDate(last.completed)} · ${esc(last.completedBy||'')} · ${miss} Differenz${miss===1?'':'en'}</div>`:''}<button class="btn" onclick="startAreaInventoryV186('${ea(a.id)}')">Inventur ausführen</button>`}</div>`}).join('')||'<div class="help">Keine Lagerflächen vorhanden.</div>'}</div>`}
  window.renderFullControl=function(){ensureV24();if(areaIdV186&&activeAreaControl())renderAreaWorkV186();else renderOverview()};
@@ -30917,5 +30938,21 @@ ${safeTypeLines}
    finally{running=false;if(again){again=false;setTimeout(()=>window.pushEntitySync(false),900)}}
  };
  try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V275';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V275 bereit')}catch(_e){}
+})();
+</script>
+
+<style>
+/* V276 – sichtbare Kategorieauswahl in der tatsächlich verwendeten Flächeninventur V186 */
+.areaInvCatV276{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+.areaInvCatBtnV276{min-width:52px;padding:10px 14px;border:1px solid #c8d2cd;border-radius:9px;background:#fff;font-weight:900;cursor:pointer}
+.areaInvCatBtnV276.active{background:#173f34;color:#fff;border-color:#173f34}
+</style>
+<script>
+/* V276 – Versionsmarker. Die Änderungen sitzen direkt in V186/Cloud-Funktionen. */
+(()=>{
+ try{
+  const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V276';
+  if(cloudReady())setSyncStatus('ok','Cloud aktiv · V276 Inventur + Pins bereit');
+ }catch(_e){}
 })();
 </script>
