@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V289</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V290</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -5512,7 +5512,7 @@ window.APP_RELEASE = {
 <label class="permissionCheck permissionMainV108" style="font-size:16px;font-weight:900"><input type="checkbox" id="permManageV286"> Verwaltung &amp; Einstellungen</label>
 <div class="muted" style="margin-top:5px">Zugriff auf Benutzer, Cloud und allgemeine Verwaltung.</div>
 </div>
-<button class="btn" id="permissionSaveBtnV121" type="button" onclick="savePermissionEditorV121(event)">Berechtigungen speichern</button>
+<button class="btn" id="permissionSaveBtnV121" type="button" onclick="savePermissionEditorV121(event); setTimeout(()=>window.savePermissionSetV290&&window.savePermissionSetV290(),0)">Berechtigungen speichern</button>
  </div>
 </div></div>
 
@@ -31083,7 +31083,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V289';
+   if(v)v.textContent='Aktuelle Version: V290';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -31276,5 +31276,74 @@ ${safeTypeLines}
      }catch(_e){}
    },1200);
  });
+})();
+</script>
+
+<script>
+/* V290 – direkter Admin-Permission-Cloudsave.
+   Der aktive V121-Button ruft diesen Pfad nach seinem bestehenden lokalen Save auf.
+   Keine Änderung an Login, Packages, Inventar oder __state. */
+(()=>{
+ let busyV290=false;
+
+ async function savePermissionSetV290(){
+   if(busyV290)return;
+   busyV290=true;
+   try{
+     const n=(st.packages||[]).length;
+     if(n!==347)throw new Error('Package-Sicherheitsgrenze: '+n+' statt 347.');
+     if(!canAdmin())throw new Error('Nur Administrator darf Berechtigungen publizieren.');
+     if(!cloudReady()||!authSession||!cloudMember)throw new Error('Cloud nicht bereit.');
+
+     const key=String(permissionEditorKey||'').trim();
+     if(!key)throw new Error('Permission-Key fehlt.');
+     ensurePermissionStore();
+
+     // Read directly from the active editor fields, so wrapper ordering cannot lose manage.
+     const map=permissionFieldMap();
+     const base=permissionsForKey(key);
+     const data={...base};
+     Object.entries(map).forEach(([prop,id])=>{
+       const el=document.getElementById(id);
+       if(el)data[prop]=!!el.checked;
+     });
+     const explicit=document.getElementById('permManageV286');
+     if(explicit)data.manage=!!explicit.checked;
+
+     // Preserve project selections exactly as the existing permission editor stores them.
+     const local=st.userPermissions?.[key];
+     if(local?.projects!==undefined)data.projects=JSON.parse(JSON.stringify(local.projects));
+
+     // Persist the exact same permission locally first.
+     st.userPermissions[key]=JSON.parse(JSON.stringify(data));
+     localStorage.setItem(KEY,JSON.stringify(st));
+
+     const ek='permissionSets|'+key;
+     const before=(await fetchRemoteEntities())[ek];
+     await rpcEntitySave('permissionSets',key,JSON.parse(JSON.stringify(data)),Number(before?.version||0),false);
+     const after=(await fetchRemoteEntities())[ek];
+
+     if(!after)throw new Error(ek+' wurde nach Save nicht gefunden.');
+     if(stableJson(after.data)!==stableJson(data))throw new Error('Cloud-Verifikation weicht vom Editor ab.');
+
+     setSyncStatus('ok','V290 Rechte Cloud-verifiziert · '+key+' · Verwaltung '+(data.manage?'JA':'NEIN'));
+     return true;
+   }catch(e){
+     setSyncStatus('err','V290 Berechtigungs-Sync · '+String(e?.message||e||''));
+     return false;
+   }finally{busyV290=false}
+ }
+ window.savePermissionSetV290=savePermissionSetV290;
+
+ // Missing permissionSets is a permission-state condition, not a connectivity failure.
+ const priorStatusV290=window.setSyncStatus||setSyncStatus;
+ window.setSyncStatus=function(kind,msg){
+   const text=String(msg||'');
+   if(kind==='err' && /^V286 Rechte fehlen in Cloud\b/.test(text)){
+     return priorStatusV290.call(this,'ok','Cloud aktiv · Berechtigungssatz noch nicht publiziert');
+   }
+   return priorStatusV290.apply(this,arguments);
+ };
+ try{setSyncStatus=window.setSyncStatus}catch(_e){}
 })();
 </script>
