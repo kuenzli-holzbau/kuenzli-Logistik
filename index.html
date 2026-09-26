@@ -30250,3 +30250,141 @@ ${safeTypeLines}
  }catch(_e){}
 })();
 </script>
+
+
+<script>
+/* V267 – rein lesende Zuordnungsdiagnose der vier nur-lokalen gegen die vier nur-Cloud MaterialCatalog-Objekte.
+   Keine lokale Übernahme, keine Löschung, kein Cloud-Schreiben, keine Sync-Basis-Änderung. */
+(()=>{
+ const VERSION='V267', EXPECT=347;
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function close(){document.getElementById('v267Modal')?.remove()}
+ function modal(h){close();const m=document.createElement('div');m.id='v267Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1220px,98vw);max-height:95vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${h}</div>`;document.body.appendChild(m);document.getElementById('v267Close')?.addEventListener('click',close)}
+ function rawState(){const r=localStorage.getItem(KEY);if(!r)throw new Error('Lokaler Hauptzustand fehlt.');const p=JSON.parse(r);if(!p||!Array.isArray(p.packages))throw new Error('Lokaler Hauptzustand unlesbar.');return p}
+ function rawMap(p){const old=st;try{st=p;return localEntityMap()}finally{st=old}}
+ function isStateKey(k){return k==='__state'||k==='__state|main'||String(k).startsWith('__state|')}
+ function idOfKey(k){const i=String(k).indexOf('|');return i<0?'':String(k).slice(i+1)}
+ function norm(v){return v==null?'':String(v).trim()}
+ const F=['name','width','height','length','category','active'];
+ function score(a,b){let same=0,known=0,d=[];for(const f of F){const av=norm(a?.[f]),bv=norm(b?.[f]);if(av||bv){known++;if(av===bv)same++;else d.push(`${f}: ${av||'∅'} ↔ ${bv||'∅'}`)}}return{same,known,d}}
+ function refs(root,target){const out=[];function walk(v,path){if(out.length>=80)return;if(v===target){out.push(path||'(root)');return}if(!v||typeof v!=='object')return;if(Array.isArray(v)){for(let i=0;i<v.length;i++)walk(v[i],`${path}[${i}]`)}else{for(const [k,x] of Object.entries(v))walk(x,path?`${path}.${k}`:k)}}walk(root,'');return out}
+ async function pull(manual=false){
+  if(!manual)return false;cloudCfg=loadCloudConfig();if(!cloudReady()){alert('V267: Cloud nicht bereit. Nichts verändert.');return false}if(cloudBusy)return false;cloudBusy=true;setSyncStatus('syncing','V267 analysiert Material-ID-Zuordnung');
+  try{
+   const before=localStorage.getItem(KEY),p=rawState(),local=rawMap(p),remote=await fetchRemoteEntities(),after=localStorage.getItem(KEY);if(before!==after)throw new Error('Lokaler Hauptzustand änderte sich während der rein lesenden Diagnose.');
+   const lp=Object.keys(local).filter(k=>k.startsWith('packages|')).length,rp=Object.keys(remote).filter(k=>k.startsWith('packages|')).length;if(lp!==EXPECT||rp!==EXPECT)throw new Error(`Package-Sicherheitsgrenze verletzt: lokal ${lp}, Cloud ${rp}.`);
+   const keys=new Set([...Object.keys(local),...Object.keys(remote)]),lo=[],co=[],mm=[];for(const k of keys){if(isStateKey(k))continue;const l=local[k],r=remote[k];if(l&&!r)lo.push({k,l});else if(!l&&r)co.push({k,r});else if(l&&r&&stableJson(l.data)!==stableJson(r.data))mm.push(k)}
+   const lm=lo.filter(x=>x.k.startsWith('materialCatalog|')),cm=co.filter(x=>x.k.startsWith('materialCatalog|'));
+   const rows=lm.map(L=>{const lid=idOfKey(L.k),rr=refs(p,lid);const cand=cm.map(C=>({C,s:score(L.l.data,C.r.data)})).sort((a,b)=>b.s.same-a.s.same||a.s.d.length-b.s.d.length);return{L,lid,rr,cand,best:cand[0]}});
+   const exact=rows.filter(x=>x.best&&x.best.s.known>0&&x.best.s.same===x.best.s.known&&(!x.cand[1]||x.cand[1].s.same<x.best.s.same)).length;
+   const cards=rows.map((x,i)=>`<div style="margin-top:12px;padding:12px;border:1px solid #d9dedb;border-radius:10px"><b>${i+1}. NUR LOKAL:</b> ${esc(x.L.k)}<br><b>Name:</b> ${esc(x.L.l.data?.name||'')}<br><b>Lokale Referenzen auf ID:</b> ${x.rr.length}${x.rr.length?`<details><summary>Referenzpfade anzeigen</summary>${x.rr.map(r=>`<div><code>${esc(r)}</code></div>`).join('')}</details>`:''}<div style="margin-top:8px"><b>Cloud-Kandidaten nach Feldübereinstimmung:</b></div>${x.cand.map((q,j)=>`<div style="padding:7px 0;border-top:1px solid #eee;${j===0?'font-weight:700':''}">${j===0?'→ ':''}${esc(q.C.k)} · ${q.s.same}/${q.s.known} Vergleichsfelder gleich · Cloud-Version ${Number(q.C.r.version||0)}<br><span style="font-weight:400">${q.s.d.length?'Abweichungen: '+esc(q.s.d.join(' · ')):'Alle ausgewerteten Sachfelder stimmen überein.'}</span></div>`).join('')}</div>`).join('');
+   modal(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V267 Zuordnungsdiagnose Material-IDs</h2><div><b>NUR LESEND</b> · 4 lokale gegen 4 Cloud-Materialien · keine Änderung</div></div><button id="v267Close" class="btn secondary">Schließen</button></div>
+   <div style="margin-top:12px;padding:11px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal <b>${lp}</b> · Cloud <b>${rp}</b>. V267 verändert keine Packages.</div>
+   <div style="margin-top:10px;padding:11px;background:${mm.length===0?'#eef7ef':'#fff0f0'};border:1px solid #b7d3bb;border-radius:10px"><b>Bestehende gemeinsame Nicht-__state-Objekte:</b> Inhaltsabweichungen ${mm.length}.<br><b>Nur lokal:</b> ${lo.length}, davon materialCatalog ${lm.length}. · <b>Nur Cloud:</b> ${co.length}, davon materialCatalog ${cm.length}.</div>
+   <div style="margin-top:10px;padding:11px;background:#fff4e6;border:1px solid #e5bf84;border-radius:10px"><b>Eindeutig sachfeld-identische Paarungen:</b> ${exact}/${lm.length}. Verglichen werden name, width, height, length, category und active. Zusätzlich werden exakte lokale ID-Referenzen angezeigt.</div>
+   ${cards||'<div>Keine nur-lokalen MaterialCatalog-Objekte.</div>'}
+   <div style="margin-top:12px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt gesperrt und unangetastet.</b></div>
+   <div style="margin-top:14px;font-weight:800">V267 hat nichts geschrieben, gelöscht oder synchronisiert. Bitte Ergebnis fotografieren.</div>`);
+   setSyncStatus('ok',`V267 Diagnose · ${exact}/${lm.length} eindeutige Material-Paarungen`);return true;
+  }catch(e){alert('V267 Diagnose fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V267 Diagnose fehlgeschlagen');return false}finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pull;try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V267';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V267 Zuordnungsdiagnose bereit')}catch(_e){}
+})();
+</script>
+
+
+<script>
+/* V268 – Cloud ist autoritative Quelle: kontrollierter MaterialCatalog-Abschluss.
+   Ersetzt ausschließlich den lokalen materialCatalog vollständig durch die aktuell
+   gelesenen Cloud-materialCatalog-Objekte. Packages und __state bleiben unangetastet.
+   Danach: erneute Cloud-Lesung, exakte Nicht-__state-Verifikation und Neuaufbau
+   der Nicht-__state-Sync-Basis. */
+(()=>{
+ const VERSION='V268', EXPECT=347, TYPE='materialCatalog';
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function close(){document.getElementById('v268Modal')?.remove()}
+ function modal(h){close();const m=document.createElement('div');m.id='v268Modal';m.style='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:12px';m.innerHTML=`<div style="background:#fff;width:min(1220px,98vw);max-height:95vh;overflow:auto;border-radius:16px;padding:18px;color:#17201c;box-shadow:0 20px 70px rgba(0,0,0,.35)">${h}</div>`;document.body.appendChild(m);document.getElementById('v268Close')?.addEventListener('click',close)}
+ function rawState(){const r=localStorage.getItem(KEY);if(!r)throw new Error('Lokaler Hauptzustand fehlt.');const p=JSON.parse(r);if(!p||!Array.isArray(p.packages)||!Array.isArray(p.materialCatalog))throw new Error('Lokaler Hauptzustand unlesbar.');return p}
+ function rawMap(p){const old=st;try{st=p;return localEntityMap()}finally{st=old}}
+ function isStateKey(k){return k==='__state'||k==='__state|main'||String(k).startsWith('__state|')}
+ function cloudMaterials(remote){return Object.entries(remote).filter(([k,v])=>k.startsWith(TYPE+'|')&&v&&v.data&&typeof v.data==='object').map(([k,v])=>JSON.parse(JSON.stringify(v.data)))}
+ function compare(local,remote){
+   const keys=new Set([...Object.keys(local),...Object.keys(remote)]),mismatch=[],lo=[],co=[];
+   for(const k of keys){if(isStateKey(k))continue;const l=local[k],r=remote[k];if(l&&!r)lo.push(k);else if(!l&&r)co.push(k);else if(l&&r&&stableJson(l.data)!==stableJson(r.data))mismatch.push(k)}
+   return {mismatch,lo,co};
+ }
+ function packageCount(map){return Object.keys(map).filter(k=>k.startsWith('packages|')).length}
+ function materialCount(map){return Object.keys(map).filter(k=>k.startsWith('materialCatalog|')).length}
+ function buildNonStateBase(remote){
+   const old=loadSyncBase(),b={};
+   Object.entries(old||{}).forEach(([k,v])=>{if(isStateKey(k)&&v&&typeof v==='object')b[k]=v});
+   Object.entries(remote||{}).forEach(([k,v])=>{if(!isStateKey(k))b[k]={version:Number(v.version||0),hash:stableJson(v.data)}});
+   return b;
+ }
+ async function inspect(){
+   const before=localStorage.getItem(KEY),p=rawState(),local=rawMap(p),remote=await fetchRemoteEntities(),after=localStorage.getItem(KEY);
+   if(before!==after)throw new Error('Lokaler Hauptzustand änderte sich während der Prüfung.');
+   const lp=packageCount(local),rp=packageCount(remote),c=compare(local,remote),cm=cloudMaterials(remote);
+   return {p,local,remote,lp,rp,c,cm,lm:p.materialCatalog.length};
+ }
+ async function pull(manual=false){
+   if(!manual)return false;
+   cloudCfg=loadCloudConfig();
+   if(!cloudReady()){alert('V268: Cloud nicht bereit. Nichts verändert.');return false}
+   if(cloudBusy)return false;cloudBusy=true;setSyncStatus('syncing','V268 prüft Cloud→Gerät Materialabschluss');
+   try{
+     const x=await inspect();
+     if(x.lp!==EXPECT||x.rp!==EXPECT)throw new Error(`Package-Sicherheitsgrenze verletzt: lokal ${x.lp}, Cloud ${x.rp}.`);
+     const nonMat=x.c.mismatch.concat(x.c.lo,x.c.co).filter(k=>!k.startsWith(TYPE+'|'));
+     const safe=nonMat.length===0&&x.cm.length>0;
+     modal(`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e1e6e3;padding-bottom:10px"><div><h2 style="margin:0 0 5px">V268 Cloud → Gerät – autoritativer Materialabschluss</h2><div><b>CLOUD IST DIE QUELLE</b> · lokaler Materialstamm wird exakt auf Cloud-Stand gesetzt</div></div><button id="v268Close" class="btn secondary">Schließen</button></div>
+     <div style="margin-top:12px;padding:11px;background:#eef7ef;border:1px solid #b7d3bb;border-radius:10px"><b>Packages:</b> lokal <b>${x.lp}</b> · Cloud <b>${x.rp}</b>. Sicherheitsgrenze <b>347/347</b>.</div>
+     <div style="margin-top:10px;padding:11px;background:${safe?'#eef7ef':'#fff0f0'};border:1px solid ${safe?'#b7d3bb':'#dfb1b1'};border-radius:10px"><b>MaterialCatalog:</b> lokales Array ${x.lm} Einträge · Cloud ${x.cm.length} Objekte.<br>Aktuelle Nicht-__state-Abweichungen: Inhalt ${x.c.mismatch.length} · nur lokal ${x.c.lo.length} · nur Cloud ${x.c.co.length}.<br>Abweichungen außerhalb materialCatalog: <b>${nonMat.length}</b>.</div>
+     <div style="margin-top:10px;padding:11px;background:#fff4e6;border:1px solid #e5bf84;border-radius:10px"><b>Freigegebener Schritt:</b> ausschließlich <code>materialCatalog</code> lokal durch den vollständig neu gelesenen Cloud-MaterialCatalog ersetzen. Danach wird die Cloud erneut gelesen und der gesamte Nicht-__state-Datenbestand exakt verglichen. Nur bei 0 Abweichungen wird die Nicht-__state-Sync-Basis neu aufgebaut.</div>
+     <div style="margin-top:10px;padding:11px;background:#fff0f0;border:1px solid #dfb1b1;border-radius:10px"><b>__state bleibt gesperrt.</b> Packages werden nicht ersetzt oder gelöscht.</div>
+     ${safe?'<button id="v268Apply" class="btn" style="margin-top:14px;background:#173f32;color:white">Cloud-MaterialCatalog kontrolliert lokal übernehmen und Sync-Verknüpfung herstellen</button>':''}<button id="v268Cancel" class="btn secondary" style="margin:14px 0 0 8px">Abbrechen</button><div id="v268Out" style="margin-top:12px;font-weight:800">Noch nichts verändert.</div>`);
+     document.getElementById('v268Cancel').onclick=close;
+     if(safe)document.getElementById('v268Apply').onclick=run;
+     setSyncStatus(safe?'ok':'err',safe?'V268 sicher freigegeben':'V268 Sicherheitsprüfung nicht erfüllt');
+     return true;
+   }catch(e){alert('V268 Vorbereitung fehlgeschlagen:\n\n'+String(e.message||e));setSyncStatus('err','V268 Vorbereitung fehlgeschlagen');return false}
+   finally{cloudBusy=false}
+ }
+ async function run(){
+   if(!confirm('V268 CLOUD → GERÄT\n\nDie Cloud ist die autoritative Quelle.\n\nDer lokale MaterialCatalog wird vollständig durch den aktuell gelesenen Cloud-MaterialCatalog ersetzt. 347 Packages bleiben erhalten. __state bleibt gesperrt.\n\nDanach erfolgt eine vollständige Nicht-__state-Verifikation und erst bei 0 Abweichungen der Neuaufbau der Sync-Basis.\n\nFortfahren?'))return;
+   if(cloudBusy)return;cloudBusy=true;const out=document.getElementById('v268Out');
+   try{
+     const x=await inspect();
+     if(x.lp!==EXPECT||x.rp!==EXPECT)throw new Error(`Vorprüfung: Packages nicht 347/347 (${x.lp}/${x.rp}). Nichts geschrieben.`);
+     const nonMat=x.c.mismatch.concat(x.c.lo,x.c.co).filter(k=>!k.startsWith(TYPE+'|'));
+     if(nonMat.length)throw new Error('Vorprüfung: Es existieren Abweichungen außerhalb materialCatalog. Sicherheitsstopp ohne Änderung.');
+     if(!x.cm.length)throw new Error('Cloud-MaterialCatalog ist leer. Sicherheitsstopp ohne Änderung.');
+     const p=rawState();
+     if(p.packages.length!==EXPECT)throw new Error('Unmittelbare Vorprüfung: lokales Package-Array ist nicht 347. Nichts geschrieben.');
+     const cloudNow=await fetchRemoteEntities(),cmNow=cloudMaterials(cloudNow);
+     if(packageCount(cloudNow)!==EXPECT||!cmNow.length)throw new Error('Erneute Cloud-Vorprüfung fehlgeschlagen. Nichts geschrieben.');
+     p.materialCatalog=cmNow;
+     localStorage.setItem(KEY,JSON.stringify(p));
+     st=rawState();
+     const local1=rawMap(st);
+     if(packageCount(local1)!==EXPECT||st.packages.length!==EXPECT)throw new Error('Package-Sicherheitsgrenze nach Materialübernahme verletzt.');
+     const remote2=await fetchRemoteEntities();
+     if(packageCount(remote2)!==EXPECT)throw new Error('Cloud-Package-Sicherheitsgrenze bei Abschlussprüfung verletzt.');
+     const finalCmp=compare(local1,remote2);
+     if(finalCmp.mismatch.length||finalCmp.lo.length||finalCmp.co.length)throw new Error(`Abschlussprüfung noch nicht sauber: Inhalt ${finalCmp.mismatch.length}, nur lokal ${finalCmp.lo.length}, nur Cloud ${finalCmp.co.length}. Sync-Basis wurde NICHT aktualisiert.`);
+     const nb=buildNonStateBase(remote2);
+     saveSyncBase(nb);
+     const checkBase=loadSyncBase();let bad=0,missing=0;
+     for(const [k,r] of Object.entries(remote2)){if(isStateKey(k))continue;const b=checkBase[k];if(!b)missing++;else if(Number(b.version||0)!==Number(r.version||0)||b.hash!==stableJson(r.data))bad++}
+     if(missing||bad)throw new Error(`Sync-Basis-Nachprüfung fehlgeschlagen: fehlend ${missing}, falsch ${bad}. Nutzdaten sind Cloud-identisch, technische Verknüpfung muss separat geprüft werden.`);
+     if(out)out.innerHTML=`<span style="color:#176b3a">V268 ERFOLG.<br><b>347 lokale Packages / 347 Cloud-Packages.</b><br>Lokaler MaterialCatalog wurde vollständig auf den Cloud-Stand gesetzt: <b>${cmNow.length} Cloud-Materialobjekte</b>.<br><b>Alle Nicht-__state-Objekte sind jetzt exakt Cloud-identisch.</b><br>Nicht-__state-Sync-Basis wurde neu aufgebaut und verifiziert. <b>__state blieb gesperrt und unangetastet.</b><br>Bitte Ergebnis fotografieren.</span>`;
+     setSyncStatus('ok','V268 erfolgreich · Nutzdaten Cloud-identisch · Sync-Basis verknüpft');
+   }catch(e){
+     if(out)out.innerHTML=`<span style="color:#9b2525">V268 STOPP: ${esc(String(e.message||e))}<br>Keine weiteren Schritte ausführen. Bitte Ergebnis fotografieren.</span>`;
+     setSyncStatus('err','V268 gestoppt');
+   }finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pull;
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V268';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V268 autoritativer Materialabschluss bereit')}catch(_e){}
+})();
+</script>
