@@ -30581,3 +30581,176 @@ ${safeTypeLines}
  }catch(_e){}
 })();
 </script>
+
+<script>
+/* V272 – Login-Diagnose entfernt + sichere Cloud→Gerät-Aktualisierung.
+   Projektfreigabe selbst gewährt Sicht auf genau das freigegebene Projekt.
+   Eingehende Cloud-Änderungen werden nur übernommen, wenn das lokale Objekt seit
+   der Sync-Basis unverändert ist. __state und Cloud-Löschungen bleiben gesperrt.
+   Harte Package-Sicherheitsgrenze: 347. */
+(()=>{
+ const VERSION='V272', EXPECT_PACKAGES=347;
+
+ // V221 Diagnose vollständig stilllegen und ein eventuell vorhandenes Fenster entfernen.
+ try{document.getElementById('loginDiagV221')?.remove()}catch(_e){}
+ loginDiagOpenV221=function(){try{document.getElementById('loginDiagV221')?.remove()}catch(_e){}};
+ loginDiagV221=function(){};
+ loginDiagPaintV221=function(){return Promise.resolve()};
+
+ function currentProjectShareExists(){
+   try{
+     const key=projectAccessKey();
+     return (projectStore?.projects||[]).some(p=>p&&(
+       projectOwnerKey(p)===key || projectMemberKeys(p).includes(String(key))
+     ));
+   }catch(_e){return false}
+ }
+ const oldHasAppPermissionV272=hasAppPermission;
+ hasAppPermission=function(name){
+   if(name==='projects'&&currentProjectShareExists())return true;
+   return oldHasAppPermissionV272(name);
+ };
+ hasProjectAccess=function(projectId){
+   const p=projectById(projectId);if(!p)return false;
+   if(canAdmin())return true;
+   const key=projectAccessKey();
+   if(projectOwnerKey(p)===key)return true;
+   if(projectMemberKeys(p).includes(String(key)))return true;
+   const perms=currentPermissions();
+   return !!(perms.projects&&perms.allProjects);
+ };
+
+ function clone(v){return JSON.parse(JSON.stringify(v))}
+ function localPackages(){return Array.isArray(st?.packages)?st.packages.length:0}
+ function replaceInArray(type,id,data){
+   if(!Array.isArray(st[type]))st[type]=[];
+   const arr=st[type], ix=arr.findIndex((o,i)=>String(entityId(type,o,i))===String(id));
+   if(ix>=0)arr[ix]=clone(data); else arr.push(clone(data));
+ }
+ function applyOneRemote(x){
+   if(!x||x.type==='__state')return false;
+   if(x.type==='projects'){
+     loadProjects();
+     const arr=projectStore.projects||[], ix=arr.findIndex(p=>p&&String(p.id)===String(x.id));
+     if(ix>=0)arr[ix]=clone(x.data); else arr.push(clone(x.data));
+     projectStore.projects=arr;
+     localStorage.setItem(PROJECTS_KEY,JSON.stringify(projectStore));
+     return true;
+   }
+   if(x.type==='smallOrders'){
+     loadSmallOrders();
+     const arr=smallOrderStore.reports||[], ix=arr.findIndex(p=>p&&String(p.id)===String(x.id));
+     if(ix>=0)arr[ix]=clone(x.data); else arr.push(clone(x.data));
+     smallOrderStore.reports=arr;
+     localStorage.setItem(SMALL_ORDERS_KEY,JSON.stringify(smallOrderStore));
+     return true;
+   }
+   if(x.type==='platforms'){
+     if(String(x.id)!=='main')return false;
+     platformStore=clone(x.data); delete platformStore.id;
+     localStorage.setItem(PLATFORM_KEY,JSON.stringify(platformStore));
+     return true;
+   }
+   if(x.type==='toolsContainers'){
+     if(String(x.id)!=='main')return false;
+     const d=clone(x.data);delete d.id;
+     localStorage.setItem('kuenzli_tools_white_container_v1',JSON.stringify(d));
+     return true;
+   }
+   if(entityCollections().includes(x.type)){
+     replaceInArray(x.type,x.id,x.data);
+     localStorage.setItem(KEY,JSON.stringify(st));
+     return true;
+   }
+   return false;
+ }
+ function analyzeInbound(remote,local){
+   const base=loadSyncBase()||{}, inbound=[], conflicts=[];
+   const keys=new Set([...Object.keys(remote||{}),...Object.keys(local||{}),...Object.keys(base||{})]);
+   for(const k of keys){
+     if(k==='__state|main')continue;
+     const l=local[k],r=remote[k],b=base[k];
+     const lh=l?stableJson(l.data):null,rh=r?stableJson(r.data):null,bh=b?.hash??null;
+     if(lh===rh)continue;
+     const lc=lh!==bh, rc=rh!==bh;
+     if(!lc&&rc&&r)inbound.push({k,l,r,b,lh,rh,bh});
+     else if(lc&&rc)conflicts.push({k,l,r,b});
+     // r fehlt = Cloud-Löschung: absichtlich nicht automatisch lokal löschen.
+   }
+   return {inbound,conflicts};
+ }
+ async function pullSafe(manual=false){
+   cloudCfg=loadCloudConfig();
+   if(!cloudReady())return false;
+   if(cloudBusy)return false;
+   cloudBusy=true;
+   const beforeMain=localStorage.getItem(KEY)||'', beforeProjects=localStorage.getItem(PROJECTS_KEY)||'';
+   try{
+     if(localPackages()!==EXPECT_PACKAGES)throw new Error('Package-Sicherheitsgrenze verletzt: lokal '+localPackages()+' statt 347.');
+     let remote=await fetchRemoteEntities(),local=localEntityMap(),a=analyzeInbound(remote,local);
+     if(a.conflicts.length){
+       setSyncStatus('err','V272 Schutzstopp · '+a.conflicts.length+' echte Konflikt(e) · nichts automatisch überschrieben');
+       return false;
+     }
+     let done=0,nb=loadSyncBase();
+     for(const s of a.inbound){
+       // Vor jedem Objekt frisch prüfen.
+       remote=await fetchRemoteEntities();local=localEntityMap();
+       const r=remote[s.k],l=local[s.k],b=loadSyncBase()[s.k];
+       if(!r)continue;
+       const lh=l?stableJson(l.data):null,rh=stableJson(r.data),bh=b?.hash??null;
+       if(lh===rh){nb=loadSyncBase();nb[s.k]={version:Number(r.version||0),hash:rh};saveSyncBase(nb);continue}
+       if(lh!==bh)throw new Error(s.k+': lokal parallel geändert; Cloud-Übernahme gestoppt.');
+       if(!applyOneRemote(r))continue;
+       if(localPackages()!==EXPECT_PACKAGES)throw new Error('Package-Sicherheitsgrenze nach '+s.k+' verletzt.');
+       const freshLocal=localEntityMap()[s.k];
+       if(!freshLocal||stableJson(freshLocal.data)!==rh)throw new Error(s.k+': lokale Verifikation fehlgeschlagen.');
+       nb=loadSyncBase();nb[s.k]={version:Number(r.version||0),hash:rh};saveSyncBase(nb);done++;
+     }
+     refreshPermissionVisibility?.();
+     renderProjectCards?.();
+     renderPlatformProjectOverview?.();
+     if(done)setSyncStatus('ok','V272 Cloud → Gerät · '+done+' Änderung(en) sicher übernommen');
+     else if(manual)setSyncStatus('ok','V272 Cloud → Gerät · keine offenen Änderungen');
+     return true;
+   }catch(e){
+     // Bei Sicherheitsfehler Hauptzustand/Projekte auf den Stand vor diesem Pull zurücksetzen.
+     try{localStorage.setItem(KEY,beforeMain);st=JSON.parse(beforeMain)}catch(_e){}
+     try{localStorage.setItem(PROJECTS_KEY,beforeProjects);loadProjects()}catch(_e){}
+     setSyncStatus('err','V272 Cloud → Gerät Schutzstopp · '+String(e?.message||e||''));
+     return false;
+   }finally{cloudBusy=false}
+ }
+ window.pullEntitySync=pullSafe;
+
+ // Login ohne Diagnosefenster; nach bestätigter Membership sofort sicher Cloud→Gerät aktualisieren.
+ signInCloud=async function(){
+   const username=cleanUsername(E('authUsername')?.value||''),password=E('authPassword')?.value||'';
+   if(!username||!password){alert('Bitte Benutzername und PIN/Passwort eingeben.');return}
+   try{
+     const s=await authFetch('token?grant_type=password',{email:syntheticEmail(username),password});
+     saveAuthSession(s);
+     await refreshCloudIdentity(true);
+     if(!cloudMember){
+       alert('Anmeldung erfolgreich, aber für diesen Benutzer fehlt noch die Cloud-Lagerfreigabe.');
+       return;
+     }
+     closeM('authModal');
+     if(cloudReady())await pullSafe(false);
+     startCloudPolling();
+     refreshPermissionVisibility?.();
+     renderProjectCards?.();
+   }catch(e){alert('Anmeldung fehlgeschlagen:\n'+String(e?.message||e))}
+ };
+
+ // Bereits angemeldete Geräte bekommen Freigaben/Änderungen ohne Neuanmeldung:
+ // bestehendes 2-Minuten-Polling ruft jetzt pullSafe auf; Fokus zusätzlich sofort.
+ window.addEventListener('focus',()=>{try{if(cloudReady()&&authSession&&cloudMember)setTimeout(()=>pullSafe(false),150)}catch(_e){}});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden){try{if(cloudReady()&&authSession&&cloudMember)setTimeout(()=>pullSafe(false),150)}catch(_e){}}});
+
+ try{
+   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V272';
+   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V272 Auto-Sync in beide Richtungen bereit');
+ }catch(_e){}
+})();
+</script>
