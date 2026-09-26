@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V291</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V292</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31083,7 +31083,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V291';
+   if(v)v.textContent='Aktuelle Version: V292';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -31448,5 +31448,104 @@ ${safeTypeLines}
    return trace.result.startsWith('ERFOLG');
  }
  window.diagnosePermissionSaveV291=diagnosePermissionSaveV291;
+})();
+</script>
+
+<script>
+/* V292 – Laufzeitdiagnose des tatsächlich ausgeführten Berechtigungs-Saves.
+   Capture-Listener beobachtet den realen Klick unabhängig von onclick/Handler-Reihenfolge.
+   Keine Cloud-Schreiboperation durch V292 selbst. */
+(()=>{
+ const TRACE='kuenzli_v292_permission_runtime';
+ let lastRpcV292=null, lastFetchV292=null;
+
+ function packV292(e){
+   return {name:String(e?.name||''),message:String(e?.message||e||'')};
+ }
+ function storeV292(x){
+   try{localStorage.setItem(TRACE,JSON.stringify(x))}catch(_e){}
+   window.__v292PermissionRuntime=x;
+ }
+ function showV292(x){
+   let b=document.getElementById('runtimeDiagV292');
+   if(!b){
+     b=document.createElement('div'); b.id='runtimeDiagV292';
+     b.style.cssText='position:fixed;z-index:2147483647;left:8px;right:8px;bottom:8px;max-height:75vh;overflow:auto;background:white;border:4px solid #173f34;border-radius:14px;padding:14px;box-shadow:0 8px 30px #0006;font:14px/1.4 system-ui';
+     document.body.appendChild(b);
+   }
+   const e=v=>String(v??'—').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+   b.innerHTML=`<b style="font-size:18px">V292 Berechtigungs-Save Laufzeitdiagnose</b>
+   <div><b>Button:</b> ${e(x.buttonId)} · <b>onclick:</b> ${e(x.onclick)}</div>
+   <div><b>Permission-Key:</b> ${e(x.key)} · <b>Pakete:</b> ${e(x.packages)}</div>
+   <div><b>savePermissionEditorV121:</b> ${e(x.fn121)}</div>
+   <div><b>savePermissionEditor:</b> ${e(x.fnPlain)}</div>
+   <hr><div><b>Letzter rpcEntitySave:</b> ${e(x.rpc)}</div>
+   <div><b>RPC Ergebnis:</b> ${e(x.rpcResult)}</div>
+   <div><b>Letzter fetchRemoteEntities:</b> ${e(x.fetch)}</div>
+   <div><b>Fetch Ergebnis:</b> ${e(x.fetchResult)}</div>
+   <div><b>Cloudstatus:</b> ${e(x.status)}</div>
+   <div><b>Zeit:</b> ${e(x.at)}</div>
+   <button type="button" onclick="document.getElementById('runtimeDiagV292').remove()" style="margin-top:10px">Schliessen</button>`;
+ }
+
+ // Observe calls only; preserve behavior and arguments.
+ const oldRpcV292=window.rpcEntitySave||rpcEntitySave;
+ window.rpcEntitySave=async function(){
+   lastRpcV292={at:new Date().toISOString(),args:Array.from(arguments).map((v,i)=>i===2?'[data]':String(v))};
+   try{
+     const r=await oldRpcV292.apply(this,arguments);
+     lastRpcV292.result='OK'; return r;
+   }catch(e){lastRpcV292.result='FEHLER '+packV292(e).name+' · '+packV292(e).message; throw e}
+ };
+ try{rpcEntitySave=window.rpcEntitySave}catch(_e){}
+
+ const oldFetchV292=window.fetchRemoteEntities||fetchRemoteEntities;
+ window.fetchRemoteEntities=async function(){
+   lastFetchV292={at:new Date().toISOString()};
+   try{
+     const r=await oldFetchV292.apply(this,arguments);
+     lastFetchV292.result='OK · '+Object.keys(r||{}).length+' Objekte'; return r;
+   }catch(e){lastFetchV292.result='FEHLER '+packV292(e).name+' · '+packV292(e).message; throw e}
+ };
+ try{fetchRemoteEntities=window.fetchRemoteEntities}catch(_e){}
+
+ function snapV292(btn){
+   const x={
+     at:new Date().toISOString(),
+     buttonId:btn?.id||'',
+     onclick:btn?.getAttribute?.('onclick')||'',
+     key:String(window.permissionEditorKey??permissionEditorKey??''),
+     packages:(st.packages||[]).length,
+     fn121:typeof window.savePermissionEditorV121,
+     fnPlain:typeof window.savePermissionEditor,
+     rpc:lastRpcV292?JSON.stringify(lastRpcV292.args):'noch kein Aufruf',
+     rpcResult:lastRpcV292?.result||'—',
+     fetch:lastFetchV292?.at||'noch kein Aufruf',
+     fetchResult:lastFetchV292?.result||'—',
+     status:'wird 2.5 s nach Klick aktualisiert'
+   };
+   storeV292(x); return x;
+ }
+
+ // Capture phase: runs before normal button handlers, regardless of inline/runtime replacement.
+ document.addEventListener('click',ev=>{
+   const btn=ev.target?.closest?.('button');
+   if(!btn)return;
+   const txt=String(btn.textContent||'').trim().toLowerCase();
+   if(btn.id!=='permissionSaveBtnV121' && !txt.includes('berechtigungen speichern'))return;
+
+   const x=snapV292(btn);
+   setTimeout(()=>{
+     x.at=new Date().toISOString();
+     x.rpc=lastRpcV292?JSON.stringify(lastRpcV292.args):'KEIN rpcEntitySave beobachtet';
+     x.rpcResult=lastRpcV292?.result||'—';
+     x.fetch=lastFetchV292?.at||'KEIN fetchRemoteEntities beobachtet';
+     x.fetchResult=lastFetchV292?.result||'—';
+     x.status=String(document.querySelector('[data-sync-status]')?.textContent||
+                     document.getElementById('cloudStatus')?.textContent||
+                     document.body.innerText.match(/Cloud-(?:Fehler|aktuell)/)?.[0]||'—');
+     storeV292(x); showV292(x);
+   },2500);
+ },true);
 })();
 </script>
