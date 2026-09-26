@@ -10479,17 +10479,17 @@ async function checkCloudForUpdates(force=false){
 
 
 function entityCollections(){
- return ['areas','racks','packages','commissions','controls','users','internalMaterials','internalTransfers','standardStock','materialCatalog'];
+ return ['areas','racks','packages','commissions','controls','users','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552'];
 }
 function canWriteCloudEntity(type,action='save'){
  let role=currentRole();
  if(role==='Administrator')return true;
  if(role==='Lagerverantwortlicher'){
    if(type==='users')return false;
-   return ['areas','racks','packages','commissions','controls','internalMaterials','internalTransfers','standardStock','materialCatalog','projects','smallOrders','platforms','toolsContainers','__state'].includes(type);
+   return ['areas','racks','packages','commissions','controls','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','projects','smallOrders','platforms','toolsContainers','__state'].includes(type);
  }
  if(role==='Mitarbeiter'){
-   if(action==='save')return ['packages','controls','standardStock','materialCatalog','projects','smallOrders','platforms','toolsContainers'].includes(type);
+   if(action==='save')return ['packages','controls','standardStock','materialCatalog','materialPinsV552','projects','smallOrders','platforms','toolsContainers'].includes(type);
    if(action==='delete')return type==='packages' && !!st.settings?.allowMaterialDelete;
  }
  return false;
@@ -27041,12 +27041,24 @@ renderPlatformReservationGantt=function(from='',to=''){
   const name=prompt('Name der neuen Ebene:','Ebene '+((r.levels?.length||0)+1));if(name===null||!name.trim())return;
   if(!Array.isArray(r.levels))r.levels=[];r.levels.push({name:name.trim(),length:'',width:'',height:''});locV185.levelIndex=String(r.levels.length-1);persist();renderFullControl();
  };
- function findPackageV185(raw){
-  const q=String(raw||'').trim().toLowerCase();if(!q)return null;
+ let controlCatSelectedV275='A';
+  window.controlCatV275=function(cat){
+   controlCatSelectedV275=String(cat||'A').toUpperCase();
+   document.querySelectorAll('#ctrlCatV275 .ctrlCatBtnV275').forEach(b=>b.classList.toggle('active',b.dataset.cat===controlCatSelectedV275));
+   document.getElementById('ctrlElementV185')?.focus();
+  };
+  function controlFullIdV275(raw){
+   let q=String(raw||'').trim().toUpperCase();
+   let mm=q.match(/^(TB|A|B|C|D|E)\s*-?\s*(\d+)$/);
+   if(mm){controlCatSelectedV275=mm[1];return mm[1]+'-'+mm[2]}
+   let n=q.replace(/\D+/g,'');return n?controlCatSelectedV275+'-'+n:'';
+  }
+  function findPackageV185(raw){
+  const q=controlFullIdV275(raw).toLowerCase();if(!q)return null;
   return activePackagesV185().find(p=>String(p.elementId||'').trim().toLowerCase()===q)||null;
  }
  window.controlFindV185=function(){
-  const inp=document.getElementById('ctrlElementV185'),p=findPackageV185(inp?.value);if(!p){loadedPidV185='';renderEditorV185();if(inp?.value?.trim())alert('Element-ID nicht gefunden: '+inp.value.trim());focusIdV185();return}
+  const inp=document.getElementById('ctrlElementV185'),p=findPackageV185(inp?.value);if(!p){loadedPidV185='';renderEditorV185();if(inp?.value?.trim())alert('Element-ID nicht gefunden: '+controlFullIdV275(inp.value));focusIdV185();return}
   loadedPidV185=p.id;renderEditorV185();setTimeout(()=>document.getElementById('ctrlQtyV185')?.focus(),0);
  };
  window.controlIdKeyV185=function(e){if(e.key==='Enter'){e.preventDefault();controlFindV185()}};
@@ -27105,7 +27117,7 @@ renderPlatformReservationGantt=function(from='',to=''){
     <label>Gestell / Regal<select id="ctrlRackV185" onchange="controlRackV185(this.value)">${racks.map(r=>`<option value="${escAttrV185(r.id)}" ${r.id===locV185.rackId?'selected':''}>${esc(r.name)}</option>`).join('')}</select></label>
     <label>Ebene (optional)<select id="ctrlLevelV185" onchange="controlLevelV185(this.value)"><option value="">– keine Ebene –</option>${(rack?.levels||[]).map((l,i)=>`<option value="${i}" ${String(i)===String(locV185.levelIndex)?'selected':''}>${esc(l.name||('Ebene '+(i+1)))}</option>`).join('')}</select></label>
    </div><div class="controlActionsV185"><button class="btn secondary" type="button" onclick="controlNewRackV185()">+ Gestell / Regal</button><button class="btn secondary" type="button" onclick="controlNewLevelV185()">+ Ebene</button></div></section>
-   <section class="controlLookupV185"><h3>2. Element-ID</h3><input id="ctrlElementV185" class="controlIdV185" placeholder="z. B. E-438" autocomplete="off" onkeydown="controlIdKeyV185(event)"><div class="controlActionsV185"><button class="btn" type="button" onclick="controlFindV185()">Element laden</button><button class="btn secondary" type="button" onclick="controlAddFoundV185()">+ Paket ohne Element-ID gefunden</button></div><div class="controlHintV185">Eingabe allein ändert keine Daten. Gespeichert wird erst nach deiner Bestätigung.</div></section><div id="ctrlEditorV185"></div></div>`;
+   <section class="controlLookupV185"><h3>2. Element-ID</h3><div id="ctrlCatV275" class="ctrlCatV275">${['A','B','C','D','E','TB'].map(c=>`<button type="button" class="ctrlCatBtnV275 ${c==='A'?'active':''}" data-cat="${c}" onclick="controlCatV275('${c}')">${c}</button>`).join('')}</div><input id="ctrlElementV185" class="controlIdV185" placeholder="nur Nummer, z. B. 438" inputmode="numeric" autocomplete="off" onkeydown="controlIdKeyV185(event)"><div class="controlActionsV185"><button class="btn" type="button" onclick="controlFindV185()">Element laden</button><button class="btn secondary" type="button" onclick="controlAddFoundV185()">+ Paket ohne Element-ID gefunden</button></div><div class="controlHintV185">Eingabe allein ändert keine Daten. Gespeichert wird erst nach deiner Bestätigung.</div></section><div id="ctrlEditorV185"></div></div>`;
   renderEditorV185();focusIdV185();
   const hist=document.getElementById('controlHistory');if(hist)hist.innerHTML=(st.controls||[]).filter(x=>x.completed&&x.type!=='standard').map(x=>`<div class="manageItem"><div class="manageHead"><div><b>${esc(controlLabel(x))}</b><div class="muted">${formatDateTime(x.completed)} · ${x.items.length} Positionen</div></div><div class="toolbar"><button class="btn secondary" onclick="controlDetails('${x.id}')">Details</button><button class="btn" onclick="exportControlPDF('${x.id}')">PDF</button></div></div></div>`).join('')||'<p class="muted">Noch keine abgeschlossene Kontrolle.</p>';
  }
@@ -30888,157 +30900,22 @@ ${safeTypeLines}
 </script>
 
 <style>
-/* V274 – Kategorieauswahl Element-ID in der Lagerkontrolle */
-#controlIdCategoryV274{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 8px}
-#controlIdCategoryV274 button{min-width:46px;padding:8px 12px;border:1px solid #c8d2cd;border-radius:9px;background:#fff;font-weight:900;cursor:pointer}
-#controlIdCategoryV274 button.active{background:#173f34;color:#fff;border-color:#173f34}
+.ctrlCatV275{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 8px}
+.ctrlCatBtnV275{min-width:48px;padding:9px 13px;border:1px solid #c8d2cd;border-radius:9px;background:#fff;font-weight:900;cursor:pointer}
+.ctrlCatBtnV275.active{background:#173f34;color:#fff;border-color:#173f34}
 </style>
 <script>
-/* V274 – Pins objektweise synchronisieren; Lagerkontroll-Sync robust gegen
-   Folgeänderungen; Element-ID = Kategorie + Nummer.
-   Packages werden niemals pauschal ersetzt; __state bleibt ausgeschlossen. */
+/* V275 – Folgeänderungen werden nach laufendem Sync erneut verarbeitet. */
 (()=>{
- const VERSION='V274', EXPECT_PACKAGES=347;
- let catV274='A', runV274=false, pendingV274=false;
-
- // 1) Material-Pins sind ab V274 echte Cloud-Entitäten.
- const oldEntityCollectionsV274=entityCollections;
- entityCollections=function(){
-   const a=oldEntityCollectionsV274();
-   return a.includes('materialPinsV552')?a:[...a,'materialPinsV552'];
+ let running=false,again=false;
+ const prior=window.pushEntitySync;
+ window.pushEntitySync=async function(manual=false){
+   if((st.packages||[]).length!==347){setSyncStatus('err','V275 Schutzstopp · '+(st.packages||[]).length+' Packages statt 347');return false}
+   if(running||cloudBusy){again=true;return false}
+   running=true;
+   try{return await prior(manual)}
+   finally{running=false;if(again){again=false;setTimeout(()=>window.pushEntitySync(false),900)}}
  };
- const oldCanWriteV274=canWriteCloudEntity;
- canWriteCloudEntity=function(type,action='save'){
-   if(type==='materialPinsV552'){
-     const role=currentRole();
-     return role==='Administrator'||role==='Lagerverantwortlicher'||role==='Mitarbeiter';
-   }
-   return oldCanWriteV274(type,action);
- };
-
- function transientV274(e){return /\b(503|504)\b|PGRST003|timeout|timed out|Failed to fetch|NetworkError|Load failed/i.test(String(e?.message||e||''))}
- function analyzeV274(remote,local){
-   const base=loadSyncBase(), keys=new Set([...Object.keys(base||{}),...Object.keys(local||{}),...Object.keys(remote||{})]);
-   const changed=[],remoteChanged=[],conflicts=[],deletions=[];
-   for(const k of keys){
-     if(k==='__state|main')continue;
-     const l=local[k],r=remote[k],b=base[k],lh=l?stableJson(l.data):null,rh=r?stableJson(r.data):null,bh=b?.hash??null;
-     if(lh===rh)continue;
-     const lc=lh!==bh,rc=rh!==bh;
-     if(lc&&!rc){(l?changed:deletions).push({k,l,r,b,lh,rh})}
-     else if(!lc&&rc)remoteChanged.push({k,l,r,b,lh,rh});
-     else conflicts.push({k,l,r,b,lh,rh});
-   }
-   return {changed,remoteChanged,conflicts,deletions};
- }
-
- // 2) Auto-Sync: eine während eines laufenden Lagerkontroll-Syncs erneut
- // geänderte Entität erzeugt keinen Cloudfehler mehr, sondern einen Folgelauf.
- async function syncV274(manual=false){
-   cloudCfg=loadCloudConfig();
-   if(!cloudReady()){if(manual)alert('Cloud ist nicht bereit. Lokale Daten bleiben gespeichert.');return false}
-   if(runV274||cloudBusy){pendingV274=true;return false}
-   if((st.packages||[]).length!==EXPECT_PACKAGES){
-     setSyncStatus('err','V274 Schutzstopp · '+(st.packages||[]).length+' Packages statt 347');return false;
-   }
-   runV274=true;cloudBusy=true;
-   try{
-     setSyncStatus('syncing','V274 synchronisiert Änderungen…');
-     let remote=await fetchRemoteEntities(),local=localEntityMap(),a=analyzeV274(remote,local);
-     if(a.conflicts.length||a.remoteChanged.length){
-       setSyncStatus('err',`V274 Schutzstopp · ${a.conflicts.length} Konflikt(e), ${a.remoteChanged.length} Cloud-Änderung(en)`);
-       return false;
-     }
-     // Löschungen bleiben grundsätzlich gesperrt; einzige neue Ausnahme sind Pins.
-     const forbiddenDeletes=a.deletions.filter(x=>x.l?.type!=='materialPinsV552'&&x.r?.type!=='materialPinsV552');
-     if(forbiddenDeletes.length){
-       setSyncStatus('err','V274 Schutzstopp · '+forbiddenDeletes.length+' Löschung(en) nicht automatisch übertragen');return false;
-     }
-     let done=0,needsRerun=false;
-     for(const s of a.changed){
-       remote=await fetchRemoteEntities();local=localEntityMap();
-       const l=local[s.k],r=remote[s.k],b=loadSyncBase()[s.k];
-       const lh=l?stableJson(l.data):null,rh=r?stableJson(r.data):null,bh=b?.hash??null;
-       if(!l){needsRerun=true;continue}
-       if(lh!==s.lh){needsRerun=true;continue} // Folgeänderung: nächster Lauf statt Fehler
-       if(rh!==s.rh||rh!==bh){throw new Error(s.k+': Cloud parallel geändert; nichts überschrieben.')}
-       if(!canWriteCloudEntity(l.type,'save'))continue;
-       await rpcEntitySave(l.type,l.id,l.data,Number(r?.version||b?.version||0),false);
-       const fresh=(await fetchRemoteEntities())[s.k],cur=localEntityMap()[s.k];
-       if(!fresh||!cur||stableJson(cur.data)!==lh||stableJson(fresh.data)!==lh){needsRerun=true;continue}
-       const nb=loadSyncBase();nb[s.k]={version:Number(fresh.version||0),hash:lh};saveSyncBase(nb);done++;
-     }
-     // Pin-Löschungen einzeln, versioniert und verifiziert.
-     for(const s of a.deletions.filter(x=>(x.r?.type||'')==='materialPinsV552')){
-       const fresh=(await fetchRemoteEntities())[s.k],cur=localEntityMap()[s.k];
-       if(cur){needsRerun=true;continue}
-       if(!fresh)continue;
-       const b=loadSyncBase()[s.k],bh=b?.hash??null,rh=stableJson(fresh.data);
-       if(rh!==bh)throw new Error(s.k+': Pin wurde in Cloud parallel geändert; Löschung gestoppt.');
-       await rpcEntityDelete('materialPinsV552',fresh.id,Number(fresh.version||b?.version||0),false);
-       if((await fetchRemoteEntities())[s.k])throw new Error(s.k+': Pin-Löschung nicht bestätigt.');
-       const nb=loadSyncBase();delete nb[s.k];saveSyncBase(nb);done++;
-     }
-     if((st.packages||[]).length!==EXPECT_PACKAGES)throw new Error('Package-Sicherheitsgrenze nach Sync verletzt.');
-     if(needsRerun){pendingV274=true;setSyncStatus('syncing','V274 Folgeänderung erkannt · nächster Sync läuft…')}
-     else setSyncStatus('ok','V274 synchron · '+done+' Änderung(en) Cloud-verifiziert');
-     return true;
-   }catch(e){
-     setSyncStatus('err',(transientV274(e)?'V274 Cloud vorübergehend nicht erreichbar':'V274 Schutzstopp')+' · '+String(e?.message||e||''));
-     return false;
-   }finally{
-     cloudBusy=false;runV274=false;
-     if(pendingV274){pendingV274=false;setTimeout(()=>syncV274(false),900)}
-   }
- }
- window.pushEntitySync=syncV274;
-
- // 3) Lagerkontrolle: Kategorie wählen, im Feld nur Nummer eingeben.
- const oldControlFindV274=window.controlFindV185;
- function normalizeNumV274(v){
-   let x=String(v||'').trim().toUpperCase();
-   const m=x.match(/^(TB|A|B|C|D|E)\s*-\s*(\d+)$/);if(m){catV274=m[1];return m[2]}
-   return x.replace(/\D+/g,'');
- }
- function decorateControlIdV274(){
-   const inp=document.getElementById('ctrlElementV185');if(!inp)return;
-   let host=document.getElementById('controlIdCategoryV274');
-   if(!host){
-     host=document.createElement('div');host.id='controlIdCategoryV274';
-     host.innerHTML=['A','B','C','D','E','TB'].map(c=>`<button type="button" data-cat="${c}">${c}</button>`).join('');
-     inp.parentNode.insertBefore(host,inp);
-     host.addEventListener('click',e=>{
-       const b=e.target.closest('button[data-cat]');if(!b)return;
-       catV274=b.dataset.cat;paintCatV274();inp.focus();
-     });
-     inp.placeholder='nur Nummer, z. B. 438';inp.inputMode='numeric';
-     inp.addEventListener('input',()=>{const n=normalizeNumV274(inp.value);if(inp.value!==n)inp.value=n});
-   }
-   paintCatV274();
- }
- function paintCatV274(){
-   document.querySelectorAll('#controlIdCategoryV274 button').forEach(b=>b.classList.toggle('active',b.dataset.cat===catV274));
- }
- window.controlFindV185=function(){
-   const inp=document.getElementById('ctrlElementV185');if(!inp)return;
-   const n=normalizeNumV274(inp.value);
-   if(!n){alert('Bitte eine Nummer eingeben.');inp.focus();return}
-   inp.value=catV274+'-'+n;
-   const out=oldControlFindV274.apply(this,arguments);
-   setTimeout(()=>{const i=document.getElementById('ctrlElementV185');if(i&&!document.getElementById('ctrlEditorV185')?.querySelector('.controlEditV185'))i.value=n;decorateControlIdV274()},0);
-   return out;
- };
- const oldRenderFullV274=window.renderFullControl;
- window.renderFullControl=function(){
-   const out=oldRenderFullV274.apply(this,arguments);
-   setTimeout(decorateControlIdV274,0);return out;
- };
- document.addEventListener('DOMContentLoaded',()=>setTimeout(decorateControlIdV274,0));
- setTimeout(decorateControlIdV274,300);
-
- try{
-   const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V274';
-   if(cloudReady())setSyncStatus('ok','Cloud aktiv · V274 Pins + Lagerkontrolle bereit');
- }catch(_e){}
+ try{const v=document.getElementById('currentBuildV234');if(v)v.textContent='Aktuelle Version: V275';if(cloudReady())setSyncStatus('ok','Cloud aktiv · V275 bereit')}catch(_e){}
 })();
 </script>
