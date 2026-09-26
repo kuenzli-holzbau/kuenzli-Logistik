@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V290</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V291</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -5512,7 +5512,7 @@ window.APP_RELEASE = {
 <label class="permissionCheck permissionMainV108" style="font-size:16px;font-weight:900"><input type="checkbox" id="permManageV286"> Verwaltung &amp; Einstellungen</label>
 <div class="muted" style="margin-top:5px">Zugriff auf Benutzer, Cloud und allgemeine Verwaltung.</div>
 </div>
-<button class="btn" id="permissionSaveBtnV121" type="button" onclick="savePermissionEditorV121(event); setTimeout(()=>window.savePermissionSetV290&&window.savePermissionSetV290(),0)">Berechtigungen speichern</button>
+<button class="btn" id="permissionSaveBtnV121" type="button" onclick="savePermissionEditorV121(event); setTimeout(()=>window.diagnosePermissionSaveV291&&window.diagnosePermissionSaveV291(),0)">Berechtigungen speichern</button>
  </div>
 </div></div>
 
@@ -31083,7 +31083,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V290';
+   if(v)v.textContent='Aktuelle Version: V291';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -31345,5 +31345,108 @@ ${safeTypeLines}
    return priorStatusV290.apply(this,arguments);
  };
  try{setSyncStatus=window.setSyncStatus}catch(_e){}
+})();
+</script>
+
+<script>
+/* V291 – Permission-Save Phasendiagnose.
+   Ziel: exakt unterscheiden zwischen Cloud-Lesen, RPC-Save und Verifikationslesen.
+   Keine Bestands-/Package-/Login-Änderung. */
+(()=>{
+ let busyV291=false;
+ const STORE='kuenzli_v291_permission_trace';
+
+ function saveTraceV291(trace){
+   try{localStorage.setItem(STORE,JSON.stringify(trace))}catch(_e){}
+   window.__v291PermissionTrace=trace;
+ }
+ function errV291(e){
+   return {
+     name:String(e?.name||''),
+     message:String(e?.message||e||''),
+     stack:String(e?.stack||'').split('\n').slice(0,4).join(' | ')
+   };
+ }
+ function renderV291(t){
+   let box=document.getElementById('permissionTraceV291');
+   if(!box){
+     box=document.createElement('div'); box.id='permissionTraceV291';
+     box.style.cssText='position:fixed;z-index:1000001;left:10px;right:10px;bottom:10px;max-height:72vh;overflow:auto;background:#fff;border:3px solid #173f34;border-radius:14px;padding:14px;box-shadow:0 8px 30px #0005;font:14px/1.4 system-ui';
+     document.body.appendChild(box);
+   }
+   const esc=x=>String(x??'—').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+   box.innerHTML='<b style="font-size:18px">V291 Permission-Save Diagnose</b>'+
+     '<div><b>Key:</b> '+esc(t.key)+' · <b>manage:</b> '+esc(t.manage)+' · <b>Pakete:</b> '+esc(t.packages)+'</div>'+
+     '<hr><div><b>Phase 1 Cloud-Lesen:</b> '+esc(t.read1?.status)+' '+esc(t.read1?.detail)+'</div>'+
+     '<div><b>Phase 2 RPC-Save:</b> '+esc(t.save?.status)+' '+esc(t.save?.detail)+'</div>'+
+     '<div><b>Phase 3 Verifikationslesen:</b> '+esc(t.read2?.status)+' '+esc(t.read2?.detail)+'</div>'+
+     '<div><b>Ergebnis:</b> '+esc(t.result)+'</div>'+
+     '<div><b>Zeit:</b> '+esc(t.at)+'</div>'+
+     '<button type="button" onclick="document.getElementById(\'permissionTraceV291\').remove()" style="margin-top:10px">Schliessen</button>';
+ }
+
+ async function diagnosePermissionSaveV291(){
+   if(busyV291)return;
+   busyV291=true;
+   const trace={at:new Date().toISOString(),key:'',manage:null,packages:(st.packages||[]).length,
+                read1:{status:'nicht gestartet'},save:{status:'nicht gestartet'},read2:{status:'nicht gestartet'},result:'läuft'};
+   try{
+     if(trace.packages!==347)throw new Error('Package-Sicherheitsgrenze: '+trace.packages+' statt 347.');
+     if(!canAdmin())throw new Error('Administrator erforderlich.');
+     if(!cloudReady()||!authSession||!cloudMember)throw new Error('Cloud nicht bereit.');
+
+     trace.key=String(permissionEditorKey||'').trim();
+     if(!trace.key)throw new Error('Permission-Key fehlt.');
+     ensurePermissionStore();
+
+     const map=permissionFieldMap(), base=permissionsForKey(trace.key), data={...base};
+     Object.entries(map).forEach(([prop,id])=>{const el=document.getElementById(id);if(el)data[prop]=!!el.checked});
+     const explicit=document.getElementById('permManageV286');
+     if(explicit)data.manage=!!explicit.checked;
+     const local=st.userPermissions?.[trace.key];
+     if(local?.projects!==undefined)data.projects=JSON.parse(JSON.stringify(local.projects));
+     trace.manage=!!data.manage;
+     const ek='permissionSets|'+trace.key;
+
+     let before=null;
+     try{
+       const all=await fetchRemoteEntities();
+       before=all[ek];
+       trace.read1={status:'OK',detail:before?'vorhanden · Version '+String(before.version??'—'):'nicht vorhanden'};
+     }catch(e){
+       trace.read1={status:'FEHLER',detail:errV291(e).name+' · '+errV291(e).message};
+       trace.result='STOPP in Phase 1';
+       saveTraceV291(trace); renderV291(trace); return false;
+     }
+
+     try{
+       await rpcEntitySave('permissionSets',trace.key,JSON.parse(JSON.stringify(data)),Number(before?.version||0),false);
+       trace.save={status:'OK',detail:'RPC abgeschlossen'};
+     }catch(e){
+       const x=errV291(e);
+       trace.save={status:'FEHLER',detail:x.name+' · '+x.message};
+       trace.result='STOPP in Phase 2';
+       saveTraceV291(trace); renderV291(trace); return false;
+     }
+
+     try{
+       const all2=await fetchRemoteEntities(), after=all2[ek];
+       if(!after)throw new Error(ek+' nach RPC nicht vorhanden.');
+       const same=stableJson(after.data)===stableJson(data);
+       trace.read2={status:same?'OK':'FEHLER',detail:'Version '+String(after.version??'—')+' · Inhalt '+(same?'identisch':'abweichend')};
+       trace.result=same?'ERFOLG – Cloudobjekt verifiziert':'STOPP in Phase 3';
+     }catch(e){
+       const x=errV291(e);
+       trace.read2={status:'FEHLER',detail:x.name+' · '+x.message};
+       trace.result='STOPP in Phase 3';
+     }
+   }catch(e){
+     trace.result='VORPRÜFUNG FEHLER · '+String(e?.message||e||'');
+   }finally{
+     saveTraceV291(trace); renderV291(trace); busyV291=false;
+   }
+   return trace.result.startsWith('ERFOLG');
+ }
+ window.diagnosePermissionSaveV291=diagnosePermissionSaveV291;
 })();
 </script>
