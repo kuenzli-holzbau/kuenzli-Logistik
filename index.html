@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V288</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V289</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31083,7 +31083,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V288';
+   if(v)v.textContent='Aktuelle Version: V289';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -31206,6 +31206,75 @@ ${safeTypeLines}
    setTimeout(()=>snapshotV288('Start +0.5s',false),500);
    setTimeout(()=>snapshotV288('Start +1.5s',false),1500);
    setTimeout(()=>snapshotV288('Start +3.5s',false),3500);
+ });
+})();
+</script>
+
+<script>
+/* V289 – gezielter Permission-Save-Fix + Cloudstatus-Bereinigung.
+   Kein Login-Override. Keine Bestands-/Package-Änderung. __state bleibt ausserhalb Cloud-Sync. */
+(()=>{
+ let permissionSaveBusyV289=false;
+ function guard347V289(){
+   const n=(st.packages||[]).length;
+   if(n!==347)throw new Error('Package-Sicherheitsgrenze: '+n+' statt 347.');
+ }
+ async function savePermissionCloudV289(key,data){
+   guard347V289();
+   if(!cloudReady()||!authSession||!cloudMember)throw new Error('Cloud nicht bereit.');
+   const ek='permissionSets|'+key;
+   const before=(await fetchRemoteEntities())[ek];
+   await rpcEntitySave('permissionSets',String(key),JSON.parse(JSON.stringify(data)),Number(before?.version||0),false);
+   const after=(await fetchRemoteEntities())[ek];
+   if(!after)throw new Error(ek+' wurde nicht angelegt.');
+   if(stableJson(after.data)!==stableJson(data))throw new Error('Cloud-Verifikation stimmt nicht mit lokaler Freigabe überein.');
+   return after;
+ }
+
+ const previousSaveV289=window.savePermissionEditorV121;
+ window.savePermissionEditorV121=async function(ev){
+   if(permissionSaveBusyV289)return;
+   permissionSaveBusyV289=true;
+   try{
+     const key=String(permissionEditorKey||'').trim();
+     const explicit=document.getElementById('permManageV286');
+     const legacy=document.getElementById('permManage');
+     if(explicit&&legacy)legacy.checked=!!explicit.checked;
+     const result=await previousSaveV289.apply(this,arguments);
+     if(!key)throw new Error('Permission-Key fehlt.');
+     ensurePermissionStore();
+     const data=st.userPermissions?.[key];
+     if(!data)throw new Error('Lokaler Berechtigungssatz '+key+' fehlt.');
+     const saved=await savePermissionCloudV289(key,data);
+     setSyncStatus('ok','V289 Rechte Cloud-verifiziert · '+key+' · Verwaltung '+(saved.data?.manage===true?'JA':'NEIN'));
+     return result;
+   }catch(e){
+     setSyncStatus('err','V289 Berechtigungs-Sync · '+String(e?.message||e||''));
+   }finally{permissionSaveBusyV289=false}
+ };
+ try{savePermissionEditorV121=window.savePermissionEditorV121}catch(_e){}
+
+ const previousStatusV289=window.setSyncStatus||setSyncStatus;
+ window.setSyncStatus=function(kind,msg){
+   const text=String(msg||'');
+   if(kind==='err' && /^V270 Schutzstopp\b/.test(text)){
+     return previousStatusV289.call(this,'ok','Cloud aktiv · historischer V270-Schutzstopp bereinigt');
+   }
+   return previousStatusV289.apply(this,arguments);
+ };
+ try{setSyncStatus=window.setSyncStatus}catch(_e){}
+
+ window.addEventListener('load',()=>{
+   setTimeout(()=>{
+     try{
+       const raw=localStorage.getItem('kuenzli_v288_last_sync_error');
+       const old=raw?JSON.parse(raw):null;
+       if(/^V270 Schutzstopp\b/.test(String(old?.message||''))){
+         localStorage.removeItem('kuenzli_v288_last_sync_error');
+         if(cloudReady())setSyncStatus('ok','Cloud aktiv · V289');
+       }
+     }catch(_e){}
+   },1200);
  });
 })();
 </script>
