@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V295</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V296</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -17828,13 +17828,28 @@ function openMaterialPinV552(id){
  E('materialPinNoteV552').value=p.note||'';E('materialPinDeleteBtnV552').style.display='';
  E('materialPinModalV552').classList.add('open');
 }
-function saveMaterialPinV552(e){
- e.preventDefault();let id=E('materialPinIdV552').value,arr=ensureMaterialPinsV552(),p=arr.find(x=>x.id===id);
- let now=new Date().toISOString();
+async function saveMaterialPinV552(e){
+ e.preventDefault();if(window.__pinSaveFlightV296)return;window.__pinSaveFlightV296=true;
+ let id=E('materialPinIdV552').value,arr=ensureMaterialPinsV552(),p=arr.find(x=>x.id===id),now=new Date().toISOString();
  if(!p){p={id:'mp'+Date.now()+Math.random().toString(16).slice(2),createdAt:now};arr.push(p)}
  p.x=Number(E('materialPinXV552').value);p.y=Number(E('materialPinYV552').value);p.material=E('materialPinMaterialV552').value.trim();
  p.commission=E('materialPinCommissionV552').value||'';p.note=E('materialPinNoteV552').value.trim();p.updatedAt=now;
- persist();closeM('materialPinModalV552');renderAreas();
+ ensureV24();localStorage.setItem(KEY,JSON.stringify(st));closeM('materialPinModalV552');renderAreas();
+ try{
+   if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' statt 347.');
+   if(!cloudReady()||!authSession||!cloudMember){setSyncStatus('ok','V296 Pin lokal gespeichert · Cloud derzeit nicht aktiv');return}
+   if(!canWriteCloudEntity('materialPinsV552','save'))throw new Error('Keine Cloud-Schreibberechtigung für Material-Pins.');
+   const key='materialPinsV552|'+String(p.id),remote1=await fetchRemoteEntities(),r=remote1[key],base=loadSyncBase()[key];
+   const localHash=stableJson(p),remoteHash=r?stableJson(r.data):null,baseHash=base?.hash??null;
+   if(r&&baseHash!==null&&remoteHash!==baseHash&&remoteHash!==localHash)throw new Error('Pin wurde in der Cloud parallel geändert. Speichern gestoppt.');
+   if(r&&remoteHash===localHash){const nb=loadSyncBase();nb[key]={version:Number(r.version||0),hash:localHash};saveSyncBase(nb);setSyncStatus('ok','V296 Pin synchron · Cloud bereits identisch');return}
+   await rpcEntitySave('materialPinsV552',String(p.id),JSON.parse(JSON.stringify(p)),Number(r?.version||0),false);
+   const fresh=(await fetchRemoteEntities())[key];
+   if(!fresh||stableJson(fresh.data)!==localHash)throw new Error('Cloud-Verifikation des Pins fehlgeschlagen.');
+   const nb=loadSyncBase();nb[key]={version:Number(fresh.version||0),hash:localHash};saveSyncBase(nb);
+   setSyncStatus('ok','V296 Pin Cloud-verifiziert');
+ }catch(err){setSyncStatus('err','V296 Pin-Sync · '+String(err?.message||err||''))}
+ finally{window.__pinSaveFlightV296=false}
 }
 async function deleteMaterialPinV552(){
   let id=E('materialPinIdV552').value;if(!id)return;
@@ -17852,7 +17867,7 @@ async function deleteMaterialPinV552(){
       const nb=loadSyncBase();delete nb[k];saveSyncBase(nb);
     }
     st.materialPinsV552=ensureMaterialPinsV552().filter(x=>x.id!==id);
-    persist();closeM('materialPinModalV552');renderAreas();
+    ensureV24();localStorage.setItem(KEY,JSON.stringify(st));closeM('materialPinModalV552');renderAreas();
     setSyncStatus('ok','V276 Pin gelöscht · Cloud-verifiziert');
   }catch(e){
     setSyncStatus('err','V276 Pin-Löschung Schutzstopp · '+String(e?.message||e||''));
@@ -31083,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V295';
+   if(v)v.textContent='Aktuelle Version: V296';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -31752,4 +31767,8 @@ ${safeTypeLines}
  document.addEventListener('DOMContentLoaded',addV295Button);
  window.addEventListener('load',()=>setTimeout(addV295Button,0));
 })();
+</script>
+<script>
+/* V296 – Pin-Sync konsolidiert: kein globaler Multi-Entity-Push beim Pin-Save. */
+(()=>{try{if(cloudReady())setSyncStatus('ok','Cloud aktiv · V296 gezielter Pin-Sync bereit')}catch(_e){}})();
 </script>
