@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V298</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V299</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V298';
+   if(v)v.textContent='Aktuelle Version: V299';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -31942,5 +31942,28 @@ ${safeTypeLines}
  setTimeout(applyManageTileV298,0);
  setTimeout(applyManageTileV298,500);
  setTimeout(applyManageTileV298,2000);
+})();
+</script>
+
+<script>
+/* V299 – Rollenwechsel in Benutzer & Rechte konsolidiert. */
+(()=>{
+ window.updateUserRole=function(id,role){
+   if(!requireAdmin())return false;
+   if((st.packages||[]).length!==347){setSyncStatus('err','V299 Schutzstopp · '+(st.packages||[]).length+' statt 347 Packages');return false}
+   const allowed=['Mitarbeiter','Lagerverantwortlicher','Administrator'];
+   if(!allowed.includes(role)){alert('Ungültige Rolle.');return false}
+   const u=(st.users||[]).find(x=>String(x.id)===String(id));if(!u)return false;
+   if(u.role==='Administrator'&&role!=='Administrator'&&st.users.filter(x=>x.active&&x.role==='Administrator').length<=1){
+     alert('Mindestens ein aktiver Administrator muss bestehen bleiben.');renderManage();return false;
+   }
+   u.role=role;
+   ensureV24();
+   localStorage.setItem(KEY,JSON.stringify(st));
+   try{if(activeMainModule==='settings')toggleGlobalSettingsSection('users');else renderManage()}catch(_e){renderManage()}
+   setSyncStatus('ok','Cloud aktuell · lokale Benutzerrolle gespeichert');
+   return true;
+ };
+ try{updateUserRole=window.updateUserRole}catch(_e){}
 })();
 </script>
