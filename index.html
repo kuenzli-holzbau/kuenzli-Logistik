@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V300</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V301</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V300';
+   if(v)v.textContent='Aktuelle Version: V301';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -32016,5 +32016,42 @@ ${safeTypeLines}
    return true;
  };
  setTimeout(lockCloudBackedLocalRoleV300,0);
+})();
+</script>
+
+<script>
+/* V301 – Cloud-Benutzerliste im neuen Modul repariert.
+   V210 verlangte currentPage==='manage'; das eigenständige settings-Modul setzt
+   activeMainModule==='settings' und wurde deshalb fälschlich abgewiesen. */
+(()=>{
+ let flightV301=false;
+ window.renderCloudUsers=async function(force=false){
+   const box=E('cloudUsersList');
+   if(!box||!cloudMember||currentRole()!=='Administrator')return false;
+   const settingsOpen=(activeMainModule==='settings'||currentPage==='manage');
+   if(!settingsOpen)return false;
+   if(flightV301)return false;
+   if(!force&&Date.now()-cloudUsersLastFetchV210<3000)return false;
+   flightV301=true;
+   try{
+     await renderCloudUsersV186();
+     cloudUsersLastFetchV210=Date.now();
+     return true;
+   }finally{flightV301=false}
+ };
+ try{renderCloudUsers=window.renderCloudUsers}catch(_e){}
+
+ // The visible Cloud card must always request a fresh list when opened.
+ const oldToggleV301=window.toggleGlobalSettingsSection||toggleGlobalSettingsSection;
+ window.toggleGlobalSettingsSection=function(section){
+   const r=oldToggleV301.apply(this,arguments);
+   if(section==='cloud')setTimeout(()=>window.renderCloudUsers(true),0);
+   return r;
+ };
+ try{toggleGlobalSettingsSection=window.toggleGlobalSettingsSection}catch(_e){}
+
+ // After adding a cloud user, the existing addCloudUser() calls renderCloudUsers().
+ // Because the throttle is now only 3 s and the module guard is fixed, it appears immediately.
+ if(activeMainModule==='settings')setTimeout(()=>window.renderCloudUsers(true),100);
 })();
 </script>
