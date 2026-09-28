@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V301</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V302</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V301';
+   if(v)v.textContent='Aktuelle Version: V302';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -32053,5 +32053,55 @@ ${safeTypeLines}
  // After adding a cloud user, the existing addCloudUser() calls renderCloudUsers().
  // Because the throttle is now only 3 s and the module guard is fixed, it appears immediately.
  if(activeMainModule==='settings')setTimeout(()=>window.renderCloudUsers(true),100);
+})();
+</script>
+
+<script>
+/* V302 – Pin-Löschung konsolidiert.
+   Vor dem Cloud-Delete wird die aktuelle Cloud-Identität/Rolle frisch gelesen.
+   Nur der eine Pin wird versioniert gelöscht und danach aus der Cloud verifiziert.
+   Lokal wird erst NACH bestätigter Cloud-Löschung entfernt. */
+(()=>{
+ let deleteFlightV302=false;
+ window.deleteMaterialPinV552=async function(){
+   if(deleteFlightV302)return false;
+   const id=String(E('materialPinIdV552')?.value||'');if(!id)return false;
+   if(!confirm('Diesen Material-Pin löschen?'))return false;
+   deleteFlightV302=true;
+   const k='materialPinsV552|'+id;
+   try{
+     if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' statt 347.');
+
+     if(cloudReady()&&authSession){
+       // Do not trust a stale cached role for destructive cloud operations.
+       const identityOk=await refreshCloudIdentity(false);
+       if(!identityOk||!cloudMember)throw new Error('Cloud-Berechtigung konnte nicht aktuell bestätigt werden.');
+       if(!canWriteCloudEntity('materialPinsV552','delete'))
+         throw new Error('Keine Cloud-Löschberechtigung für Material-Pins (Rolle: '+String(currentRole())+').');
+
+       const remote=await fetchRemoteEntities(),r=remote[k],b=loadSyncBase()[k];
+       if(r){
+         const rh=stableJson(r.data),bh=b?.hash??null;
+         if(bh!==null&&rh!==bh)throw new Error('Pin wurde in der Cloud parallel geändert. Löschung gestoppt.');
+         await rpcEntityDelete('materialPinsV552',id,Number(r.version||b?.version||0),false);
+         const verify=await fetchRemoteEntities();
+         if(verify[k])throw new Error('Cloud hat die Pin-Löschung nicht bestätigt.');
+       }
+       const nb=loadSyncBase();delete nb[k];saveSyncBase(nb);
+     }
+
+     // Destructive local change only after cloud success (or when genuinely offline/local).
+     st.materialPinsV552=ensureMaterialPinsV552().filter(x=>String(x.id)!==id);
+     ensureV24();localStorage.setItem(KEY,JSON.stringify(st));
+     closeM('materialPinModalV552');renderAreas();
+     setSyncStatus('ok','V302 Pin gelöscht · Cloud-verifiziert');
+     return true;
+   }catch(e){
+     setSyncStatus('err','V302 Pin-Löschung · '+String(e?.message||e||''));
+     alert('Pin wurde nicht gelöscht:\n'+String(e?.message||e||''));
+     return false;
+   }finally{deleteFlightV302=false}
+ };
+ try{deleteMaterialPinV552=window.deleteMaterialPinV552}catch(_e){}
 })();
 </script>
