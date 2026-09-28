@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V302</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V303</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V302';
+   if(v)v.textContent='Aktuelle Version: V303';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -32103,5 +32103,107 @@ ${safeTypeLines}
    }finally{deleteFlightV302=false}
  };
  try{deleteMaterialPinV552=window.deleteMaterialPinV552}catch(_e){}
+})();
+</script>
+
+<script>
+/* V303 – Flächeninventur: nicht gefundene Positionen verlieren NUR den Lagerort.
+   Menge, Material, Masse, Kommission und Status bleiben unverändert.
+   Cloud: nur die betroffenen packages werden gezielt/versioniert geschrieben. */
+(()=>{
+ let finishMissingFlightV303=false;
+
+ window.confirmAreaWithMissingV186=async function(){
+   if(finishMissingFlightV303)return false;
+   const c=activeAreaControl?.();if(!c)return false;
+   const m=(c.items||[]).filter(i=>!i.result);
+   if(!m.length)return false;
+
+   if(!confirm(
+     `${m.length} Position(en) wurden auf dieser Fläche nicht gefunden.\n\n`+
+     `Beim Abschluss wird NUR der Lagerort dieser Positionen auf „Nicht zugewiesen“ gesetzt.\n\n`+
+     `Menge, Material, Abmessungen, Kommission und Bestand bleiben unverändert.\n\n`+
+     `Fläche abschliessen?`
+   ))return false;
+
+   finishMissingFlightV303=true;
+   try{
+     if((st.packages||[]).length!==347)
+       throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' statt 347.');
+
+     const now=new Date().toISOString(),by=currentUserName();
+     const changes=[];
+
+     for(const i of m){
+       const p=(st.packages||[]).find(x=>x&&x.id===i.packageId);
+       if(!p)continue;
+       const beforeQty=String(p.qty??'');
+       const next=JSON.parse(JSON.stringify(p));
+       next.rackId='';
+       next.levelIndex=null;
+       if(String(next.qty??'')!==beforeQty)throw new Error('Mengen-Schutz bei '+String(p.elementId||p.id));
+       changes.push({i,p,next,beforeQty});
+     }
+
+     // Bei aktiver Cloud jeden betroffenen Package-Datensatz einzeln prüfen und schreiben.
+     if(cloudReady()&&authSession&&cloudMember){
+       if(!canWriteCloudEntity('packages','save'))
+         throw new Error('Keine Cloud-Schreibberechtigung für Inventur-Lagerorte.');
+
+       const remote=await fetchRemoteEntities(),base=loadSyncBase();
+       for(const x of changes){
+         const key='packages|'+String(x.p.id),r=remote[key],b=base[key];
+         if(!r)throw new Error('Package fehlt in Cloud: '+String(x.p.elementId||x.p.id));
+         const rh=stableJson(r.data),bh=b?.hash??null;
+         if(bh!==null&&rh!==bh&&rh!==stableJson(x.p))
+           throw new Error('Package wurde parallel geändert: '+String(x.p.elementId||x.p.id));
+         await rpcEntitySave('packages',String(x.p.id),x.next,Number(r.version||b?.version||0),false);
+       }
+
+       const verify=await fetchRemoteEntities();
+       for(const x of changes){
+         const key='packages|'+String(x.p.id),r=verify[key];
+         if(!r||stableJson(r.data)!==stableJson(x.next))
+           throw new Error('Cloud-Verifikation fehlgeschlagen: '+String(x.p.elementId||x.p.id));
+         if(String(r.data?.qty??'')!==x.beforeQty)
+           throw new Error('Mengen-Verifikation fehlgeschlagen: '+String(x.p.elementId||x.p.id));
+       }
+
+       const nb=loadSyncBase();
+       for(const x of changes){
+         const key='packages|'+String(x.p.id),r=verify[key];
+         nb[key]={version:Number(r.version||0),hash:stableJson(x.next)};
+       }
+       saveSyncBase(nb);
+     }
+
+     // Erst nach erfolgreicher Cloud-Prüfung lokal übernehmen.
+     for(const x of changes){
+       x.p.rackId='';
+       x.p.levelIndex=null;
+       if(String(x.p.qty??'')!==x.beforeQty)throw new Error('Lokaler Mengen-Schutz ausgelöst.');
+       x.i.result='Nicht gefunden';
+       x.i.checkedAt=now;
+       x.i.checkedBy=by;
+       x.i.note='Bei Flächeninventur nicht gefunden · Lagerort auf Nicht zugewiesen gesetzt · Menge unverändert';
+       try{addHistory(x.p,'Lagerkontrolle Fläche '+(c.areaNameV186||''),'Nicht gefunden · Lagerort → Nicht zugewiesen · Menge unverändert · kontrolliert von '+by)}catch(_e){}
+     }
+
+     c.completed=now;c.completedBy=by;
+     ensureV24();
+     localStorage.setItem(KEY,JSON.stringify(st)); // kein globaler Multi-Entity-Push
+     areaIdV186='';pidV186='';
+     renderFullControl();
+     setSyncStatus('ok','V303 Inventur abgeschlossen · Lagerorte nicht gefundener Positionen → Nicht zugewiesen · Mengen unverändert');
+     return true;
+   }catch(e){
+     setSyncStatus('err','V303 Inventurabschluss · '+String(e?.message||e||''));
+     alert('Inventur wurde nicht abgeschlossen:\n'+String(e?.message||e||''));
+     return false;
+   }finally{
+     finishMissingFlightV303=false;
+   }
+ };
+ try{confirmAreaWithMissingV186=window.confirmAreaWithMissingV186}catch(_e){}
 })();
 </script>
