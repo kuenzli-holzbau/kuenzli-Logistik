@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V297</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V298</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V297';
+   if(v)v.textContent='Aktuelle Version: V298';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -31889,5 +31889,58 @@ ${safeTypeLines}
  window.addEventListener('load',()=>setTimeout(()=>pullOwnV297(false),1800));
  window.addEventListener('focus',()=>setTimeout(()=>pullOwnV297(false),200));
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>pullOwnV297(false),200)});
+})();
+</script>
+
+<style>
+/* V298: manage-Recht muss auch gegen historische !important-Regeln gewinnen. */
+#moduleSettingsTile.permManageV298Show{
+ display:flex!important;
+ visibility:visible!important;
+ opacity:1!important;
+}
+#moduleSettingsTile.permManageV298Hide{
+ display:none!important;
+}
+</style>
+<script>
+/* V298 – Verwaltung & Einstellungen: finaler Sichtbarkeitspfad.
+   Ursache in V297: ältere Berechtigungslogik setzt für manage/settings display:none !important.
+   Ein normales element.style.display='' kann das nicht überschreiben. */
+(()=>{
+ function applyManageTileV298(){
+   const tile=document.getElementById('moduleSettingsTile');if(!tile)return;
+   let allowed=false;
+   try{allowed=canAdmin()||currentPermissions()?.manage===true}catch(_e){}
+   tile.classList.toggle('permManageV298Show',allowed);
+   tile.classList.toggle('permManageV298Hide',!allowed);
+   // Remove stale inline !important left by V120, then let V298 classes decide.
+   tile.style.removeProperty('display');
+   tile.style.removeProperty('visibility');
+   tile.style.removeProperty('opacity');
+ }
+ window.applyManageTileV298=applyManageTileV298;
+
+ const prevRefreshV298=window.refreshPermissionVisibility||refreshPermissionVisibility;
+ window.refreshPermissionVisibility=function(){
+   const r=prevRefreshV298.apply(this,arguments);
+   applyManageTileV298();
+   return r;
+ };
+ try{refreshPermissionVisibility=window.refreshPermissionVisibility}catch(_e){}
+
+ // V120's MutationObserver can reapply display:none!important after a permission refresh.
+ // Observe only the one tile and immediately normalize it back to the authoritative manage right.
+ const tile=document.getElementById('moduleSettingsTile');
+ if(tile){
+   let fixing=false;
+   new MutationObserver(()=>{
+     if(fixing)return;fixing=true;
+     try{applyManageTileV298()}finally{fixing=false}
+   }).observe(tile,{attributes:true,attributeFilter:['style','class']});
+ }
+ setTimeout(applyManageTileV298,0);
+ setTimeout(applyManageTileV298,500);
+ setTimeout(applyManageTileV298,2000);
 })();
 </script>
