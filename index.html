@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V310</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V311</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V310';
+   if(v)v.textContent='Aktuelle Version: V311';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -32763,5 +32763,42 @@ ${safeTypeLines}
      if(typeof checkCloudForUpdates==='function')checkCloudForUpdates(false);
    }catch(_e){}
  },3200);
+})();
+</script>
+
+
+<style>
+#cloudDiagV311{position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483600;margin:auto;max-width:760px;padding:10px 12px;border:1px solid #b9c7c0;border-radius:12px;background:#fff;box-shadow:0 8px 30px #0002;font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:#173f34}
+</style>
+<script>
+/* V311 – read-only Cloud/Auth-Trennung. Keine Lagerdatenänderung, kein Entity-Pull,
+   kein Cloud-Write und keine Session-Veränderung. Der Access-Token wird direkt per
+   GET geprüft; danach folgt ein minimaler REST-GET. */
+(()=>{
+ const EXPECT_V311=347;let flightV311=false;
+ function escV311(v){return String(v||'').replace(/[<>]/g,c=>c==='<'?'&lt;':'&gt;').slice(0,260)}
+ function panelV311(msg){let el=document.getElementById('cloudDiagV311');if(!el){el=document.createElement('div');el.id='cloudDiagV311';document.body.appendChild(el)}el.innerHTML='<b>V311 Cloud-Diagnose · nur lesend</b><br>'+String(msg||'')}
+ function statusV311(ok,msg){lastCloudMessage=String(msg||'');['syncStatusBadge','cloudManageStatus'].forEach(id=>{const el=E(id);if(!el)return;el.textContent=ok?'Cloud aktuell':'Cloud unbekannt';el.className='syncBadge '+(ok?'ok':'');el.title='V311 · '+String(msg||'')})}
+ async function runV311(){
+  if(flightV311)return;flightV311=true;
+  try{
+   if((st.packages||[]).length!==EXPECT_V311){const m='SCHUTZSTOPP: '+(st.packages||[]).length+' statt 347 Packages';panelV311(m);setSyncStatus('err','V311 '+m);return}
+   cloudCfg=loadCloudConfig();
+   if(!cloudCfg?.url||!cloudCfg?.anonKey){panelV311('Konfiguration fehlt: URL oder Publishable/Anon-Key.');statusV311(false,'Cloud-Konfiguration unvollständig');return}
+   if(!authSession?.access_token){panelV311('Auth: KEIN Access-Token vorhanden · REST-Test nicht ausgeführt.');statusV311(false,'Keine aktive Cloud-Sitzung');return}
+   const base=String(cloudCfg.url).replace(/\/+$/,''),token=String(authSession.access_token);
+   const h={'apikey':cloudCfg.anonKey,'Authorization':'Bearer '+token,'Content-Type':'application/json'};
+   let authLabel='',restLabel='';
+   try{const a=await fetch(base+'/auth/v1/user',{method:'GET',headers:h}),t=await a.text();authLabel=a.ok?'Auth OK ('+a.status+')':'Auth FEHLER HTTP '+a.status+' · '+escV311(t)}
+   catch(e){authLabel='Auth NETZFEHLER · '+escV311(e?.message||e)}
+   try{const u=base+'/rest/v1/warehouse_entities?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&select=warehouse_id&limit=1';const r=await fetch(u,{method:'GET',headers:h}),t=await r.text();restLabel=r.ok?'REST OK ('+r.status+')':'REST FEHLER HTTP '+r.status+' · '+escV311(t)}
+   catch(e){restLabel='REST NETZFEHLER · '+escV311(e?.message||e)}
+   const ok=/^Auth OK/.test(authLabel)&&/^REST OK/.test(restLabel);
+   panelV311(authLabel+'<br>'+restLabel+'<br>Session NICHT verändert · Lagerdaten NICHT synchronisiert.');
+   statusV311(ok,authLabel+' | '+restLabel);
+  }catch(e){panelV311('Diagnosefehler · '+escV311(e?.message||e));statusV311(false,'Diagnose konnte nicht abgeschlossen werden')}
+  finally{flightV311=false}
+ }
+ window.addEventListener('load',()=>setTimeout(runV311,4200));setTimeout(runV311,4500);window.runCloudDiagV311=runV311;
 })();
 </script>
