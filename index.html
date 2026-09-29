@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V314</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V315</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V314';
+   if(v)v.textContent='Aktuelle Version: V315';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -33076,5 +33076,26 @@ ${safeTypeLines}
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>authoritativePackagesV314('auto'),900)});
  // Slow recurring reconciliation; no aggressive polling.
  setInterval(()=>{if(!document.hidden)authoritativePackagesV314('auto')},120000);
+})();
+</script>
+
+<style>
+/* V315 – Betriebsfassung: temporäre Diagnose-/Recovery-Panels ausblenden. */
+#cloudDiagV311,#pkgDiagV312,#cloudRestoreV313{display:none !important}
+</style>
+<script>
+/* V315 – Clean-up / Release-Kandidat.
+   Daten- und Sync-Logik von V314 bleibt unverändert.
+   Entfernt nur die temporären V311/V312/V313 Bedienoberflächen aus dem Betrieb.
+   Keine Cloud-Writes, keine lokalen Datenänderungen, __state unangetastet. */
+(()=>{
+ function cleanupV315(){
+   ['cloudDiagV311','pkgDiagV312','cloudRestoreV313'].forEach(id=>{
+     const e=document.getElementById(id);
+     if(e){e.style.setProperty('display','none','important');e.setAttribute('aria-hidden','true')}
+   });
+ }
+ cleanupV315();
+ window.addEventListener('load',()=>{cleanupV315();setTimeout(cleanupV315,7000)});
 })();
 </script>
