@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V303</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V304</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V303';
+   if(v)v.textContent='Aktuelle Version: V304';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -32205,5 +32205,84 @@ ${safeTypeLines}
    }
  };
  try{confirmAreaWithMissingV186=window.confirmAreaWithMissingV186}catch(_e){}
+})();
+</script>
+
+<script>
+/* V304 – iPhone Cloud-Status stabilisiert.
+   Hintergrund-Fokus/visibility/load-Aufrufe dürfen bei temporärem Netzwerkfehler
+   keinen roten Cloud-Fehler setzen. Sicherheits-/Konfliktstopps bleiben rot.
+   Manuelle Aktionen und echte Schreibfehler bleiben unverändert sichtbar. */
+(()=>{
+ function transientCloudErrorV304(e){
+   const m=String(e?.message||e||'').toLowerCase();
+   return /failed to fetch|network|load failed|timeout|timed out|503|504|pgrst003|offline|internet|connection/.test(m);
+ }
+
+ // V272: same safe inbound algorithm, but automatic background network failures are "unknown/offline", not errors.
+ const oldPullV304=window.pullEntitySync||pullEntitySync;
+ window.pullEntitySync=async function(manual=false){
+   // The original pullSafe is retained for manual use; for background calls, suppress only transient status poisoning.
+   if(manual)return oldPullV304(true);
+   const badge=E('syncStatus'),beforeText=badge?.textContent||'',beforeClass=badge?.className||'';
+   try{
+     const ok=await oldPullV304(false);
+     if(!ok&&badge&&/cloud-fehler/i.test(badge.textContent||'')){
+       const detail=String(badge.title||'');
+       // If this was a safety/conflict stop, never hide it.
+       if(!/schutzstopp|konflikt|347|parallel geändert|verifikation/i.test((badge.textContent||'')+' '+detail)){
+         badge.textContent='Cloud unbekannt';
+         badge.className='statusbadge';
+       }
+     }
+     return ok;
+   }catch(e){
+     if(transientCloudErrorV304(e)){
+       if(badge){badge.textContent='Cloud unbekannt';badge.className='statusbadge'}
+       return false;
+     }
+     throw e;
+   }
+ };
+ try{pullEntitySync=window.pullEntitySync}catch(_e){}
+
+ // V273 project discovery: background read failures must not overwrite global cloud health.
+ const oldDiscoverV304=window.discoverSharedProjectsV273;
+ if(typeof oldDiscoverV304==='function'){
+   window.discoverSharedProjectsV273=async function(){
+     const badge=E('syncStatus'),txt=badge?.textContent||'',cls=badge?.className||'';
+     const result=await oldDiscoverV304();
+     if(badge&&/cloud-fehler/i.test(badge.textContent||'')){
+       // Project discovery is read-only background work. Restore prior healthy/neutral status.
+       badge.textContent=txt||'Cloud';
+       badge.className=cls||'statusbadge';
+     }
+     return result;
+   };
+ }
+
+ // On iOS, focus + visibilitychange often fire together. Debounce background cloud reads.
+ let lastWakeV304=0;
+ function wakeV304(){
+   const now=Date.now();if(now-lastWakeV304<5000)return;lastWakeV304=now;
+   if(!cloudReady()||!authSession||!cloudMember)return;
+   setTimeout(()=>window.pullEntitySync(false),250);
+   setTimeout(()=>window.pullOwnPermissionsV297?.(false),700);
+ }
+ window.addEventListener('focus',wakeV304);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)wakeV304()});
+
+ // Clear a stale generic red badge only after confirmed identity; no data writes.
+ setTimeout(async()=>{
+   try{
+     if(!cloudReady()||!authSession)return;
+     const ok=await refreshCloudIdentity(false);
+     const badge=E('syncStatus');
+     if(ok&&cloudMember&&badge&&/cloud-fehler/i.test(badge.textContent||'')){
+       badge.textContent='Cloud aktuell';
+       badge.className='statusbadge';
+     }
+   }catch(_e){}
+ },1200);
 })();
 </script>
