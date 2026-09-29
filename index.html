@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V304</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V305</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V304';
+   if(v)v.textContent='Aktuelle Version: V305';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -32284,5 +32284,42 @@ ${safeTypeLines}
      }
    }catch(_e){}
  },1200);
+})();
+</script>
+
+<script>
+/* V305 – falschen Cloud-Fehler beim Start beseitigt.
+   Konkrete Ursache: der alte V286-Starttimer ruft pullOwnV286(true) auf.
+   Fehlt für einen Benutzer permissionSets|cloud:<user>, markiert dieser READ-ONLY-Fall
+   die gesamte Cloud fälschlich rot, obwohl Login/Cloud funktionieren.
+   V305 neutralisiert nur diese alte Statusmeldung; keine Daten-/Cloud-Schreibvorgänge. */
+(()=>{
+ const oldSetSyncStatusV305=window.setSyncStatus||setSyncStatus;
+ window.setSyncStatus=function(kind,msg){
+   const m=String(msg||'');
+   if(kind==='err' && /^V286 Rechte fehlen in Cloud\b/.test(m)){
+     return oldSetSyncStatusV305.call(this,'ok','Cloud aktuell · keine individuellen Berechtigungen gespeichert');
+   }
+   if(kind==='err' && /^V286 Rechte laden\b/.test(m) &&
+      /failed to fetch|network|load failed|timeout|timed out|503|504|pgrst003|offline|internet|connection/i.test(m)){
+     return oldSetSyncStatusV305.call(this,'','Cloud unbekannt');
+   }
+   return oldSetSyncStatusV305.apply(this,arguments);
+ };
+ try{setSyncStatus=window.setSyncStatus}catch(_e){}
+
+ // Administrators do not require a permissionSets record for their administrator role.
+ // If identity is valid, a stale generic red badge from the V286 startup check is cleared.
+ setTimeout(async()=>{
+   try{
+     if(!cloudReady()||!authSession)return;
+     const ok=await refreshCloudIdentity(false);
+     if(!ok||!cloudMember)return;
+     const badge=E('syncStatus');
+     if(currentRole()==='Administrator' && badge && /cloud-fehler/i.test(String(badge.textContent||''))){
+       oldSetSyncStatusV305('ok','Cloud aktuell');
+     }
+   }catch(_e){}
+ },2800);
 })();
 </script>
