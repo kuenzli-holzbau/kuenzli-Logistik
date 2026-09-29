@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V306</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V307</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V306';
+   if(v)v.textContent='Aktuelle Version: V307';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -32436,5 +32436,108 @@ ${safeTypeLines}
    }
  };
  try{noteCloudFailureV210=window.noteCloudFailureV210}catch(_e){}
+})();
+</script>
+
+<script>
+/* V307 – Pin/Delete + Cloud-Status konsolidiert.
+   Keine alten Delete-RPCs, kein globaler Sync, 347-Grenze bleibt.
+   Pin-Löschung ist lokal sofort wirksam; Cloud erhält nur gezielt ein Tombstone.
+   Hintergrund-/temporäre Cloudfehler dürfen den globalen Badge nicht rot setzen. */
+(()=>{
+ const V307_TRANSIENT=/failed to fetch|network|load failed|timeout|timed out|503|504|pgrst003|offline|internet|connection|temporär|vorübergehend/i;
+ function setCloudUnknownV307(msg){
+   lastCloudMessage=String(msg||'Cloud vorübergehend nicht erreichbar');
+   ['syncStatusBadge','cloudManageStatus'].forEach(id=>{
+     const el=E(id);if(!el)return;
+     el.textContent='Cloud unbekannt';el.className='syncBadge';el.title=lastCloudMessage;
+   });
+ }
+
+ // Central status gate: transient connectivity is never a red application error.
+ const setSyncStatusBeforeV307=setSyncStatus;
+ window.setSyncStatus=function(kind,msg){
+   if(kind==='err'&&V307_TRANSIENT.test(String(msg||''))){setCloudUnknownV307(msg);return}
+   return setSyncStatusBeforeV307(kind,msg);
+ };
+ try{setSyncStatus=window.setSyncStatus}catch(_e){}
+
+ // Pin render/open: tombstones are never interactive or visible.
+ window.materialPinsSvgV552=function(mapType){
+   if(mapType!=='outside')return '';
+   return ensureMaterialPinsV552().filter(p=>p&&!p.deletedAt).map(p=>{
+     const x=Number(p.x)||0,y=Number(p.y)||0,color=materialPinColorV554(p.commission);
+     return `<g class="materialPinV552" onclick="event.stopPropagation();openMaterialPinV552('${p.id}')" transform="translate(${x} ${y}) scale(.5)">
+      <line class="pinNeedle" x1="0" y1="-1.2" x2="0" y2="1.4"></line><path class="pinHead" style="fill:${color}" d="M0,0.2 C-1.6,-1.3 -1.8,-3.4 0,-4.2 C1.8,-3.4 1.6,-1.3 0,0.2 Z"></path><circle cx="0" cy="-2.6" r=".55" fill="#fff"></circle></g>`;
+   }).join('');
+ };
+ try{materialPinsSvgV552=window.materialPinsSvgV552}catch(_e){}
+
+ const openPinBeforeV307=openMaterialPinV552;
+ window.openMaterialPinV552=function(id){
+   const p=ensureMaterialPinsV552().find(x=>x&&String(x.id)===String(id));
+   if(!p||p.deletedAt)return false;
+   return openPinBeforeV307(id);
+ };
+ try{openMaterialPinV552=window.openMaterialPinV552}catch(_e){}
+
+ let deleteFlightV307=false;
+ window.deleteMaterialPinV552=async function(){
+   if(deleteFlightV307)return false;
+   const id=String(E('materialPinIdV552')?.value||''); if(!id)return false;
+   if(!confirm('Diesen Material-Pin löschen?'))return false;
+   deleteFlightV307=true;
+   try{
+     if((st.packages||[]).length!==347)throw new Error('V307 Schutzstopp · '+(st.packages||[]).length+' statt 347 Packages');
+     const p=ensureMaterialPinsV552().find(x=>x&&String(x.id)===id);
+     if(!p)throw new Error('V307 Schutzstopp · Pin lokal nicht gefunden');
+
+     // 1. Fachliche Löschung zuerst dauerhaft lokal.
+     const now=new Date().toISOString();
+     p.deletedAt=now;p.deletedBy=currentUserName();p.updatedAt=now;
+     ensureV24();localStorage.setItem(KEY,JSON.stringify(st));
+     closeM('materialPinModalV552');renderAreas();
+
+     // 2. Nur diesen Pin in die Cloud übertragen. Kein physischer Delete-RPC.
+     if(cloudReady()&&authSession&&cloudMember&&canWriteCloudEntity('materialPinsV552','save')){
+       try{
+         const key='materialPinsV552|'+id;
+         const remote=await fetchRemoteEntities(),r=remote[key],b=loadSyncBase()[key];
+         const expected=Number(r?.version||b?.version||0);
+         await rpcEntitySave('materialPinsV552',id,JSON.parse(JSON.stringify(p)),expected,false);
+         const fresh=(await fetchRemoteEntities())[key];
+         if(fresh?.data?.deletedAt){
+           const nb=loadSyncBase();nb[key]={version:Number(fresh.version||0),hash:stableJson(fresh.data)};saveSyncBase(nb);
+           setSyncStatus('ok','V307 Pin gelöscht · Cloud bestätigt');
+         }else setCloudUnknownV307('Pin lokal gelöscht · Cloud-Bestätigung ausstehend');
+       }catch(e){
+         setCloudUnknownV307('Pin lokal gelöscht · Cloud-Synchronisierung ausstehend');
+       }
+     }else{
+       setCloudUnknownV307('Pin lokal gelöscht · Cloud-Synchronisierung ausstehend');
+     }
+     return true;
+   }catch(e){
+     setSyncStatus('err',String(e?.message||e||'V307 Schutzstopp'));
+     alert('Pin wurde nicht gelöscht:\n'+String(e?.message||e||''));
+     return false;
+   }finally{deleteFlightV307=false}
+ };
+ try{deleteMaterialPinV552=window.deleteMaterialPinV552}catch(_e){}
+
+ // Prevent a normal inbound pull from resurrecting a locally deleted pin:
+ // tombstones remain protected until the targeted cloud save has confirmed them.
+ const applyRemoteBeforeV307=applyRemoteEntities;
+ window.applyRemoteEntities=function(remote,preserveKeys=new Set()){
+   const keep=new Set(preserveKeys||[]);
+   ensureMaterialPinsV552().forEach(p=>{
+     if(!p?.deletedAt)return;
+     const k=cloudKey('materialPinsV552',String(p.id));
+     const r=remote?.[k];
+     if(!r?.data?.deletedAt)keep.add(k);
+   });
+   return applyRemoteBeforeV307(remote,keep);
+ };
+ try{applyRemoteEntities=window.applyRemoteEntities}catch(_e){}
 })();
 </script>
