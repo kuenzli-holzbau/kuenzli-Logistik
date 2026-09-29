@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V305</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V306</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V305';
+   if(v)v.textContent='Aktuelle Version: V306';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -32321,5 +32321,57 @@ ${safeTypeLines}
      }
    }catch(_e){}
  },2800);
+})();
+</script>
+
+<script>
+/* V306 – Cloud-Status hat nur noch die Bedeutung "Cloud-Verbindung/Identität".
+   Historische Modul-/Syncfehler dürfen bei bestätigter Cloud-Identität den
+   Startbildschirm nicht mehr fälschlich als "Cloud-Fehler" markieren. */
+(()=>{
+ const baseSetV306=window.setSyncStatus||setSyncStatus;
+
+ function hardCloudHealthErrorV306(msg){
+   const m=String(msg||'').toLowerCase();
+   return /cloud-lagerfreigabe fehlt|nicht freigeschaltet|anmeldung erforderlich|nicht angemeldet|unauthorized|forbidden|jwt|401|403/.test(m);
+ }
+ function transientV306(msg){
+   return /failed to fetch|network|load failed|timeout|timed out|503|504|pgrst003|offline|internet|connection/.test(String(msg||'').toLowerCase());
+ }
+
+ window.setSyncStatus=function(kind,msg){
+   if(kind==='err' && authSession && cloudMember){
+     if(transientV306(msg)){
+       return baseSetV306.call(this,'', 'Cloud momentan nicht prüfbar · '+String(msg||''));
+     }
+     if(!hardCloudHealthErrorV306(msg)){
+       // Keep the operation detail in the title, but do not call a healthy authenticated cloud "Cloud-Fehler".
+       return baseSetV306.call(this,'ok','Cloud aktuell · Hinweis: '+String(msg||''));
+     }
+   }
+   return baseSetV306.apply(this,arguments);
+ };
+ try{setSyncStatus=window.setSyncStatus}catch(_e){}
+
+ async function normalizeCloudHealthV306(){
+   if(!cloudCfg||cloudCfg.mode!=='supabase'||!authSession)return false;
+   try{
+     const ok=await refreshCloudIdentity(false);
+     if(!ok||!cloudMember)return false;
+     baseSetV306('ok','Cloud aktuell · Identität bestätigt');
+     try{window.syncModuleHomeAccountV96?.()}catch(_e){}
+     return true;
+   }catch(e){
+     if(transientV306(e)){
+       baseSetV306('','Cloud momentan nicht prüfbar');
+       try{window.syncModuleHomeAccountV96?.()}catch(_e){}
+     }
+     return false;
+   }
+ }
+ window.normalizeCloudHealthV306=normalizeCloudHealthV306;
+
+ // One controlled verification after all historical startup timers have run.
+ window.addEventListener('load',()=>setTimeout(normalizeCloudHealthV306,4200));
 })();
 </script>
