@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V309</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V310</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V309';
+   if(v)v.textContent='Aktuelle Version: V310';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -32726,5 +32726,42 @@ ${safeTypeLines}
  window.addEventListener('focus',()=>scheduleHealthV309(700));
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleHealthV309(700)});
  scheduleHealthV309(250);
+})();
+</script>
+
+<script>
+/* V310 – globaler Cloud-Status-Firewall.
+   Nachweis aus V309: ältere, bereits registrierte load/focus-Callbacks (u.a. V286)
+   besitzen eigene Funktionsreferenzen und laufen trotz späterer window-Overrides weiter.
+   Sie dürfen im Sicherheitsmodus keinen globalen roten Cloud-Fehler mehr setzen.
+   Nur echte lokale Schutz-/Konflikt-/347-/Verifikationsfehler bleiben rot.
+   Keine Daten- oder Cloud-Schreiboperationen. */
+(()=>{
+ const originalSetSyncStatusV310=setSyncStatus;
+ const SAFETY_V310=/schutzstopp|schutzgrenze|347|konflikt|parallel geändert|verifikation|lokal parallel|package-sicherheitsgrenze/i;
+ const firewallV310=function(kind,msg){
+   const m=String(msg||'');
+   if(kind==='err'&&!SAFETY_V310.test(m)){
+     lastCloudMessage=m;
+     ['syncStatusBadge','cloudManageStatus'].forEach(id=>{
+       const el=E(id);if(!el)return;
+       el.textContent='Cloud unbekannt';
+       el.className='syncBadge';
+       el.title='V310 · '+(m||'Cloud-Status momentan nicht eindeutig');
+     });
+     return;
+   }
+   return originalSetSyncStatusV310(kind,msg);
+ };
+ window.setSyncStatus=firewallV310;
+ try{setSyncStatus=firewallV310}catch(_e){}
+
+ // V309's minimal read-only health check remains authoritative.
+ // Re-run once after all historical delayed load callbacks (V286: 2400 ms) have fired.
+ setTimeout(()=>{
+   try{
+     if(typeof checkCloudForUpdates==='function')checkCloudForUpdates(false);
+   }catch(_e){}
+ },3200);
 })();
 </script>
