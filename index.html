@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V306</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V305</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V306';
+   if(v)v.textContent='Aktuelle Version: V305';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -32288,90 +32288,81 @@ ${safeTypeLines}
 </script>
 
 <script>
-/* V305 – falschen Cloud-Fehler beim Start beseitigt.
-   Konkrete Ursache: der alte V286-Starttimer ruft pullOwnV286(true) auf.
-   Fehlt für einen Benutzer permissionSets|cloud:<user>, markiert dieser READ-ONLY-Fall
-   die gesamte Cloud fälschlich rot, obwohl Login/Cloud funktionieren.
-   V305 neutralisiert nur diese alte Statusmeldung; keine Daten-/Cloud-Schreibvorgänge. */
+/* V305 – Material-Pins: rollenunabhängige, synchronisierbare Löschmarkierung.
+   Hintergrund: materialPinsV552 darf von Lagerverantwortlichen/Mitarbeitern gespeichert werden,
+   der Server-RPC delete_warehouse_entity kann aber enger geschützt sein.
+   Deshalb wird Löschen zuerst als versioniertes deletedAt-Tombstone gespeichert.
+   V305 blendet Tombstones auf allen Karten aus. Ein physischer RPC-Delete wird nur best-effort
+   versucht; sein Fehlschlag macht die fachliche Löschung nicht rückgängig. */
 (()=>{
- const oldSetSyncStatusV305=window.setSyncStatus||setSyncStatus;
- window.setSyncStatus=function(kind,msg){
-   const m=String(msg||'');
-   if(kind==='err' && /^V286 Rechte fehlen in Cloud\b/.test(m)){
-     return oldSetSyncStatusV305.call(this,'ok','Cloud aktuell · keine individuellen Berechtigungen gespeichert');
-   }
-   if(kind==='err' && /^V286 Rechte laden\b/.test(m) &&
-      /failed to fetch|network|load failed|timeout|timed out|503|504|pgrst003|offline|internet|connection/i.test(m)){
-     return oldSetSyncStatusV305.call(this,'','Cloud unbekannt');
-   }
-   return oldSetSyncStatusV305.apply(this,arguments);
+ let pinDeleteFlightV305=false;
+
+ const oldSvgV305=window.materialPinsSvgV552||materialPinsSvgV552;
+ window.materialPinsSvgV552=function(mapType){
+   if(mapType!=='outside')return '';
+   return ensureMaterialPinsV552().filter(p=>p&&!p.deletedAt).map(p=>{
+     let x=Number(p.x)||0,y=Number(p.y)||0,color=materialPinColorV554(p.commission);
+     return `<g class="materialPinV552" onclick="event.stopPropagation();openMaterialPinV552('${p.id}')" transform="translate(${x} ${y}) scale(.5)">
+      <line class="pinNeedle" x1="0" y1="-1.2" x2="0" y2="1.4"></line><path class="pinHead" style="fill:${color}" d="M0,0.2 C-1.6,-1.3 -1.8,-3.4 0,-4.2 C1.8,-3.4 1.6,-1.3 0,0.2 Z"></path><circle cx="0" cy="-2.6" r=".55" fill="#fff"></circle></g>`;
+   }).join('');
  };
- try{setSyncStatus=window.setSyncStatus}catch(_e){}
+ try{materialPinsSvgV552=window.materialPinsSvgV552}catch(_e){}
 
- // Administrators do not require a permissionSets record for their administrator role.
- // If identity is valid, a stale generic red badge from the V286 startup check is cleared.
- setTimeout(async()=>{
-   try{
-     if(!cloudReady()||!authSession)return;
-     const ok=await refreshCloudIdentity(false);
-     if(!ok||!cloudMember)return;
-     const badge=E('syncStatus');
-     if(currentRole()==='Administrator' && badge && /cloud-fehler/i.test(String(badge.textContent||''))){
-       oldSetSyncStatusV305('ok','Cloud aktuell');
-     }
-   }catch(_e){}
- },2800);
-})();
-</script>
-
-<script>
-/* V306 – Cloud-Status hat nur noch die Bedeutung "Cloud-Verbindung/Identität".
-   Historische Modul-/Syncfehler dürfen bei bestätigter Cloud-Identität den
-   Startbildschirm nicht mehr fälschlich als "Cloud-Fehler" markieren. */
-(()=>{
- const baseSetV306=window.setSyncStatus||setSyncStatus;
-
- function hardCloudHealthErrorV306(msg){
-   const m=String(msg||'').toLowerCase();
-   return /cloud-lagerfreigabe fehlt|nicht freigeschaltet|anmeldung erforderlich|nicht angemeldet|unauthorized|forbidden|jwt|401|403/.test(m);
- }
- function transientV306(msg){
-   return /failed to fetch|network|load failed|timeout|timed out|503|504|pgrst003|offline|internet|connection/.test(String(msg||'').toLowerCase());
- }
-
- window.setSyncStatus=function(kind,msg){
-   if(kind==='err' && authSession && cloudMember){
-     if(transientV306(msg)){
-       return baseSetV306.call(this,'', 'Cloud momentan nicht prüfbar · '+String(msg||''));
-     }
-     if(!hardCloudHealthErrorV306(msg)){
-       // Keep the operation detail in the title, but do not call a healthy authenticated cloud "Cloud-Fehler".
-       return baseSetV306.call(this,'ok','Cloud aktuell · Hinweis: '+String(msg||''));
-     }
-   }
-   return baseSetV306.apply(this,arguments);
+ const oldOpenPinV305=window.openMaterialPinV552||openMaterialPinV552;
+ window.openMaterialPinV552=function(id){
+   const p=ensureMaterialPinsV552().find(x=>x&&String(x.id)===String(id));
+   if(!p||p.deletedAt)return;
+   return oldOpenPinV305(id);
  };
- try{setSyncStatus=window.setSyncStatus}catch(_e){}
+ try{openMaterialPinV552=window.openMaterialPinV552}catch(_e){}
 
- async function normalizeCloudHealthV306(){
-   if(!cloudCfg||cloudCfg.mode!=='supabase'||!authSession)return false;
+ window.deleteMaterialPinV552=async function(){
+   if(pinDeleteFlightV305)return false;
+   const id=String(E('materialPinIdV552')?.value||'');if(!id)return false;
+   if(!confirm('Diesen Material-Pin löschen?'))return false;
+   pinDeleteFlightV305=true;
+   const key='materialPinsV552|'+id;
    try{
-     const ok=await refreshCloudIdentity(false);
-     if(!ok||!cloudMember)return false;
-     baseSetV306('ok','Cloud aktuell · Identität bestätigt');
-     try{window.syncModuleHomeAccountV96?.()}catch(_e){}
+     if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' statt 347.');
+     const p=ensureMaterialPinsV552().find(x=>x&&String(x.id)===id);
+     if(!p)throw new Error('Pin lokal nicht gefunden.');
+
+     const tomb=JSON.parse(JSON.stringify(p));
+     tomb.deletedAt=new Date().toISOString();
+     tomb.deletedBy=currentUserName();
+     tomb.updatedAt=tomb.deletedAt;
+
+     if(cloudReady()&&authSession&&cloudMember){
+       if(!canWriteCloudEntity('materialPinsV552','save'))
+         throw new Error('Keine Cloud-Schreibberechtigung für Material-Pins.');
+       const remote=await fetchRemoteEntities(),r=remote[key],b=loadSyncBase()[key];
+       const expected=Number(r?.version||b?.version||0);
+       await rpcEntitySave('materialPinsV552',id,tomb,expected,false);
+       const verify=(await fetchRemoteEntities())[key];
+       if(!verify||!verify.data?.deletedAt)throw new Error('Cloud hat die Pin-Löschmarkierung nicht bestätigt.');
+
+       const nb=loadSyncBase();nb[key]={version:Number(verify.version||0),hash:stableJson(verify.data)};saveSyncBase(nb);
+
+       // Physical cleanup is optional. Server-side delete rights may be stricter than pin edit rights.
+       try{
+         await rpcEntityDelete('materialPinsV552',id,Number(verify.version||0),false);
+         const gone=(await fetchRemoteEntities())[key];
+         if(!gone)delete nb[key];
+         saveSyncBase(nb);
+       }catch(_cleanup){}
+     }
+
+     Object.assign(p,tomb);
+     ensureV24();localStorage.setItem(KEY,JSON.stringify(st));
+     closeM('materialPinModalV552');renderAreas();
+     setSyncStatus('ok','V305 Pin gelöscht · Cloud-synchronisiert');
      return true;
    }catch(e){
-     if(transientV306(e)){
-       baseSetV306('','Cloud momentan nicht prüfbar');
-       try{window.syncModuleHomeAccountV96?.()}catch(_e){}
-     }
+     setSyncStatus('err','V305 Pin-Löschung · '+String(e?.message||e||''));
+     alert('Pin wurde nicht gelöscht:\n'+String(e?.message||e||''));
      return false;
-   }
- }
- window.normalizeCloudHealthV306=normalizeCloudHealthV306;
-
- // One controlled verification after all historical startup timers have run.
- window.addEventListener('load',()=>setTimeout(normalizeCloudHealthV306,4200));
+   }finally{pinDeleteFlightV305=false}
+ };
+ try{deleteMaterialPinV552=window.deleteMaterialPinV552}catch(_e){}
 })();
 </script>
