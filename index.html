@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V316</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V317</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V316';
+   if(v)v.textContent='Aktuelle Version: V317';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -33236,5 +33236,142 @@ ${safeTypeLines}
  window.addEventListener('focus',()=>setTimeout(()=>syncPackagesV316(false),700));
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>syncPackagesV316(false),700)});
  setInterval(()=>{if(!document.hidden)syncPackagesV316(false)},15000);
+})();
+</script>
+
+<script>
+/* V317 – dynamischer Package-Bestand.
+   347 ist die verifizierte historische Untergrenze, NICHT die Soll-Anzahl.
+   Neue Packages (348, 349, ...) werden als lokale Ergänzungen erkannt und gezielt
+   in die Cloud geschrieben, bevor Cloud→Lokal angewendet wird.
+   Cloud darf lokal vollständig ersetzen, aber nur nachdem lokale neue/geänderte
+   Packages erfolgreich Cloud-verifiziert wurden.
+   Keine globalen Multi-Entity-Writes, kein __state-Sync. */
+(()=>{
+ const MIN_V317=347;
+ const PENDING_V317='kuenzli_package_pending_v317';
+ let flightV317=false,timerV317=null,lastV317=0;
+
+ function readPendingV317(){try{const a=JSON.parse(localStorage.getItem(PENDING_V317)||'[]');return Array.isArray(a)?a.map(String):[]}catch(_){return []}}
+ function writePendingV317(a){localStorage.setItem(PENDING_V317,JSON.stringify([...new Set(a.map(String))]))}
+ function transientV317(m){return /failed to fetch|network|load failed|timeout|timed out|503|504|pgrst003|offline|internet|connection/i.test(String(m||''))}
+ function unknownV317(m){lastCloudMessage=String(m||'');['syncStatusBadge','cloudManageStatus'].forEach(id=>{const e=E(id);if(!e)return;e.textContent='Cloud unbekannt';e.className='syncBadge';e.title='V317 · '+String(m||'')})}
+
+ function localV317(){
+   const a=Array.isArray(st?.packages)?st.packages:[];
+   if(a.length<MIN_V317)throw new Error('Schutzstopp: lokal '+a.length+' Packages · Untergrenze 347.');
+   const m={};
+   a.forEach((p,i)=>{const id=String(entityId('packages',p,i));if(!id||m[id])throw new Error('Schutzstopp: lokale Package-ID fehlt/doppelt: '+id);m[id]=p});
+   return {a,m};
+ }
+ async function rowsV317(){
+   cloudCfg=loadCloudConfig();
+   if(!cloudCfg?.url||!cloudCfg?.anonKey||!authSession?.access_token)throw new Error('Cloud-Sitzung/Konfiguration nicht verfügbar.');
+   const root=String(cloudCfg.url).replace(/\/+$/,''),h={'apikey':cloudCfg.anonKey,'Authorization':'Bearer '+String(authSession.access_token),'Content-Type':'application/json'};
+   const u=root+'/rest/v1/warehouse_entities?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&entity_type=eq.packages&select=entity_id,data,version&order=entity_id.asc';
+   const r=await fetch(u,{method:'GET',headers:h}),txt=await r.text();
+   if(!r.ok)throw new Error('HTTP '+r.status+' · '+txt.slice(0,220));
+   let rows;try{rows=txt?JSON.parse(txt):[]}catch(_){throw new Error('Ungültige Cloud-JSON-Antwort.')}
+   if(!Array.isArray(rows)||rows.length<MIN_V317)throw new Error('Schutzstopp: Cloud liefert '+(Array.isArray(rows)?rows.length:'keine Liste')+' Packages · Untergrenze 347.');
+   const ids=rows.map(x=>String(x?.entity_id??''));
+   if(ids.some(x=>!x)||new Set(ids).size!==rows.length)throw new Error('Schutzstopp: Cloud-Package-IDs fehlen oder sind doppelt.');
+   if(rows.some(x=>!x?.data||typeof x.data!=='object'||Array.isArray(x.data)))throw new Error('Schutzstopp: ungültige Package-Daten in Cloud.');
+   return rows;
+ }
+ function rmapV317(rows){const m={};rows.forEach(x=>m[String(x.entity_id)]=x);return m}
+ function bmapV317(){const b=loadSyncBase(),m={};Object.entries(b).forEach(([k,v])=>{if(k.startsWith('packages|'))m[k.slice(9)]=v});return m}
+
+ async function saveV317(id,data,ver){
+   if(!canWriteCloudEntity('packages','save'))throw new Error('Cloud-Rolle erlaubt Package-Speichern nicht.');
+   await rpcEntitySave('packages',id,JSON.parse(JSON.stringify(data)),Number(ver||0),false);
+   const rr=await rowsV317(),x=rmapV317(rr)[id];
+   if(!x||stableJson(x.data)!==stableJson(data))throw new Error('Cloud-Verifikation fehlgeschlagen: '+id);
+   return x;
+ }
+
+ async function syncV317(manual=false){
+   if(flightV317)return false;
+   if(!manual&&Date.now()-lastV317<3500)return false;
+   flightV317=true;lastV317=Date.now();
+   try{
+     const {a:localArr,m:local}=localV317();
+     let rows=await rowsV317(),remote=rmapV317(rows),base=bmapV317(),pending=new Set(readPendingV317());
+
+     // Detect ALL local additions/edits before any Cloud→local replacement.
+     for(const [id,p] of Object.entries(local)){
+       const lh=stableJson(p),b=base[id],bh=b?.hash??null,r=remote[id],rh=r?stableJson(r.data):null;
+       if(!r || (bh!==null&&lh!==bh))pending.add(id);
+     }
+     writePendingV317([...pending]);
+
+     let uploaded=0;
+     for(const id of [...pending]){
+       const p=local[id];
+       if(!p){pending.delete(id);continue}
+       const lh=stableJson(p),r=remote[id],rh=r?stableJson(r.data):null,b=base[id],bh=b?.hash??null;
+       // Existing same object changed independently on both sides => protect.
+       if(r&&bh!==null&&rh!==bh&&rh!==lh)throw new Error('Konflikt: Package '+id+' wurde lokal UND in der Cloud geändert.');
+       if(r&&rh===lh){pending.delete(id);continue}
+       const saved=await saveV317(id,p,r?.version||b?.version||0);
+       remote[id]=saved;pending.delete(id);writePendingV317([...pending]);uploaded++;
+     }
+
+     // Never replace local while any local package is still pending.
+     if(pending.size)throw new Error('Schutzstopp: '+pending.size+' lokale Package-Änderung(en) noch nicht Cloud-verifiziert.');
+
+     rows=await rowsV317();
+     if(rows.length<localArr.length)throw new Error('Schutzstopp: Cloud hat '+rows.length+', lokal '+localArr.length+' Packages.');
+     const next=JSON.parse(JSON.stringify(st));next.packages=rows.map(x=>JSON.parse(JSON.stringify(x.data)));
+     localStorage.setItem(KEY,JSON.stringify(next));st=next;
+
+     const persisted=JSON.parse(localStorage.getItem(KEY)||'{}');
+     if(!Array.isArray(persisted.packages)||persisted.packages.length!==rows.length)throw new Error('Lokale Persistenz-Verifikation fehlgeschlagen.');
+     for(let i=0;i<rows.length;i++)if(stableJson(persisted.packages[i])!==stableJson(rows[i].data))throw new Error('Cloud→Lokal Verifikation fehlgeschlagen: '+rows[i].entity_id);
+
+     const all=loadSyncBase();Object.keys(all).filter(k=>k.startsWith('packages|')).forEach(k=>delete all[k]);
+     rows.forEach(x=>all['packages|'+String(x.entity_id)]={version:Number(x.version||0),hash:stableJson(x.data)});saveSyncBase(all);
+     writePendingV317([]);
+     try{refresh?.();renderHomeStats?.();renderInv?.()}catch(_e){}
+     setSyncStatus('ok','V317 · '+rows.length+' Packages synchron'+(uploaded?' · '+uploaded+' übertragen':''));
+     return true;
+   }catch(e){
+     const m=String(e?.message||e||'');
+     if(transientV317(m)||/sitzung\/konfiguration nicht verfügbar/i.test(m)){unknownV317(m);return false}
+     setSyncStatus('err','V317 '+m);return false;
+   }finally{flightV317=false}
+ }
+
+ // Detect package-array changes immediately after persist/normal UI save.
+ let snapV317={};
+ function snapNowV317(){const m={};try{(st.packages||[]).forEach((p,i)=>m[String(entityId('packages',p,i))]=stableJson(p))}catch(_e){}return m}
+ snapV317=snapNowV317();
+ function scheduleV317(ms=700){
+   try{
+     const n=snapNowV317(),p=new Set(readPendingV317());
+     for(const [id,h] of Object.entries(n))if(snapV317[id]===undefined||snapV317[id]!==h)p.add(id);
+     writePendingV317([...p]);snapV317=n;
+   }catch(_e){}
+   clearTimeout(timerV317);timerV317=setTimeout(()=>syncV317(false),ms);
+ }
+
+ // Supersede V314/V316 automatic paths and V309 no-op.
+ window.authoritativePackagesV314=async()=>false;
+ window.queueCloudSync=function(){if(!cloudCfg?.autoSync)return;scheduleV317(700)};
+ window.scheduleCloudPushV214=function(){scheduleV317(700)};
+ window.pushEntitySync=async function(manual=false){return syncV317(manual)};
+ window.pullEntitySync=async function(manual=false){return syncV317(manual)};
+ window.checkCloudForUpdates=async function(){return syncV317(false)};
+ window.startCloudPolling=function(){};
+ try{
+   queueCloudSync=window.queueCloudSync;scheduleCloudPushV214=window.scheduleCloudPushV214;
+   pushEntitySync=window.pushEntitySync;pullEntitySync=window.pullEntitySync;checkCloudForUpdates=window.checkCloudForUpdates;startCloudPolling=window.startCloudPolling;
+ }catch(_e){}
+
+ // Existing A-156/A-157 may already have been removed locally by V316.
+ // We deliberately do not recreate guessed records. Their reserved IDs remain reserved.
+ window.addEventListener('load',()=>setTimeout(()=>{snapV317=snapNowV317();syncV317(false)},8000));
+ window.addEventListener('focus',()=>setTimeout(()=>syncV317(false),650));
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>syncV317(false),650)});
+ setInterval(()=>{if(!document.hidden)syncV317(false)},12000);
 })();
 </script>
