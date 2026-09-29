@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V305</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V306</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V305';
+   if(v)v.textContent='Aktuelle Version: V306';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -32364,5 +32364,77 @@ ${safeTypeLines}
    }finally{pinDeleteFlightV305=false}
  };
  try{deleteMaterialPinV552=window.deleteMaterialPinV552}catch(_e){}
+})();
+</script>
+
+<script>
+/* V306 – Pin-Löschung lokal-first, Cloud später.
+   Ein Pin-Delete darf die Bedienung nicht blockieren und darf keinen globalen Cloud-Fehler erzeugen.
+   Lokal wird der Pin sofort als Tombstone markiert/ausgeblendet. Cloud-Sync ist best-effort:
+   gezieltes save_warehouse_entity; kein delete_warehouse_entity, kein globaler Sync.
+   Bei temporärem Cloudfehler bleibt die Löschmarkierung lokal erhalten und wird beim nächsten
+   gezielten Pin-Save/Cloud-Lauf nicht als sichtbarer Pin dargestellt. */
+(()=>{
+ let deleteFlightV306=false;
+
+ window.deleteMaterialPinV552=async function(){
+   if(deleteFlightV306)return false;
+   const id=String(E('materialPinIdV552')?.value||'');if(!id)return false;
+   if(!confirm('Diesen Material-Pin löschen?'))return false;
+   deleteFlightV306=true;
+   try{
+     if((st.packages||[]).length!==347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' statt 347.');
+     const p=ensureMaterialPinsV552().find(x=>x&&String(x.id)===id);
+     if(!p)throw new Error('Pin lokal nicht gefunden.');
+
+     const now=new Date().toISOString();
+     p.deletedAt=now;p.deletedBy=currentUserName();p.updatedAt=now;
+     ensureV24();localStorage.setItem(KEY,JSON.stringify(st));
+     closeM('materialPinModalV552');renderAreas();
+     setSyncStatus('ok','V306 Pin lokal gelöscht');
+
+     // Best-effort targeted cloud propagation. Never turn a successful local delete into Cloud-Fehler.
+     if(cloudReady()&&authSession&&cloudMember&&canWriteCloudEntity('materialPinsV552','save')){
+       try{
+         const key='materialPinsV552|'+id;
+         const remote=await fetchRemoteEntities(),r=remote[key],b=loadSyncBase()[key];
+         const expected=Number(r?.version||b?.version||0);
+         await rpcEntitySave('materialPinsV552',id,JSON.parse(JSON.stringify(p)),expected,false);
+         const fresh=(await fetchRemoteEntities())[key];
+         if(fresh&&fresh.data?.deletedAt){
+           const nb=loadSyncBase();nb[key]={version:Number(fresh.version||0),hash:stableJson(fresh.data)};saveSyncBase(nb);
+           setSyncStatus('ok','V306 Pin gelöscht · Cloud synchron');
+         }
+       }catch(_cloudPinDeleteError){
+         // Deliberately no red global status: local deletion is valid and preserved.
+         // Cloud outage/permission ambiguity must not masquerade as an application failure.
+       }
+     }
+     return true;
+   }catch(e){
+     setSyncStatus('err','V306 Pin-Löschung Schutzstopp · '+String(e?.message||e||''));
+     alert('Pin wurde nicht gelöscht:\n'+String(e?.message||e||''));
+     return false;
+   }finally{deleteFlightV306=false}
+ };
+ try{deleteMaterialPinV552=window.deleteMaterialPinV552}catch(_e){}
+
+ // V210 incorrectly promoted transient connectivity to red Cloud-Fehler.
+ // Keep backoff, but classify temporary network/service failures as unknown/offline.
+ window.noteCloudFailureV210=function(status,text){
+   cloudFailureCountV210=Math.min(cloudFailureCountV210+1,6);
+   const steps=[30000,60000,120000,300000,300000,300000];
+   cloudBackoffUntilV210=Date.now()+steps[Math.max(0,cloudFailureCountV210-1)];
+   if(transientCloudErrorV210(status,text)){
+     lastCloudMessage=String(text||'Cloud vorübergehend nicht erreichbar');
+     ['syncStatusBadge','cloudManageStatus'].forEach(id=>{
+       const el=E(id);if(!el)return;
+       el.textContent='Cloud unbekannt';
+       el.className='syncBadge';
+       el.title='Cloud vorübergehend nicht erreichbar · lokale Daten bleiben erhalten';
+     });
+   }
+ };
+ try{noteCloudFailureV210=window.noteCloudFailureV210}catch(_e){}
 })();
 </script>
