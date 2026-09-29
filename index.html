@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V312</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V313</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V312';
+   if(v)v.textContent='Aktuelle Version: V313';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -32881,5 +32881,101 @@ ${safeTypeLines}
  window.runPackageDiagV312=runV312;
  window.addEventListener('load',()=>setTimeout(runV312,5000));
  setTimeout(runV312,5200);
+})();
+</script>
+
+<style>
+#cloudRestoreV313{position:fixed;left:10px;right:10px;bottom:10px;z-index:2147483645;margin:auto;max-width:900px;max-height:48vh;overflow:auto;padding:12px 14px;border:2px solid #173f34;border-radius:12px;background:#fff;box-shadow:0 8px 32px #0004;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;color:#173f34}
+#cloudRestoreV313 button{margin-top:9px}
+</style>
+<script>
+/* V313 – vom Benutzer ausdrücklich autorisierte Wiederherstellung:
+   CLOUD ist für packages die Quelle der Wahrheit und darf die lokale Package-Liste
+   vollständig ersetzen. Es wird AUSSCHLIESSLICH entity_type=packages gelesen.
+   Keine Cloud-Writes. __state unberührt. Andere lokale Collections unberührt.
+   Vor Commit: Cloud muss exakt 347 eindeutige Package-Entities liefern.
+   Nach Commit: lokal exakt 347 und ID-/Inhaltsidentität gegen den gerade gelesenen
+   Cloud-Snapshot. Sync-Base wird nur für packages auf diesen verifizierten Snapshot gesetzt. */
+(()=>{
+ const EXPECT_V313=347;let flightV313=false;
+ function escV313(v){return String(v??'').replace(/[&<>]/g,c=>c==='&'?'&amp;':c==='<'?'&lt;':'&gt;')}
+ function boxV313(html,button=true){
+   let e=document.getElementById('cloudRestoreV313');if(!e){e=document.createElement('div');e.id='cloudRestoreV313';document.body.appendChild(e)}
+   e.innerHTML='<b>V313 · Cloud → lokal Package-Wiederherstellung</b><br>'+html+
+     (button?'<br><button class="btn primary" type="button" id="restorePackagesBtnV313">347 Packages aus Cloud übernehmen</button>':'');
+   const b=document.getElementById('restorePackagesBtnV313');if(b)b.onclick=restoreV313;
+ }
+ async function readCloudV313(){
+   cloudCfg=loadCloudConfig();
+   if(!cloudCfg?.url||!cloudCfg?.anonKey)throw new Error('Cloud-Konfiguration fehlt.');
+   if(!authSession?.access_token)throw new Error('Kein Access-Token vorhanden.');
+   const base=String(cloudCfg.url).replace(/\/+$/,'');
+   const h={'apikey':cloudCfg.anonKey,'Authorization':'Bearer '+String(authSession.access_token),'Content-Type':'application/json'};
+   const url=base+'/rest/v1/warehouse_entities?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&entity_type=eq.packages&select=entity_id,data,version&order=entity_id.asc';
+   const r=await fetch(url,{method:'GET',headers:h}),txt=await r.text();
+   if(!r.ok)throw new Error('Cloud GET HTTP '+r.status+' · '+txt.slice(0,300));
+   let rows;try{rows=txt?JSON.parse(txt):[]}catch(_){throw new Error('Cloud-Antwort ist kein gültiges JSON.')}
+   if(!Array.isArray(rows))throw new Error('Cloud-Antwort ist keine Liste.');
+   const ids=rows.map(x=>String(x?.entity_id??''));
+   if(rows.length!==EXPECT_V313)throw new Error('Schutzstopp: Cloud liefert '+rows.length+' statt 347 Packages.');
+   if(ids.some(x=>!x))throw new Error('Schutzstopp: Cloud enthält Package ohne entity_id.');
+   if(new Set(ids).size!==EXPECT_V313)throw new Error('Schutzstopp: Cloud enthält doppelte Package-IDs.');
+   if(rows.some(x=>!x?.data||typeof x.data!=='object'||Array.isArray(x.data)))throw new Error('Schutzstopp: ungültige Package-Daten in Cloud.');
+   return rows;
+ }
+ async function restoreV313(){
+   if(flightV313)return;
+   if(!confirm('Cloud ist die autorisierte Quelle. Lokale Package-Liste vollständig durch die 347 Cloud-Packages ersetzen?\n\nAndere Daten und __state bleiben unverändert.'))return;
+   flightV313=true;boxV313('Cloud-Snapshot wird read-only geladen und vor dem lokalen Commit geprüft…',false);
+   try{
+     const rows=await readCloudV313();
+     const cloudPackages=rows.map(x=>JSON.parse(JSON.stringify(x.data)));
+     // Validate entity_id matches normal package identity before commit.
+     for(let i=0;i<rows.length;i++){
+       const derived=String(entityId('packages',cloudPackages[i],i));
+       if(derived!==String(rows[i].entity_id))throw new Error('Schutzstopp: ID-Abweichung '+rows[i].entity_id+' / '+derived);
+     }
+
+     // One controlled local commit: replace ONLY st.packages.
+     const next=JSON.parse(JSON.stringify(st));
+     next.packages=cloudPackages;
+     if(next.packages.length!==EXPECT_V313)throw new Error('Interner Schutzstopp vor Commit.');
+     localStorage.setItem(KEY,JSON.stringify(next));
+     st=next;
+
+     // Verify persisted package snapshot exactly.
+     const persisted=JSON.parse(localStorage.getItem(KEY)||'{}');
+     if(!Array.isArray(persisted.packages)||persisted.packages.length!==EXPECT_V313)throw new Error('Lokale Persistenz-Verifikation fehlgeschlagen.');
+     for(let i=0;i<rows.length;i++){
+       if(stableJson(persisted.packages[i])!==stableJson(cloudPackages[i]))throw new Error('Inhalts-Verifikation fehlgeschlagen bei '+rows[i].entity_id);
+     }
+
+     // Rebuild ONLY package entries of sync base; preserve every non-package base entry.
+     const base=loadSyncBase();
+     Object.keys(base).filter(k=>k.startsWith('packages|')).forEach(k=>delete base[k]);
+     rows.forEach(x=>{base['packages|'+String(x.entity_id)]={version:Number(x.version||0),hash:stableJson(x.data)}});
+     saveSyncBase(base);
+     const checkBase=loadSyncBase();
+     const pkgBase=Object.keys(checkBase).filter(k=>k.startsWith('packages|'));
+     if(pkgBase.length!==EXPECT_V313)throw new Error('Sync-Base-Verifikation: '+pkgBase.length+' statt 347 Package-Einträge.');
+
+     // Fresh read-only cloud verification: still exactly same 347 IDs/content.
+     const verify=await readCloudV313();
+     if(verify.length!==EXPECT_V313)throw new Error('Cloud-Nachprüfung fehlgeschlagen.');
+     for(let i=0;i<verify.length;i++){
+       if(String(verify[i].entity_id)!==String(rows[i].entity_id)||stableJson(verify[i].data)!==stableJson(rows[i].data))
+         throw new Error('Cloud änderte sich während Wiederherstellung: '+String(rows[i].entity_id));
+     }
+
+     try{refresh?.();renderHomeStats?.();renderInv?.()}catch(_e){}
+     boxV313('<b>ERFOLG</b><br>Lokal: 347 Packages<br>Cloud: 347 Packages<br>Alle Package-IDs/Inhalte verifiziert.<br>Package-Sync-Base: 347 Einträge.<br>Cloud-Writes: 0<br>Andere Collections: unverändert<br>__state: unverändert',false);
+     ['syncStatusBadge','cloudManageStatus'].forEach(id=>{const e=E(id);if(!e)return;e.textContent='Cloud aktuell';e.className='syncBadge ok';e.title='V313 · 347 Packages kontrolliert aus Cloud wiederhergestellt'});
+   }catch(e){
+     boxV313('<b>STOPP</b><br>'+escV313(e?.message||e)+'<br>Keine Cloud-Daten wurden geschrieben.',false);
+   }finally{flightV313=false}
+ }
+ window.restorePackagesFromCloudV313=restoreV313;
+ window.addEventListener('load',()=>setTimeout(()=>boxV313('Aktuell lokal: '+((st.packages||[]).length)+' Packages.<br>Cloud wird erst beim Klick frisch gelesen. Nur die lokale Package-Liste wird ersetzt.'),5200));
+ setTimeout(()=>boxV313('Aktuell lokal: '+((st.packages||[]).length)+' Packages.<br>Cloud wird erst beim Klick frisch gelesen. Nur die lokale Package-Liste wird ersetzt.'),5400);
 })();
 </script>
