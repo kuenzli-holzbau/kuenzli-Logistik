@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V317</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V318</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -11192,7 +11192,10 @@ async function pullStateFromCloud(manual=false){
 
 function persist(){
  maybeAutoBackup('Automatische Sicherung');
- maybeAutoCloudBackup();ensureV24();localStorage.setItem(KEY,JSON.stringify(st));refresh();queueCloudSync()}
+ maybeAutoCloudBackup();ensureV24();
+ /* V318: Package-Änderungen/Neuanlagen VOR refresh()/Cloud-Callbacks dauerhaft als pending sichern. */
+ try{window.capturePackagePendingV318?.()}catch(e){console.warn('V318 Pending-Capture',e)}
+ localStorage.setItem(KEY,JSON.stringify(st));refresh();queueCloudSync()}
 function closeM(id){E(id).classList.remove('open');if(id==='matModal')window.addingFoundForControl=false}
 document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>showPage(b.dataset.page));
 
@@ -31098,7 +31101,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V317';
+   if(v)v.textContent='Aktuelle Version: V318';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -33021,6 +33024,8 @@ ${safeTypeLines}
  }
 
  async function authoritativePackagesV314(reason='auto'){
+   /* V318: dauerhaft deaktiviert. Die bereits registrierten V314 Listener dürfen neue lokale Packages nicht mehr auf 347 zurücksetzen. */
+   return false;
    if(flightV314)return false;
    if(reason==='auto'&&Date.now()-lastRunV314<30000)return false;
    flightV314=true;lastRunV314=Date.now();
@@ -33155,6 +33160,8 @@ ${safeTypeLines}
  }
 
  async function syncPackagesV316(manual=false){
+   /* V318: alter Exact-347-Reconciler deaktiviert; verhindert Konkurrenz mit dynamischem Bestand. */
+   return false;
    if(flightV316)return false;
    if(!manual&&Date.now()-lastV316<4000)return false;
    flightV316=true;lastV316=Date.now();
@@ -33373,5 +33380,58 @@ ${safeTypeLines}
  window.addEventListener('focus',()=>setTimeout(()=>syncV317(false),650));
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>syncV317(false),650)});
  setInterval(()=>{if(!document.hidden)syncV317(false)},12000);
+})();
+</script>
+
+<script>
+/* V318 – Neuerfassung atomar vor alten Cloud-Callbacks schützen.
+   Ursache V317: V314 hatte bereits registrierte Listener mit lexikalischer Referenz
+   auf authoritativePackagesV314(). Ein späteres window.authoritativePackagesV314=...
+   konnte diese Listener nicht neutralisieren. V318 deaktiviert V314/V316 deshalb
+   direkt in deren Funktionskörpern und markiert Package-Neuanlagen bereits in persist(). */
+(()=>{
+ const MIN_V318=347;
+ const PENDING_V317='kuenzli_package_pending_v317';
+
+ function capturePackagePendingV318(){
+   try{
+     const arr=Array.isArray(st?.packages)?st.packages:[];
+     if(arr.length<MIN_V318)return false;
+     const base=loadSyncBase(),pending=new Set();
+     try{
+       const old=JSON.parse(localStorage.getItem(PENDING_V317)||'[]');
+       if(Array.isArray(old))old.forEach(x=>pending.add(String(x)));
+     }catch(_e){}
+     arr.forEach((p,i)=>{
+       const id=String(entityId('packages',p,i));
+       if(!id)return;
+       const b=base['packages|'+id],lh=stableJson(p);
+       if(!b||lh!==b.hash)pending.add(id);
+     });
+     localStorage.setItem(PENDING_V317,JSON.stringify([...pending]));
+     return true;
+   }catch(_e){return false}
+ }
+ window.capturePackagePendingV318=capturePackagePendingV318;
+
+ // V317 remains the sole active package reconciler.
+ // Rebind manual/automatic entry points once more after all historical code.
+ try{
+   if(typeof syncV317==='function'){
+     window.pushEntitySync=async function(manual=false){return syncV317(manual)};
+     window.pullEntitySync=async function(manual=false){return syncV317(manual)};
+     window.checkCloudForUpdates=async function(){return syncV317(false)};
+     window.queueCloudSync=function(){
+       capturePackagePendingV318();
+       if(!cloudCfg?.autoSync)return;
+       try{scheduleV317(500)}catch(_e){setTimeout(()=>syncV317(false),500)}
+     };
+     pushEntitySync=window.pushEntitySync;pullEntitySync=window.pullEntitySync;
+     checkCloudForUpdates=window.checkCloudForUpdates;queueCloudSync=window.queueCloudSync;
+   }
+ }catch(_e){}
+
+ // Persisted state must be the source for the immediate UI after a save.
+ window.addEventListener('load',()=>setTimeout(()=>capturePackagePendingV318(),100));
 })();
 </script>
