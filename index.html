@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V318</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V319</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31101,7 +31101,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V318';
+   if(v)v.textContent='Aktuelle Version: V319';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -33433,5 +33433,72 @@ ${safeTypeLines}
 
  // Persisted state must be the source for the immediate UI after a save.
  window.addEventListener('load',()=>setTimeout(()=>capturePackagePendingV318(),100));
+})();
+</script>
+
+<style>
+/* V319 – Paket-Erfassung: Hintergrund darf auf Touch-Geräten nicht mitscrollen. */
+html.v319ModalLock,
+body.v319ModalLock{
+  overflow:hidden!important;
+  overscroll-behavior:none!important;
+  touch-action:none!important;
+}
+#matModal.open{
+  overscroll-behavior:contain!important;
+  touch-action:pan-y!important;
+}
+#matModal.open .modalCard,
+#matModal.open .modalContent{
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  touch-action:pan-y!important;
+}
+</style>
+<script>
+/* V319 – isolierter Scroll-Lock ausschließlich für #matModal.
+   Body-Position wird fixiert, damit iPhone/iPad den Hintergrund nicht bewegt.
+   Beim Schließen wird exakt auf die vorherige Scrollposition zurückgestellt. */
+(()=>{
+ let lockedV319=false,scrollYV319=0;
+
+ function lockV319(){
+   if(lockedV319)return;
+   const m=document.getElementById('matModal');
+   if(!m||!m.classList.contains('open'))return;
+   lockedV319=true;
+   scrollYV319=window.scrollY||document.documentElement.scrollTop||0;
+   document.documentElement.classList.add('v319ModalLock');
+   document.body.classList.add('v319ModalLock');
+   document.body.style.position='fixed';
+   document.body.style.top=(-scrollYV319)+'px';
+   document.body.style.left='0';
+   document.body.style.right='0';
+   document.body.style.width='100%';
+ }
+ function unlockV319(){
+   if(!lockedV319)return;
+   lockedV319=false;
+   document.documentElement.classList.remove('v319ModalLock');
+   document.body.classList.remove('v319ModalLock');
+   document.body.style.position='';
+   document.body.style.top='';
+   document.body.style.left='';
+   document.body.style.right='';
+   document.body.style.width='';
+   window.scrollTo(0,scrollYV319);
+ }
+ function syncV319(){
+   const m=document.getElementById('matModal');
+   if(m?.classList.contains('open'))lockV319();else unlockV319();
+ }
+ function installV319(){
+   const m=document.getElementById('matModal');
+   if(!m)return;
+   new MutationObserver(syncV319).observe(m,{attributes:true,attributeFilter:['class']});
+   syncV319();
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installV319,{once:true});
+ else installV319();
 })();
 </script>
