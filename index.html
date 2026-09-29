@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V308</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V309</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V308';
+   if(v)v.textContent='Aktuelle Version: V309';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -32627,5 +32627,104 @@ ${safeTypeLines}
  }
  bindV308();
  window.addEventListener('load',bindV308,{once:true});
+})();
+</script>
+
+<script>
+/* V309 – Cloud-Notstabilisierung: genau ein read-only Gesundheitscheck.
+   Ziel: konkurrierende automatische Alt-Pulls/Projekt-/Permission-Reads stoppen,
+   ohne lokale oder Cloud-Daten zu verändern. 347 Packages und __state bleiben unangetastet.
+   Bis zur späteren kontrollierten Wiederfreigabe werden automatische Push/Pull-Aufrufe
+   neutralisiert; der Gesundheitscheck liest nur warehouse_entities?limit=1. */
+(()=>{
+ const EXPECT_V309=347;
+ let healthTimerV309=null,healthFlightV309=false,lastWakeV309=0;
+
+ function badgeV309(kind,msg){
+   lastCloudMessage=String(msg||'');
+   const text=kind==='ok'?'Cloud aktuell':kind==='syncing'?'Cloud wird geprüft':'Cloud unbekannt';
+   ['syncStatusBadge','cloudManageStatus'].forEach(id=>{
+     const el=E(id);if(!el)return;
+     el.textContent=text;el.className='syncBadge '+(kind==='ok'?'ok':'');el.title=String(msg||text);
+   });
+ }
+ function transientV309(status,msg){
+   return Number(status)===503||Number(status)===504||/failed to fetch|network|load failed|timeout|timed out|pgrst003|offline|internet|connection/i.test(String(msg||''));
+ }
+
+ // Stop existing scheduled automatic sync work.
+ try{stopCloudPolling()}catch(_e){}
+ try{clearTimeout(cloudTimer)}catch(_e){}
+ try{cloudPushPendingV214=false}catch(_e){}
+ try{cloudBackoffUntilV210=0;cloudPushBackoffUntilV210=0}catch(_e){}
+
+ // Central no-write automatic gates. Manual functions remain available to later repair code,
+ // but legacy timers/focus listeners calling these globals cannot mutate data.
+ window.queueCloudSync=function(){};
+ window.scheduleCloudPushV214=function(){};
+ window.startCloudPolling=function(){};
+ window.checkCloudForUpdates=async function(){return healthV309(false)};
+ window.pullEntitySync=async function(manual=false){
+   if(manual)alert('V309 Sicherheitsmodus: automatischer Cloud → Gerät Sync ist vorübergehend gesperrt. Es werden keine Lagerdaten verändert.');
+   return healthV309(manual);
+ };
+ window.pushEntitySync=async function(manual=false){
+   if(manual)alert('V309 Sicherheitsmodus: automatischer Gerät → Cloud Sync ist vorübergehend gesperrt. Es werden keine Lagerdaten geschrieben.');
+   return healthV309(manual);
+ };
+ window.discoverSharedProjectsV273=async function(){return 0};
+ window.pullOwnPermissionsV297=async function(){return false};
+ try{
+   queueCloudSync=window.queueCloudSync;
+   scheduleCloudPushV214=window.scheduleCloudPushV214;
+   startCloudPolling=window.startCloudPolling;
+   checkCloudForUpdates=window.checkCloudForUpdates;
+   pullEntitySync=window.pullEntitySync;
+   pushEntitySync=window.pushEntitySync;
+ }catch(_e){}
+
+ async function healthV309(manual=false){
+   if(healthFlightV309)return false;
+   healthFlightV309=true;
+   try{
+     if((st.packages||[]).length!==EXPECT_V309){
+       badgeV309('unknown','V309 Schutzstopp · '+(st.packages||[]).length+' statt 347 Packages');
+       return false;
+     }
+     cloudCfg=loadCloudConfig();
+     if(!cloudAuthEnabled()||!authSession){
+       badgeV309('unknown','V309 · keine aktive Cloud-Anmeldung');
+       return false;
+     }
+     badgeV309('syncing','V309 · Cloud wird read-only geprüft');
+     if(!await ensureFreshSession()){
+       badgeV309('unknown','V309 · Sitzung momentan nicht bestätigbar');
+       return false;
+     }
+     // One minimal read only. No refreshCloudIdentity, no full entity pull, no writes.
+     const url=entityBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&select=warehouse_id&limit=1';
+     const r=await fetch(url,{headers:cloudHeaders()});
+     const txt=await r.text();
+     if(!r.ok){
+       if(transientV309(r.status,txt)){badgeV309('unknown','V309 · Cloud vorübergehend nicht erreichbar · HTTP '+r.status);return false}
+       badgeV309('unknown','V309 · Cloud-Antwort HTTP '+r.status+' · '+String(txt||'').slice(0,180));
+       return false;
+     }
+     badgeV309('ok','V309 · Cloud read-only erreichbar · keine Daten verändert');
+     return true;
+   }catch(e){
+     badgeV309('unknown','V309 · '+String(e?.message||e||'Cloud nicht erreichbar').slice(0,200));
+     return false;
+   }finally{healthFlightV309=false}
+ }
+
+ function scheduleHealthV309(delay=800){
+   const now=Date.now();if(now-lastWakeV309<5000&&delay<5000)return;lastWakeV309=now;
+   clearTimeout(healthTimerV309);healthTimerV309=setTimeout(()=>healthV309(false),delay);
+ }
+ window.addEventListener('load',()=>scheduleHealthV309(900));
+ window.addEventListener('focus',()=>scheduleHealthV309(700));
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleHealthV309(700)});
+ scheduleHealthV309(250);
 })();
 </script>
