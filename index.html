@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V311</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V312</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31098,7 +31098,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V311';
+   if(v)v.textContent='Aktuelle Version: V312';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -32800,5 +32800,86 @@ ${safeTypeLines}
   finally{flightV311=false}
  }
  window.addEventListener('load',()=>setTimeout(runV311,4200));setTimeout(runV311,4500);window.runCloudDiagV311=runV311;
+})();
+</script>
+
+<style>
+#pkgDiagV312{position:fixed;left:10px;right:10px;bottom:10px;z-index:2147483640;margin:auto;max-width:900px;max-height:46vh;overflow:auto;padding:11px 13px;border:1px solid #b9c7c0;border-radius:12px;background:#fff;box-shadow:0 8px 30px #0003;font:12px/1.42 ui-monospace,SFMono-Regular,Menlo,monospace;color:#173f34}
+#pkgDiagV312 button{margin-top:8px}
+</style>
+<script>
+/* V312 – 339/347 Bestandsdiagnose, strikt read-only.
+   KEINE 347-Vorabblockade, weil gerade die Abweichung diagnostiziert werden soll.
+   Liest lokal st.packages und Cloud warehouse_entities nur für entity_type=packages.
+   Keine Session-Erneuerung, keine lokalen Writes, keine Cloud-Writes, kein Apply/Pull. */
+(()=>{
+ let flightV312=false;
+ function escV312(v){return String(v??'').replace(/[&<>]/g,c=>c==='&'?'&amp;':c==='<'?'&lt;':'&gt;')}
+ function boxV312(html){
+   let e=document.getElementById('pkgDiagV312');
+   if(!e){e=document.createElement('div');e.id='pkgDiagV312';document.body.appendChild(e)}
+   e.innerHTML='<b>V312 · Package-Diagnose · NUR LESEND</b><br>'+html+
+     '<br><button class="btn secondary" type="button" onclick="runPackageDiagV312()">Erneut prüfen</button>';
+ }
+ function idV312(p,i){return String(p?.id??i)}
+ async function runV312(){
+   if(flightV312)return;flightV312=true;
+   try{
+     const localArr=Array.isArray(st?.packages)?st.packages.filter(x=>x&&typeof x==='object'):[];
+     const localIds=localArr.map(idV312);
+     const localSet=new Set(localIds);
+     const localDup=[...new Set(localIds.filter((id,i,a)=>a.indexOf(id)!==i))];
+
+     cloudCfg=loadCloudConfig();
+     if(!cloudCfg?.url||!cloudCfg?.anonKey){
+       boxV312('Lokal: '+localArr.length+' Packages<br>Cloud: nicht geprüft · Konfiguration fehlt.');
+       return;
+     }
+     if(!authSession?.access_token){
+       boxV312('Lokal: '+localArr.length+' Packages<br>Cloud: nicht geprüft · kein Access-Token vorhanden.');
+       return;
+     }
+
+     const base=String(cloudCfg.url).replace(/\/+$/,'');
+     const h={'apikey':cloudCfg.anonKey,'Authorization':'Bearer '+String(authSession.access_token),'Content-Type':'application/json'};
+     const url=base+'/rest/v1/warehouse_entities?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+
+       '&entity_type=eq.packages&select=entity_id,data,version&order=entity_id.asc';
+     const r=await fetch(url,{method:'GET',headers:h});
+     const txt=await r.text();
+     if(!r.ok){
+       boxV312('Lokal: '+localArr.length+' Packages<br>Cloud-GET FEHLER HTTP '+r.status+'<br>'+escV312(txt).slice(0,500));
+       return;
+     }
+     let rows=[];try{rows=txt?JSON.parse(txt):[]}catch(_e){throw new Error('Cloud-Antwort ist kein gültiges JSON.')}
+     const cloudRows=Array.isArray(rows)?rows:[];
+     const cloudIds=cloudRows.map(x=>String(x?.entity_id??'')).filter(Boolean);
+     const cloudSet=new Set(cloudIds);
+     const cloudDup=[...new Set(cloudIds.filter((id,i,a)=>a.indexOf(id)!==i))];
+     const missingLocal=cloudIds.filter(id=>!localSet.has(id));
+     const localOnly=localIds.filter(id=>!cloudSet.has(id));
+     const common=localIds.filter(id=>cloudSet.has(id));
+
+     let html=
+       'Lokal: <b>'+localArr.length+'</b> Packages<br>'+
+       'Cloud: <b>'+cloudRows.length+'</b> Package-Entities<br>'+
+       'Gemeinsam nach ID: '+common.length+'<br>'+
+       'In Cloud, lokal fehlend: <b>'+missingLocal.length+'</b><br>'+
+       (missingLocal.length?'Fehlende IDs: '+escV312(missingLocal.join(', '))+'<br>':'')+
+       'Nur lokal: <b>'+localOnly.length+'</b><br>'+
+       (localOnly.length?'Lokale-only IDs: '+escV312(localOnly.join(', '))+'<br>':'')+
+       'Lokale doppelte IDs: '+localDup.length+' · Cloud doppelte IDs: '+cloudDup.length+'<br>'+
+       '<b>Keine Daten wurden verändert.</b>';
+     boxV312(html);
+
+     // Status is informational only; never claim healthy sync from this diagnostic.
+     ['syncStatusBadge','cloudManageStatus'].forEach(id=>{
+       const e=E(id);if(!e)return;e.textContent='Cloud Diagnose';e.className='syncBadge';e.title='V312 read-only: lokal '+localArr.length+', Cloud '+cloudRows.length+', lokal fehlend '+missingLocal.length;
+     });
+   }catch(e){boxV312('Diagnosefehler: '+escV312(e?.message||e))}
+   finally{flightV312=false}
+ }
+ window.runPackageDiagV312=runV312;
+ window.addEventListener('load',()=>setTimeout(runV312,5000));
+ setTimeout(runV312,5200);
 })();
 </script>
