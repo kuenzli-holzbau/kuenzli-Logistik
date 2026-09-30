@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V339</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V351</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -4539,7 +4539,7 @@ window.APP_RELEASE = {
 <button class="nav" data-page="inventory">▦ Material</button>
 <button class="nav" data-page="reserved">◆ Reserviert</button>
 <div class="navGroupLabel">Kontrolle</div>
-<button class="nav" data-page="control">✓ Lagerkontrolle <span id="stdLowBadge" class="stdBadge" style="display:none">0</span></button>
+<!-- V340: Lager-/Inventarkontrolle aus Navigation entfernt; Bestandsdaten bleiben erhalten. -->
 <button class="nav defectNavBtn" data-page="defects">⚠ Mängel <span id="defectOpenBadge" class="defectBadge" style="display:none">0</span></button>
 <div class="navGroupLabel">Historie</div>
 <button class="nav" data-page="transfers">↔ Umbuchungen</button>
@@ -5106,7 +5106,12 @@ window.APP_RELEASE = {
 
 <div class="f span2 v75Section"><div class="manageHead"><div><b>Weitere Materialien im Paket</b><div class="muted">Testfunktion V75 – kann später wieder entfernt werden.</div></div><button class="btn secondary" type="button" onclick="addSubMaterialRow()">+ Material</button></div><div id="subMaterialsEditor"></div></div>
 <div class="f span2 v75Section"><div class="manageHead"><div><b>Materialmängel</b><div class="muted">Mehrere Mängel, Beschreibungen und Fotos.</div></div><button class="btn secondary" type="button" onclick="addDefectEditor(true)">+ Mangel mit Foto</button></div><div id="defectsEditor"></div></div>
-<label class="f span2">Bemerkung<textarea id="mNote" rows="3"></textarea></label><div class="span2"><button class="btn">Speichern</button></div>
+<label class="f span2">Bemerkung<textarea id="mNote" rows="3"></textarea></label>
+<div class="f span2 materialEditActionsV342" id="materialEditActionsV342" style="display:none">
+ <b>Aktionen</b>
+ <div class="toolbar" id="materialEditActionButtonsV342"></div>
+</div>
+<div class="span2"><button class="btn">Speichern</button></div>
 </form></div></div>
 
 
@@ -5742,8 +5747,8 @@ const INVENTORY_COLS={
 };
 const DEFAULT_INVENTORY_ORDER=['elementId','material','formatV479','woodTypeV474','width','height','length','linearMeters','areaHorizontal','qty','project','usage','status','reservation','location','levelV467','createdAt','action'];
 function ensureInventoryOrder(){
- let o=Array.isArray(st.inventoryColumnOrder)?st.inventoryColumnOrder.filter(k=>k!=='packCode'&&INVENTORY_COLS[k]):[];
- DEFAULT_INVENTORY_ORDER.forEach(k=>{if(!o.includes(k))o.push(k)});
+ let o=Array.isArray(st.inventoryColumnOrder)?st.inventoryColumnOrder.filter(k=>k!=='packCode'&&k!=='action'&&INVENTORY_COLS[k]):[];
+ DEFAULT_INVENTORY_ORDER.filter(k=>k!=='action').forEach(k=>{if(!o.includes(k))o.push(k)});
  st.inventoryColumnOrder=o;
 }
 function moveInventoryColumn(key,dir){
@@ -17915,7 +17920,7 @@ function materialPinsSvgV552(mapType){
  if(mapType!=='outside')return '';
  return ensureMaterialPinsV552().map(p=>{
    let x=Number(p.x)||0,y=Number(p.y)||0,color=materialPinColorV554(p.commission);
-   return `<g class="materialPinV552" onclick="event.stopPropagation();openMaterialPinV552('${p.id}')" transform="translate(${x} ${y}) scale(.5)">
+   return `<g class="materialPinV552" data-material-pin-id="${esc(p.id)}" transform="translate(${x} ${y}) scale(.5)">
     <line class="pinNeedle" x1="0" y1="-1.2" x2="0" y2="1.4"></line><path class="pinHead" style="fill:${color}" d="M0,0.2 C-1.6,-1.3 -1.8,-3.4 0,-4.2 C1.8,-3.4 1.6,-1.3 0,0.2 Z"></path><circle cx="0" cy="-2.6" r=".55" fill="#fff"></circle></g>`;
  }).join('');
 }
@@ -17923,8 +17928,21 @@ function renderOneAreaMap(mapType){
  let svg=svgForMap(mapType);if(!svg)return;
  let parts='';
  st.areas.filter(a=>areaMapType(a)===mapType).forEach(a=>{
-   let areaRackIds=st.racks.filter(r=>r.areaId===a.id).map(r=>r.id);
-   let reservedPackages=st.packages.filter(p=>areaRackIds.includes(p.rackId)&&hasReservation(p));
+   let areaRackIds=st.racks.filter(r=>String(r.areaId)===String(a.id)).map(r=>String(r.id));
+   /* V351: Kartenfläche aus dem tatsächlich sichtbaren Lagerort ableiten.
+      In den Bestandsdaten ist der in der Materialübersicht sichtbare Lagerort
+      der Gestellname (r.name). Existiert eine Kartenfläche mit exakt demselben
+      Namen, hat diese Zuordnung Vorrang. Erst danach folgt rack.areaId und als
+      letzter Fallback p.areaId. So landet z.B. ein reserviertes Paket im
+      Gestell „Vis à Vis Büro“ auch auf der gleichnamigen Kartenfläche. */
+   let reservedPackages=st.packages.filter(p=>{
+     if(!hasReservation(p))return false;
+     const rack=(st.racks||[]).find(r=>String(r.id)===String(p.rackId||''));
+     const norm=v=>String(v||'').trim().toLocaleLowerCase('de-CH');
+     const namedArea=rack?.name ? (st.areas||[]).find(x=>areaMapType(x)===mapType && norm(x.name)===norm(rack.name)) : null;
+     const effectiveAreaId=namedArea?.id ?? rack?.areaId ?? p.areaId ?? '';
+     return String(effectiveAreaId)===String(a.id);
+   });
    let isSelected=selectedPackage&&st.racks.find(r=>r.id===st.packages.find(p=>p.id===selectedPackage)?.rackId)?.areaId===a.id;
    let commissionMatch=areaHasCommission(a,mapCommission);
    let cls='areaPoly'+(reservedPackages.length?' reserved':'')+(commissionMatch?' commissionMatch':'')+(isSelected?' selected':'')+(a.locked?' locked':'');
@@ -17939,9 +17957,25 @@ function renderOneAreaMap(mapType){
    parts+=`<text class="areaLabel ${editAreaId===a.id?'movable':''} ${a.locked?'lockedName':''}" style="fill:${labelColor};font-size:${(labelPx/10).toFixed(2)}px" data-area-label="${a.id}" x="${c[0]}" y="${c[1]}" text-anchor="middle">${esc(a.name)}</text>`;
    if(a.locked)parts+=`<text class="areaLockedText" x="${c[0]}" y="${c[1]+1.65}" text-anchor="middle">GESPERRT</text>`;
    if(reservedPackages.length){
-     let total=reservedPackages.reduce((s,p)=>s+reservedQty(p),0),txt=`RESERVIERT ${Number.isInteger(total)?total:total.toFixed(2)}`;
-     let w=Math.max(8,txt.length*.72),x=c[0]-w/2,y=c[1]+1.3;
-     parts+=`<rect class="areaReserveBox" x="${x}" y="${y}" width="${w}" height="2.15" rx=".65"></rect><text class="areaReserveText" x="${c[0]}" y="${y+1.45}" text-anchor="middle">${txt}</text>`;
+     /* V341: Anzahl reservierter Pakete, nicht reservierte Menge.
+        Reservierungsbadge immer aus der tatsächlichen Flächengeometrie ableiten,
+        unabhängig von einer manuell verschobenen/alten Beschriftungsposition. */
+     let reserveCount=reservedPackages.length,txt=`RESERVIERT ${reserveCount}`;
+     /* V347: Badge direkt unter der sichtbaren Flächenbeschriftung.
+        c ist bereits korrekt in Karten-/Displaykoordinaten transformiert.
+        Damit kann ein Reservierungsbadge nicht mehr durch alte/geometrische
+        Schwerpunktwerte oben links bzw. ausserhalb seiner Beschriftung landen. */
+     /* V350: Badge nicht mehr als separates SVG-Element positionieren.
+        Es wird an die Fläche selbst gebunden und bekommt dieselbe transformierte
+        Beschriftungsposition. Zusätzlich erhält jedes Badge die areaId als
+        data-Attribut, damit keine fremde/alte Badge-Position wiederverwendet wird. */
+     let rc=[Number(c[0]),Number(c[1])],w=Math.max(8,txt.length*.72);
+     if(!Number.isFinite(rc[0])||!Number.isFinite(rc[1]))rc=centroid(displayPoints);
+     let bx=rc[0]-w/2,by=rc[1]+1.3;
+     parts+=`<g class="areaReserveGroupV350" data-reserve-area="${esc(a.id)}" pointer-events="none">`+
+       `<rect class="areaReserveBox" x="${bx}" y="${by}" width="${w}" height="2.15" rx=".65"></rect>`+
+       `<text class="areaReserveText" x="${rc[0]}" y="${by+1.45}" text-anchor="middle">${txt}</text></g>`;
+
    }
  });
  if(drawMode && drawingMap===mapType && drawPoints.length){
@@ -17958,7 +17992,9 @@ function renderOneAreaMap(mapType){
    }
  }
  parts+=materialPinsSvgV552(mapType);
- svg.innerHTML=parts;
+ /* V350: vollständiger Neuaufbau; alte Reservierungs-Rechtecke/Gruppen nie weiterverwenden. */
+ svg.replaceChildren();
+ svg.insertAdjacentHTML('afterbegin',parts);
 }
 function renderProductionHotspot(){
  // V73: Die Produktionshalle wird ausschließlich über den Button oberhalb
@@ -19033,12 +19069,12 @@ function renderInv(){
        last=key;
      }
      let r=st.racks.find(x=>x.id===p.rackId),l=r?.levels?.[p.levelIndex];
-     bodyV485.push(`<tr class="${hasReservation(p)?'reservedRow ':''}${inventorySelectedV466.has(p.id)?'inventorySelectedV497':''}">${st.inventoryColumnOrder.map(k=>`<td>${inventoryCell(p,k,r,l)}</td>`).join('')}</tr>`);
+     bodyV485.push(`<tr class="inventoryEditRowV342 ${hasReservation(p)?'reservedRow ':''}${inventorySelectedV466.has(p.id)?'inventorySelectedV497':''}" data-package-id="${esc(p.id)}">${st.inventoryColumnOrder.map(k=>`<td>${inventoryCell(p,k,r,l)}</td>`).join('')}</tr>`);
    });
  }else{
    ps.forEach(p=>{
      let r=st.racks.find(x=>x.id===p.rackId),l=r?.levels?.[p.levelIndex];
-     bodyV485.push(`<tr class="${hasReservation(p)?'reservedRow ':''}${inventorySelectedV466.has(p.id)?'inventorySelectedV497':''}">${st.inventoryColumnOrder.map(k=>`<td>${inventoryCell(p,k,r,l)}</td>`).join('')}</tr>`);
+     bodyV485.push(`<tr class="inventoryEditRowV342 ${hasReservation(p)?'reservedRow ':''}${inventorySelectedV466.has(p.id)?'inventorySelectedV497':''}" data-package-id="${esc(p.id)}">${st.inventoryColumnOrder.map(k=>`<td>${inventoryCell(p,k,r,l)}</td>`).join('')}</tr>`);
    });
  }
  E('tbody').innerHTML=bodyV485.join('');
@@ -31183,7 +31219,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V339';
+   if(v)v.textContent='Aktuelle Version: V351';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -34596,5 +34632,367 @@ body.v319ModalLock{
  const mo=new MutationObserver(()=>requestAnimationFrame(addRackButtonsV339));
  mo.observe(document.body,{childList:true,subtree:true});
  setTimeout(addRackButtonsV339,80);
+})();
+</script>
+
+<style>
+/* V340 – Inventarkontrolle vollständig aus der Bedienoberfläche entfernen.
+   Historische Kontrolldaten werden ausdrücklich nicht gelöscht. */
+#page-control,#page-production .productionInventoryV322,
+#page-production #productionInventoryV322,
+#page-production [id*="productionInventoryV322"],
+.nav[data-page="control"]{display:none!important}
+/* Keine Browser-Doppeltipp-Vergrösserung bei Flächen-/Gestell-Navigation. */
+#areaSide button,#productionSide button,
+#page-map .rackbtn,#page-production .rackbtn{
+ touch-action:manipulation!important;
+ -webkit-tap-highlight-color:transparent;
+}
+</style>
+<script>
+/* V340 – Karte beim Öffnen von Flächen und Gestellen nicht vergrössern.
+   Klicks navigieren nur die Seitenansicht; vorheriger Karten-Zoom und
+   Karten-Scrollposition werden danach wiederhergestellt. */
+(()=>{
+ const oldArea=window.openArea,oldRack=window.openRack;
+ function capture(){
+   const outside=document.querySelector('#page-map .mapwrap');
+   const prod=E('productionPlanWrap');
+   return {oz:outsideZoom,pz:productionZoom,
+     outside:outside?{el:outside,x:outside.scrollLeft,y:outside.scrollTop}:null,
+     prod:prod?{el:prod,x:prod.scrollLeft,y:prod.scrollTop}:null};
+ }
+ function restore(a){
+   if(!a)return;
+   if(outsideZoom!==a.oz){outsideZoom=a.oz;applyOutsideZoom()}
+   if(productionZoom!==a.pz){productionZoom=a.pz;applyProductionZoom()}
+   for(const v of [a.outside,a.prod])if(v&&v.el.isConnected){
+     v.el.scrollLeft=v.x;v.el.scrollTop=v.y;
+   }
+ }
+ function guard(fn){
+   return function(){
+     const before=capture();
+     const result=fn.apply(this,arguments);
+     restore(before);
+     requestAnimationFrame(()=>restore(before));
+     return result;
+   };
+ }
+ if(typeof oldArea==='function'){
+   window.openArea=guard(oldArea);
+   try{openArea=window.openArea}catch(_e){}
+ }
+ if(typeof oldRack==='function'){
+   window.openRack=guard(oldRack);
+   try{openRack=window.openRack}catch(_e){}
+ }
+ // Alte Deep-Links zur entfernten Inventarkontrolle auf die Materialübersicht führen.
+ const oldShow=window.showPage;
+ if(typeof oldShow==='function'){
+   window.showPage=function(p,...args){return oldShow.call(this,p==='control'?'inventory':p,...args)};
+   try{showPage=window.showPage}catch(_e){}
+ }
+})();
+</script>
+
+<style>
+/* V342 – ganze Materialzeile öffnet Bearbeiten; Aktionsspalte entfällt */
+#page-inventory .inventoryEditRowV342{cursor:pointer}
+#page-inventory .inventoryEditRowV342:hover td{background:#f3f7f5}
+.materialEditActionsV342{border-top:1px solid var(--line);padding-top:12px;margin-top:5px}
+.materialEditActionsV342 .toolbar{margin-top:8px}
+</style>
+<script>
+/* V342 – Aktionen aus der Tabellen-Spalte in das Material-Bearbeitungsfenster. */
+(()=>{
+ function actionButtonsV342(id){
+   const p=(st.packages||[]).find(x=>String(x.id)===String(id));if(!p)return '';
+   const r=(st.racks||[]).find(x=>x.id===p.rackId);
+   return `<button class="btn secondary" type="button" onclick="closeM('matModal');jump('${r?.id||p.rackId||''}','${p.id}')">Zu Lagerort</button>
+   ${p.status!=='aufgebraucht'?`<button class="btn secondary" type="button" onclick="closeM('matModal');reservePackage('${p.id}')">Reservieren</button>`:''}
+   ${p.status!=='aufgebraucht'?`<button class="btn secondary" type="button" onclick="closeM('matModal');openWarehouseTransferV550('${p.id}')">↔ Umbuchen</button>`:''}
+   <button class="btn secondary" type="button" onclick="closeM('matModal');showHistory('${p.id}')">Verlauf</button>
+   ${p.status==='aufgebraucht'?`<button class="btn" type="button" onclick="closeM('matModal');restorePackage('${p.id}')">Wieder aktivieren</button>`:`<button class="btn secondary" type="button" onclick="closeM('matModal');archivePackage('${p.id}')">Archiv</button>`}
+   ${st.settings?.allowMaterialDelete?`<button class="btn danger" type="button" onclick="closeM('matModal');deletePackage('${p.id}')">Löschen</button>`:''}`;
+ }
+ function fillActionsV342(id){
+   const box=E('materialEditActionsV342'),host=E('materialEditActionButtonsV342');if(!box||!host)return;
+   if(!id){box.style.display='none';host.innerHTML='';return}
+   host.innerHTML=actionButtonsV342(id);box.style.display='';
+ }
+ const oldEdit=window.editPackage;
+ if(typeof oldEdit==='function'){
+   window.editPackage=function(id){const r=oldEdit.apply(this,arguments);if(E('matModal')?.classList.contains('open'))fillActionsV342(id);return r};
+   try{editPackage=window.editPackage}catch(_e){}
+ }
+ // Delegation survives every renderInv(). Ignore interactive controls if any are added later.
+ document.addEventListener('click',e=>{
+   const tr=e.target.closest?.('#tbody tr.inventoryEditRowV342[data-package-id]');if(!tr)return;
+   if(e.target.closest('button,a,input,select,textarea,details,summary,label'))return;
+   editPackage(tr.dataset.packageId);
+ });
+})();
+</script>
+
+<style>
+/* V343 – Material-Pins direkt mit Maus/Finger ziehen */
+.materialPinV552{cursor:grab;touch-action:none}
+.materialPinV552.v343Dragging{cursor:grabbing}
+</style>
+<script>
+/* V343 – Pointerdown halten + ziehen verschiebt einen Pin.
+   Kurzer Klick ohne Bewegung öffnet weiterhin den Pin-Editor.
+   Speichern erfolgt gezielt nur für materialPinsV552; kein globales persist(). */
+(()=>{
+ let drag=null;
+ function pinById(id){return ensureMaterialPinsV552().find(p=>String(p.id)===String(id))}
+ async function saveMovedPinV343(p){
+   if(!p)return;
+   p.updatedAt=new Date().toISOString();
+   // Nur aktuellen State lokal sichern; keine globale Cloud-Sync-Kette starten.
+   localStorage.setItem(KEY,JSON.stringify(st));
+   try{
+     if(!cloudReady()||!authSession||!cloudMember)return;
+     if(!canWriteCloudEntity('materialPinsV552','save'))return;
+     const key='materialPinsV552|'+String(p.id),remote=await fetchRemoteEntities(),r=remote[key];
+     const localHash=stableJson(p);
+     if(r&&stableJson(r.data)===localHash){
+       const b=loadSyncBase();b[key]={version:Number(r.version||0),hash:localHash};saveSyncBase(b);return;
+     }
+     await rpcEntitySave('materialPinsV552',String(p.id),JSON.parse(JSON.stringify(p)),Number(r?.version||0),false);
+     const fresh=(await fetchRemoteEntities())[key];
+     if(fresh&&stableJson(fresh.data)===localHash){
+       const b=loadSyncBase();b[key]={version:Number(fresh.version||0),hash:localHash};saveSyncBase(b);
+     }
+   }catch(e){setSyncStatus?.('err','Pin verschieben · '+String(e?.message||e||''))}
+ }
+ function bind(){
+   const svg=E('areaSvg');if(!svg||svg.dataset.pinDragV343)return;
+   svg.dataset.pinDragV343='1';
+   svg.addEventListener('pointerdown',e=>{
+     const g=e.target.closest?.('.materialPinV552[data-material-pin-id]');if(!g)return;
+     const p=pinById(g.dataset.materialPinId);if(!p)return;
+     drag={id:p.id,pointerId:e.pointerId,sx:e.clientX,sy:e.clientY,moved:false,g};
+     g.classList.add('v343Dragging');g.setPointerCapture?.(e.pointerId);
+     e.preventDefault();e.stopPropagation();
+   },true);
+   svg.addEventListener('pointermove',e=>{
+     if(!drag||drag.pointerId!==e.pointerId)return;
+     const p=pinById(drag.id);if(!p)return;
+     const r=svg.getBoundingClientRect();if(!r.width||!r.height)return;
+     if(Math.hypot(e.clientX-drag.sx,e.clientY-drag.sy)>4)drag.moved=true;
+     if(!drag.moved)return;
+     p.x=+Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100)).toFixed(2);
+     p.y=+Math.max(0,Math.min(100,(e.clientY-r.top)/r.height*100)).toFixed(2);
+     // Direktes visuelles Verschieben ohne komplettes Karten-Neurendern.
+     drag.g.setAttribute('transform',`translate(${p.x} ${p.y}) scale(.5)`);
+     e.preventDefault();e.stopPropagation();
+   },true);
+   const finish=e=>{
+     if(!drag||drag.pointerId!==e.pointerId)return;
+     const d=drag,p=pinById(d.id);drag=null;d.g?.classList.remove('v343Dragging');
+     e.preventDefault();e.stopPropagation();
+     if(d.moved){saveMovedPinV343(p);renderMaterialPinLegendV554()}
+     else openMaterialPinV552(d.id);
+   };
+   svg.addEventListener('pointerup',finish,true);
+   svg.addEventListener('pointercancel',e=>{
+     if(!drag||drag.pointerId!==e.pointerId)return;
+     const d=drag;drag=null;d.g?.classList.remove('v343Dragging');renderAreas();
+   },true);
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+})();
+</script>
+
+<style>
+/* V344 – Materialtabelle: vertikal immer die Seite, horizontal die Tabelle */
+#page-inventory .tablewrap{
+ overflow-x:auto!important;
+ overflow-y:visible!important;
+ max-height:none!important;
+ overscroll-behavior-x:contain;
+ overscroll-behavior-y:auto;
+ -webkit-overflow-scrolling:touch;
+ touch-action:pan-x pan-y;
+ scrollbar-gutter:stable;
+}
+#page-inventory #invTable{min-width:100%;width:max-content}
+#page-inventory .tablewrap.v344Dragging{cursor:grabbing;user-select:none}
+@media (pointer:fine){
+ #page-inventory .tablewrap{cursor:grab}
+}
+</style>
+<script>
+/* V344
+   - Kein eigener vertikaler Scrollbereich mehr in der Materialtabelle.
+   - Zwei-Finger-/vertikale Gesten laufen dadurch über die Seite.
+   - Horizontal: Trackpad/Wheel wird in Tabellen-Scroll übersetzt.
+   - Maus: in freien Tabellenbereichen horizontal ziehen ("grab to scroll").
+   Interaktive Felder/Zeilenklicks bleiben geschützt. */
+(()=>{
+ function bindV344(){
+   const w=document.querySelector('#page-inventory .tablewrap');if(!w||w.dataset.v344)return;
+   w.dataset.v344='1';
+
+   w.addEventListener('wheel',e=>{
+     if(Math.abs(e.deltaX)>Math.abs(e.deltaY)){
+       w.scrollLeft+=e.deltaX;e.preventDefault();return;
+     }
+     // Shift+Mausrad = horizontal. Normales/2-Finger vertikales Scrollen bleibt Seite.
+     if(e.shiftKey&&Math.abs(e.deltaY)>0){
+       w.scrollLeft+=e.deltaY;e.preventDefault();
+     }
+   },{passive:false});
+
+   let d=null;
+   w.addEventListener('pointerdown',e=>{
+     if(e.pointerType!=='mouse'||e.button!==0)return;
+     if(e.target.closest('button,input,select,textarea,a,label,details,summary,.invResizeHandleV469'))return;
+     d={id:e.pointerId,x:e.clientX,left:w.scrollLeft,moved:false};
+   });
+   w.addEventListener('pointermove',e=>{
+     if(!d||d.id!==e.pointerId)return;
+     const dx=e.clientX-d.x;
+     if(Math.abs(dx)>5)d.moved=true;
+     if(!d.moved)return;
+     w.classList.add('v344Dragging');
+     w.scrollLeft=d.left-dx;
+     e.preventDefault();
+   });
+   function end(e){
+     if(!d||d.id!==e.pointerId)return;
+     const moved=d.moved;d=null;w.classList.remove('v344Dragging');
+     if(moved){
+       // Verhindert, dass das Loslassen nach horizontalem Ziehen eine Materialzeile öffnet.
+       const stop=ev=>{ev.preventDefault();ev.stopImmediatePropagation();};
+       w.addEventListener('click',stop,{capture:true,once:true});
+     }
+   }
+   w.addEventListener('pointerup',end);
+   w.addEventListener('pointercancel',end);
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindV344,{once:true});else bindV344();
+})();
+</script>
+
+<style>
+#cloudPullPreviewV345{position:fixed;inset:0;z-index:2147483646;background:#0007;display:none;align-items:center;justify-content:center;padding:18px}
+#cloudPullPreviewV345.open{display:flex}
+#cloudPullPreviewV345 .v345box{width:min(720px,96vw);max-height:88vh;overflow:auto;background:#fff;border-radius:14px;padding:18px;border:1px solid #cfd8d3;box-shadow:0 14px 50px #0005}
+#cloudPullPreviewV345 .v345stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+#cloudPullPreviewV345 .v345stat{padding:12px;border:1px solid #dce3df;border-radius:10px;background:#f7f9f8}
+</style>
+<script>
+/* V345 – manueller "Cloud → Gerät"-Button wieder funktionsfähig.
+   WICHTIG: manuell ist jetzt strikt Cloud→lokal und schreibt NIE lokale Packages in die Cloud.
+   Zuerst Vorschau; Übernahme nur nach expliziter Bestätigung.
+   347 ist Mindest-Sicherheitsgrenze, keine feste Sollzahl mehr. __state bleibt unberührt. */
+(()=>{
+ const MIN=347;let flight=false,snapshot=null;
+
+ function modal(){
+   let m=E('cloudPullPreviewV345');
+   if(!m){m=document.createElement('div');m.id='cloudPullPreviewV345';document.body.appendChild(m)}
+   return m;
+ }
+ function closeV345(){const m=modal();m.classList.remove('open');snapshot=null}
+ window.closeCloudPullV345=closeV345;
+
+ async function readPackagesV345(){
+   cloudCfg=loadCloudConfig();
+   if(!cloudCfg?.url||!cloudCfg?.anonKey||!cloudCfg?.warehouseId)throw new Error('Cloud-Konfiguration fehlt.');
+   if(!authSession?.access_token)throw new Error('Nicht bei der Cloud angemeldet.');
+   const base=String(cloudCfg.url).replace(/\/+$/,'');
+   const h={'apikey':cloudCfg.anonKey,'Authorization':'Bearer '+String(authSession.access_token)};
+   const url=base+'/rest/v1/warehouse_entities?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&entity_type=eq.packages&select=entity_id,data,version&order=entity_id.asc';
+   const r=await fetch(url,{headers:h}),txt=await r.text();
+   if(!r.ok)throw new Error('Cloud nicht erreichbar · HTTP '+r.status);
+   let rows;try{rows=txt?JSON.parse(txt):[]}catch(_){throw new Error('Ungültige Cloud-Antwort.')}
+   if(!Array.isArray(rows))throw new Error('Ungültige Cloud-Package-Liste.');
+   const ids=rows.map(x=>String(x?.entity_id||''));
+   if(rows.length<MIN)throw new Error('Sicherheitsstopp: Cloud enthält nur '+rows.length+' Packages (Minimum '+MIN+'). Lokal bleibt unverändert.');
+   if(ids.some(x=>!x)||new Set(ids).size!==rows.length)throw new Error('Sicherheitsstopp: Cloud enthält fehlende oder doppelte Package-IDs.');
+   if(rows.some(x=>!x?.data||typeof x.data!=='object'||Array.isArray(x.data)))throw new Error('Sicherheitsstopp: ungültige Package-Daten in der Cloud.');
+   return rows;
+ }
+ function diffV345(rows){
+   const local=new Map((st.packages||[]).map((p,i)=>[String(entityId('packages',p,i)),stableJson(p)]));
+   const remote=new Map(rows.map(x=>[String(x.entity_id),stableJson(x.data)]));
+   let cloudOnly=0,localOnly=0,different=0,same=0;
+   for(const [id,h] of remote){if(!local.has(id))cloudOnly++;else if(local.get(id)!==h)different++;else same++}
+   for(const id of local.keys())if(!remote.has(id))localOnly++;
+   return {cloudOnly,localOnly,different,same};
+ }
+ async function previewV345(){
+   if(flight)return;flight=true;setSyncStatus('syncing','Cloud → Gerät wird geprüft…');
+   try{
+     const rows=await readPackagesV345(),d=diffV345(rows),localCount=(st.packages||[]).length;
+     snapshot={rows,readAt:Date.now()};
+     const m=modal();
+     m.innerHTML=`<div class="v345box"><h2 style="margin-top:0">Cloud → Gerät</h2>
+       <p>Die Cloud wurde <b>nur gelesen</b>. Noch wurde lokal nichts verändert.</p>
+       <div class="v345stats"><div class="v345stat"><b>Lokal</b><br><span style="font-size:26px">${localCount}</span> Packages</div>
+       <div class="v345stat"><b>Cloud</b><br><span style="font-size:26px">${rows.length}</span> Packages</div></div>
+       <p>Identisch: <b>${d.same}</b> · unterschiedlich: <b>${d.different}</b> · nur Cloud: <b>${d.cloudOnly}</b> · nur lokal: <b>${d.localOnly}</b></p>
+       <p><b>Übernehmen</b> ersetzt ausschließlich die lokale Package-Liste durch den gerade gelesenen Cloud-Stand. Andere Daten und <code>__state</code> bleiben unverändert.</p>
+       <div class="toolbar"><button class="btn" type="button" onclick="applyCloudPackagesV345()">Cloud-Stand übernehmen</button>
+       <button class="btn secondary" type="button" onclick="closeCloudPullV345()">Abbrechen</button></div></div>`;
+     m.classList.add('open');setSyncStatus('ok','Cloud gelesen · '+rows.length+' Packages · Vorschau bereit');
+     return true;
+   }catch(e){setSyncStatus('err','Cloud → Gerät · '+String(e?.message||e));alert('Cloud → Gerät\n\n'+String(e?.message||e));return false}
+   finally{flight=false}
+ }
+ async function applyV345(){
+   if(flight||!snapshot?.rows)return;
+   if(Date.now()-snapshot.readAt>120000){alert('Die Vorschau ist älter als 2 Minuten. Bitte Cloud → Gerät erneut öffnen.');closeV345();return}
+   const rows=snapshot.rows;
+   if(!confirm('Cloud-Stand wirklich übernehmen?\n\nLokal: '+(st.packages||[]).length+' Packages\nCloud: '+rows.length+' Packages\n\nDie lokale Package-Liste wird durch den Cloud-Stand ersetzt.'))return;
+   flight=true;
+   try{
+     const next=JSON.parse(JSON.stringify(st));
+     next.packages=rows.map(x=>JSON.parse(JSON.stringify(x.data)));
+     // Einziger Nutzdaten-Commit: packages. Kein persist(), kein Cloud-Write.
+     // V346: Bei QuotaExceeded ausschließlich rekonstruierbare technische Sync-Caches
+     // freigeben und denselben vollständigen Hauptzustand erneut atomar schreiben.
+     const nextRaw=JSON.stringify(next);
+     try{
+       localStorage.setItem(KEY,nextRaw);
+     }catch(quotaErr){
+       const qm=String(quotaErr?.name||'')+' '+String(quotaErr?.message||quotaErr||'');
+       if(!/quota|storage/i.test(qm))throw quotaErr;
+       // Diese Schlüssel enthalten keine Lager-/Package-Nutzdaten und können neu aufgebaut werden.
+       [SYNC_BASE_KEY,SYNC_CONFLICT_KEY,'kuenzli_package_pending_v317'].forEach(k=>{try{localStorage.removeItem(k)}catch(_e){}});
+       try{localStorage.setItem(KEY,nextRaw)}
+       catch(second){throw new Error('Lokaler Browserspeicher ist weiterhin voll. Es wurden keine Lagerdaten gelöscht. Cloud-Stand bleibt '+rows.length+' Packages.')}
+     }
+     st=next;
+     const verify=JSON.parse(localStorage.getItem(KEY)||'{}');
+     if(!Array.isArray(verify.packages)||verify.packages.length!==rows.length)throw new Error('Lokale Speicherprüfung fehlgeschlagen.');
+     for(let i=0;i<rows.length;i++)if(stableJson(verify.packages[i])!==stableJson(rows[i].data))throw new Error('Verifikation fehlgeschlagen bei Package '+rows[i].entity_id);
+     const b=loadSyncBase();
+     Object.keys(b).filter(k=>k.startsWith('packages|')).forEach(k=>delete b[k]);
+     rows.forEach(x=>b['packages|'+String(x.entity_id)]={version:Number(x.version||0),hash:stableJson(x.data)});
+     try{saveSyncBase(b)}catch(_e){}
+     try{localStorage.setItem('kuenzli_package_pending_v317','[]')}catch(_e){}
+     closeV345();
+     try{refresh();renderHomeStats();renderInv()}catch(_e){}
+     setSyncStatus('ok','Cloud → Gerät abgeschlossen · '+rows.length+' Packages lokal verifiziert');
+     alert('Cloud → Gerät abgeschlossen.\n\n'+rows.length+' Packages wurden lokal übernommen und verifiziert.');
+   }catch(e){setSyncStatus('err','Cloud → Gerät · '+String(e?.message||e));alert('Übernahme fehlgeschlagen:\n\n'+String(e?.message||e))}
+   finally{flight=false}
+ }
+ window.previewCloudPackagesV345=previewV345;
+ window.applyCloudPackagesV345=applyV345;
+
+ // Der bestehende Verwaltungsbutton ruft pullEntitySync(true) auf.
+ // Nur MANUELLER Pull wird auf die sichere Cloud→lokal-Vorschau gelegt.
+ const automaticPull=window.pullEntitySync;
+ window.pullEntitySync=async function(manual=false){
+   if(manual)return previewV345();
+   return typeof automaticPull==='function'?automaticPull(false):false;
+ };
+ try{pullEntitySync=window.pullEntitySync}catch(_e){}
 })();
 </script>
