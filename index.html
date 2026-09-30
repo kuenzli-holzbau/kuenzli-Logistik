@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V351</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V353</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -31219,7 +31219,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V351';
+   if(v)v.textContent='Aktuelle Version: V353';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -34994,5 +34994,119 @@ body.v319ModalLock{
    return typeof automaticPull==='function'?automaticPull(false):false;
  };
  try{pullEntitySync=window.pullEntitySync}catch(_e){}
+})();
+</script>
+
+<!-- V352: Pin-Legende unterhalb der Aussenlagerkarte; reine Darstellung -->
+<style>
+#materialPinLegendV554.materialPinLegendOverlayV555{
+ position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+ z-index:2!important;width:100%!important;min-width:0!important;max-width:none!important;
+ box-sizing:border-box!important;margin:10px 0 0!important;padding:9px 12px!important;
+ display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;align-items:center!important;gap:8px 16px!important;
+ background:#fff!important;border:1px solid rgba(0,0,0,.16)!important;border-radius:10px!important;
+ box-shadow:none!important;line-height:1.25!important;pointer-events:none!important;
+}
+#materialPinLegendV554 .materialPinLegendItemV554{display:inline-flex!important;align-items:center!important;gap:6px!important;white-space:nowrap!important}
+</style>
+<script>
+(()=>{
+ function placePinLegendBelowV352(){
+   const map=E('mapwrap'),legend=E('materialPinLegendV554');if(!map||!legend)return;
+   // Alte V179-Huelle falls noch vorhanden sauber aufloesen.
+   const old=E('mapLegendLayoutV179');
+   if(old&&map.parentNode===old){
+     const parent=old.parentNode;if(parent){parent.insertBefore(map,old);old.remove()}
+   }
+   // Legende unmittelbar NACH der Karte einsetzen, nicht mehr als Karten-Overlay.
+   if(map.parentNode&&legend.previousElementSibling!==map)map.insertAdjacentElement('afterend',legend);
+ }
+ const previous=window.renderAreas;
+ if(typeof previous==='function')window.renderAreas=function(){const r=previous.apply(this,arguments);try{placePinLegendBelowV352()}catch(_e){}return r};
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',placePinLegendBelowV352,{once:true});else placePinLegendBelowV352();
+ setTimeout(placePinLegendBelowV352,0);
+})();
+</script>
+
+<style>
+.inventoryTodayCheckV353{white-space:nowrap}
+.inventoryTodayDateV353{white-space:nowrap;font-weight:700}
+</style>
+<script>
+/* V353 – Materialliste: zwei feste Schluss-Spalten für Tageskontrolle.
+   Verwendet die bereits vorhandenen Package-Felder lastCheckedAt/lastCheckedBy. */
+(()=>{
+  INVENTORY_COLS.todayCheckedV353={label:'Heute kontrolliert',sort:''};
+  INVENTORY_COLS.checkedDateV353={label:'Kontrolldatum',sort:''};
+
+  function ensureCheckColumnsV353(){
+    if(!Array.isArray(st.inventoryColumnOrder))st.inventoryColumnOrder=[];
+    st.inventoryColumnOrder=st.inventoryColumnOrder.filter(k=>k!=='todayCheckedV353'&&k!=='checkedDateV353');
+    st.inventoryColumnOrder.push('todayCheckedV353','checkedDateV353');
+  }
+
+  const ensureBeforeV353=ensureInventoryOrder;
+  ensureInventoryOrder=function(){
+    ensureBeforeV353.apply(this,arguments);
+    ensureCheckColumnsV353();
+  };
+
+  function dateOnlyV353(v){
+    if(!v)return '–';
+    const d=new Date(v);
+    if(Number.isNaN(d.getTime()))return '–';
+    return d.toLocaleDateString('de-CH',{day:'2-digit',month:'2-digit',year:'numeric'});
+  }
+  function isTodayV353(v){
+    if(!v)return false;
+    const d=new Date(v),n=new Date();
+    return !Number.isNaN(d.getTime()) &&
+      d.getFullYear()===n.getFullYear() &&
+      d.getMonth()===n.getMonth() &&
+      d.getDate()===n.getDate();
+  }
+
+  window.markPackageCheckedTodayV353=function(id,ev){
+    ev?.preventDefault?.();ev?.stopPropagation?.();
+    const p=(st.packages||[]).find(x=>String(x.id)===String(id));
+    if(!p)return;
+    const now=new Date().toISOString();
+    p.lastCheckedAt=now;
+    p.lastCheckedBy=currentUserName();
+    p.updatedAt=now;
+    addHistory(p,'Heute kontrolliert','Materialbestand kontrolliert');
+    persist();
+    renderInv();
+  };
+
+  const cellBeforeV353=inventoryCell;
+  inventoryCell=function(p,key,r,l){
+    if(key==='todayCheckedV353'){
+      const done=isTodayV353(p.lastCheckedAt);
+      return `<button type="button" class="btn ${done?'secondary':''} inventoryTodayCheckV353" onclick="markPackageCheckedTodayV353('${esc(p.id)}',event)">${done?'✓ Heute kontrolliert':'Heute kontrolliert'}</button>`;
+    }
+    if(key==='checkedDateV353'){
+      return `<span class="inventoryTodayDateV353">${esc(dateOnlyV353(p.lastCheckedAt))}</span>`;
+    }
+    return cellBeforeV353.apply(this,arguments);
+  };
+
+  /* Die beiden Kontrollspalten bleiben immer ganz rechts und werden nicht verschoben. */
+  const moveBeforeV353=moveInventoryColumn;
+  moveInventoryColumn=function(key,dir){
+    if(key==='todayCheckedV353'||key==='checkedDateV353')return;
+    moveBeforeV353.apply(this,arguments);
+    ensureCheckColumnsV353();
+  };
+
+  const resetBeforeV353=resetInventoryColumns;
+  resetInventoryColumns=function(){
+    resetBeforeV353.apply(this,arguments);
+    ensureCheckColumnsV353();
+    localStorage.setItem(KEY,JSON.stringify(st));
+    renderInv();
+  };
+
+  ensureCheckColumnsV353();
 })();
 </script>
