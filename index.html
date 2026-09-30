@@ -4249,7 +4249,7 @@ window.APP_RELEASE = {
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V337</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V339</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -19160,7 +19160,7 @@ function renderManage(){
  if(E('autoIdCheck'))E('autoIdCheck').checked=!!st.idSettings.auto;
  if(E('idCounters'))E('idCounters').innerHTML=Object.entries(ID_CATS).map(([k,n])=>`<div class="manageItem"><div><b>${esc(n)}</b><div class="muted">Präfix ${k}-xxx</div></div><div><b>Nächste ID: ${esc(formatElementId(k,scanNextId(k)))}</b></div></div>`).join('');
  E('areaManage').innerHTML=st.areas.map(a=>{let n=st.racks.filter(r=>r.areaId===a.id).length,m=areaActiveMaterialCount(a.id);return `<div class="manageItem"><div class="manageHead"><div><b>${esc(a.name)}</b>${a.locked?' <span class="lockBadge">GESPERRT</span>':''}<div class="muted">${areaMapType(a)==='production'?'Produktion':'Aussenlager'} · ${n} Gestell(e) · ${m} aktive Materialeinträge</div></div><div class="toolbar"><button class="btn ${a.locked?'secondary':'danger'}" onclick="toggleAreaLock('${a.id}')">${a.locked?'Entsperren':'Sperren'}</button><button class="btn secondary" onclick="renameArea('${a.id}')">Umbenennen</button><button class="btn secondary" onclick="editAreaGeometry('${a.id}')">Fläche bearbeiten</button><button class="btn danger" onclick="deleteArea('${a.id}')">Löschen</button></div></div></div>`}).join('');
- E('rackSel').innerHTML=st.racks.map(r=>`<option value="${r.id}">${esc(areaName(r.areaId))} – ${esc(r.name)}</option>`).join('');renderManageRack()
+ let selectedRackV338=E('rackSel')?.value||'';E('rackSel').innerHTML=st.racks.map(r=>`<option value="${r.id}">${esc(areaName(r.areaId))} – ${esc(r.name)}</option>`).join('');if(selectedRackV338&&st.racks.some(r=>String(r.id)===String(selectedRackV338)))E('rackSel').value=selectedRackV338;renderManageRack()
 
  if(E('materialCatalogManagerModal')?.classList.contains('open'))renderMaterialCatalogManager();
 }
@@ -31183,7 +31183,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V337';
+   if(v)v.textContent='Aktuelle Version: V339';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -34497,5 +34497,104 @@ body.v319ModalLock{
  const mo=new MutationObserver(()=>requestAnimationFrame(addV337));
  mo.observe(document.body,{childList:true,subtree:true});
  setTimeout(addV337,50);
+})();
+</script>
+
+<style>
+.areaLevelsV338{margin-top:10px;border-top:1px solid var(--line);padding-top:9px}
+.areaRackV338{padding:8px 0;border-bottom:1px solid #edf1ef}.areaRackV338:last-child{border-bottom:0}
+.areaRackHeadV338{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.areaLevelChipsV338{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.areaLevelChipV338{display:inline-flex;padding:5px 9px;border:1px solid var(--line);border-radius:9px;background:#f7f9f8;font-size:13px}
+</style>
+<script>
+/* V338 – Gestelle/Ebenen in Flächenliste + stabile Dropdown-Auswahl */
+(()=>{
+ window.openLevelForRackV338=function(rid){
+   const sel=E('rackSel');
+   if(sel&&[...sel.options].some(o=>String(o.value)===String(rid)))sel.value=String(rid);
+   openLevel();
+ };
+ function enhanceAreasV338(){
+   const box=E('areaManage');if(!box)return;
+   const items=[...box.querySelectorAll(':scope > .manageItem')];
+   (st.areas||[]).forEach((a,ai)=>{
+     const item=items[ai];if(!item||item.querySelector('.areaLevelsV338'))return;
+     const racks=(st.racks||[]).filter(r=>String(r.areaId)===String(a.id));
+     const wrap=document.createElement('div');wrap.className='areaLevelsV338';
+     if(!racks.length)wrap.innerHTML='<div class="muted">Noch kein Gestell in dieser Fläche.</div>';
+     else{
+       racks.forEach(r=>{
+         const row=document.createElement('div');row.className='areaRackV338';
+         const head=document.createElement('div');head.className='areaRackHeadV338';
+         const name=document.createElement('b');name.textContent=r.name||'Gestell';
+         const btn=document.createElement('button');btn.type='button';btn.className='btn';btn.textContent='+ Ebene';
+         btn.addEventListener('click',()=>window.openLevelForRackV338(r.id));
+         head.append(name,btn);row.appendChild(head);
+         const chips=document.createElement('div');chips.className='areaLevelChipsV338';
+         const levels=Array.isArray(r.levels)?r.levels:[];
+         if(!levels.length){const x=document.createElement('span');x.className='muted';x.textContent='Noch keine Ebene';chips.appendChild(x)}
+         else levels.forEach((l,i)=>{const x=document.createElement('span');x.className='areaLevelChipV338';x.textContent=l.name||('Ebene '+(i+1));chips.appendChild(x)});
+         row.appendChild(chips);wrap.appendChild(row);
+       });
+     }
+     item.appendChild(wrap);
+   });
+ }
+ const oldRenderManageV338=window.renderManage;
+ if(typeof oldRenderManageV338==='function'){
+   window.renderManage=function(){
+     const selected=E('rackSel')?.value||'';
+     const r=oldRenderManageV338.apply(this,arguments);
+     if(selected&&E('rackSel')&&[...E('rackSel').options].some(o=>String(o.value)===String(selected))){
+       E('rackSel').value=selected;try{renderManageRack()}catch(_e){}
+     }
+     enhanceAreasV338();return r;
+   };
+   try{renderManage=window.renderManage}catch(_e){}
+ }
+ setTimeout(enhanceAreasV338,80);
+})();
+</script>
+
+<style>
+/* V339 – Gestell direkt bei der Lagerfläche hinzufügen */
+.areaAddRackV339{margin-left:auto}
+.areaLevelsHeaderV339{display:flex;justify-content:flex-end;align-items:center;margin-bottom:5px}
+</style>
+<script>
+/* V339 – + Gestell in jeder Lagerflächenkarte.
+   Verwendet den bestehenden Gestell-anlegen-Dialog und setzt die Fläche vor. */
+(()=>{
+ window.openRackForAreaV339=function(areaId){
+   if(!requireStructure())return;
+   const area=(st.areas||[]).find(a=>String(a.id)===String(areaId));
+   if(!area)return;
+   if(areaIsLocked(area.id)){alert('Diese Lagerfläche ist gesperrt.');return}
+   try{openRackNew()}catch(_e){return}
+   const sel=E('rArea');
+   if(sel){
+     const exists=[...sel.options].some(o=>String(o.value)===String(area.id));
+     if(exists)sel.value=String(area.id);
+   }
+ };
+ function addRackButtonsV339(){
+   const box=E('areaManage');if(!box)return;
+   const items=[...box.querySelectorAll(':scope > .manageItem')];
+   (st.areas||[]).forEach((a,i)=>{
+     const item=items[i];if(!item||item.querySelector('.areaAddRackV339'))return;
+     const levels=item.querySelector('.areaLevelsV338');
+     if(!levels)return;
+     const head=document.createElement('div');head.className='areaLevelsHeaderV339';
+     const b=document.createElement('button');b.type='button';b.className='btn areaAddRackV339';
+     b.textContent='+ Gestell';b.disabled=!!a.locked;
+     b.title=a.locked?'Fläche ist gesperrt':'Gestell in dieser Fläche hinzufügen';
+     b.addEventListener('click',()=>window.openRackForAreaV339(a.id));
+     head.appendChild(b);levels.prepend(head);
+   });
+ }
+ const mo=new MutationObserver(()=>requestAnimationFrame(addRackButtonsV339));
+ mo.observe(document.body,{childList:true,subtree:true});
+ setTimeout(addRackButtonsV339,80);
 })();
 </script>
