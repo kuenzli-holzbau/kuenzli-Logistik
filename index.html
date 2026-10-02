@@ -4338,6 +4338,16 @@ html body #smallOrdersHome > .sectionToolbarCard,html body #smallOrdersHome > .s
   html body #invTable tr.inventoryEditRowV342 > td.invMatInGroupV355{display:none!important}
   html body #invTable tr.inventoryEditRowV342 > td[data-label=""]::before{display:none}
 }
+/* Cloud-Status-Fenster */
+#cloudStatusV359 .cloudStatusBoxV359{max-width:640px;width:calc(100vw - 24px);max-height:86vh;overflow:auto}
+#cloudStatusV359 .cloudPlainV359{font-size:16px;line-height:1.45;margin:14px 0}
+#cloudStatusV359 h3{margin:16px 0 6px}
+.cloudConflictRowV359{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin:6px 0;background:#fff8ef}
+.cloudConflictRowV359 b{display:block}.cloudConflictRowV359 span{font-size:13px;color:var(--mut)}
+.cloudConflictBtnsV359{display:flex;gap:6px;flex-wrap:wrap}
+.cloudTechV359{margin-top:14px}.cloudTechV359 summary{cursor:pointer;color:var(--mut);font-size:13px}
+#syncStatusBadge,#cloudManageStatus{cursor:pointer}
+.syncBadge.warnV359{background:#fff1d6!important;color:#7a4b00!important;border-color:#efc56b!important}
 /* Kurzmeldungen statt Hinweisfenster */
 #toastHostV358{position:fixed;z-index:2147483000;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));display:grid;gap:8px;width:min(520px,calc(100vw - 24px));pointer-events:none}
 @media(min-width:901px){#toastHostV358{bottom:24px}}
@@ -4388,7 +4398,7 @@ html body #smallOrdersHome > .sectionToolbarCard,html body #smallOrdersHome > .s
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V358</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V359</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -4602,7 +4612,7 @@ html body #smallOrdersHome > .sectionToolbarCard,html body #smallOrdersHome > .s
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V358</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V359</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7322,7 +7332,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V358</b></p><div class="releaseNote"><b>Neu in V358</b><br>Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V359</b></p><div class="releaseNote"><b>Neu in V359</b><br>Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -18389,9 +18399,12 @@ let rackOrderEditAreaId='';
 let rackOrderDragId='';
 
 function orderedAreaRacks(areaId){
+ /* V359: nur lesen – früher schrieb das blosse Öffnen einer Fläche displayOrder in alle Gestelle.
+    Dadurch galten Gestelle als „lokal geändert“, wurden unnötig gesendet und blockierten als
+    Konflikt echte Änderungen (z.B. Umbenennen) von anderen Geräten. */
  let rs=st.racks.filter(r=>r.areaId===areaId);
- rs.forEach((r,i)=>{if(!Number.isFinite(Number(r.displayOrder)))r.displayOrder=i});
- return rs.slice().sort((a,b)=>(Number(a.displayOrder)||0)-(Number(b.displayOrder)||0));
+ const key=new Map(rs.map((r,i)=>[r,Number.isFinite(Number(r.displayOrder))?Number(r.displayOrder):i]));
+ return rs.slice().sort((a,b)=>key.get(a)-key.get(b));
 }
 function normalizeRackOrder(areaId){
  orderedAreaRacks(areaId).forEach((r,i)=>r.displayOrder=i);
@@ -18496,6 +18509,7 @@ function toggleLevelLocked(rid,levelId){
 function openArea(id){
  if(drawMode||editAreaId)return;
  let a=st.areas.find(x=>x.id===id);if(!a)return;
+ window.openAreaIdV359=id;
  let mt=areaMapType(a);if((mt==='production'&&currentPage!=='production')||(mt==='outside'&&currentPage!=='map'))showPage(mt==='production'?'production':'map');
  selectedPackage='';renderAreas();
  let rs=orderedAreaRacks(id),side=sideForMap(mt),ordering=rackOrderEditAreaId===id;
@@ -18571,7 +18585,17 @@ function toggleAreaLock(id){
 
 function renameArea(id){if(!requireStructure())return;let a=st.areas.find(x=>x.id===id);renameTarget={type:'area',id};E('renameTitle').textContent='Lagerfläche umbenennen';E('renameValue').value=a.name;E('renameModal').classList.add('open')}
 function renameRack(id){if(!requireStructure())return;let r=st.racks.find(x=>x.id===id);renameTarget={type:'rack',id};E('renameTitle').textContent='Gestell umbenennen';E('renameValue').value=r.name;E('renameModal').classList.add('open')}
-function saveRename(e){e.preventDefault();let name=E('renameValue').value.trim();if(renameTarget.type==='area')st.areas.find(x=>x.id===renameTarget.id).name=name;else st.racks.find(x=>x.id===renameTarget.id).name=name;closeM('renameModal');persist();renderAreas();renderManage();if(renameTarget.type==='rack'&&currentRack===renameTarget.id)openRack(currentRack)}
+function saveRename(e){e.preventDefault();let name=E('renameValue').value.trim();if(!name)return;if(renameTarget.type==='area')st.areas.find(x=>x.id===renameTarget.id).name=name;else st.racks.find(x=>x.id===renameTarget.id).name=name;closeM('renameModal');persist();renderAreas();renderManage();if(renameTarget.type==='rack'&&currentRack===renameTarget.id)openRack(currentRack);
+ /* V359: auch das offene Flächen-Panel sofort mit dem neuen Namen zeigen. */
+ refreshOpenAreaPanelV359()}
+function refreshOpenAreaPanelV359(){
+ const id=window.openAreaIdV359;if(!id)return;
+ const a=st.areas.find(x=>x.id===id);if(!a)return;
+ const side=sideForMap(areaMapType(a));if(!side||!side.querySelector('h2'))return;
+ if(currentRack&&side.innerHTML.includes('Zurück zur Fläche'))return; // Gestell-Ansicht offen → nicht wegklicken
+ const mt=areaMapType(a);if((mt==='production'&&currentPage!=='production')||(mt==='outside'&&currentPage!=='map'))return;
+ openArea(id);
+}
 function deleteArea(id){
  if(!requireStructure())return false;
  id=String(id||'');
@@ -31408,7 +31432,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V358';
+   if(v)v.textContent='Aktuelle Version: V359';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -33624,13 +33648,14 @@ ${safeTypeLines}
      }
      writePendingV317([...pending]);
 
-     let uploaded=0;
+     let uploaded=0;const pkgConflicts=new Set();
      for(const id of [...pending]){
        const p=local[id];
        if(!p){pending.delete(id);continue}
        const lh=stableJson(p),r=remote[id],rh=r?stableJson(r.data):null,b=base[id],bh=b?.hash??null;
-       // Existing same object changed independently on both sides => protect.
-       if(r&&bh!==null&&rh!==bh&&rh!==lh)throw new Error('Konflikt: Package '+id+' wurde lokal UND in der Cloud geändert.');
+       /* V359: lokal UND Cloud geändert → nur dieses Paket als Konflikt zurückhalten (lokal bleibt),
+          der Rest des Abgleichs läuft weiter. Vorher stoppte ein einziger Konflikt alles → „Cloud-Fehler“. */
+       if(r&&bh!==null&&rh!==bh&&rh!==lh){pkgConflicts.add(id);pending.delete(id);continue}
        if(r&&rh===lh){pending.delete(id);continue}
        const saved=await saveV317(id,p,r?.version||b?.version||0);
        remote[id]=saved;pending.delete(id);writePendingV317([...pending]);uploaded++;
@@ -33641,30 +33666,43 @@ ${safeTypeLines}
 
      rows=await rowsV317();
      if(rows.length<localArr.length)throw new Error('Schutzstopp: Cloud hat '+rows.length+', lokal '+localArr.length+' Packages.');
-     const next=JSON.parse(JSON.stringify(st));next.packages=rows.map(x=>JSON.parse(JSON.stringify(x.data)));
+     const freshLocal=localV317().m;
+     const want=rows.map(x=>{const id=String(x.entity_id);return pkgConflicts.has(id)&&freshLocal[id]?freshLocal[id]:x.data});
+     const next=JSON.parse(JSON.stringify(st));next.packages=want.map(d=>JSON.parse(JSON.stringify(d)));
      localStorage.setItem(KEY,JSON.stringify(next));st=next;
 
      const persisted=JSON.parse(localStorage.getItem(KEY)||'{}');
      if(!Array.isArray(persisted.packages)||persisted.packages.length!==rows.length)throw new Error('Lokale Persistenz-Verifikation fehlgeschlagen.');
-     for(let i=0;i<rows.length;i++)if(stableJson(persisted.packages[i])!==stableJson(rows[i].data))throw new Error('Cloud→Lokal Verifikation fehlgeschlagen: '+rows[i].entity_id);
+     for(let i=0;i<rows.length;i++)if(stableJson(persisted.packages[i])!==stableJson(want[i]))throw new Error('Cloud→Lokal Verifikation fehlgeschlagen: '+rows[i].entity_id);
 
-     const all=loadSyncBase();Object.keys(all).filter(k=>k.startsWith('packages|')).forEach(k=>delete all[k]);
-     rows.forEach(x=>all['packages|'+String(x.entity_id)]={version:Number(x.version||0),hash:stableJson(x.data)});saveSyncBase(all);
+     const oldBase=loadSyncBase(),all=loadSyncBase();Object.keys(all).filter(k=>k.startsWith('packages|')).forEach(k=>delete all[k]);
+     rows.forEach(x=>{const id=String(x.entity_id),k='packages|'+id;
+       if(pkgConflicts.has(id)){if(oldBase[k])all[k]=oldBase[k];return}   // Konflikt bleibt erkennbar
+       all[k]={version:Number(x.version||0),hash:stableJson(x.data)}});
+     saveSyncBase(all);
      writePendingV317([]);
      try{refresh?.();renderHomeStats?.();renderInv?.()}catch(_e){}
 
      /* V357: übrige Objekte (Flächen, Gestelle, Katalog, Pins, Projekte, Pritschen …) im selben Lauf. */
      const o=await othersV357(manual);
-     let msg='Cloud aktuell · '+rows.length+' Pakete'+(uploaded?' · '+uploaded+' Paket(e) übertragen':'');
-     if(o.stop){setSyncStatus('err','V357 Schutzstopp · '+(o.push+o.pull)+' Objektänderungen auf einmal – bitte in der Verwaltung „Cloud abgleichen“ bestätigen');lastV357=o;return false}
+     o.pkgConflictKeys=[...pkgConflicts].map(id=>'packages|'+id);
+     o.conflicts=(o.conflicts||0)+pkgConflicts.size;
+     o.at=Date.now();o.packages=rows.length;o.uploadedPackages=uploaded;
+     let msg='Cloud aktuell · '+rows.length+' Pakete'+(uploaded?' · '+uploaded+' Paket(e) gesendet':'');
      if(o.pushed)msg+=' · '+o.pushed+' Änderung(en) gesendet';
      if(o.pulled)msg+=' · '+o.pulled+' Änderung(en) übernommen';
-     if(o.conflicts)msg+=' · ⚠ '+o.conflicts+' Konflikt(e): lokal behalten';
-     lastV357=o;
+     if(o.remaining)msg+=' · noch '+o.remaining+' offen (läuft weiter)';
+     if(o.failed)msg+=' · '+o.failed+' Objekt(e) von der Cloud abgelehnt';
+     if(o.conflicts)msg+=' · ⚠ '+o.conflicts+' Konflikt(e) – zum Lösen antippen';
+     lastV357=o;lastOkV359=Date.now();
      setSyncStatus('ok',msg);
+     if(o.conflicts){['syncStatusBadge','cloudManageStatus'].forEach(id=>{const el=E(id);if(el){el.textContent='⚠ '+o.conflicts+' Konflikt'+(o.conflicts>1?'e':'');el.className='syncBadge warnV359';el.title=msg}})}
+     if(o.remaining)setTimeout(()=>syncV317(true),2500);
+     try{rerenderAfterSyncV359(o.pulled>0||uploaded>0)}catch(_e){}
      return true;
    }catch(e){
      const m=String(e?.message||e||'');
+     lastErrorV359={at:Date.now(),message:m};
      if(transientV317(m)||/sitzung\/konfiguration nicht verfügbar/i.test(m)){unknownV317(m);return false}
      setSyncStatus('err','V317 '+m);return false;
    }finally{flightV317=false}
@@ -33700,18 +33738,19 @@ ${safeTypeLines}
      if(lc&&!rc)push.push(k);else if(!lc&&rc)pull.push(k);else conflicts.push(k);
    }
    if(ident.length){const nb=loadSyncBase();ident.forEach(k=>{nb[k]={version:Number(remote[k].version||0),hash:stableJson(remote[k].data)}});saveSyncBase(nb)}
-   if(push.length+pull.length>MAX_AUTO_V357){
-     if(!manual||!confirm('Cloud-Abgleich: '+push.length+' Änderung(en) senden und '+pull.length+' Änderung(en) übernehmen.\n\nLöschungen werden nicht übertragen, Konflikte nicht überschrieben.\n\nFortfahren?'))
-       return {stop:true,push:push.length,pull:pull.length,conflicts:conflicts.length,conflictKeys:conflicts};
-   }
-   let pushed=0,pulled=0,denied=0,later=0;
-   for(const k of push){
+   /* V359: grosse Rückstände werden in Portionen à 40 abgearbeitet statt mit Schutzstopp
+      (jede Schreibaktion ist versionsgeprüft und konfliktsicher). */
+   const total=push.length+pull.length+tombPush.length;
+   const pushNow=push.slice(0,MAX_AUTO_V357),pullNow=pull.slice(0,Math.max(0,MAX_AUTO_V357-pushNow.length));
+   const remaining=Math.max(0,total-pushNow.length-pullNow.length-tombPush.length);
+   let pushed=0,pulled=0,denied=0,later=0,failed=0;const failedKeys=[];
+   for(const k of pushNow){
      const l=local[k],r=remote[k],b=base[k];
      if(!canWriteCloudEntity(l.type,'save')){denied++;continue}
      try{
        const val=await rpcEntitySave(l.type,l.id,JSON.parse(JSON.stringify(l.data)),Number(r?.version??b?.version??0),false);
        const nb=loadSyncBase();nb[k]={version:Number(val?.version||(Number(r?.version||0)+1)),hash:stableJson(l.data)};saveSyncBase(nb);pushed++;
-     }catch(e){if(e?.syncConflict){later++;continue}throw e}
+     }catch(e){if(e?.syncConflict){later++;continue}if(transientV317(e?.message))throw e;failed++;failedKeys.push(k+': '+String(e?.message||e).slice(0,120))}
    }
    for(const k of tombPush){
      const r=remote[k],t=pinTombs[String(r.id)]||{};
@@ -33722,18 +33761,120 @@ ${safeTypeLines}
        const nb=loadSyncBase();nb[k]={version:Number(val?.version||(Number(r.version||0)+1)),hash:stableJson(tomb)};saveSyncBase(nb);pushed++;
      }catch(e){if(e?.syncConflict){later++;continue}throw e}
    }
-   for(const k of pull){
+   for(const k of pullNow){
      const r=remote[k],before=local[k]?stableJson(local[k].data):null,now=localEntityMap()[k];
      if((now?stableJson(now.data):null)!==before){later++;continue}
      if(!window.applyOneRemoteV272?.(r))continue;
-     const after=localEntityMap()[k];
-     if(!after||stableJson(after.data)!==stableJson(r.data))throw new Error('Verifikation fehlgeschlagen: '+k);
+     /* Lokale Normalisierung (z.B. Standardfelder) darf keinen Fehler auslösen: Basis = Cloud-Stand;
+        eine echte lokale Abweichung wird im nächsten Lauf normal gesendet. */
      const nb=loadSyncBase();nb[k]={version:Number(r.version||0),hash:stableJson(r.data)};saveSyncBase(nb);pulled++;
    }
    if(pulled){try{loadPlatformStore?.();refresh?.();renderProjectCards?.();renderPlatformProjectOverview?.();refreshPermissionVisibility?.()}catch(_e){}}
-   return {pushed,pulled,conflicts:conflicts.length,conflictKeys:conflicts,denied,later};
+   try{let mx='';Object.values(remote).forEach(x=>{if(x?.updated_at&&String(x.updated_at)>mx)mx=String(x.updated_at)});if(mx)localStorage.setItem('kuenzli_cloud_seen_v359',mx)}catch(_e){}
+   return {pushed,pulled,conflicts:conflicts.length,conflictKeys:conflicts,denied,later,failed,failedKeys,remaining,remoteSnapshot:remote};
  }
  window.cloudSyncStateV357=()=>lastV357;
+ let lastOkV359=0,lastErrorV359=null;
+
+ function rerenderAfterSyncV359(changed){
+   if(!changed)return;
+   try{renderAreas?.()}catch(_e){}
+   try{refreshOpenAreaPanelV359?.()}catch(_e){}
+   try{if(currentPage==='inventory')renderInv?.();if(currentPage==='manage')renderManage?.()}catch(_e){}
+   try{if(currentRack&&E('rackSide')?.innerHTML)openRack?.(currentRack)}catch(_e){}
+ }
+
+ async function resolveConflictV359(k,choice){
+   const [type,...rest]=String(k).split('|'),id=rest.join('|');
+   if(!await ensureFreshSession())throw new Error('Keine Cloud-Verbindung.');
+   const remote=await fetchRemoteEntities(),r=remote[k];
+   if(type==='packages'){
+     const i=(st.packages||[]).findIndex((p,ix)=>String(entityId('packages',p,ix))===id);
+     if(choice==='cloud'){
+       if(!r)throw new Error('In der Cloud nicht gefunden.');
+       if(i>=0)st.packages[i]=JSON.parse(JSON.stringify(r.data));else st.packages.push(JSON.parse(JSON.stringify(r.data)));
+       localStorage.setItem(KEY,JSON.stringify(st));
+       const nb=loadSyncBase();nb[k]={version:Number(r.version||0),hash:stableJson(r.data)};saveSyncBase(nb);
+     }else{
+       if(i<0)throw new Error('Lokal nicht gefunden.');
+       const d=st.packages[i];const val=await rpcEntitySave('packages',id,JSON.parse(JSON.stringify(d)),Number(r?.version||0),false);
+       const nb=loadSyncBase();nb[k]={version:Number(val?.version||(Number(r?.version||0)+1)),hash:stableJson(d)};saveSyncBase(nb);
+     }
+   }else{
+     const l=localEntityMap()[k];
+     if(choice==='cloud'){
+       if(!r)throw new Error('In der Cloud nicht gefunden.');
+       window.applyOneRemoteV272?.(r);
+       const nb=loadSyncBase();nb[k]={version:Number(r.version||0),hash:stableJson(r.data)};saveSyncBase(nb);
+     }else{
+       if(!l)throw new Error('Lokal nicht gefunden.');
+       const val=await rpcEntitySave(l.type,l.id,JSON.parse(JSON.stringify(l.data)),Number(r?.version||0),false);
+       const nb=loadSyncBase();nb[k]={version:Number(val?.version||(Number(r?.version||0)+1)),hash:stableJson(l.data)};saveSyncBase(nb);
+     }
+   }
+   try{refresh?.()}catch(_e){}
+   rerenderAfterSyncV359(true);
+   await syncV317(true);
+   openCloudStatusV359();
+ }
+ window.resolveConflictV359=async(k,c)=>{try{await resolveConflictV359(k,c)}catch(e){alert('Konflikt konnte nicht gelöst werden: '+String(e?.message||e))}};
+
+ const TYPE_LABEL_V359={packages:'Paket',areas:'Lagerfläche',racks:'Gestell',materialCatalog:'Material-Katalog',materialPinsV552:'Material-Pin',projects:'Projekt',platforms:'Pritschenverwaltung',toolsContainers:'Werkzeug & Geräte',commissions:'Kommission',controls:'Kontrolle',smallOrders:'Kleinauftrag',internalMaterials:'Internes Material',internalTransfers:'Umbuchung',standardStock:'Standardbestand'};
+ function labelForV359(k,snap){
+   const [type,...rest]=String(k).split('|'),id=rest.join('|');
+   let d=null;try{d=localEntityMap()[k]?.data||snap?.[k]?.data}catch(_e){}
+   if(type==='packages'){const p=(st.packages||[]).find((x,i)=>String(entityId('packages',x,i))===id);d=p||d}
+   const name=d?.elementId?(d.elementId+' · '+(d.material||'')):(d?.name||d?.title||d?.number||id);
+   return (TYPE_LABEL_V359[type]||type)+': '+name;
+ }
+ function plainStatusV359(){
+   const b=E('syncStatusBadge'),t=String(b?.title||lastCloudMessage||'');
+   if(!authSession||!cloudMember)return 'Nicht angemeldet – Änderungen bleiben auf diesem Gerät, bis du dich anmeldest.';
+   if(/failed to fetch|network|offline|internet|load failed|timeout|503|504|nicht verfügbar/i.test(t))return 'Keine Verbindung zur Cloud. Deine Änderungen sind auf diesem Gerät gespeichert und werden automatisch gesendet, sobald wieder Netz da ist.';
+   if(/untergrenze 347|minimum 347/i.test(t))return 'Sicherheitsstopp: Auf diesem Gerät sind weniger als 347 Pakete. Es wurde nichts übertragen. Bitte melden.';
+   if(b?.classList.contains('err'))return 'Der Abgleich ist auf ein Problem gestossen. Details unten.';
+   const c=(lastV357?.conflicts)||0;
+   if(c)return 'Der Abgleich läuft. '+c+' Eintrag'+(c>1?'e brauchen':' braucht')+' deine Entscheidung, weil er auf diesem Gerät und auf einem anderen Gerät unterschiedlich geändert wurde.';
+   return 'Alles in Ordnung.';
+ }
+ function openCloudStatusV359(){
+   let m=E('cloudStatusV359');
+   if(!m){m=document.createElement('div');m.id='cloudStatusV359';m.className='modal';document.body.appendChild(m)}
+   const o=lastV357||{},keys=[...(o.pkgConflictKeys||[]),...(o.conflictKeys||[])];
+   const when=lastOkV359?new Date(lastOkV359).toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):'–';
+   const list=keys.slice(0,30).map(k=>`<div class="cloudConflictRowV359"><div><b>${esc(labelForV359(k,o.remoteSnapshot))}</b><span>Auf diesem Gerät und in der Cloud unterschiedlich geändert.</span></div><div class="cloudConflictBtnsV359"><button class="btn secondary" type="button" onclick="resolveConflictV359('${esc(k)}','cloud')">Cloud übernehmen</button><button class="btn" type="button" onclick="resolveConflictV359('${esc(k)}','local')">Meine Version</button></div></div>`).join('');
+   const fails=(o.failedKeys||[]).slice(0,10).map(x=>`<li>${esc(x)}</li>`).join('');
+   m.innerHTML=`<div class="modalbox cloudStatusBoxV359"><div class="manageHead"><div><h2 style="margin:0">Cloud-Status</h2><p class="muted" style="margin:4px 0 0">Letzter erfolgreicher Abgleich: ${when}</p></div><button class="btn secondary" type="button" onclick="E('cloudStatusV359').classList.remove('open')">Schliessen</button></div>
+     <p class="cloudPlainV359">${esc(plainStatusV359())}</p>
+     ${keys.length?`<h3>Konflikte (${keys.length})</h3><p class="muted">Wähle pro Eintrag, welche Version gelten soll. Die andere wird überschrieben.</p>${list}`:''}
+     ${fails?`<h3>Von der Cloud abgelehnt</h3><ul class="muted">${fails}</ul>`:''}
+     <details class="cloudTechV359"><summary>Technische Details</summary><div class="muted">${esc(String(E('syncStatusBadge')?.title||''))}${lastErrorV359?'<br>Letzter Fehler: '+esc(new Date(lastErrorV359.at).toLocaleTimeString('de-CH'))+' · '+esc(lastErrorV359.message):''}</div></details>
+     <div class="toolbar" style="margin-top:12px"><button class="btn" type="button" onclick="this.disabled=true;cloudSyncNowV357().then(()=>openCloudStatusV359())">⇅ Jetzt abgleichen</button></div></div>`;
+   m.classList.add('open');
+ }
+ window.openCloudStatusV359=openCloudStatusV359;
+ function bindBadgeV359(){['syncStatusBadge','cloudManageStatus'].forEach(id=>{const b=E(id);if(b&&!b.dataset.v359){b.dataset.v359='1';b.style.cursor='pointer';b.setAttribute('role','button');b.addEventListener('click',openCloudStatusV359)}})}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindBadgeV359);else bindBadgeV359();
+
+ /* Schneller Änderungs-Check (alle 8 s, nur wenn sichtbar): fragt nur, OB sich seit dem letzten
+    Abgleich etwas geändert hat (winzige Antwort). Nur dann folgt der vollständige Abgleich.
+    So erscheinen Änderungen anderer Geräte nach wenigen Sekunden statt erst nach einer Minute. */
+ let pollFlightV359=false;
+ async function changePollV359(){
+   if(pollFlightV359||flightV317||document.hidden)return;
+   if(!cloudReady()||!authSession||!cloudMember)return;
+   const since=localStorage.getItem('kuenzli_cloud_seen_v359');if(!since)return;
+   pollFlightV359=true;
+   try{
+     if(authExpiryMs()<Date.now()+60000&&!await ensureFreshSession())return;
+     const u=String(cloudCfg.url).replace(/\/+$/,'')+'/rest/v1/warehouse_entities?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&updated_at=gt.'+encodeURIComponent(since)+'&select=entity_type,entity_id,updated_at&order=updated_at.desc&limit=3';
+     const r=await fetch(u,{headers:cloudHeaders()});if(!r.ok)return;
+     const rows=await r.json();
+     if(Array.isArray(rows)&&rows.length)await syncV317(true);
+   }catch(_e){}finally{pollFlightV359=false}
+ }
+ setInterval(changePollV359,8000);
+ window.changePollV359=changePollV359;
  window.cloudSyncNowV357=async()=>{const r=await syncV317(true);return r};
 
  // Detect package-array changes immediately after persist/normal UI save.
