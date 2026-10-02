@@ -4437,7 +4437,7 @@ html body nav .nav,html body .navMoreBtnV360{align-items:center!important;gap:10
 .planToolsV362{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 10px}
 .planLegendV362{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
 .planEmptyV362{padding:22px;border:1px dashed var(--line);border-radius:14px;background:#fff;line-height:1.5}
-.planScrollV362{overflow:auto;max-height:calc(100vh - 230px);border:1px solid var(--line);border-radius:14px;background:#fff;-webkit-overflow-scrolling:touch}
+.planScrollV362{overflow:auto;max-height:none;border:1px solid var(--line);border-radius:14px;background:#fff;-webkit-overflow-scrolling:touch}
 .planInnerV362{position:relative}
 .planHeadV362{display:flex;position:sticky;top:0;z-index:6;background:#f1f5f2;border-bottom:1px solid var(--line)}
 .planCornerV362{position:sticky;left:0;z-index:7;background:#f1f5f2;display:flex;align-items:flex-end;padding:0 12px 8px;font-size:13px;font-weight:600;color:var(--mut);border-right:1px solid var(--line);box-sizing:border-box;flex:0 0 auto}
@@ -4519,6 +4519,16 @@ html body nav .nav,html body .navMoreBtnV360{align-items:center!important;gap:10
 .planMsWarnV364{margin:10px 0;padding:10px 12px;border-radius:10px;background:#fde3e1;color:#7d1a10;line-height:1.4}
 .planMsOkV364{margin:10px 0;padding:10px 12px;border-radius:10px;background:#e3f2e5;color:#174a1b}
 .planMsDoneV364 span{display:flex;gap:8px;align-items:center;font-weight:400}
+
+/* V366 · Planung bildschirmfüllend, Ziehen zum Navigieren */
+html body .projectsShell.planWideV366{max-width:none!important;padding-left:16px!important;padding-right:16px!important}
+html body .projectsShell.planWideV366 > *{max-width:none!important}
+html body .projectsShell.planWideV366 .projectDetailBody,html body .projectsShell.planWideV366 .projectTabPanel{max-width:none!important;width:auto!important}
+.planScrollV362{cursor:grab}
+.planScrollV362.panningV366{cursor:grabbing;user-select:none}
+.planScrollV362.panningV366 *{cursor:grabbing!important}
+.planScrollV362 .planBarV362,.planScrollV362 .planLabelV362,.planScrollV362 button{cursor:pointer}
+.planMsRowV364 .planLabelV362{align-content:start;padding-top:8px}
 </style>
 
 <script id="toastV358">
@@ -4576,7 +4586,7 @@ html body nav .nav,html body .navMoreBtnV360{align-items:center!important;gap:10
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V365</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V366</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -4790,7 +4800,7 @@ html body nav .nav,html body .navMoreBtnV360{align-items:center!important;gap:10
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V365</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V366</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7519,7 +7529,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V365</b></p><div class="releaseNote"><b>Neu in V365</b><br>Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V366</b></p><div class="releaseNote"><b>Neu in V366</b><br>Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -8737,12 +8747,14 @@ function setProjectsHomeTab(tab='active'){
  projectsHomeActiveTab=['active','plan','analysis','archive'].includes(tab)?tab:'active';
  document.querySelectorAll('[data-project-home-tab]').forEach(b=>b.classList.toggle('active',b.dataset.projectHomeTab===projectsHomeActiveTab));
  ['active','plan','analysis','archive'].forEach(k=>E('projectsHomeTab'+k[0].toUpperCase()+k.slice(1))?.classList.toggle('active',k===projectsHomeActiveTab));
+ E('projectsHome')?.classList.toggle('planWideV366',projectsHomeActiveTab==='plan');
  if(projectsHomeActiveTab==='plan')window.renderPlanOverviewV362?.();
 }
 function setProjectDetailTab(tab='overview'){
  projectDetailActiveTab=['overview','plan','commissions'].includes(tab)?tab:'overview';
  document.querySelectorAll('[data-project-detail-tab]').forEach(b=>b.classList.toggle('active',b.dataset.projectDetailTab===projectDetailActiveTab));
  document.querySelectorAll('.projectDetailTabPanel').forEach(p=>p.classList.toggle('active',p.dataset.projectDetailPanel===projectDetailActiveTab));
+ E('projectDetail')?.classList.toggle('planWideV366',projectDetailActiveTab==='plan');
  if(projectDetailActiveTab==='plan')window.renderProjectPlanV362?.();
 }
 function setCommissionDetailTab(tab='overview'){
@@ -20949,15 +20961,23 @@ document.addEventListener('DOMContentLoaded',()=>{
  }
  function lateMilestonesFor(p,s){return milestones(p).filter(m=>{const i=msInfo(p,m);return i.state!=='done'&&i.late.some(x=>x.id===s.id)})}
  function msLabel(m){return m.name||'Meilenstein'}
+ const MS_LANE_H=24;
+ function msLanes(days,list){ // weist jedem Meilenstein eine Zeile zu, damit nichts überlappt
+   const items=list.map(m=>({m,i:days.indexOf(prevWork(m.date))})).filter(x=>x.i>=0).sort((a,b)=>a.i-b.i||String(a.m.name).localeCompare(String(b.m.name)));
+   const ends=[];items.forEach(x=>{const x0=(x.i+1)*DW-11,x1=x0+30+Math.min(260,String(msLabel(x.m)).length*7.4);let lane=ends.findIndex(e=>e<x0-6);if(lane<0){lane=ends.length;ends.push(0)}ends[lane]=x1;x.lane=lane;x.x=x0});
+   return {items,lanes:Math.max(1,ends.length)};
+ }
+ function msRowHeight(days,list){return list.length?10+msLanes(days,list).lanes*MS_LANE_H:0}
  function msRowHtml(p,days,list,editable){
    if(!list.length)return '';
-   const pid=esc(p.id);
-   const items=list.map(m=>{const k=prevWork(m.date),i=days.indexOf(k);if(i<0)return '';const info=msInfo(p,m);
-     return `<button type="button" class="planMsV364 ms-${info.state}" style="left:${(i+1)*DW-11}px" onclick="openPlanMilestoneV364('${pid}','${esc(m.id)}')" title="${esc(msLabel(m))} · spätestens ${fmtD(m.date)}${info.state==='late'?' · ⚠ '+(info.late.length?info.late.length+' Schritt(e) enden zu spät':'Termin überschritten'):info.state==='done'?' · erledigt':''}"><i></i><span>${esc(msLabel(m))}</span></button>`}).join('');
-   return `<div class="planRowV362 planMsRowV364"><div class="planLabelV362" style="width:${LABELW}px"><b>◆ Meilensteine</b></div><div class="planTrackV362" style="width:${days.length*DW}px">${items}</div></div>`;
+   const pid=esc(p.id),L=msLanes(days,list),h=msRowHeight(days,list);
+   const items=L.items.map(({m,i,lane})=>{const info=msInfo(p,m);
+     return `<button type="button" class="planMsV364 ms-${info.state}" style="left:${(i+1)*DW-11}px;top:${5+lane*MS_LANE_H}px" onclick="openPlanMilestoneV364('${pid}','${esc(m.id)}')" title="${esc(msLabel(m))} · spätestens ${fmtD(m.date)}${info.state==='late'?' · ⚠ '+(info.late.length?info.late.length+' Schritt(e) enden zu spät':'Termin überschritten'):info.state==='done'?' · erledigt':''}"><i></i><span>${esc(msLabel(m))}</span></button>`}).join('');
+   return `<div class="planRowV362 planMsRowV364" style="height:${h}px"><div class="planLabelV362" style="width:${LABELW}px"><b>◆ Meilensteine</b></div><div class="planTrackV362" style="width:${days.length*DW}px">${items}</div></div>`;
  }
  function msLinesHtml(p,days,list,top,height){
-   return list.map(m=>{const i=days.indexOf(prevWork(m.date));if(i<0)return '';const st=msInfo(p,m).state;return `<div class="planMsLineV364 ms-${st}" style="left:${LABELW+(i+1)*DW-1}px;top:${top}px;height:${height}px"></div>`}).join('');
+   const seen=new Set();
+   return list.map(m=>{const i=days.indexOf(prevWork(m.date));if(i<0)return '';const st=msInfo(p,m).state;if(seen.has(i+st))return '';seen.add(i+st);return `<div class="planMsLineV364 ms-${st}" style="left:${LABELW+(i+1)*DW-1}px;top:${top}px;height:${height}px"></div>`}).join('');
  }
  function barHtml(p,s,idx,days,editable){
    const i0=days.indexOf(nextWork(s.start));if(i0<0)return '';
@@ -21013,7 +21033,7 @@ document.addEventListener('DOMContentLoaded',()=>{
      y+=HEADH;
      const msList=milestones(p).filter(m=>m.date&&(!m.floorId||m.floorId===f.id||(!f.id&&!floorsOf(p,false).some(x=>x.id===m.floorId))));
      const secTop=y;
-     let rows=msRowHtml(p,days,msList,editable);if(rows)y+=34;
+     let rows=msRowHtml(p,days,msList,editable);if(rows)y+=msRowHeight(days,msList);
      steps.forEach(s=>{pos[s.id]=y;all.push(s);rows+=`<div class="planRowV362">${rowLabel(p,s)}<div class="planTrackV362" style="width:${days.length*DW}px">${barHtml(p,s,0,days,editable)}</div></div>`;y+=ROWH});
      if(!steps.length){rows=`<div class="planRowV362 planFloorEmptyV363"><div class="planLabelV362" style="width:${LABELW}px"><span>Noch keine Schritte</span></div><div class="planTrackV362" style="width:${days.length*DW}px">${editable?`<div class="planFloorEmptyBtnsV363"><button class="btn secondary" type="button" onclick="openPlanStepV362('${pid}','','${fid}')">+ Arbeitsschritt</button><button class="btn secondary" type="button" onclick="insertPlanTemplateV362('${pid}','${fid}')">Vorlage Holzbau einfügen</button></div>`:''}</div></div>`;y+=ROWH}
      html+=`<section class="planFloorV363">${headerHtml(days,corner)}${rows}${msLinesHtml(p,days,msList,HEADH,y-secTop)}</section>`;
@@ -21029,6 +21049,7 @@ document.addEventListener('DOMContentLoaded',()=>{
      <svg class="planDepsV362" width="${days.length*DW}" height="${y}" style="left:${LABELW}px;top:0">${paths}</svg>
      <section class="planFloorV363 planLoadSectionV363">${loadRowHtml(days,k=>load(p,k),k=>capacity(p,k),'Auslastung gesamt')}</section></div></div>`;
    bind(host,days,editable);
+   afterRender();
    scrollToday(false);
  }
  window.addPlanFloorV363=function(pid){
@@ -21067,7 +21088,8 @@ document.addEventListener('DOMContentLoaded',()=>{
    if(!projects.length){host.innerHTML='<div class="planEmptyV362"><b>Noch keine Projekte geplant.</b><br>Öffne ein Projekt und wähle den Reiter «Planung».</div>';return}
    const days=range(projects);let rows='',r=0;const items=[];
    projects.forEach(p=>{
-     rows+=`<div class="planRowV362 planProjRowV362"><div class="planLabelV362" style="width:${LABELW}px" onclick="openProjectPlanV362('${esc(p.id)}')"><b>${esc(p.name||'Projekt')}</b><span>${esc([p.number,p.customer].filter(Boolean).join(' · '))}</span></div><div class="planTrackV362" style="width:${days.length*DW}px">${milestones(p).filter(m=>m.date).map(m=>{const i=days.indexOf(prevWork(m.date));if(i<0)return '';const info=msInfo(p,m);return `<span class="planMsV364 ms-${info.state} static" style="left:${(i+1)*DW-11}px" title="${esc(msLabel(m))} · spätestens ${fmtD(m.date)}"><i></i><span>${esc(msLabel(m))}</span></span>`}).join('')}</div></div>`;r++;
+     const projMsH=Math.max(46,12+msLanes(days,milestones(p).filter(m=>m.date)).lanes*MS_LANE_H);
+     rows+=`<div class="planRowV362 planProjRowV362" style="height:${projMsH}px"><div class="planLabelV362" style="width:${LABELW}px" onclick="openProjectPlanV362('${esc(p.id)}')"><b>${esc(p.name||'Projekt')}</b><span>${esc([p.number,p.customer].filter(Boolean).join(' · '))}</span></div><div class="planTrackV362" style="width:${days.length*DW}px">${(()=>{const L=msLanes(days,milestones(p).filter(m=>m.date));return L.items.map(({m,i,lane})=>{const info=msInfo(p,m);return `<span class="planMsV364 ms-${info.state} static" style="left:${(i+1)*DW-11}px;top:${6+lane*MS_LANE_H}px" title="${esc(msLabel(m))} · spätestens ${fmtD(m.date)}"><i></i><span>${esc(msLabel(m))}</span></span>`}).join('')})()}</div></div>`;r++;
      floorsOf(p).forEach(f=>{const st=sortSteps(plan(p).steps.filter(s=>floorIdOf(p,s)===f.id));if(!st.length)return;
        rows+=`<div class="planRowV362 planFloorRowV363"><div class="planLabelV362" style="width:${LABELW}px"><b>${esc(f.name)}</b></div><div class="planTrackV362" style="width:${days.length*DW}px"></div></div>`;
        st.forEach(s=>{rows+=`<div class="planRowV362">${rowLabel(p,s)}<div class="planTrackV362" style="width:${days.length*DW}px">${barHtml(p,s,0,days,false)}</div></div>`;r++})});
@@ -21076,8 +21098,36 @@ document.addEventListener('DOMContentLoaded',()=>{
    host.innerHTML=`<div class="planToolsV362"><span class="muted">Alle aktiven Projekte mit Planung. Zum Bearbeiten ein Projekt antippen.</span><button class="btn secondary" type="button" onclick="scrollPlanTodayV362()">Heute</button></div>
    <div class="planScrollV362" id="planScrollV362"><div class="planInnerV362" style="width:${LABELW+days.length*DW}px">${headerHtml(days)}${todayCol(days)}${rows}${loadRowHtml(days,k=>projects.reduce((n,p)=>n+load(p,k),0),cap,'Auslastung gesamt')}</div></div>`;
    host.querySelectorAll('.planBarV362').forEach(b=>b.addEventListener('click',()=>openProjectPlanV362(b.dataset.project)));
+   afterRender();
    scrollToday(false);
  }
+ /* V366: Tabelle füllt den verfügbaren Bildschirm, Navigation per Maus: klicken und ziehen. */
+ function fitHeight(){
+   const sc=E('planScrollV362');if(!sc||!sc.offsetParent)return;
+   const top=sc.getBoundingClientRect().top;
+   sc.style.height=Math.max(320,Math.floor(window.innerHeight-top-14))+'px';
+ }
+ window.addEventListener('resize',()=>{clearTimeout(window.__planFitV366);window.__planFitV366=setTimeout(fitHeight,120)});
+ function attachPan(sc){
+   if(!sc||sc.dataset.panV366)return;sc.dataset.panV366='1';
+   let st=null;
+   sc.addEventListener('pointerdown',ev=>{
+     if(ev.pointerType!=='mouse'||ev.button!==0)return;
+     if(ev.target.closest('.planBarV362,button,a,input,select,textarea,summary,details,label'))return;
+     st={x:ev.clientX,y:ev.clientY,l:sc.scrollLeft,t:sc.scrollTop,moved:false};
+   });
+   window.addEventListener('pointermove',ev=>{
+     if(!st)return;const dx=ev.clientX-st.x,dy=ev.clientY-st.y;
+     if(!st.moved&&Math.abs(dx)+Math.abs(dy)<5)return;
+     if(!st.moved){st.moved=true;sc.classList.add('panningV366')}
+     sc.scrollLeft=st.l-dx;sc.scrollTop=st.t-dy;ev.preventDefault();
+   });
+   window.addEventListener('pointerup',()=>{
+     if(!st)return;const moved=st.moved;st=null;sc.classList.remove('panningV366');
+     if(moved){const stop=e=>{e.stopPropagation();e.preventDefault()};sc.addEventListener('click',stop,{capture:true,once:true});setTimeout(()=>sc.removeEventListener('click',stop,{capture:true}),50)}
+   });
+ }
+ function afterRender(){const sc=E('planScrollV362');attachPan(sc);fitHeight();requestAnimationFrame(fitHeight)}
  function scrollToday(smooth){
    const sc=E('planScrollV362');if(!sc)return;const t=sc.querySelector('.planTodayV362');if(!t)return;
    const x=parseFloat(t.style.left)-LABELW-DW*3;sc.scrollTo({left:Math.max(0,x),behavior:smooth?'smooth':'auto'});
@@ -32070,7 +32120,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V365';
+   if(v)v.textContent='Aktuelle Version: V366';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
