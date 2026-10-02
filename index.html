@@ -5,7 +5,7 @@
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; form-action 'self'; img-src 'self' data: blob: https://*.supabase.co; connect-src 'self' https://*.supabase.co; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; font-src 'self' data:; media-src 'self' data: blob:; worker-src 'self' blob:; upgrade-insecure-requests">
 <!-- V406: Transporte direkt unter der Projekterfassung -->
-<title>Künzli Lagerverwaltung · BV2026-1-228</title>
+<title>Künzli Logistik</title>
 <style>
 :root{--g:#173f32;--bg:#f3f5f3;--line:#d8ded9;--mut:#6a746e;--red:#df3428}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:#17201c}button,input,select,textarea{font:inherit}
@@ -25,7 +25,7 @@ header{background:#fff;border-bottom:1px solid var(--line);padding:11px 16px;dis
 .productionHotspot:hover{fill:rgba(255,255,255,.12);stroke-width:.28}
 .productionHotspot.moving{cursor:move;fill:rgba(242,165,22,.28);stroke:#f2a516;stroke-width:.5}
 .productionHotspotText{pointer-events:auto;fill:#fff;font-size:1.55px;font-weight:900;paint-order:stroke;stroke:rgba(0,0,0,.22);stroke-width:.08px;cursor:pointer;pointer-events:auto;user-select:none}
-.areaReserveBox{fill:#f2a516;stroke:white;stroke-width:.18;pointer-events:none}.statusbadge{display:inline-block;padding:3px 7px;border-radius:999px;font-size:11px;font-weight:800;background:#eef2ef}.roleAdmin{background:#e8ddf2;color:#5d2f82}.roleLager{background:#dce9f7;color:#27567e}.roleMitarbeiter{background:#e7f3e2;color:#2f6c24}.lockedCard{opacity:.55;pointer-events:none}.st-kommission{background:#fff1d7;color:#8b5d00}.st-lagerware{background:#e7f3e2;color:#2f6c24}.st-aufgebraucht{background:#f4e3e1;color:#9a3429}
+.areaReserveBox{fill:#f2a516;stroke:white;stroke-width:.18;pointer-events:none}.statusbadge{display:inline-block;padding:3px 7px;border-radius:999px;font-size:11px;font-weight:800;background:#eef2ef}.roleAdmin{background:#e9edeb;color:#24352d}.roleLager{background:#e9edeb;color:#24352d}.roleMitarbeiter{background:#e9edeb;color:#24352d}.lockedCard{opacity:.55;pointer-events:none}.st-kommission{background:#fff1d7;color:#8b5d00}.st-lagerware{background:#e7f3e2;color:#2f6c24}.st-aufgebraucht{background:#f4e3e1;color:#9a3429}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:9px 0}
 .syncBadge{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800;background:#eef2ef;color:#355}
 .syncBadge.syncing{background:#fff1d7;color:#8b5d00}
@@ -130,7 +130,7 @@ body.accessLocked #authModal .manageHead > button{
   display:none !important;
 }
 body.accessLocked #authModal .manageHead h2::before{
-  content:"KÜNZLI LOGISTIK · ";
+  content:"Künzli Logistik · ";
   color:#0f4d3c;
   font-weight:950;
 }
@@ -3472,7 +3472,7 @@ select,input,textarea{min-height:40px}
      Daten-/Storage-Keys und Supabase-Strukturen bleiben unverändert. -->
 <script>
 window.APP_RELEASE = {
-  name: 'Künzli Lagerverwaltung',
+  name: 'Künzli Logistik',
   version: '1.1.1',
   basis: 'V310',
   releasedAt: '2026-09-10'
@@ -4251,7 +4251,8 @@ html body .manageLinkCardV355 span{display:block;margin-top:3px;font-size:13px;c
   html body .app > nav{width:186px!important;min-width:186px!important}
   html body .app{grid-template-columns:186px minmax(0,1fr)!important}
   html body .app > nav .navGroupLabel{text-align:left!important;padding-left:12px!important}
-  html body .app > nav .nav{display:flex!important;align-items:center!important;justify-content:flex-start!important;text-align:left!important;gap:8px!important;padding:10px 12px!important;font-size:15px!important}
+  html body .app > nav .nav:not([style*="none"]):not(.permHiddenV115){display:flex!important}
+  html body .app > nav .nav{align-items:center!important;justify-content:flex-start!important;text-align:left!important;gap:8px!important;padding:10px 12px!important;font-size:15px!important}
 }
 html body .app main > header .actions{align-items:center!important}
 html body .app main > header .statusbadge,html body .app main > header .syncBadge{display:inline-flex;align-items:center;line-height:1.1}
@@ -4274,7 +4275,7 @@ html body #moduleHome.open{align-items:flex-start!important}
 html body #moduleHome .moduleHomeInner{margin-top:auto!important;margin-bottom:auto!important;padding-top:12px}
 html body #moduleHome .moduleHomeDashboard:has(> .homeTodoCard[style*="none"]){grid-template-columns:minmax(0,1fr)!important}
 html body #moduleHome .moduleHomeDashboard:has(> .homeTodoCard[style*="none"]) > .moduleTilesVisual{max-width:1100px;margin:0 auto!important}
-html body #moduleHome .moduleVisualBody b{font-size:clamp(19px,1.9vw,24px)!important;overflow-wrap:anywhere;hyphens:auto}
+html body #moduleHome .moduleVisualBody b{font-size:clamp(19px,1.9vw,24px)!important;overflow-wrap:normal;word-break:normal;hyphens:auto;-webkit-hyphens:auto}
 html body #moduleHome #moduleToolsTile.moduleToolsTextOnlyV422{display:flex!important;flex-direction:column!important;min-height:0!important}
 html body #moduleHome #moduleToolsTile.moduleToolsTextOnlyV422::before{content:"🛠";display:grid;place-items:center;flex:0 0 190px;height:190px;font-size:72px;background:linear-gradient(135deg,#e7f0eb,#cfe0d6)}
 html body #moduleHome #moduleToolsTile.moduleToolsTextOnlyV422 .moduleVisualBody{min-height:130px!important;justify-content:flex-start!important;padding:22px 70px 20px 24px!important}
@@ -4356,6 +4357,168 @@ html body #smallOrdersHome > .sectionToolbarCard,html body #smallOrdersHome > .s
 .toastV358 span{flex:1;min-width:0;overflow-wrap:anywhere}
 .toastV358 button{flex:0 0 auto;border:0;background:transparent;color:inherit;font-size:20px;line-height:1;cursor:pointer;padding:0 2px;opacity:.85}
 @keyframes toastInV358{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ===== V360 · Darstellung ===== */
+:root{--mut:#4d5953!important;--line:#cbd4ce!important}
+/* Schrift: drei Stufen (Titel 700 · Normaltext 400 · Hervorhebung 600) */
+html body{font-weight:400}
+html body h1,html body h2{font-weight:700!important}
+html body h3{font-weight:650!important}
+html body b,html body strong,html body th,html body label{font-weight:600!important}
+html body .btn,html body button{font-weight:600!important}
+html body .muted,html body small,html body .manageGroupHint,html body .dragHint,html body p{font-weight:400!important}
+html body .statusbadge,html body .syncBadge,html body .defectBadge{font-weight:600!important}
+html body #invTable td{font-weight:400!important}
+html body #invTable td > b{font-weight:600!important}
+html body .stat b,html body .kpiV360 b{font-weight:700!important}
+html body .navGroupLabel{font-weight:600!important}
+html body ::placeholder{color:#5e6963!important;opacity:1}
+html body .muted,html body .manageGroupHint,html body .dragHint{color:var(--mut)!important}
+/* Fixe Kopfzeile der Materialliste */
+@media(min-width:641px){
+  html body #page-inventory .tablewrap{max-height:calc(100vh - 150px);overflow:auto!important}
+  html body #page-inventory #invTable thead th{position:sticky!important;top:0!important;z-index:5!important;background:#f1f5f2!important;box-shadow:0 1px 0 var(--line)}
+}
+/* Filter-Chips */
+html body #page-inventory #areaFilter,html body #page-inventory #categoryFilterV471,html body #page-inventory #archiveFilter{display:none!important}
+html body #page-inventory .searchSelectWrap:has(> #areaFilter),html body #page-inventory .searchSelectWrap:has(> #categoryFilterV471),html body #page-inventory .searchSelectWrap:has(> #archiveFilter){display:none!important}
+.invChipsV360{display:grid;gap:6px;margin:6px 0 10px}
+.chipRowV360{display:flex;align-items:center;gap:8px;min-width:0}
+.chipLabelV360{flex:0 0 92px;font-size:13px;color:var(--mut);font-weight:600}
+.chipScrollV360{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin;min-width:0}
+.chipV360{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:#1d2d25;border-radius:999px;padding:7px 14px;font-size:14px;cursor:pointer;white-space:nowrap;min-height:36px}
+.chipV360.on{background:var(--g);border-color:var(--g);color:#fff}
+/* Kennzahlen */
+html body .statsActionV360 .kpiV360{text-align:left;border:1px solid var(--line);cursor:pointer;font:inherit;color:inherit;border-left-width:5px}
+html body .statsActionV360 div.kpiV360{cursor:default}
+html body .statsActionV360 .kpiRedV360{border-left-color:#c62828}
+html body .statsActionV360 .kpiYellowV360{border-left-color:#e0a100}
+html body .statsActionV360 .kpiGreenV360{border-left-color:#2e7d32}
+/* Feste Farbbedeutung */
+html body .syncBadge.ok{background:#e3f2e5!important;color:#1d5c25!important}
+html body .syncBadge.err{background:#fde3e1!important;color:#8e1c12!important}
+html body .reservedRow td{background:#fff8e1}
+/* Strich-Icons */
+.navIconV360{width:20px;height:20px;flex:0 0 20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html body nav .nav:not([style*="none"]):not(.permHiddenV115){display:flex!important}
+html body nav .nav,html body .navMoreBtnV360{align-items:center!important;gap:10px!important}
+.navMoreBtnV360{display:none!important;border:0;background:transparent;color:inherit;cursor:pointer}
+.navMoreSheetV360{display:none}
+/* «Weitere ▾» */
+.moreMenuV360{position:relative;display:inline-block}
+.moreMenuV360>summary{list-style:none;cursor:pointer}.moreMenuV360>summary::-webkit-details-marker{display:none}
+.moreMenuListV360{position:absolute;z-index:60;top:calc(100% + 6px);left:0;min-width:240px;display:grid;gap:6px;padding:8px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.14)}
+.moreMenuListV360 .btn{width:100%;text-align:left;justify-content:flex-start}
+/* Handy: 4 feste Einträge + Mehr, Tippflächen ≥ 44 px, Kontrast */
+@media(max-width:900px){
+  html body .app nav .nav.navSecondaryV360{display:none!important}
+  html body .app nav .nav,html body .app nav .navMoreBtnV360{flex:1 1 0!important;min-width:0!important;flex-direction:column!important;justify-content:center!important;gap:3px!important;font-size:12px!important;padding:6px 2px!important;min-height:60px!important;color:#fff}
+  html body .app nav .navMoreBtnV360{display:flex!important}
+  html body .app nav .navMoreBtnV360.active,html body .app nav .nav.active{background:rgba(255,255,255,.16)!important}
+  html body .app nav{overflow-x:hidden!important;height:auto!important;min-height:64px}
+  html body .app nav .defectNavBtn{position:relative}
+  html body .app nav .defectNavBtn .defectBadge{position:absolute;top:4px;right:calc(50% - 22px)}
+  .navMoreSheetV360{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.35);align-items:flex-end}
+  .navMoreSheetV360.open{display:flex}
+  .navMoreBoxV360{width:100%;background:#fff;border-radius:18px 18px 0 0;padding:10px 10px calc(76px + env(safe-area-inset-bottom));display:grid;gap:4px}
+  .navMoreItemV360{display:flex;align-items:center;gap:12px;min-height:52px;padding:0 14px;border:0;background:#fff;border-radius:12px;font-size:16px;color:#14251d;text-align:left}
+  .navMoreItemV360.active{background:#e8f0eb}
+  .navMoreItemV360 .navIconV360{width:22px;height:22px}
+  html body .btn,html body button.btn,html body select,html body input:not([type=checkbox]):not([type=radio]),html body summary.btn{min-height:44px!important}
+  html body input[type=checkbox],html body input[type=radio]{min-width:22px;min-height:22px}
+  html body .chipV360{min-height:42px;padding:8px 16px}
+  html body .chipLabelV360{flex-basis:78px}
+  html body{color:#0f1f18}
+}
+
+/* ===== V362 · Produktionsplanung ===== */
+#planStepModalV362,#cloudStatusV359{z-index:9600!important}
+.planHostV362{margin-top:12px}
+.planToolsV362{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 10px}
+.planLegendV362{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.planEmptyV362{padding:22px;border:1px dashed var(--line);border-radius:14px;background:#fff;line-height:1.5}
+.planScrollV362{overflow:auto;max-height:calc(100vh - 230px);border:1px solid var(--line);border-radius:14px;background:#fff;-webkit-overflow-scrolling:touch}
+.planInnerV362{position:relative}
+.planHeadV362{display:flex;position:sticky;top:0;z-index:6;background:#f1f5f2;border-bottom:1px solid var(--line)}
+.planCornerV362{position:sticky;left:0;z-index:7;background:#f1f5f2;display:flex;align-items:flex-end;padding:0 12px 8px;font-size:13px;font-weight:600;color:var(--mut);border-right:1px solid var(--line);box-sizing:border-box;flex:0 0 auto}
+.planDaysV362{flex:0 0 auto}
+.planWeeksV362,.planDayRowV362{display:flex}
+.planWeeksV362>div{height:22px;line-height:22px;font-size:12px;font-weight:600;padding-left:6px;border-left:1px solid var(--line);box-sizing:border-box;color:#24352d;white-space:nowrap;overflow:hidden}
+.planDayRowV362>div{height:30px;font-size:11px;text-align:center;line-height:1.15;color:#3c4a43;border-left:1px solid #e3e8e4;box-sizing:border-box;padding-top:2px}
+.planDayRowV362>div span{display:block;font-size:10px;color:var(--mut)}
+.planDayRowV362>div.mon{border-left:2px solid #b9c5be}
+.planDayRowV362>div.today{background:#163f30;color:#fff;border-radius:6px 6px 0 0}.planDayRowV362>div.today span{color:#d9eadf}
+.planTodayV362{position:absolute;top:0;bottom:0;background:rgba(22,63,48,.06);border-left:2px solid rgba(22,63,48,.45);pointer-events:none;z-index:1}
+.planRowV362{display:flex;height:46px;border-bottom:1px solid #edf1ee;position:relative}
+.planLabelV362{position:sticky;left:0;z-index:4;background:#fff;flex:0 0 auto;box-sizing:border-box;padding:4px 10px;border-right:1px solid var(--line);display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;align-content:center;column-gap:6px;cursor:pointer;overflow:hidden}
+.planLabelV362 b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.planLabelV362 span{grid-column:1;font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.planLabelV362 .planChipV362{grid-column:2;grid-row:1/3;align-self:center}
+.planProjRowV362{background:#f6f9f7}.planProjRowV362 .planLabelV362{background:#eef4f0}.planProjRowV362 .planLabelV362 b{font-size:15px}
+.planTrackV362{position:relative;flex:0 0 auto;background-image:linear-gradient(to right,#eef2ef 1px,transparent 1px);background-size:46px 100%}
+.planBarV362{position:absolute;top:7px;height:32px;border-radius:9px;border:1.5px solid;box-sizing:border-box;display:flex;align-items:center;overflow:hidden;cursor:pointer;touch-action:none;z-index:3;user-select:none}
+.planBarV362.dragging{opacity:.85;box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.planBarTextV362{position:relative;z-index:1;padding:0 10px;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.planBarFillV362{position:absolute;left:0;top:0;bottom:0;background:rgba(46,125,50,.28)}
+.planResizeV362{position:absolute;right:0;top:0;bottom:0;width:12px;cursor:ew-resize;background:linear-gradient(to right,transparent,rgba(0,0,0,.12));z-index:2}
+.planBarV362.st-open{background:#fff3c4;border-color:#d9a400;color:#5b4300}
+.planBarV362.st-progress{background:#e3f2e5;border-color:#2e7d32;color:#174a1b}
+.planBarV362.st-done{background:#2e7d32;border-color:#2e7d32;color:#fff}
+.planBarV362.st-blocked{background:#fde3e1;border-color:#c62828;color:#7d1a10}
+.planChipV362{font-style:normal;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid;white-space:nowrap}
+.planChipV362.st-open{background:#fff3c4;border-color:#d9a400;color:#5b4300}.planChipV362.st-progress{background:#e3f2e5;border-color:#2e7d32;color:#174a1b}
+.planChipV362.st-done{background:#2e7d32;border-color:#2e7d32;color:#fff}.planChipV362.st-blocked{background:#fde3e1;border-color:#c62828;color:#7d1a10}
+.planDepsV362{position:absolute;pointer-events:none;z-index:2;overflow:visible}
+.planDepsV362 path{fill:none;stroke:#5d6b64;stroke-width:1.6;stroke-dasharray:4 3}
+.planLoadV362{background:#fafbfa;height:40px}.planLoadV362 .planTrackV362{display:flex}.planLoadV362 .planLabelV362{background:#fafbfa}
+.planLoadCellV362{height:100%;display:flex;align-items:center;justify-content:center;font-size:11px;box-sizing:border-box;border-left:1px solid #eef2ef;color:#3c4a43}
+.planLoadCellV362.ok{background:#e9f4ea}.planLoadCellV362.over{background:#fde3e1;color:#8e1c12;font-weight:600}
+.planDialogV362{max-width:720px;width:calc(100vw - 24px);max-height:90vh;overflow:auto}
+.planFieldLabelV362{display:block;font-size:13px;font-weight:600;margin-bottom:4px}
+.planDepsListV362{display:grid;gap:4px;max-height:180px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:8px}
+.planDepsListV362 label{display:flex;gap:8px;align-items:center;font-weight:400!important}
+@media(max-width:700px){
+  .planLabelV362{padding:4px 8px}
+  .planLabelV362 .planChipV362{display:none}
+  .planScrollV362{max-height:calc(100vh - 260px)}
+  .planLegendV362{margin-left:0}
+}
+
+/* V363 · eine Tabelle pro Geschoss */
+.planFloorV363{position:relative}
+.planFloorV363+.planFloorV363{border-top:6px solid #e6ece8}
+.planCornerV362{align-items:center!important;padding:4px 8px 4px 12px!important;overflow:visible}
+.planFloorCornerV363{display:flex;flex-direction:column;justify-content:center;width:100%;min-width:0;gap:1px}
+.pfcTopV363{display:flex;align-items:center;gap:4px;min-width:0}
+.pfcTopV363 b{flex:1 1 auto;min-width:0;font-size:18px;line-height:1.15;color:#14251d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.planFloorCornerV363>span{font-size:12px;font-weight:400;color:var(--mut);line-height:1.2}
+.pfcBtnV363{flex:0 0 auto;display:inline-grid;place-items:center;border:1px solid var(--line);background:#fff;border-radius:8px;width:28px;height:28px;padding:0;font-size:16px;line-height:1;cursor:pointer;color:#24352d;list-style:none}
+.pfcMenuV363{position:relative}.pfcMenuV363>summary::-webkit-details-marker{display:none}
+.pfcMenuListV363{position:absolute;right:0;top:calc(100% + 4px);z-index:20;min-width:190px;display:grid;gap:2px;padding:6px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 28px rgba(0,0,0,.16)}
+.pfcMenuListV363 button{text-align:left;border:0;background:#fff;padding:9px 10px;border-radius:8px;font-size:14px;cursor:pointer;color:#14251d}
+.pfcMenuListV363 button:hover{background:#eef2ef}.pfcMenuListV363 button.danger{color:#8e1c12}
+.planFloorEmptyV363 .planLabelV362 span{font-style:italic}
+.planFloorEmptyBtnsV363{position:sticky;left:8px;display:inline-flex;gap:8px;align-items:center;height:100%;padding-left:8px}
+.planFloorEmptyBtnsV363 .btn{min-height:34px!important;padding:4px 12px}
+.planFloorRowV363{height:30px}.planFloorRowV363 .planLabelV362{background:#f6f9f7}.planFloorRowV363 .planLabelV362 b{font-size:13px;color:var(--mut)}
+.planDepFloorV363{font-size:11px;font-weight:600;background:#eef2ef;border-radius:6px;padding:1px 6px}
+.planLoadSectionV363{border-top:6px solid #e6ece8}
+.planHeadV362{z-index:8!important}
+@media(max-width:700px){.pfcTopV363 b{font-size:16px}.pfcBtnV363{width:30px;height:30px}}
+
+/* V364 · Meilensteine */
+#planMsModalV364{z-index:9600!important}
+.planMsRowV364{height:34px;background:#fcfcf8}.planMsRowV364 .planLabelV362{background:#fcfcf8}.planMsRowV364 .planLabelV362 b{font-size:13px}
+.planMsV364{position:absolute;top:7px;height:20px;display:flex;align-items:center;gap:5px;border:0;background:transparent;padding:0;cursor:pointer;z-index:5;white-space:nowrap}
+.planMsV364.static{cursor:default;top:12px}
+.planMsV364 i{display:block;width:16px;height:16px;transform:rotate(45deg);border:2px solid #fff;box-shadow:0 0 0 1.5px currentColor;background:currentColor;flex:0 0 16px;margin-left:3px}
+.planMsV364 span{font-size:12px;font-weight:600;background:rgba(255,255,255,.9);padding:1px 5px;border-radius:5px}
+.planMsV364.ms-ok{color:#1e4f8a}.planMsV364.ms-late{color:#c62828}.planMsV364.ms-done{color:#2e7d32}
+.planMsLineV364{position:absolute;width:0;border-left:2px dashed #1e4f8a;opacity:.55;pointer-events:none;z-index:2}.planMsLineV364.ms-late{border-left-color:#c62828;opacity:.7}.planMsLineV364.ms-done{border-left-color:#2e7d32}
+.planBarV362.lateV364{box-shadow:0 0 0 2px #c62828}
+.planMsWarnV364{margin:10px 0;padding:10px 12px;border-radius:10px;background:#fde3e1;color:#7d1a10;line-height:1.4}
+.planMsOkV364{margin:10px 0;padding:10px 12px;border-radius:10px;background:#e3f2e5;color:#174a1b}
+.planMsDoneV364 span{display:flex;gap:8px;align-items:center;font-weight:400}
 </style>
 
 <script id="toastV358">
@@ -4365,7 +4528,7 @@ html body #smallOrdersHome > .sectionToolbarCard,html body #smallOrdersHome > .s
    Eine Meldung direkt vor einem Neuladen wird nach dem Neuladen nochmals angezeigt. */
 (function(){
   var nativeAlert=window.alert.bind(window);
-  var WARN=/fehl|fehler|schutzstopp|keine berechtigung|nicht freigeschaltet|nicht gefunden|nicht möglich|ungültig|bitte|abgebrochen|konnte nicht|konflikt|gesperrt|achtung/i;
+  var WARN=/fehl|fehler|schutzstopp|keine berechtigung|nicht freigeschaltet|nicht gefunden|nicht möglich|ungültig|bitte|abgebrochen|konnte nicht|konflikt|gesperrt|achtung|kreis/i;
   function host(){var h=document.getElementById('toastHostV358');if(!h&&document.body){h=document.createElement('div');h.id='toastHostV358';h.setAttribute('role','status');h.setAttribute('aria-live','polite');document.body.appendChild(h)}return h}
   function show(msg){
     var h=host();if(!h){nativeAlert(msg);return}
@@ -4379,7 +4542,22 @@ html body #smallOrdersHome > .sectionToolbarCard,html body #smallOrdersHome > .s
     if(!warn)setTimeout(close,Math.min(9000,3500+text.length*30));
     try{sessionStorage.setItem('toastLastV358',JSON.stringify({t:Date.now(),m:text}))}catch(e){}
   }
-  window.alert=function(msg){show(msg)};
+  window.alert=function(msg){show(String(msg==null?'':msg).replace(/\bV\d{2,3}\b\s*(·\s*)?(?=[A-Za-zÄÖÜäöü„"(])/g,''))};
+  /* V360: Statusabzeichen zeigen nur Klartext; die technische Meldung bleibt im Tooltip. */
+  var NET=/failed to fetch|network|offline|internet|load failed|timeout|timed out|503|504|pgrst003|nicht verfügbar|verbindung/i;
+  function plain(el){
+    var t=String(el.textContent||'').trim(),title=String(el.title||'');
+    if(/konflikt/i.test(t)){var n=(t.match(/\d+/)||['1'])[0];return '⚠ '+n+(n==='1'?' Konflikt prüfen':' Konflikte prüfen')}
+    if(t==='Cloud aktuell'||t==='Offline – wird später gesendet'||t==='Cloud-Problem – antippen'||t==='Synchronisiere…'||t==='Nicht angemeldet')return t;
+    if(/fehler/i.test(t))return NET.test(title)?'Offline – wird später gesendet':'Cloud-Problem – antippen';
+    if(/unbekannt/i.test(t)){if(/sitzung|anmeld/i.test(title)&&!/nicht verfügbar/i.test(title))return 'Nicht angemeldet';return NET.test(title)||!title?'Offline – wird später gesendet':'Synchronisiere…'}
+    if(/diagnose|geprüft|prüfen|synchronisiere/i.test(t))return 'Synchronisiere…';
+    return t;
+  }
+  function watch(id){var el=document.getElementById(id);if(!el||el.dataset.plainV360)return;el.dataset.plainV360='1';
+    var fix=function(){var p=plain(el);if(p!==el.textContent)el.textContent=p};
+    new MutationObserver(fix).observe(el,{childList:true,characterData:true,subtree:true});fix()}
+  document.addEventListener('DOMContentLoaded',function(){watch('syncStatusBadge');watch('cloudManageStatus');setTimeout(function(){watch('syncStatusBadge');watch('cloudManageStatus')},1500)});
   window.nativeAlertV358=nativeAlert;
   document.addEventListener('DOMContentLoaded',function(){
     try{var x=JSON.parse(sessionStorage.getItem('toastLastV358')||'null');if(x&&Date.now()-x.t<4000)show(x.m);sessionStorage.removeItem('toastLastV358')}catch(e){}
@@ -4398,7 +4576,7 @@ html body #smallOrdersHome > .sectionToolbarCard,html body #smallOrdersHome > .s
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V359</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V365</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -4612,7 +4790,7 @@ html body #smallOrdersHome > .sectionToolbarCard,html body #smallOrdersHome > .s
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V359</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V365</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -4651,10 +4829,12 @@ html body #smallOrdersHome > .sectionToolbarCard,html body #smallOrdersHome > .s
  </div>
  <div class="projectMainTabs" id="projectsHomeTabs" role="tablist" aria-label="Projektbereiche">
    <button class="projectMainTab active" type="button" data-project-home-tab="active" onclick="setProjectsHomeTab('active')">Aktive Projekte</button>
+   <button class="projectMainTab" type="button" data-project-home-tab="plan" onclick="setProjectsHomeTab('plan')">Planung</button>
    <button class="projectMainTab" type="button" data-project-home-tab="analysis" onclick="setProjectsHomeTab('analysis')">Produktionsanalyse</button>
    <button class="projectMainTab" type="button" data-project-home-tab="archive" onclick="setProjectsHomeTab('archive')">Archiv</button>
  </div>
  <div id="projectsHomeTabActive" class="projectTabPanel active"><div id="projectCards" class="projectCards"></div></div>
+ <div id="projectsHomeTabPlan" class="projectTabPanel"><div id="planOverviewV362" class="planHostV362"></div></div>
  <div id="projectsHomeTabAnalysis" class="projectTabPanel"><div id="productionAnalysisOverview" class="productionAnalysisOverview"></div></div>
  <div id="projectsHomeTabArchive" class="projectTabPanel"><div id="projectArchiveWrap" style="display:none"><h2>Archiv</h2><div id="projectArchiveCards" class="projectCards"></div></div></div>
 </div>
@@ -4682,20 +4862,22 @@ html body #smallOrdersHome > .sectionToolbarCard,html body #smallOrdersHome > .s
 </div>
 
 <div class="app">
-<nav><div class="brand">HOLZ<br>LAGER</div>
+<nav><div class="brand">Künzli<br>Logistik</div>
 <div class="navGroupLabel">Lager</div>
-<button class="nav active" data-page="map">⌖ Karte</button>
-<button class="nav" data-page="inventory">▦ Material</button>
-<button class="nav" data-page="reserved">◆ Reserviert</button>
+<button class="nav active" data-page="map"><svg class="navIconV360" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.6-6-10.5A6 6 0 0 1 18 10.5C18 15.4 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.2"/></svg><span>Karte</span></button>
+<button class="nav" data-page="inventory"><svg class="navIconV360" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 3.5l8 4v9l-8 4-8-4z"/><path d="M4 7.5l8 4 8-4M12 11.5v9"/></svg><span>Material</span></button>
+<button class="nav" data-page="reserved"><svg class="navIconV360" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10v17l-5-3.5-5 3.5z"/></svg><span>Reserviert</span></button>
 <div class="navGroupLabel">Kontrolle</div>
 <!-- V340: Lager-/Inventarkontrolle aus Navigation entfernt; Bestandsdaten bleiben erhalten. -->
-<button class="nav defectNavBtn" data-page="defects">⚠ Mängel <span id="defectOpenBadge" class="defectBadge" style="display:none">0</span></button>
+<button class="nav defectNavBtn" data-page="defects"><svg class="navIconV360" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 21 19.5H3z"/><path d="M12 10v4.5M12 17.2v.3"/></svg><span>Mängel</span> <span id="defectOpenBadge" class="defectBadge" style="display:none">0</span></button>
 <div class="navGroupLabel">Historie</div>
-<button class="nav" data-page="transfers">↔ Umbuchungen</button>
-<button class="nav" data-page="archive">▣ Archiv</button>
+<button class="nav navSecondaryV360" data-page="transfers"><svg class="navIconV360" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h14l-3.5-3.5M20 16H6l3.5 3.5"/></svg><span>Umbuchungen</span></button>
+<button class="nav navSecondaryV360" data-page="archive"><svg class="navIconV360" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5h17v4h-17z"/><path d="M5 9v10.5h14V9M10 13h4"/></svg><span>Archiv</span></button>
 <div class="navGroupLabel">Verwaltung</div>
-<button class="nav" data-page="manage">⚙ Lagerverwaltung</button>
+<button class="nav navSecondaryV360" data-page="manage"><svg class="navIconV360" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"/></svg><span>Lagerverwaltung</span></button>
+<button class="navMoreBtnV360" type="button" onclick="toggleNavMoreV360()" aria-haspopup="true"><svg class="navIconV360" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="18.5" cy="12" r="1.3"/></svg><span>Mehr</span></button>
 </nav>
+<div id="navMoreSheetV360" class="navMoreSheetV360" onclick="if(event.target===this)toggleNavMoreV360(false)"><div class="navMoreBoxV360" role="menu"></div></div>
 <main>
 <header><div class="actions moduleTitleGroupV454"><button class="moduleChooserBtnV454" type="button" onclick="showModuleHome()" title="Bereichauswahl" aria-label="Bereichauswahl"><span aria-hidden="true">☰</span></button><button class="btn secondary" id="backBtn" onclick="goBack()" style="display:none">← Zurück</button><h1 id="title">Aussenlager</h1></div><div class="actions"><span id="syncStatusBadge" class="syncBadge" title="Speicherstatus">Lokal</span><button id="authHeaderBtn" class="btn secondary authBtn" onclick="openAuthModal()">Anmelden</button><span id="activeRoleBadge" class="statusbadge"></span><button class="btn secondary" id="drawBtn" onclick="startDraw()">+ Fläche erstellen</button><button class="btn" onclick="openMaterial()">+ Material erfassen</button></div></header>
 
@@ -4737,13 +4919,13 @@ html body #smallOrdersHome > .sectionToolbarCard,html body #smallOrdersHome > .s
 </div></section>
 
 <section class="page" id="page-inventory">
-<div class="stats"><div class="stat"><b id="sPkg">0</b><span>Pakete</span></div><div class="stat"><b id="sRack">0</b><span>Gestelle</span></div><div class="stat"><b id="sLvl">0</b><span>Ebenen</span></div><div class="stat"><b id="sMat">0</b><span>Materialarten</span></div></div>
+<div class="stats statsActionV360"><button type="button" class="stat kpiV360 kpiRedV360" onclick="showPage('defects')"><b id="kpiDefectsV360">0</b><span>Offene Mängel</span></button><button type="button" class="stat kpiV360 kpiYellowV360" onclick="showPage('reserved')"><b id="kpiReservedV360">0</b><span>Aktive Reservierungen</span></button><div class="stat kpiV360 kpiGreenV360"><b id="kpiCheckedV360">0</b><span id="kpiCheckedLabelV360">heute kontrolliert</span></div><button type="button" class="stat kpiV360 kpiRedV360" onclick="setInvFilterV360('noLocation')"><b id="kpiNoLocV360">0</b><span>Pakete ohne Lagerort</span></button></div><div hidden><b id="sPkg">0</b><b id="sRack">0</b><b id="sLvl">0</b><b id="sMat">0</b></div>
 <div class="card"><div class="toolbar"><input id="search" placeholder="Suchen" oninput="renderInv()"><select id="areaFilter" onchange="renderInv()"></select><select id="categoryFilterV471" onchange="renderInv()"><option value="">Alle Kategorien</option></select><select id="archiveFilter" onchange="renderInv()"><option value="active">Aktives Lager</option><option value="archive">Aufgebraucht / Archiv</option><option value="all">Alle Materialien</option></select><details class="exportMenuV355"><summary class="btn secondary">Exportieren ▾</summary><div class="exportMenuListV355">
 <button class="btn secondary" onclick="this.closest('details').open=false;csv()">CSV exportieren</button>
 <button class="btn secondary" onclick="this.closest('details').open=false;exportInventoryExcel()">Excel exportieren</button>
 <button class="btn secondary" onclick="this.closest('details').open=false;exportInventoryPDF()">PDF exportieren</button>
 </div></details>
-<button class="btn secondary" onclick="resetInventoryColumns()">Spalten zurücksetzen</button><label class="formatEditToggleV538" title="Länge, Breite und Höhe direkt im Materialinventar bearbeiten"><input type="checkbox" id="formatEditV538" onchange="toggleFormatEditV538(this.checked)"> <span>Formatbearbeitungen</span></label></div><div class="dragHint">Spalten per Drag & Drop verschieben · Spaltenbreite am Rand ziehen. Die Ansicht wird gespeichert.</div>
+<button class="btn secondary" onclick="resetInventoryColumns()">Spalten zurücksetzen</button><label class="formatEditToggleV538" title="Länge, Breite und Höhe direkt im Materialinventar bearbeiten"><input type="checkbox" id="formatEditV538" onchange="toggleFormatEditV538(this.checked)"> <span>Formatbearbeitungen</span></label></div><div id="invChipsV360" class="invChipsV360"></div><div class="dragHint">Spalten per Drag & Drop verschieben · Spaltenbreite am Rand ziehen. Die Ansicht wird gespeichert.</div>
 <div class="tablewrap"><table id="invTable"><thead><tr id="invHead"></tr></thead><tbody id="tbody"></tbody></table></div>
 <div class="sumBox">
   <b>Summe der aktuell angezeigten Materialien</b>
@@ -4935,15 +5117,18 @@ html body #smallOrdersHome > .sectionToolbarCard,html body #smallOrdersHome > .s
      <label class="full compactCheck"><input id="cloudAutoSync" type="checkbox"> Automatisch synchronisieren</label>
     </div>
     <div class="toolbar compactToolbar">
-     <button class="btn" onclick="saveCloudSettings()">Speichern</button>
-     <button class="btn secondary" onclick="openAuthModal()">Anmelden / Konto</button>
-     <button class="btn secondary" onclick="testCloudConnection()">Verbindung testen</button>
-     <button class="btn secondary" title="Gerät und Cloud in beide Richtungen abgleichen (objektweise, mit Konfliktschutz)" onclick="setSyncStatus('syncing','Abgleich gestartet');pushEntitySync(true)">⇅ Jetzt abgleichen</button>
-     <button class="btn secondary" onclick="pullEntitySync(true)">Cloud → Gerät</button>
-     <button class="btn secondary" type="button" onclick="downloadBackupV495()">Datensicherung herunterladen</button>
+     <button class="btn" title="Gerät und Cloud in beide Richtungen abgleichen (objektweise, mit Konfliktschutz)" onclick="setSyncStatus('syncing','Abgleich gestartet');pushEntitySync(true)">⇅ Jetzt abgleichen</button>
+     <button class="btn secondary" onclick="openCloudStatusV359()">Status & Konflikte</button>
+     <details class="moreMenuV360"><summary class="btn secondary">Weitere ▾</summary><div class="moreMenuListV360">
+     <button class="btn secondary" onclick="this.closest('details').open=false;openAuthModal()">Anmelden / Konto</button>
+     <button class="btn secondary" onclick="this.closest('details').open=false;pullEntitySync(true)">Cloud → Gerät (Vorschau)</button>
+     <button class="btn secondary" onclick="this.closest('details').open=false;testCloudConnection()">Verbindung testen</button>
+     <button class="btn secondary" type="button" onclick="this.closest('details').open=false;downloadBackupV495()">Datensicherung herunterladen</button>
      <input id="backupFileV495" type="file" accept=".json,application/json" style="display:none" onchange="restoreBackupV495(this.files&&this.files[0]);this.value=''">
-     <button class="btn secondary" type="button" onclick="E('backupFileV495').click()">Datensicherung wiederherstellen</button>
-     <button class="btn secondary" onclick="migrateLocalPhotosToCloud()">Fotos → Cloud</button>
+     <button class="btn secondary" type="button" onclick="this.closest('details').open=false;E('backupFileV495').click()">Datensicherung wiederherstellen</button>
+     <button class="btn secondary" onclick="this.closest('details').open=false;migrateLocalPhotosToCloud()">Fotos → Cloud</button>
+     <button class="btn secondary" onclick="this.closest('details').open=false;saveCloudSettings()">Einstellungen speichern</button>
+     </div></details>
     </div>
     <div class="manageStatusGrid">
      <div id="photoStorageState" class="authState muted">Fotos: lokale Speicherung / Cloud-Speicher noch nicht geprüft.</div>
@@ -5627,6 +5812,7 @@ html body #smallOrdersHome > .sectionToolbarCard,html body #smallOrdersHome > .s
      <label class="permissionCheck"><input type="checkbox" id="permProjectCreateV109"> Projekt erstellen</label>
      <label class="permissionCheck"><input type="checkbox" id="permCommissionV109"> Kommission</label>
      <label class="permissionCheck"><input type="checkbox" id="permProductionAnalysisV110"> Produktionsanalyse</label>
+     <label class="permissionCheck"><input type="checkbox" id="permProductionPlanEditV362"> Produktionsplanung bearbeiten</label>
     </div>
    </div>
 
@@ -6659,6 +6845,7 @@ function permissionFieldMap(){
   projectCreate:'permProjectCreateV109',
   commission:'permCommissionV109',
   productionAnalysis:'permProductionAnalysisV110',
+  productionPlanEdit:'permProductionPlanEditV362',
 
   smallOrderMaterialKuenzli:'permSmallOrderMaterialKuenzliV111',
   smallOrderMaterialImmer:'permSmallOrderMaterialImmerV111',
@@ -7332,7 +7519,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V359</b></p><div class="releaseNote"><b>Neu in V359</b><br>Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V365</b></p><div class="releaseNote"><b>Neu in V365</b><br>Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -8547,14 +8734,16 @@ let projectsHomeActiveTab='active';
 let projectDetailActiveTab='overview';
 let commissionDetailActiveTab='overview';
 function setProjectsHomeTab(tab='active'){
- projectsHomeActiveTab=['active','analysis','archive'].includes(tab)?tab:'active';
+ projectsHomeActiveTab=['active','plan','analysis','archive'].includes(tab)?tab:'active';
  document.querySelectorAll('[data-project-home-tab]').forEach(b=>b.classList.toggle('active',b.dataset.projectHomeTab===projectsHomeActiveTab));
- ['active','analysis','archive'].forEach(k=>E('projectsHomeTab'+k[0].toUpperCase()+k.slice(1))?.classList.toggle('active',k===projectsHomeActiveTab));
+ ['active','plan','analysis','archive'].forEach(k=>E('projectsHomeTab'+k[0].toUpperCase()+k.slice(1))?.classList.toggle('active',k===projectsHomeActiveTab));
+ if(projectsHomeActiveTab==='plan')window.renderPlanOverviewV362?.();
 }
 function setProjectDetailTab(tab='overview'){
- projectDetailActiveTab=['overview','commissions'].includes(tab)?tab:'overview';
+ projectDetailActiveTab=['overview','plan','commissions'].includes(tab)?tab:'overview';
  document.querySelectorAll('[data-project-detail-tab]').forEach(b=>b.classList.toggle('active',b.dataset.projectDetailTab===projectDetailActiveTab));
  document.querySelectorAll('.projectDetailTabPanel').forEach(p=>p.classList.toggle('active',p.dataset.projectDetailPanel===projectDetailActiveTab));
+ if(projectDetailActiveTab==='plan')window.renderProjectPlanV362?.();
 }
 function setCommissionDetailTab(tab='overview'){
  commissionDetailActiveTab=['overview','production','analysis'].includes(tab)?tab:'overview';
@@ -8782,8 +8971,10 @@ function openProjectDetail(id){
  E('projectDetailBody').innerHTML=`
   <div class="projectMainTabs projectDetailTabs" role="tablist" aria-label="Projektansicht">
    <button class="projectMainTab active" type="button" data-project-detail-tab="overview" onclick="setProjectDetailTab('overview')">Übersicht</button>
+   <button class="projectMainTab" type="button" data-project-detail-tab="plan" onclick="setProjectDetailTab('plan')">Planung</button>
    <button class="projectMainTab" type="button" data-project-detail-tab="commissions" onclick="setProjectDetailTab('commissions')">Kommissionen</button>
   </div>
+  <div class="projectTabPanel projectDetailTabPanel" data-project-detail-panel="plan"><div id="projectPlanV362" class="planHostV362"></div></div>
   <div class="projectTabPanel projectDetailTabPanel active" data-project-detail-panel="overview">
    <div class="projectSummaryCard"><h2>Projektangaben</h2>
     <p><b>Projektnummer:</b> ${esc(p.number||'–')}<br><b>PL:</b> ${esc(p.customer||'–')}<br><b>Start:</b> ${esc(p.startDate||'–')}<br><b>Erstellt von:</b> ${esc(p.createdByName||'Altprojekt')}</p>
@@ -10739,6 +10930,11 @@ function stableJson(v){
  if(Array.isArray(v))return '['+v.map(stableJson).join(',')+']';
  return '{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+stableJson(v[k])).join(',')+'}';
 }
+/* V365: Felder, die nur die Ansicht auf DIESEM Gerät betreffen (z.B. welche Kommission gerade offen ist),
+   werden nicht synchronisiert. Vorher erzeugte schon das Öffnen einer Kommission auf zwei Geräten einen Konflikt. */
+const PROJECT_UI_FIELDS_V365=['activePlanningCommissionId'];
+function projectSyncDataV365(p){if(!p||typeof p!=='object')return p;const c={...p};PROJECT_UI_FIELDS_V365.forEach(k=>delete c[k]);return c}
+function keepProjectUiFieldsV365(oldP,newP){if(oldP&&newP)PROJECT_UI_FIELDS_V365.forEach(k=>{if(oldP[k]!==undefined)newP[k]=oldP[k];else delete newP[k]});return newP}
 function localEntityMap(){
  let map={};
  entityCollections().forEach(type=>{
@@ -10752,7 +10948,7 @@ function localEntityMap(){
  (projectStore.projects||[]).forEach((obj,idx)=>{
    if(!obj||typeof obj!=='object')return;
    let id=obj.id||('project:'+idx);
-   map['projects|'+id]={type:'projects',id,data:obj};
+   map['projects|'+id]={type:'projects',id,data:projectSyncDataV365(obj)};
  });
  loadSmallOrders();
  (smallOrderStore.reports||[]).filter(r=>r&&typeof r==='object'&&r.cloudSync===true).forEach((obj,idx)=>{
@@ -11270,6 +11466,8 @@ function cloudReady(){
  return cloudCfg.mode==='supabase' && /^https:\/\/.+\.supabase\.co\/?$/.test(String(cloudCfg.url||'').trim()) && !!String(cloudCfg.anonKey||'').trim() && !!String(cloudCfg.warehouseId||'').trim() && !!authSession && !!cloudMember
 }
 function setSyncStatus(kind,msg){
+ /* V360: neutrale Meldungen („Cloud-Modus“ beim Öffnen der Einstellungen) überschreiben keinen echten Status mehr. */
+ if(!kind){const b=E('syncStatusBadge');if(b&&/\b(ok|err|syncing|warnV359)\b/.test(b.className))return;}
  lastCloudMessage=msg||'';
  /* V152: Fehler dort erfassen, wo der Cloud-Status tatsächlich gesetzt wird.
     pullEntitySync/pushEntitySync fangen Fehler intern ab, deshalb konnte V151 sie nicht sehen. */
@@ -17077,6 +17275,7 @@ function showPage(p,fromBack=false){
  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
  E('page-'+p).classList.add('active');
  document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x.dataset.page===p));
+ document.querySelector('.navMoreBtnV360')?.classList.toggle('active',!!document.querySelector('nav .nav.navSecondaryV360.active'));
  E('title').textContent=p==='map'?'Aussenlager':p==='production'?'Produktionshalle':p==='inventory'?'Materialübersicht':p==='control'?'Lagerkontrolle':p==='reserved'?'Reservierte Materialien':p==='archive'?'Materialarchiv':p==='defects'?'Mängel':p==='transfers'?'Interne Materialumbuchungen':'Lager verwalten';
  E('drawBtn').style.display=((p==='map'||p==='production')&&canManageStructure())?'inline-block':'none';
  /* V355: Zurück nur auf Unterseiten ohne eigenen Navigationspunkt (Fläche, Gestell …). */
@@ -18588,6 +18787,15 @@ function renameRack(id){if(!requireStructure())return;let r=st.racks.find(x=>x.i
 function saveRename(e){e.preventDefault();let name=E('renameValue').value.trim();if(!name)return;if(renameTarget.type==='area')st.areas.find(x=>x.id===renameTarget.id).name=name;else st.racks.find(x=>x.id===renameTarget.id).name=name;closeM('renameModal');persist();renderAreas();renderManage();if(renameTarget.type==='rack'&&currentRack===renameTarget.id)openRack(currentRack);
  /* V359: auch das offene Flächen-Panel sofort mit dem neuen Namen zeigen. */
  refreshOpenAreaPanelV359()}
+function toggleNavMoreV360(force){
+ const sh=E('navMoreSheetV360');if(!sh)return;
+ const open=typeof force==='boolean'?force:!sh.classList.contains('open');
+ if(open){
+   const items=[...document.querySelectorAll('nav .nav.navSecondaryV360')].filter(b=>b.style.display!=='none'&&!b.classList.contains('permHiddenV115'));
+   sh.querySelector('.navMoreBoxV360').innerHTML=items.length?items.map(b=>`<button type="button" class="navMoreItemV360${b.classList.contains('active')?' active':''}" onclick="toggleNavMoreV360(false);showPage('${b.dataset.page}')">${b.querySelector('svg')?.outerHTML||''}<span>${esc(b.querySelector('span')?.textContent||'')}</span></button>`).join(''):'<div class="muted" style="padding:12px">Keine weiteren Bereiche freigegeben.</div>';
+ }
+ sh.classList.toggle('open',open);
+}
 function refreshOpenAreaPanelV359(){
  const id=window.openAreaIdV359;if(!id)return;
  const a=st.areas.find(x=>x.id===id);if(!a)return;
@@ -19230,6 +19438,7 @@ function renderInv(){
    h=[p.elementId,ID_CATS[p.idCategory],p.material,p.width,p.height,p.length,linearMeters(p).toFixed(2),horizontalArea(p).toFixed(2),p.qty,p.project,p.packCode,(Array.isArray(p.usage)?p.usage:[]).join(' '),p.status,formatDateTime(p.createdAt),r?.name,areaName(r?.areaId),l?.name,...(Array.isArray(p.reservations)?p.reservations:[]).filter(Boolean).flatMap(x=>[x.project,x.who,x.note,x.qty])].join(' ').toLowerCase();
    let mode=E('archiveFilter')?.value||'active',archiveOk=mode==='all'||(mode==='archive'?p.status==='aufgebraucht':p.status!=='aufgebraucht');
    let categoryOk=!cf||String(p.idCategory||'')===cf;
+   if(invNoLocationV360&&!packageWithoutLocationV360(p))return false;
    return(!q||h.includes(q))&&(!af||r?.areaId===af)&&categoryOk&&archiveOk
  });
  const V=(p,k)=>{
@@ -19286,7 +19495,36 @@ function renderInv(){
  E('sPkg').textContent=st.packages.length;
  E('sRack').textContent=(st.racks||[]).filter(Boolean).length;
  E('sLvl').textContent=(st.racks||[]).filter(Boolean).reduce((n,r)=>n+(Array.isArray(r.levels)?r.levels.length:0),0);
- E('sMat').textContent=new Set((st.packages||[]).filter(Boolean).map(p=>String(p.material||'').trim().toLowerCase()).filter(Boolean)).size
+ E('sMat').textContent=new Set((st.packages||[]).filter(Boolean).map(p=>String(p.material||'').trim().toLowerCase()).filter(Boolean)).size;
+ renderInvKpisV360();renderInvChipsV360();
+}
+/* V360: Kennzahlen, die zum Handeln auffordern (statt Pakete/Gestelle/Ebenen/Materialarten). */
+function isTodayV360(v){if(!v)return false;const d=new Date(v);if(isNaN(d))return false;const n=new Date();return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()&&d.getDate()===n.getDate()}
+function packageWithoutLocationV360(p){const r=(st.racks||[]).find(x=>x&&x.id===p.rackId);return !p.rackId||!r}
+function renderInvKpisV360(){
+ const active=(st.packages||[]).filter(p=>p&&p.status!=='aufgebraucht');
+ const set=(id,v)=>{const e=E(id);if(e)e.textContent=String(v)};
+ try{set('kpiDefectsV360',typeof openDefectCount==='function'?openDefectCount():0)}catch(_e){set('kpiDefectsV360','–')}
+ set('kpiReservedV360',active.filter(p=>{try{return hasReservation(p)}catch(_e){return false}}).length);
+ set('kpiCheckedV360',active.filter(p=>isTodayV360(p.lastCheckedAt)).length);
+ const l=E('kpiCheckedLabelV360');if(l)l.textContent='von '+active.length+' heute kontrolliert';
+ set('kpiNoLocV360',active.filter(packageWithoutLocationV360).length);
+}
+/* V360: Filter als Chips. Die bisherigen Auswahlfelder bleiben (unsichtbar) die eine Datenquelle. */
+let invNoLocationV360=false;
+function setInvFilterV360(kind,value){
+ if(kind==='noLocation'){invNoLocationV360=!invNoLocationV360;if(currentPage!=='inventory')showPage('inventory');renderInv();return}
+ const sel=E(kind);if(!sel)return;sel.value=value;renderInv();
+}
+function renderInvChipsV360(){
+ const host=E('invChipsV360');if(!host)return;
+ const group=(label,id)=>{const sel=E(id);if(!sel||!sel.options.length)return '';
+   /* V361: Chips alphabetisch, «Alle» immer zuerst (Status behält seine logische Reihenfolge). */
+   let opts=[...sel.options];
+   if(id!=='archiveFilter'){const all=opts.filter(o=>o.value==='');opts=all.concat(opts.filter(o=>o.value!=='').sort((a,b)=>a.textContent.trim().localeCompare(b.textContent.trim(),'de-CH',{numeric:true,sensitivity:'base'})))}
+   return `<div class="chipRowV360"><span class="chipLabelV360">${label}</span><div class="chipScrollV360">${opts.map(o=>`<button type="button" class="chipV360${sel.value===o.value?' on':''}" onclick="setInvFilterV360('${id}','${esc(o.value)}')">${esc(o.textContent.replace(/^Alle .*/,'Alle'))}</button>`).join('')}</div></div>`};
+ host.innerHTML=group('Lagerfläche','areaFilter')+group('Kategorie','categoryFilterV471')+group('Status','archiveFilter')+
+   (invNoLocationV360?`<div class="chipRowV360"><span class="chipLabelV360">Aktiv</span><div class="chipScrollV360"><button type="button" class="chipV360 on" onclick="setInvFilterV360('noLocation')">Ohne Lagerort ✕</button></div></div>`:'');
 }
 function jump(rid,pid){
  if(typeof currentPermissions==='function' && currentPermissions().materialGoLocation!==true){alert('Für diese Aktion ist keine Berechtigung freigeschaltet.');return;}
@@ -20024,7 +20262,7 @@ async function exportInventoryExcel(){
    ws['!cols']=[12,23,24,11,11,11,11,11,9,20,16,18,14,11,9,20,22,13,20].map(w=>({wch:w}));
    let wb=XLSX.utils.book_new();
    XLSX.utils.book_append_sheet(wb,ws,'Gesamtinventar');
-   XLSX.writeFile(wb,`Holzlager_Gesamtinventar_${exportDateStamp()}.xlsx`);
+   XLSX.writeFile(wb,`Kuenzli_Logistik_Gesamtinventar_${exportDateStamp()}.xlsx`);
  }catch(err){
    let escXml=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
    let table='<table>'+rows.map((r,ri)=>'<tr>'+r.map(v=>`${ri===0?'<th>':'<td>'}${escXml(v)}${ri===0?'</th>':'</td>'}`).join('')+'</tr>').join('')+'</table>';
@@ -20034,7 +20272,7 @@ async function exportInventoryExcel(){
 
 </body></html>`;
    let b=new Blob(['\ufeff',html],{type:'application/vnd.ms-excel;charset=utf-8'}),a=document.createElement('a');
-   a.href=URL.createObjectURL(b);a.download=`Holzlager_Gesamtinventar_${exportDateStamp()}.xls`;a.click();
+   a.href=URL.createObjectURL(b);a.download=`Kuenzli_Logistik_Gesamtinventar_${exportDateStamp()}.xls`;a.click();
    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
  }
 }
@@ -20045,7 +20283,7 @@ async function exportInventoryPDF(){
    await loadExternalScript('https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js',()=>!!window.jspdf?.jsPDF?.API?.autoTable);
    const {jsPDF}=window.jspdf;
    let doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a3'});
-   doc.setFontSize(14);doc.text('Holzlager – Gesamtinventar',14,12);
+   doc.setFontSize(14);doc.text('Künzli Logistik – Gesamtinventar',14,12);
    doc.setFontSize(8);doc.text(`Export: ${formatDateTime(new Date().toISOString())} · Positionen: ${body.length}`,14,17);
    doc.autoTable({
      head,body,startY:21,
@@ -20059,14 +20297,14 @@ async function exportInventoryPDF(){
        doc.text(`Seite ${page}`,doc.internal.pageSize.getWidth()-22,doc.internal.pageSize.getHeight()-5);
      }
    });
-   doc.save(`Holzlager_Gesamtinventar_${exportDateStamp()}.pdf`);
+   doc.save(`Kuenzli_Logistik_Gesamtinventar_${exportDateStamp()}.pdf`);
  }catch(err){
    let win=window.open('','_blank');
    if(!win){alert('PDF-Fenster wurde vom Browser blockiert. Bitte Pop-ups für diese Seite erlauben.');return}
    let escHtml=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
    let table='<table><thead><tr>'+head[0].map(v=>`<th>${escHtml(v)}</th>`).join('')+'</tr></thead><tbody>'+
      body.map(r=>'<tr>'+r.map(v=>`<td>${escHtml(v)}</td>`).join('')+'</tr>').join('')+'</tbody></table>';
-   win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Holzlager Gesamtinventar</title><style>
+   win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Künzli Logistik – Gesamtinventar</title><style>
      @page{size:A3 landscape;margin:10mm}body{font-family:Arial,sans-serif;color:#111}h1{font-size:18px;margin:0 0 5px}p{font-size:9px}
      table{border-collapse:collapse;width:100%;font-size:6.5px}th,td{border:1px solid #777;padding:2px;vertical-align:top}th{background:#eee}
    
@@ -20306,7 +20544,7 @@ async function exportInventoryPDF(){
 .inventoryDimensionInputV538{width:92px;min-width:72px;padding:7px 8px;border:1px solid #8aa99b;border-radius:7px;background:#fff;font:inherit;text-align:right}
 .inventoryDimensionInputV538:focus{outline:2px solid rgba(21,88,63,.2);border-color:#15583f}
 </style>
-</head><body><h1>Holzlager – Gesamtinventar</h1><p>Export: ${escHtml(formatDateTime(new Date().toISOString()))} · Positionen: ${body.length}</p>${table}
+</head><body><h1>Künzli Logistik – Gesamtinventar</h1><p>Export: ${escHtml(formatDateTime(new Date().toISOString()))} · Positionen: ${body.length}</p>${table}
 
 
 </body></html>`);
@@ -20320,7 +20558,7 @@ function csv(){
  let txt=rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(';')).join('\n');
  let b=new Blob(['\ufeff',txt],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');
  a.href=URL.createObjectURL(b);
- a.download=`Holzlager_Gesamtinventar_${exportDateStamp()}.csv`;
+ a.download=`Kuenzli_Logistik_Gesamtinventar_${exportDateStamp()}.csv`;
  a.click();
  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
@@ -20606,6 +20844,405 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 </script>
+<script id="planV362">
+/* ===== V362 · Produktionsplanung (Arbeitsschritte × Arbeitstage), angelehnt an LCMD =====
+   Daten: je Projekt in p.schedV362 = {steps:[…]} → wird mit dem Projekt automatisch synchronisiert.
+   Schritt: {id,name,commissionId,start:'YYYY-MM-DD',days,crew,people:[],groupId,deps:[ids],status,note}
+   Status: open (geplant) · progress (in Arbeit) · done (erledigt) · blocked (blockiert)
+   Abhängigkeiten: Ende → Anfang. Verschieben/Verlängern schiebt Nachfolger automatisch nach.
+   Bearbeiten nur mit Recht «Produktionsplanung bearbeiten» (Administrator immer). */
+(function(){
+ const TEMPLATE=['Abbund','Wandelemente','Deckenelemente','Dachelemente','Verladung','Montage'];
+ const ST={open:'Geplant',progress:'In Arbeit',done:'Erledigt',blocked:'Blockiert'};
+ const DW=46,ROWH=46,HEADH=52;
+ let LABELW=230; const setLabelW=()=>{LABELW=window.innerWidth<=700?150:230};
+ let view={scope:'project',dragging:null};
+
+ /* ---------- Datum: nur Arbeitstage (Mo–Fr) ---------- */
+ const pad=n=>String(n).padStart(2,'0');
+ const key=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+ const parse=k=>{const [y,m,d]=String(k||'').split('-').map(Number);return new Date(y||1970,(m||1)-1,d||1,12)};
+ const isWork=d=>{const g=d.getDay();return g!==0&&g!==6};
+ function nextWork(k){let d=parse(k);while(!isWork(d))d.setDate(d.getDate()+1);return key(d)}
+ function addWork(k,n){let d=parse(nextWork(k));let left=Math.max(0,n|0);while(left>0){d.setDate(d.getDate()+1);if(isWork(d))left--}return key(d)}
+ function stepEnd(s){return addWork(s.start,Math.max(1,s.days|0)-1)}
+ function dayAfter(k){return addWork(k,1)}
+ function todayKey(){return key(new Date())}
+ function mondayOf(k){const d=parse(k);d.setDate(d.getDate()-((d.getDay()+6)%7));return key(d)}
+ function kw(d){const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const n=(t.getUTCDay()+6)%7;t.setUTCDate(t.getUTCDate()-n+3);const f=new Date(Date.UTC(t.getUTCFullYear(),0,4));return 1+Math.round(((t-f)/864e5-3+((f.getUTCDay()+6)%7))/7)}
+ function workdays(from,to){const out=[];let d=parse(nextWork(from));const e=parse(to);while(d<=e){if(isWork(d))out.push(key(d));d.setDate(d.getDate()+1)}return out}
+ const fmtD=k=>{const d=parse(k);return d.toLocaleDateString('de-CH',{weekday:'short',day:'numeric',month:'numeric'})};
+
+ /* ---------- Daten ---------- */
+ const canEdit=()=>{try{return !!currentPermissions().productionPlanEdit}catch(_e){return false}};
+ function plan(p,create){if(!p)return {steps:[]};if((!p.schedV362||!Array.isArray(p.schedV362.steps))&&create)p.schedV362={steps:[]};return p.schedV362&&Array.isArray(p.schedV362.steps)?p.schedV362:{steps:[]}}
+ const uid=()=>'ps_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+ const commissions=p=>Array.isArray(p?.planningCommissions)?p.planningCommissions:[];
+ function save(p){p.updatedAt=new Date().toISOString();saveProjects()}
+ function stepById(p,id){return plan(p).steps.find(s=>s.id===id)}
+ function wouldCycle(p,stepId,depId){ // depId als Vorgänger von stepId: Zyklus, wenn stepId (indirekt) Vorgänger von depId ist
+   const seen=new Set(),stack=[depId];
+   while(stack.length){const x=stack.pop();if(x===stepId)return true;if(seen.has(x))continue;seen.add(x);(stepById(p,x)?.deps||[]).forEach(d=>stack.push(d))}
+   return false;
+ }
+ function enforceDeps(p){
+   const steps=plan(p).steps;let moved=0;
+   for(let pass=0;pass<steps.length+1;pass++){
+     let changed=false;
+     steps.forEach(s=>{
+       const ends=(s.deps||[]).map(id=>stepById(p,id)).filter(Boolean).map(stepEnd);
+       if(!ends.length)return;
+       const earliest=dayAfter(ends.sort().pop());
+       if(s.start<earliest){s.start=earliest;changed=true;moved++}
+     });
+     if(!changed)break;
+   }
+   return moved;
+ }
+ function progress(p,s){
+   if(s.status==='done')return 100;
+   if(s.groupId){
+     const g=(p.productionPlan?.groups||[]).find(x=>x.id===s.groupId);
+     const els=g?.elements||[];
+     if(els.length){let n=0;els.forEach(e=>{try{if(productionElementIsDoneV460(p,e.id))n++}catch(_e){}});return Math.round(n*100/els.length)}
+   }
+   return null;
+ }
+ function capacity(p,date){ // verfügbare MA laut Mitarbeiterplanung (Summe aller Kommissionen); null = nicht geplant
+   let any=false,sum=0;
+   commissions(p).forEach(c=>{const d=(c.staffingDays||[]).find(x=>x.date===date);if(d){any=true;sum+=Math.max(0,Number(d.employees)||0)}});
+   return any?sum:null;
+ }
+ function load(p,date){return plan(p).steps.filter(s=>s.status!=='done'&&s.start<=date&&stepEnd(s)>=date).reduce((n,s)=>n+Math.max(0,Number(s.crew)||0),0)}
+
+ /* ---------- Darstellung ---------- */
+ function range(projects){
+   let min=mondayOf(addWork(todayKey(),-0)),max=addWork(todayKey(),40);
+   const t=parse(todayKey());t.setDate(t.getDate()-7);const lead=mondayOf(key(t));if(lead<min)min=lead;
+   projects.forEach(p=>plan(p).steps.forEach(s=>{const m=mondayOf(s.start);if(m<min)min=m;const e=addWork(stepEnd(s),10);if(e>max)max=e}));
+   projects.forEach(p=>(Array.isArray(plan(p).milestones)?plan(p).milestones:[]).forEach(m=>{if(!m.date)return;const a=mondayOf(m.date);if(a<min)min=a;const e=addWork(m.date,5);if(e>max)max=e}));
+   return workdays(min,max);
+ }
+ function headerHtml(days,corner){
+   const weeks=[];days.forEach((k,i)=>{const w=kw(parse(k));const last=weeks[weeks.length-1];if(last&&last.w===w)last.n++;else weeks.push({w,n:1,i})});
+   const t=todayKey();
+   return `<div class="planHeadV362" style="height:${HEADH}px"><div class="planCornerV362" style="width:${LABELW}px">${corner||'Arbeitsschritt'}</div><div class="planDaysV362" style="width:${days.length*DW}px">
+     <div class="planWeeksV362">${weeks.map(w=>`<div style="width:${w.n*DW}px">KW ${w.w}</div>`).join('')}</div>
+     <div class="planDayRowV362">${days.map(k=>{const d=parse(k);return `<div class="${k===t?'today':''}${d.getDay()===1?' mon':''}" style="width:${DW}px" title="${fmtD(k)}"><span>${['So','Mo','Di','Mi','Do','Fr','Sa'][d.getDay()]}</span>${d.getDate()}.${d.getMonth()+1}.</div>`}).join('')}</div></div></div>`;
+ }
+ /* ---------- V364: Meilensteine (spätester Fertigstellungstermin) ----------
+    {id,name,date,floorId:''=ganzes Projekt | Geschoss-ID, stepIds:[] (leer = alle Schritte des Geschosses/Projekts), done} */
+ function milestones(p){const m=plan(p).milestones;return Array.isArray(m)?m:[]}
+ function prevWork(k){let d=parse(k);while(!isWork(d))d.setDate(d.getDate()-1);return key(d)}
+ function msSteps(p,m){
+   const st=plan(p).steps;
+   if(Array.isArray(m.stepIds)&&m.stepIds.length)return st.filter(s=>m.stepIds.includes(s.id));
+   return m.floorId?st.filter(s=>floorIdOf(p,s)===m.floorId):st.slice();
+ }
+ function msInfo(p,m){
+   const st=msSteps(p,m),open=st.filter(s=>s.status!=='done');
+   const late=open.filter(s=>stepEnd(s)>m.date);
+   const done=!!m.done||(st.length>0&&!open.length);
+   const overdue=!done&&todayKey()>m.date;
+   const state=done?'done':(late.length||overdue)?'late':'ok';
+   return {steps:st,late,state,overdue};
+ }
+ function lateMilestonesFor(p,s){return milestones(p).filter(m=>{const i=msInfo(p,m);return i.state!=='done'&&i.late.some(x=>x.id===s.id)})}
+ function msLabel(m){return m.name||'Meilenstein'}
+ function msRowHtml(p,days,list,editable){
+   if(!list.length)return '';
+   const pid=esc(p.id);
+   const items=list.map(m=>{const k=prevWork(m.date),i=days.indexOf(k);if(i<0)return '';const info=msInfo(p,m);
+     return `<button type="button" class="planMsV364 ms-${info.state}" style="left:${(i+1)*DW-11}px" onclick="openPlanMilestoneV364('${pid}','${esc(m.id)}')" title="${esc(msLabel(m))} · spätestens ${fmtD(m.date)}${info.state==='late'?' · ⚠ '+(info.late.length?info.late.length+' Schritt(e) enden zu spät':'Termin überschritten'):info.state==='done'?' · erledigt':''}"><i></i><span>${esc(msLabel(m))}</span></button>`}).join('');
+   return `<div class="planRowV362 planMsRowV364"><div class="planLabelV362" style="width:${LABELW}px"><b>◆ Meilensteine</b></div><div class="planTrackV362" style="width:${days.length*DW}px">${items}</div></div>`;
+ }
+ function msLinesHtml(p,days,list,top,height){
+   return list.map(m=>{const i=days.indexOf(prevWork(m.date));if(i<0)return '';const st=msInfo(p,m).state;return `<div class="planMsLineV364 ms-${st}" style="left:${LABELW+(i+1)*DW-1}px;top:${top}px;height:${height}px"></div>`}).join('');
+ }
+ function barHtml(p,s,idx,days,editable){
+   const i0=days.indexOf(nextWork(s.start));if(i0<0)return '';
+   const w=Math.max(1,s.days|0)*DW-4,pr=progress(p,s);
+   const st=s.status||'open';
+   const lateMs=st==='done'?[]:lateMilestonesFor(p,s);
+   return `<div class="planBarV362 st-${st}${lateMs.length?' lateV364':''}" data-step="${esc(s.id)}" data-project="${esc(p.id)}" style="left:${i0*DW+2}px;width:${w}px" title="${esc(s.name)} · ${fmtD(s.start)} – ${fmtD(stepEnd(s))} · ${Math.max(1,s.days|0)} Arbeitstag(e)${s.crew?' · '+s.crew+' MA':''}${lateMs.length?' · ⚠ zu spät für: '+lateMs.map(m=>msLabel(m)+' ('+fmtD(m.date)+')').join(', '):''}">
+     ${pr!=null&&st!=='done'?`<div class="planBarFillV362" style="width:${pr}%"></div>`:''}
+     <span class="planBarTextV362">${lateMs.length?'⚠ ':''}${st==='done'?'✓ ':st==='blocked'?'⛔ ':''}${esc(s.name)}${pr!=null&&st!=='done'?' · '+pr+' %':''}</span>
+     ${editable?'<i class="planResizeV362" title="Dauer ziehen"></i>':''}</div>`;
+ }
+ function rowLabel(p,s){
+   const c=commissions(p).find(x=>x.id===s.commissionId);
+   return `<div class="planLabelV362" style="width:${LABELW}px" onclick="openPlanStepV362('${esc(p.id)}','${esc(s.id)}')"><b>${esc(s.name)}</b><span>${[c?.name,s.crew?s.crew+' MA':'',(s.people||[]).join(', ')].filter(Boolean).map(esc).join(' · ')}</span><em class="planChipV362 st-${s.status||'open'}">${ST[s.status||'open']}</em></div>`;
+ }
+ function depsSvg(p,rows,days,top){
+   const pos={};rows.forEach((s,r)=>{const i0=days.indexOf(nextWork(s.start));if(i0>=0)pos[s.id]={x0:i0*DW+2,x1:i0*DW+Math.max(1,s.days|0)*DW-2,y:top+r*ROWH+ROWH/2}});
+   let paths='';
+   rows.forEach(s=>(s.deps||[]).forEach(d=>{const a=pos[d],b=pos[s.id];if(!a||!b)return;const mx=Math.max(a.x1+8,b.x0-8);paths+=`<path d="M${a.x1} ${a.y} H${mx} V${b.y} H${b.x0}"/>`}));
+   return paths;
+ }
+ function loadRowHtml(days,getLoad,getCap,label){
+   return `<div class="planRowV362 planLoadV362"><div class="planLabelV362" style="width:${LABELW}px"><b>${label}</b><span>geplant / verfügbar (MA)</span></div><div class="planTrackV362" style="width:${days.length*DW}px">${days.map(k=>{const l=getLoad(k),c=getCap(k);const over=c!=null&&l>c;const cls=over?'over':l&&c!=null?'ok':'';return `<div class="planLoadCellV362 ${cls}" style="width:${DW}px" title="${fmtD(k)}: ${l} MA geplant${c!=null?' · '+c+' MA verfügbar':' · keine Mitarbeiterplanung'}">${l||c!=null?`${l}${c!=null?'/'+c:''}`:''}</div>`}).join('')}</div></div>`;
+ }
+
+ /* ---------- V363: Geschosse ---------- */
+ function floorsOf(p,withVirtual=true){
+   const pl=plan(p),fl=Array.isArray(pl.floors)?pl.floors.slice():[];
+   const ids=new Set(fl.map(f=>f.id));
+   const orphans=pl.steps.some(s=>!s.floorId||!ids.has(s.floorId));
+   if(withVirtual&&(orphans||!fl.length))fl.unshift({id:'',name:fl.length?'Ohne Geschoss':'Geschoss 1',virtual:true});
+   return fl;
+ }
+ function floorIdOf(p,s){const ids=new Set((plan(p).floors||[]).map(f=>f.id));return s.floorId&&ids.has(s.floorId)?s.floorId:''}
+ function floorName(p,id){return floorsOf(p).find(f=>f.id===id)?.name||''}
+ function sortSteps(a){return a.slice().sort((x,y)=>(x.start||'').localeCompare(y.start||'')||String(x.name).localeCompare(String(y.name)))}
+
+ function renderProjectPlan(){
+   const host=E('projectPlanV362');if(!host)return;setLabelW();
+   const p=projectById(currentProjectId);if(!p){host.innerHTML='';return}
+   const editable=canEdit(),pid=esc(p.id);
+   const days=range([p]),floors=floorsOf(p);
+   const tools=`<div class="planToolsV362">
+     ${editable?`<button class="btn" type="button" onclick="addPlanFloorV363('${pid}')">+ Geschoss</button><button class="btn secondary" type="button" onclick="openPlanMilestoneV364('${pid}','','')">◆ Meilenstein</button>`:'<span class="muted">Nur Ansicht – Bearbeiten braucht das Recht «Produktionsplanung bearbeiten».</span>'}
+     <button class="btn secondary" type="button" onclick="scrollPlanTodayV362()">Heute</button>
+     <span class="planLegendV362"><em class="planChipV362 st-open">Geplant</em><em class="planChipV362 st-progress">In Arbeit</em><em class="planChipV362 st-done">Erledigt</em><em class="planChipV362 st-blocked">Blockiert</em></span></div>`;
+   let html='',y=0;const pos={},all=[];
+   floors.forEach((f,fi)=>{
+     const fid=esc(f.id),steps=sortSteps(plan(p).steps.filter(s=>floorIdOf(p,s)===f.id));
+     const menu=f.virtual?`<button type="button" onclick="this.closest('details').open=false;renamePlanFloorV363('${pid}','${fid}')">✎ Geschoss benennen</button>`:
+       `<button type="button" onclick="this.closest('details').open=false;renamePlanFloorV363('${pid}','${fid}')">✎ Umbenennen</button>${fi>0&&!floors[fi-1]?.virtual?`<button type="button" onclick="this.closest('details').open=false;movePlanFloorV363('${pid}','${fid}',-1)">↑ Nach oben</button>`:''}${fi<floors.length-1?`<button type="button" onclick="this.closest('details').open=false;movePlanFloorV363('${pid}','${fid}',1)">↓ Nach unten</button>`:''}<button type="button" onclick="this.closest('details').open=false;openPlanMilestoneV364('${pid}','','${fid}')">◆ Meilenstein für dieses Geschoss</button><button type="button" class="danger" onclick="this.closest('details').open=false;deletePlanFloorV363('${pid}','${fid}')">✕ Geschoss entfernen</button>`;
+     const corner=`<div class="planFloorCornerV363"><div class="pfcTopV363"><b title="${esc(f.name)}">${esc(f.name)}</b>${editable?`<button type="button" class="pfcBtnV363" title="Arbeitsschritt hinzufügen" onclick="openPlanStepV362('${pid}','','${fid}')">+</button><details class="pfcMenuV363"><summary class="pfcBtnV363" title="Geschoss bearbeiten">⋯</summary><div class="pfcMenuListV363">${menu}</div></details>`:''}</div><span>${steps.length} Arbeitsschritt${steps.length===1?'':'e'}</span></div>`;
+     y+=HEADH;
+     const msList=milestones(p).filter(m=>m.date&&(!m.floorId||m.floorId===f.id||(!f.id&&!floorsOf(p,false).some(x=>x.id===m.floorId))));
+     const secTop=y;
+     let rows=msRowHtml(p,days,msList,editable);if(rows)y+=34;
+     steps.forEach(s=>{pos[s.id]=y;all.push(s);rows+=`<div class="planRowV362">${rowLabel(p,s)}<div class="planTrackV362" style="width:${days.length*DW}px">${barHtml(p,s,0,days,editable)}</div></div>`;y+=ROWH});
+     if(!steps.length){rows=`<div class="planRowV362 planFloorEmptyV363"><div class="planLabelV362" style="width:${LABELW}px"><span>Noch keine Schritte</span></div><div class="planTrackV362" style="width:${days.length*DW}px">${editable?`<div class="planFloorEmptyBtnsV363"><button class="btn secondary" type="button" onclick="openPlanStepV362('${pid}','','${fid}')">+ Arbeitsschritt</button><button class="btn secondary" type="button" onclick="insertPlanTemplateV362('${pid}','${fid}')">Vorlage Holzbau einfügen</button></div>`:''}</div></div>`;y+=ROWH}
+     html+=`<section class="planFloorV363">${headerHtml(days,corner)}${rows}${msLinesHtml(p,days,msList,HEADH,y-secTop)}</section>`;
+   });
+   // Abhängigkeiten über alle Geschosse
+   let paths='';
+   all.forEach(s=>(s.deps||[]).forEach(d=>{const a=all.find(x=>x.id===d);if(!a||pos[a.id]==null)return;
+     const ia=days.indexOf(nextWork(a.start)),ib=days.indexOf(nextWork(s.start));if(ia<0||ib<0)return;
+     const x1=ia*DW+Math.max(1,a.days|0)*DW-2,ya=pos[a.id]+ROWH/2,x0=ib*DW+2,yb=pos[s.id]+ROWH/2,mx=Math.max(x1+8,x0-8);
+     paths+=`<path d="M${x1} ${ya} H${mx} V${yb} H${x0}"/>`}));
+   host.innerHTML=tools+`<div class="planScrollV362" id="planScrollV362"><div class="planInnerV362" style="width:${LABELW+days.length*DW}px">
+     ${todayCol(days)}${html}
+     <svg class="planDepsV362" width="${days.length*DW}" height="${y}" style="left:${LABELW}px;top:0">${paths}</svg>
+     <section class="planFloorV363 planLoadSectionV363">${loadRowHtml(days,k=>load(p,k),k=>capacity(p,k),'Auslastung gesamt')}</section></div></div>`;
+   bind(host,days,editable);
+   scrollToday(false);
+ }
+ window.addPlanFloorV363=function(pid){
+   if(!canEdit())return;const p=projectById(pid);if(!p)return;
+   const name=String(prompt('Name des Geschosses (z.B. EG, 1.OG, 3.OG, Dach):','')||'').trim();if(!name)return;
+   const pl=plan(p,true);pl.floors=Array.isArray(pl.floors)?pl.floors:[];
+   pl.floors.push({id:'pf_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),name});
+   save(p);renderProjectPlan();
+ };
+ window.renamePlanFloorV363=function(pid,fid){
+   if(!canEdit())return;const p=projectById(pid);if(!p)return;const pl=plan(p,true);pl.floors=Array.isArray(pl.floors)?pl.floors:[];
+   const f=pl.floors.find(x=>x.id===fid);
+   const name=String(prompt('Geschoss benennen:',f?f.name:(pl.floors.length?'':'EG'))||'').trim();if(!name)return;
+   if(f){f.name=name}
+   else{ // „Ohne Geschoss“ / „Geschoss 1“ wird zu einem echten Geschoss; seine Schritte wandern mit
+     const nf={id:'pf_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),name};pl.floors.unshift(nf);
+     const ids=new Set(pl.floors.map(x=>x.id));pl.steps.forEach(s=>{if(!s.floorId||!ids.has(s.floorId))s.floorId=nf.id});
+   }
+   save(p);renderProjectPlan();
+ };
+ window.movePlanFloorV363=function(pid,fid,dir){
+   if(!canEdit())return;const p=projectById(pid);if(!p)return;const fl=plan(p,true).floors||[];
+   const i=fl.findIndex(x=>x.id===fid),j=i+dir;if(i<0||j<0||j>=fl.length)return;[fl[i],fl[j]]=[fl[j],fl[i]];save(p);renderProjectPlan();
+ };
+ window.deletePlanFloorV363=function(pid,fid){
+   if(!canEdit())return;const p=projectById(pid);if(!p)return;const pl=plan(p,true);const f=(pl.floors||[]).find(x=>x.id===fid);if(!f)return;
+   const n=pl.steps.filter(s=>s.floorId===fid).length;
+   if(!confirm('Geschoss «'+f.name+'» entfernen?'+(n?'\n\nSeine '+n+' Arbeitsschritt(e) bleiben erhalten und erscheinen unter «Ohne Geschoss».':'')))return;
+   pl.floors=pl.floors.filter(x=>x.id!==fid);pl.steps.forEach(s=>{if(s.floorId===fid)s.floorId=''});(pl.milestones||[]).forEach(m=>{if(m.floorId===fid)m.floorId=''});save(p);renderProjectPlan();
+ };
+ function todayCol(days){const i=days.indexOf(todayKey());return i<0?'':`<div class="planTodayV362" style="left:${LABELW+i*DW}px;width:${DW}px"></div>`}
+
+ function renderOverview(){
+   const host=E('planOverviewV362');if(!host)return;setLabelW();
+   const projects=(projectStore.projects||[]).filter(p=>p&&!p.archived&&(typeof hasProjectAccess!=='function'||hasProjectAccess(p.id))&&plan(p).steps.length);
+   if(!projects.length){host.innerHTML='<div class="planEmptyV362"><b>Noch keine Projekte geplant.</b><br>Öffne ein Projekt und wähle den Reiter «Planung».</div>';return}
+   const days=range(projects);let rows='',r=0;const items=[];
+   projects.forEach(p=>{
+     rows+=`<div class="planRowV362 planProjRowV362"><div class="planLabelV362" style="width:${LABELW}px" onclick="openProjectPlanV362('${esc(p.id)}')"><b>${esc(p.name||'Projekt')}</b><span>${esc([p.number,p.customer].filter(Boolean).join(' · '))}</span></div><div class="planTrackV362" style="width:${days.length*DW}px">${milestones(p).filter(m=>m.date).map(m=>{const i=days.indexOf(prevWork(m.date));if(i<0)return '';const info=msInfo(p,m);return `<span class="planMsV364 ms-${info.state} static" style="left:${(i+1)*DW-11}px" title="${esc(msLabel(m))} · spätestens ${fmtD(m.date)}"><i></i><span>${esc(msLabel(m))}</span></span>`}).join('')}</div></div>`;r++;
+     floorsOf(p).forEach(f=>{const st=sortSteps(plan(p).steps.filter(s=>floorIdOf(p,s)===f.id));if(!st.length)return;
+       rows+=`<div class="planRowV362 planFloorRowV363"><div class="planLabelV362" style="width:${LABELW}px"><b>${esc(f.name)}</b></div><div class="planTrackV362" style="width:${days.length*DW}px"></div></div>`;
+       st.forEach(s=>{rows+=`<div class="planRowV362">${rowLabel(p,s)}<div class="planTrackV362" style="width:${days.length*DW}px">${barHtml(p,s,0,days,false)}</div></div>`;r++})});
+   });
+   const cap=k=>{let any=false,sum=0;projects.forEach(p=>{const c=capacity(p,k);if(c!=null){any=true;sum+=c}});return any?sum:null};
+   host.innerHTML=`<div class="planToolsV362"><span class="muted">Alle aktiven Projekte mit Planung. Zum Bearbeiten ein Projekt antippen.</span><button class="btn secondary" type="button" onclick="scrollPlanTodayV362()">Heute</button></div>
+   <div class="planScrollV362" id="planScrollV362"><div class="planInnerV362" style="width:${LABELW+days.length*DW}px">${headerHtml(days)}${todayCol(days)}${rows}${loadRowHtml(days,k=>projects.reduce((n,p)=>n+load(p,k),0),cap,'Auslastung gesamt')}</div></div>`;
+   host.querySelectorAll('.planBarV362').forEach(b=>b.addEventListener('click',()=>openProjectPlanV362(b.dataset.project)));
+   scrollToday(false);
+ }
+ function scrollToday(smooth){
+   const sc=E('planScrollV362');if(!sc)return;const t=sc.querySelector('.planTodayV362');if(!t)return;
+   const x=parseFloat(t.style.left)-LABELW-DW*3;sc.scrollTo({left:Math.max(0,x),behavior:smooth?'smooth':'auto'});
+ }
+
+ /* ---------- Ziehen / Dauer ändern ---------- */
+ function bind(host,days,editable){
+   host.querySelectorAll('.planBarV362').forEach(bar=>{
+     bar.addEventListener('pointerdown',ev=>{
+       if(ev.button!==undefined&&ev.button!==0)return;
+       const resize=ev.target.classList.contains('planResizeV362');
+       view.dragging={bar,resize,x:ev.clientX,moved:false,left:parseFloat(bar.style.left),width:parseFloat(bar.style.width)};
+       if(editable){bar.setPointerCapture?.(ev.pointerId);ev.preventDefault()}
+     });
+     bar.addEventListener('pointermove',ev=>{
+       const d=view.dragging;if(!d||d.bar!==bar||!editable)return;
+       const dx=ev.clientX-d.x;if(Math.abs(dx)>4)d.moved=true;if(!d.moved)return;
+       const cols=Math.round(dx/DW);
+       if(d.resize)bar.style.width=Math.max(DW-4,d.width+cols*DW)+'px';else bar.style.left=(d.left+cols*DW)+'px';
+       bar.classList.add('dragging');
+     });
+     bar.addEventListener('pointerup',ev=>{
+       const d=view.dragging;view.dragging=null;if(!d||d.bar!==bar)return;
+       const p=projectById(bar.dataset.project),s=p&&stepById(p,bar.dataset.step);if(!s)return;
+       if(!d.moved||!editable){openPlanStepV362(p.id,s.id);return}
+       const cols=Math.round((ev.clientX-d.x)/DW);
+       const lateBefore=milestones(p).filter(m=>msInfo(p,m).state==='late').map(m=>m.id);
+       if(d.resize){s.days=Math.max(1,(s.days|0)+cols)}
+       else{const i0=days.indexOf(nextWork(s.start));const ni=Math.min(days.length-1,Math.max(0,i0+cols));s.start=days[ni]}
+       const pushed=enforceDeps(p);save(p);renderProjectPlan();
+       if(pushed)alert(pushed+' Nachfolger wurden wegen Abhängigkeiten verschoben.');
+       warnMilestonesV364(p,lateBefore);
+     });
+     bar.addEventListener('pointercancel',()=>{view.dragging=null;renderProjectPlan()});
+   });
+ }
+
+ /* ---------- Bearbeiten ---------- */
+ function dialog(){let m=E('planStepModalV362');if(!m){m=document.createElement('div');m.id='planStepModalV362';m.className='modal';document.body.appendChild(m)}return m}
+ window.openPlanStepV362=function(pid,sid,floorPre){
+   const p=projectById(pid);if(!p)return;const editable=canEdit();
+   const s=sid?stepById(p,sid):null;
+   const comms=commissions(p),groups=(p.productionPlan?.groups||[]);
+   const others=plan(p).steps.filter(x=>!s||x.id!==s.id);
+   const last=plan(p).steps.map(stepEnd).sort().pop();
+   const fpre=floorPre!=null?String(floorPre):'';
+   const lastF=plan(p).steps.filter(x=>floorIdOf(p,x)===fpre).map(stepEnd).sort().pop();
+   const v=s||{name:'',floorId:fpre,commissionId:comms[0]?.id||'',start:lastF?dayAfter(lastF):(last?dayAfter(last):nextWork(todayKey())),days:3,crew:2,people:[],groupId:'',deps:[],status:'open',note:''};
+   const vFloor=s?floorIdOf(p,s):fpre;
+   const allPeople=[...new Set((projectStore.projects||[]).flatMap(x=>plan(x).steps.flatMap(y=>y.people||[])))].sort((a,b)=>a.localeCompare(b,'de-CH'));
+   const dis=editable?'':'disabled';
+   const m=dialog();
+   m.innerHTML=`<div class="modalbox planDialogV362"><div class="manageHead"><div><h2 style="margin:0">${s?(editable?'Arbeitsschritt bearbeiten':'Arbeitsschritt'):'Neuer Arbeitsschritt'}</h2><p class="muted" style="margin:4px 0 0">${esc(p.name||'')}</p></div><button class="btn secondary" type="button" onclick="closeM('planStepModalV362')">Schliessen</button></div>
+   <form class="form planFormV362" onsubmit="event.preventDefault();savePlanStepV362('${esc(p.id)}','${s?esc(s.id):''}')">
+    <label class="f span2">Arbeitsschritt<input id="psName" required value="${esc(v.name)}" list="psNameList" ${dis}><datalist id="psNameList">${TEMPLATE.map(t=>`<option value="${esc(t)}">`).join('')}</datalist></label>
+    <label class="f">Geschoss<select id="psFloor" ${dis}>${floorsOf(p).map(f=>`<option value="${esc(f.id)}" ${f.id===vFloor?'selected':''}>${esc(f.name)}</option>`).join('')}</select></label>
+    <label class="f">Kommission<select id="psComm" ${dis}>${comms.map(c=>`<option value="${esc(c.id)}" ${c.id===v.commissionId?'selected':''}>${esc(c.name||'Kommission')}</option>`).join('')||'<option value="">–</option>'}</select></label>
+    <label class="f">Status<select id="psStatus" ${dis}>${Object.entries(ST).map(([k,t])=>`<option value="${k}" ${k===(v.status||'open')?'selected':''}>${t}</option>`).join('')}</select></label>
+    <label class="f">Start<input id="psStart" type="date" value="${esc(v.start)}" ${dis}></label>
+    <label class="f">Dauer (Arbeitstage)<input id="psDays" type="number" min="1" step="1" inputmode="numeric" value="${Math.max(1,v.days|0)}" ${dis}></label>
+    <label class="f">Mannschaft (MA)<input id="psCrew" type="number" min="0" step="1" inputmode="numeric" value="${Math.max(0,v.crew|0)}" ${dis}></label>
+    <label class="f">Personen (mit Komma trennen)<input id="psPeople" value="${esc((v.people||[]).join(', '))}" list="psPeopleList" ${dis}><datalist id="psPeopleList">${allPeople.map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label>
+    <label class="f span2">Fortschritt aus Tagesfortschritt (Elementgruppe)<select id="psGroup" ${dis}><option value="">– keine Verknüpfung –</option>${groups.map(g=>`<option value="${esc(g.id)}" ${g.id===v.groupId?'selected':''}>${esc(g.title||'Gruppe')} (${(g.elements||[]).length} Elemente)</option>`).join('')}</select></label>
+    <div class="f span2"><span class="planFieldLabelV362">Vorgänger (muss vorher fertig sein)</span><div class="planDepsListV362">${others.length?others.map(o=>`<label><input type="checkbox" value="${esc(o.id)}" ${(v.deps||[]).includes(o.id)?'checked':''} ${dis}> <span class="planDepFloorV363">${esc(floorName(p,floorIdOf(p,o)))}</span> ${esc(o.name)} <span class="muted">bis ${fmtD(stepEnd(o))}</span></label>`).join(''):'<span class="muted">Keine anderen Schritte.</span>'}</div></div>
+    <label class="f span2">Notiz<textarea id="psNote" rows="2" ${dis}>${esc(v.note||'')}</textarea></label>
+    ${s?`<div class="span2 muted">Ende: ${fmtD(stepEnd(s))}${progress(p,s)!=null?' · Fortschritt '+progress(p,s)+' %':''}</div>`:''}
+    ${editable?`<div class="toolbar span2"><button class="btn" type="submit">Speichern</button>${s?`<button class="btn danger" type="button" onclick="deletePlanStepV362('${esc(p.id)}','${esc(s.id)}')">Löschen</button>`:''}</div>`:''}
+   </form></div>`;
+   m.classList.add('open');
+ };
+ window.savePlanStepV362=function(pid,sid){
+   if(!canEdit()){alert('Für die Produktionsplanung ist keine Bearbeitungs-Berechtigung freigeschaltet.');return}
+   const p=projectById(pid);if(!p)return;const pl=plan(p,true);
+   const lateBefore=milestones(p).filter(m=>msInfo(p,m).state==='late').map(m=>m.id);
+   let s=sid?stepById(p,sid):null;const isNew=!s;if(!s){s={id:uid()};}
+   const name=String(E('psName').value||'').trim();if(!name){alert('Bitte einen Namen eingeben.');return}
+   const start=E('psStart').value||todayKey();
+   const deps=[...document.querySelectorAll('#planStepModalV362 .planDepsListV362 input:checked')].map(x=>x.value);
+   const bad=deps.find(d=>wouldCycle(p,s.id,d));if(bad){alert('Diese Abhängigkeit würde einen Kreis erzeugen: «'+(stepById(p,bad)?.name||'')+'» hängt bereits von diesem Schritt ab.');return}
+   Object.assign(s,{name,floorId:E('psFloor')?.value||'',commissionId:E('psComm').value||'',status:E('psStatus').value||'open',start:nextWork(start),days:Math.max(1,parseInt(E('psDays').value,10)||1),crew:Math.max(0,parseInt(E('psCrew').value,10)||0),people:String(E('psPeople').value||'').split(',').map(x=>x.trim()).filter(Boolean),groupId:E('psGroup').value||'',deps,note:String(E('psNote').value||'').trim(),updatedAt:new Date().toISOString()});
+   if(isNew)pl.steps.push(s);
+   const pushed=enforceDeps(p);
+   save(p);closeM('planStepModalV362');renderProjectPlan();
+   if(pushed)alert(pushed+' Schritt(e) wurden wegen Abhängigkeiten verschoben.');
+   warnMilestonesV364(p,lateBefore);
+ };
+ window.deletePlanStepV362=function(pid,sid){
+   if(!canEdit())return;const p=projectById(pid);if(!p)return;const s=stepById(p,sid);if(!s)return;
+   if(!confirm('Arbeitsschritt «'+s.name+'» löschen?'))return;
+   const pl=plan(p,true);pl.steps=pl.steps.filter(x=>x.id!==sid);pl.steps.forEach(x=>{x.deps=(x.deps||[]).filter(d=>d!==sid)});(pl.milestones||[]).forEach(m=>{if(Array.isArray(m.stepIds))m.stepIds=m.stepIds.filter(d=>d!==sid)});
+   save(p);closeM('planStepModalV362');renderProjectPlan();
+ };
+ window.insertPlanTemplateV362=function(pid,floorId){
+   if(!canEdit())return;const p=projectById(pid);if(!p)return;const pl=plan(p,true);pl.floors=Array.isArray(pl.floors)?pl.floors:[];
+   let fid=String(floorId||'');
+   if(!fid||!pl.floors.some(f=>f.id===fid)){
+     const name=String(prompt('Für welches Geschoss? (z.B. EG, 1.OG, 3.OG)',pl.floors.length?'':'EG')||'').trim();if(!name)return;
+     const nf={id:'pf_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),name};pl.floors.push(nf);fid=nf.id;
+   }
+   if(pl.steps.some(s=>s.floorId===fid))return;
+   const c=commissions(p)[0]?.id||'';
+   const lastAll=pl.steps.map(stepEnd).sort().pop();
+   let start=lastAll?dayAfter(lastAll):nextWork(p.startDate&&p.startDate>=todayKey()?p.startDate:todayKey()),prev=null;
+   TEMPLATE.forEach(name=>{const s={id:uid(),name,floorId:fid,commissionId:c,start,days:name==='Verladung'?1:3,crew:name==='Montage'?4:2,people:[],groupId:'',deps:prev?[prev.id]:[],status:'open',note:''};pl.steps.push(s);prev=s;start=dayAfter(stepEnd(s))});
+   save(p);renderProjectPlan();
+ };
+ window.openPlanMilestoneV364=function(pid,mid,floorPre){
+   const p=projectById(pid);if(!p)return;const editable=canEdit(),dis=editable?'':'disabled';
+   const m=mid?milestones(p).find(x=>x.id===mid):null;
+   const v=m||{name:'',date:'',floorId:floorPre||'',stepIds:[],done:false};
+   const info=m?msInfo(p,m):null;
+   const steps=sortSteps(plan(p).steps);
+   let md=E('planMsModalV364');if(!md){md=document.createElement('div');md.id='planMsModalV364';md.className='modal';document.body.appendChild(md)}
+   md.innerHTML=`<div class="modalbox planDialogV362"><div class="manageHead"><div><h2 style="margin:0">${m?'Meilenstein':'Neuer Meilenstein'}</h2><p class="muted" style="margin:4px 0 0">Termin, bis wann etwas spätestens fertig sein muss · ${esc(p.name||'')}</p></div><button class="btn secondary" type="button" onclick="closeM('planMsModalV364')">Schliessen</button></div>
+   ${info&&info.state==='late'?`<div class="planMsWarnV364">⚠ ${info.late.length?info.late.length+' Arbeitsschritt(e) enden nach diesem Termin: '+info.late.map(s=>esc(s.name)+' ('+fmtD(stepEnd(s))+')').join(', '):'Der Termin ist überschritten und noch nicht erledigt.'}</div>`:info&&info.state==='done'?'<div class="planMsOkV364">✓ Erledigt</div>':''}
+   <form class="form" onsubmit="event.preventDefault();savePlanMilestoneV364('${esc(p.id)}','${m?esc(m.id):''}')">
+    <label class="f span2">Bezeichnung<input id="pmName" required value="${esc(v.name)}" placeholder="z.B. Elemente 3.OG fertig, Montagebeginn, Übergabe" ${dis}></label>
+    <label class="f">Spätestens fertig am<input id="pmDate" type="date" required value="${esc(v.date)}" ${dis}></label>
+    <label class="f">Gilt für<select id="pmFloor" ${dis} onchange="filterPlanMsStepsV364()"><option value="">Ganzes Projekt</option>${floorsOf(p,false).map(f=>`<option value="${esc(f.id)}" ${f.id===v.floorId?'selected':''}>${esc(f.name)}</option>`).join('')}</select></label>
+    <div class="f span2"><span class="planFieldLabelV362">Was muss bis dahin fertig sein?</span><span class="muted" style="font-size:13px">Nichts angekreuzt = alle Arbeitsschritte des gewählten Geschosses bzw. Projekts.</span>
+     <div class="planDepsListV362" id="pmSteps">${steps.map(s=>`<label data-floor="${esc(floorIdOf(p,s))}"><input type="checkbox" value="${esc(s.id)}" ${(v.stepIds||[]).includes(s.id)?'checked':''} ${dis}> <span class="planDepFloorV363">${esc(floorName(p,floorIdOf(p,s)))}</span> ${esc(s.name)} <span class="muted">bis ${fmtD(stepEnd(s))}</span></label>`).join('')||'<span class="muted">Noch keine Arbeitsschritte.</span>'}</div></div>
+    <label class="f span2 planMsDoneV364"><span><input id="pmDone" type="checkbox" ${v.done?'checked':''} ${dis}> Meilenstein erreicht (manuell abhaken)</span></label>
+    ${editable?`<div class="toolbar span2"><button class="btn" type="submit">Speichern</button>${m?`<button class="btn danger" type="button" onclick="deletePlanMilestoneV364('${esc(p.id)}','${esc(m.id)}')">Löschen</button>`:''}</div>`:''}
+   </form></div>`;
+   md.classList.add('open');window.filterPlanMsStepsV364();
+ };
+ window.filterPlanMsStepsV364=function(){
+   const f=E('pmFloor')?.value||'';
+   document.querySelectorAll('#pmSteps label[data-floor]').forEach(l=>{l.style.display=!f||l.dataset.floor===f?'':'none'});
+ };
+ window.savePlanMilestoneV364=function(pid,mid){
+   if(!canEdit()){alert('Für die Produktionsplanung ist keine Bearbeitungs-Berechtigung freigeschaltet.');return}
+   const p=projectById(pid);if(!p)return;const pl=plan(p,true);pl.milestones=Array.isArray(pl.milestones)?pl.milestones:[];
+   const name=String(E('pmName').value||'').trim(),date=E('pmDate').value;
+   if(!name||!date){alert('Bitte Bezeichnung und Datum eingeben.');return}
+   const floorId=E('pmFloor').value||'';
+   const stepIds=[...document.querySelectorAll('#pmSteps input:checked')].filter(x=>x.closest('label').style.display!=='none').map(x=>x.value);
+   let m=mid?pl.milestones.find(x=>x.id===mid):null;
+   if(!m){m={id:'pm_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)};pl.milestones.push(m)}
+   Object.assign(m,{name,date,floorId,stepIds,done:!!E('pmDone').checked,updatedAt:new Date().toISOString()});
+   save(p);closeM('planMsModalV364');renderProjectPlan();
+   const info=msInfo(p,m);
+   if(info.state==='late')alert('Achtung: Meilenstein «'+name+'» wird nach aktueller Planung nicht eingehalten'+(info.late.length?' – '+info.late.length+' Schritt(e) enden zu spät.':'.'));
+ };
+ window.deletePlanMilestoneV364=function(pid,mid){
+   if(!canEdit())return;const p=projectById(pid);if(!p)return;const pl=plan(p,true);const m=(pl.milestones||[]).find(x=>x.id===mid);if(!m)return;
+   if(!confirm('Meilenstein «'+msLabel(m)+'» löschen?'))return;
+   pl.milestones=pl.milestones.filter(x=>x.id!==mid);save(p);closeM('planMsModalV364');renderProjectPlan();
+ };
+ function warnMilestonesV364(p,before){
+   const now=milestones(p).filter(m=>msInfo(p,m).state==='late').map(m=>m.id);
+   const fresh=now.filter(id=>!before.includes(id));
+   if(fresh.length)alert('Achtung Meilenstein: '+fresh.map(id=>{const m=milestones(p).find(x=>x.id===id);return '«'+msLabel(m)+'» ('+fmtD(m.date)+')'}).join(', ')+' wird mit dieser Änderung nicht mehr eingehalten.');
+ }
+ window.openProjectPlanV362=function(pid){openProjectDetail(pid);setProjectDetailTab('plan')};
+ window.scrollPlanTodayV362=()=>scrollToday(true);
+ window.renderProjectPlanV362=renderProjectPlan;
+ window.renderPlanOverviewV362=renderOverview;
+ window.renderPlanVisibleV362=function(){
+   if(E('projectDetail')?.classList.contains('open')&&projectDetailActiveTab==='plan')renderProjectPlan();
+   if(E('projectsHome')?.classList.contains('open')&&projectsHomeActiveTab==='plan')renderOverview();
+ };
+})();
+</script>
+
 
 <div id="platformModule" class="projectsShell" aria-label="Pritschenverwaltung">
   <div class="platformWrap">
@@ -31014,7 +31651,7 @@ ${safeTypeLines}
    if(x.type==='projects'){
      loadProjects();
      const arr=projectStore.projects||[], ix=arr.findIndex(p=>p&&String(p.id)===String(x.id));
-     if(ix>=0)arr[ix]=clone(x.data); else arr.push(clone(x.data));
+     if(ix>=0)arr[ix]=keepProjectUiFieldsV365(arr[ix],clone(x.data)); else arr.push(projectSyncDataV365(clone(x.data)));
      projectStore.projects=arr;
      localStorage.setItem(PROJECTS_KEY,JSON.stringify(projectStore));
      return true;
@@ -31155,7 +31792,7 @@ ${safeTypeLines}
  function projectLocal(id){
    loadProjects();
    const p=(projectStore.projects||[]).find(x=>x&&String(x.id)===String(id));
-   return p?{type:'projects',id:String(id),data:p}:null;
+   return p?{type:'projects',id:String(id),data:projectSyncDataV365(p)}:null;
  }
  function myProjectKey(){return permissionKeyForCloud(cloudMember?.username||authUsername())}
  function remoteProjectVisibleToMe(r){
@@ -31169,7 +31806,7 @@ ${safeTypeLines}
    loadProjects();
    let arr=(projectStore.projects||[]).filter(p=>p&&typeof p==='object');
    const ix=arr.findIndex(p=>String(p.id)===String(data.id));
-   if(ix>=0)arr[ix]=JSON.parse(JSON.stringify(data)); else arr.push(JSON.parse(JSON.stringify(data)));
+   if(ix>=0)arr[ix]=keepProjectUiFieldsV365(arr[ix],JSON.parse(JSON.stringify(data))); else arr.push(projectSyncDataV365(JSON.parse(JSON.stringify(data))));
    projectStore.projects=arr;
    localStorage.setItem(PROJECTS_KEY,JSON.stringify(projectStore));
  }
@@ -31211,6 +31848,7 @@ ${safeTypeLines}
    return false;
  }
  async function discoverSharedProjects(){
+   return 0; /* V365: stillgelegt – neue/geänderte Projekte kommen über den einen Cloud-Abgleich (inkl. Freigabe-Prüfung). */
    if(projectSyncFlight||!cloudReady()||!authSession||!cloudMember)return 0;
    projectSyncFlight=true;
    try{
@@ -31432,7 +32070,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V359';
+   if(v)v.textContent='Aktuelle Version: V365';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -33630,8 +34268,9 @@ ${safeTypeLines}
  }
 
  async function syncV317(manual=false){
-   if(flightV317)return false;
-   if(!manual&&Date.now()-lastV317<3500)return false;
+   /* V364: Änderung während eines laufenden Abgleichs nicht verlieren → direkt danach nochmals abgleichen. */
+   if(flightV317){againV364=true;return false}
+   if(!manual&&Date.now()-lastV317<3500){clearTimeout(againTimerV364);againTimerV364=setTimeout(()=>syncV317(false),3600-(Date.now()-lastV317));return false}
    flightV317=true;lastV317=Date.now();
    try{
      /* V357: Zugriffstoken vor jedem Abgleich auffrischen (vorher lief der Abgleich nach
@@ -33698,6 +34337,7 @@ ${safeTypeLines}
      setSyncStatus('ok',msg);
      if(o.conflicts){['syncStatusBadge','cloudManageStatus'].forEach(id=>{const el=E(id);if(el){el.textContent='⚠ '+o.conflicts+' Konflikt'+(o.conflicts>1?'e':'');el.className='syncBadge warnV359';el.title=msg}})}
      if(o.remaining)setTimeout(()=>syncV317(true),2500);
+     if(o.later)againV364=true; /* V364: Versionskonflikt beim Senden → sofort neu prüfen, damit ein echter Konflikt angezeigt wird */
      try{rerenderAfterSyncV359(o.pulled>0||uploaded>0)}catch(_e){}
      return true;
    }catch(e){
@@ -33705,8 +34345,9 @@ ${safeTypeLines}
      lastErrorV359={at:Date.now(),message:m};
      if(transientV317(m)||/sitzung\/konfiguration nicht verfügbar/i.test(m)){unknownV317(m);return false}
      setSyncStatus('err','V317 '+m);return false;
-   }finally{flightV317=false}
+   }finally{flightV317=false;if(againV364){againV364=false;setTimeout(()=>syncV317(true),700)}}
  }
+ let againV364=false,againTimerV364=null;
 
  /* ===== V357 · objektweiser Abgleich aller übrigen Objekte =====
     Regeln (identisch zur bisherigen Sicherheitslogik, nur jetzt in EINEM Pfad):
@@ -33716,6 +34357,11 @@ ${safeTypeLines}
     - Löschungen werden nie automatisch übertragen (weder Cloud→Gerät noch Gerät→Cloud)
     - __state, Packages (oben), Benutzer und Produktionsobjekte (eigene Pfade V321–V324) ausgenommen
     - mehr als 40 Änderungen in einem automatischen Lauf → Schutzstopp */
+ function projectVisibleV365(r){
+   try{if(currentRole()==='Administrator')return true;
+     const key=permissionKeyForCloud(cleanUsername(cloudMember?.username||authUsername()));
+     return String(r.data?.createdByKey||'')===key||(Array.isArray(r.data?.memberKeys)&&r.data.memberKeys.map(String).includes(key))}catch(_e){return false}
+ }
  const SKIP_V357=new Set(['__state','packages','users','permissionSets','productionPackagesV321','productionControlsV322','productionTextFieldsV324']);
  const MAX_AUTO_V357=40;
  let lastV357=null;
@@ -33732,7 +34378,7 @@ ${safeTypeLines}
      const lh=l?stableJson(l.data):null,rh=r?stableJson(r.data):null,bh=b?.hash??null;
      if(l&&r&&lh===rh){if(!b||b.hash!==rh||Number(b.version||0)!==Number(r.version||0))ident.push(k);continue}
      if(l&&!r){if(!b)push.push(k);continue}
-     if(!l&&r){if(!b)pull.push(k);continue}
+     if(!l&&r){if(!b&&(r.type!=='projects'||projectVisibleV365(r)))pull.push(k);continue}
      if(!l&&!r)continue;
      const lc=lh!==bh,rc=rh!==bh;
      if(lc&&!rc)push.push(k);else if(!lc&&rc)pull.push(k);else conflicts.push(k);
@@ -33782,9 +34428,11 @@ ${safeTypeLines}
    try{refreshOpenAreaPanelV359?.()}catch(_e){}
    try{if(currentPage==='inventory')renderInv?.();if(currentPage==='manage')renderManage?.()}catch(_e){}
    try{if(currentRack&&E('rackSide')?.innerHTML)openRack?.(currentRack)}catch(_e){}
+   try{window.renderPlanVisibleV362?.()}catch(_e){}
  }
 
- async function resolveConflictV359(k,choice){
+ async function resolveConflictCoreV365(k,choice){return resolveConflictV359(k,choice,true)}
+ async function resolveConflictV359(k,choice,bulk){
    const [type,...rest]=String(k).split('|'),id=rest.join('|');
    if(!await ensureFreshSession())throw new Error('Keine Cloud-Verbindung.');
    const remote=await fetchRemoteEntities(),r=remote[k];
@@ -33812,11 +34460,20 @@ ${safeTypeLines}
        const nb=loadSyncBase();nb[k]={version:Number(val?.version||(Number(r?.version||0)+1)),hash:stableJson(l.data)};saveSyncBase(nb);
      }
    }
+   if(bulk)return;
    try{refresh?.()}catch(_e){}
    rerenderAfterSyncV359(true);
    await syncV317(true);
    openCloudStatusV359();
  }
+ window.resolveAllConflictsV365=async function(choice){
+   const o=lastV357||{},keys=[...(o.pkgConflictKeys||[]),...(o.conflictKeys||[])];if(!keys.length)return;
+   if(!confirm(keys.length+' Konflikte lösen: '+(choice==='cloud'?'überall die Cloud-Version übernehmen':'überall die Version dieses Geräts verwenden')+'?'))return;
+   let ok=0,fail=0;
+   for(const k of keys){try{await resolveConflictCoreV365(k,choice);ok++}catch(_e){fail++}}
+   try{refresh?.()}catch(_e){}rerenderAfterSyncV359(true);await syncV317(true);openCloudStatusV359();
+   alert(ok+' Konflikt(e) gelöst'+(fail?', '+fail+' nicht möglich':'')+'.');
+ };
  window.resolveConflictV359=async(k,c)=>{try{await resolveConflictV359(k,c)}catch(e){alert('Konflikt konnte nicht gelöst werden: '+String(e?.message||e))}};
 
  const TYPE_LABEL_V359={packages:'Paket',areas:'Lagerfläche',racks:'Gestell',materialCatalog:'Material-Katalog',materialPinsV552:'Material-Pin',projects:'Projekt',platforms:'Pritschenverwaltung',toolsContainers:'Werkzeug & Geräte',commissions:'Kommission',controls:'Kontrolle',smallOrders:'Kleinauftrag',internalMaterials:'Internes Material',internalTransfers:'Umbuchung',standardStock:'Standardbestand'};
@@ -33846,14 +34503,14 @@ ${safeTypeLines}
    const fails=(o.failedKeys||[]).slice(0,10).map(x=>`<li>${esc(x)}</li>`).join('');
    m.innerHTML=`<div class="modalbox cloudStatusBoxV359"><div class="manageHead"><div><h2 style="margin:0">Cloud-Status</h2><p class="muted" style="margin:4px 0 0">Letzter erfolgreicher Abgleich: ${when}</p></div><button class="btn secondary" type="button" onclick="E('cloudStatusV359').classList.remove('open')">Schliessen</button></div>
      <p class="cloudPlainV359">${esc(plainStatusV359())}</p>
-     ${keys.length?`<h3>Konflikte (${keys.length})</h3><p class="muted">Wähle pro Eintrag, welche Version gelten soll. Die andere wird überschrieben.</p>${list}`:''}
+     ${keys.length?`<h3>Konflikte (${keys.length})</h3><p class="muted">Wähle pro Eintrag, welche Version gelten soll. Die andere wird überschrieben.</p>${keys.length>1?`<div class="toolbar cloudConflictAllV365"><button class="btn secondary" type="button" onclick="resolveAllConflictsV365('cloud')">Alle: Cloud übernehmen</button><button class="btn secondary" type="button" onclick="resolveAllConflictsV365('local')">Alle: meine Version</button></div>`:''}${list}`:''}
      ${fails?`<h3>Von der Cloud abgelehnt</h3><ul class="muted">${fails}</ul>`:''}
      <details class="cloudTechV359"><summary>Technische Details</summary><div class="muted">${esc(String(E('syncStatusBadge')?.title||''))}${lastErrorV359?'<br>Letzter Fehler: '+esc(new Date(lastErrorV359.at).toLocaleTimeString('de-CH'))+' · '+esc(lastErrorV359.message):''}</div></details>
      <div class="toolbar" style="margin-top:12px"><button class="btn" type="button" onclick="this.disabled=true;cloudSyncNowV357().then(()=>openCloudStatusV359())">⇅ Jetzt abgleichen</button></div></div>`;
    m.classList.add('open');
  }
  window.openCloudStatusV359=openCloudStatusV359;
- function bindBadgeV359(){['syncStatusBadge','cloudManageStatus'].forEach(id=>{const b=E(id);if(b&&!b.dataset.v359){b.dataset.v359='1';b.style.cursor='pointer';b.setAttribute('role','button');b.addEventListener('click',openCloudStatusV359)}})}
+ function bindBadgeV359(){['syncStatusBadge','cloudManageStatus','moduleHomeCloudV96'].forEach(id=>{const b=E(id);if(b&&!b.dataset.v359){b.dataset.v359='1';b.style.cursor='pointer';b.setAttribute('role','button');b.addEventListener('click',openCloudStatusV359)}})}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindBadgeV359);else bindBadgeV359();
 
  /* Schneller Änderungs-Check (alle 8 s, nur wenn sichtbar): fragt nur, OB sich seit dem letzten
