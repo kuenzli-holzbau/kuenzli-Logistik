@@ -4635,7 +4635,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V369</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V370</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -4849,7 +4849,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V369</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V370</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7578,7 +7578,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V369</b></p><div class="releaseNote"><b>Neu in V369</b><br>Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V370</b></p><div class="releaseNote"><b>Neu in V370</b><br>Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -20978,10 +20978,11 @@ document.addEventListener('DOMContentLoaded',()=>{
 
  /* ---------- Darstellung ---------- */
  function range(projects){
-   let min=mondayOf(addWork(todayKey(),-0)),max=addWork(todayKey(),40);
-   const t=parse(todayKey());t.setDate(t.getDate()-7);const lead=mondayOf(key(t));if(lead<min)min=lead;
-   projects.forEach(p=>plan(p).steps.forEach(s=>{const m=mondayOf(s.start);if(m<min)min=m;const e=addWork(stepEnd(s),10);if(e>max)max=e}));
-   projects.forEach(p=>(Array.isArray(plan(p).milestones)?plan(p).milestones:[]).forEach(m=>{if(!m.date)return;const a=mondayOf(m.date);if(a<min)min=a;const e=addWork(m.date,5);if(e>max)max=e}));
+   // V370: genug Platz zum Navigieren – 4 Wochen zurück, mind. 6 Monate voraus, nach dem letzten Eintrag 4 Wochen Luft
+   const t=parse(todayKey());t.setDate(t.getDate()-28);let min=mondayOf(key(t)),max=addWork(todayKey(),130);
+   projects.forEach(p=>plan(p).steps.forEach(s=>{const m=mondayOf(addWork(s.start,-5));if(m<min)min=m;const e=addWork(stepEnd(s),20);if(e>max)max=e}));
+   projects.forEach(p=>(Array.isArray(plan(p).milestones)?plan(p).milestones:[]).forEach(m=>{if(!m.date)return;const a=mondayOf(m.date);if(a<min)min=a;const e=addWork(m.date,20);if(e>max)max=e}));
+   max=addWork(mondayOf(max),4);
    return workdays(min,max);
  }
  function headerHtml(days,corner){
@@ -21126,7 +21127,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  function renderProjectPlan(){
    const host=E('projectPlanV362');if(!host)return;setLabelW();
    const p=projectById(currentProjectId);if(!p){host.innerHTML='';return}
-   const oldSc=E('planScrollV362'),prev=oldSc&&host.contains(oldSc)?{l:oldSc.scrollLeft,t:oldSc.scrollTop}:null;
+   const oldSc=host.querySelector('.planScrollV362'),prev=oldSc&&host.contains(oldSc)?{l:oldSc.scrollLeft,t:oldSc.scrollTop}:null;
    const editable=canEdit(),pid=esc(p.id);
    const days=range([p]);
    const tools=`<div class="planToolsV362">
@@ -21174,7 +21175,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    bindColResize(host);
    afterRender();
    drawDeps(host,p);
-   if(prev){const sc=E('planScrollV362');sc.scrollLeft=prev.l;sc.scrollTop=prev.t}else scrollToday(false);
+   if(prev){const sc=host.querySelector('.planScrollV362');sc.scrollLeft=prev.l;sc.scrollTop=prev.t}else scrollToday(false);
  }
  /* V367: Abhängigkeiten deutlich: durchgezogene Pfeile mit Spitze, Knick direkt nach dem Vorgänger,
     beim Überfahren/Antippen eines Balkens werden seine Vorgänger und Nachfolger hervorgehoben. */
@@ -21293,7 +21294,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    });
    const cap=k=>{let any=false,sum=0;projects.forEach(p=>{const c=capacity(p,k);if(c!=null){any=true;sum+=c}});return any?sum:null};
    host.innerHTML=`<div class="planToolsV362"><span class="muted">Alle aktiven Projekte mit Planung. Zum Bearbeiten ein Projekt antippen.</span><button class="btn secondary" type="button" onclick="scrollPlanTodayV362()">Heute</button><button class="btn secondary" type="button" onclick="openPlanPdfV369('overview')">⤓ PDF exportieren</button></div>
-   <div class="planScrollV362" id="planScrollV362"><div class="planInnerV362" style="width:${LABELW+days.length*DW}px">${headerHtml(days)}${todayCol(days)}${rows}${loadRowHtml(days,k=>projects.reduce((n,p)=>n+load(p,k),0),cap,'Auslastung gesamt')}</div></div>`;
+   <div class="planScrollV362" id="planOvScrollV362"><div class="planInnerV362" style="width:${LABELW+days.length*DW}px">${headerHtml(days)}${todayCol(days)}${rows}${loadRowHtml(days,k=>projects.reduce((n,p)=>n+load(p,k),0),cap,'Auslastung gesamt')}</div></div>`;
    host.querySelectorAll('.planBarV362').forEach(b=>b.addEventListener('click',()=>openProjectPlanV362(b.dataset.project)));
    bindColResize(host);
    afterRender();
@@ -21301,7 +21302,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  }
  /* V366: Tabelle füllt den verfügbaren Bildschirm, Navigation per Maus: klicken und ziehen. */
  function fitHeight(){
-   const sc=E('planScrollV362');if(!sc||!sc.offsetParent)return;
+   const sc=curSc();if(!sc)return;
    const top=sc.getBoundingClientRect().top;
    sc.style.height=Math.max(320,Math.floor(window.innerHeight-top-14))+'px';
  }
@@ -21310,10 +21311,14 @@ document.addEventListener('DOMContentLoaded',()=>{
    if(!sc||sc.dataset.panV366)return;sc.dataset.panV366='1';
    let st=null;
    sc.addEventListener('pointerdown',ev=>{
-     if(ev.pointerType!=='mouse'||ev.button!==0)return;
-     if(ev.target.closest('.planBarV362,button,a,input,select,textarea,summary,details,label,.planColResizeV368'))return;
+     if(ev.pointerType==='touch'||ev.button!==0)return;
+     if(ev.target.closest((canEdit()&&sc.closest('#projectPlanV362')?'.planBarV362,':'')+'button,a,input,select,textarea,summary,details,label,.planColResizeV368,.pfcMenuListV363'))return;
+     ev.preventDefault(); // keine Textauswahl / kein natives Ziehen, das das Verschieben abbrechen würde
+     try{window.getSelection()?.removeAllRanges()}catch(_e){}
      st={x:ev.clientX,y:ev.clientY,l:sc.scrollLeft,t:sc.scrollTop,moved:false};
    });
+   sc.addEventListener('dragstart',ev=>{if(st)ev.preventDefault()});
+   window.addEventListener('pointercancel',()=>{if(st){st=null;sc.classList.remove('panningV366')}});
    window.addEventListener('pointermove',ev=>{
      if(!st)return;const dx=ev.clientX-st.x,dy=ev.clientY-st.y;
      if(!st.moved&&Math.abs(dx)+Math.abs(dy)<5)return;
@@ -21325,9 +21330,32 @@ document.addEventListener('DOMContentLoaded',()=>{
      if(moved){const stop=e=>{e.stopPropagation();e.preventDefault()};sc.addEventListener('click',stop,{capture:true,once:true});setTimeout(()=>sc.removeEventListener('click',stop,{capture:true}),50)}
    });
  }
- function afterRender(){const sc=E('planScrollV362');attachPan(sc);fitHeight();requestAnimationFrame(fitHeight)}
+ // V370: Projekt-Planung und Übersicht haben je eine eigene Tabelle → immer die sichtbare nehmen (vorher per ID → oft die versteckte)
+ function curSc(){return [...document.querySelectorAll('.planScrollV362')].find(s=>s.offsetParent)||null}
+ function afterRender(){document.querySelectorAll('.planScrollV362').forEach(attachPan);fitHeight();requestAnimationFrame(fitHeight)}
+ /* V370: «⋯»-Menü schwebt über der Tabelle (position:fixed), damit es nie von der nächsten Gruppe verdeckt wird */
+ document.addEventListener('toggle',ev=>{
+   const d=ev.target;if(!(d instanceof HTMLElement)||!d.classList.contains('pfcMenuV363'))return;
+   const l=d.querySelector('.pfcMenuListV363');if(!l)return;
+   if(!d.open){l.style.cssText='';d.__raised?.forEach(([el,z])=>{el.style.zIndex=z});d.__raised=null;return}
+   document.querySelectorAll('details.pfcMenuV363[open]').forEach(o=>{if(o!==d)o.open=false});
+   // Vorfahren mit eigener Ebene (fixierte Spalte) nach vorne holen, sonst verdeckt die nächste Gruppe das Menü
+   d.__raised=[];for(let el=d.parentElement;el&&!el.classList.contains('planScrollV362');el=el.parentElement){const cs=getComputedStyle(el);if(cs.position!=='static'&&cs.zIndex!=='auto'){d.__raised.push([el,el.style.zIndex]);el.style.zIndex='80'}}
+   const s=d.querySelector('summary').getBoundingClientRect();
+   l.style.position='fixed';l.style.zIndex='9550';l.style.right='auto';l.style.visibility='hidden';
+   requestAnimationFrame(()=>{
+     const w=l.offsetWidth,h=l.offsetHeight,vw=window.innerWidth,vh=window.innerHeight;
+     const left=Math.max(8,Math.min(vw-w-8,s.right-w));
+     let top=s.bottom+4;if(top+h>vh-8)top=Math.max(8,s.top-h-4);
+     l.style.left=left+'px';l.style.top=top+'px';l.style.maxHeight=(vh-16)+'px';l.style.overflow='auto';l.style.visibility='';
+   });
+ },true);
+ const closeMenus=()=>document.querySelectorAll('details.pfcMenuV363[open]').forEach(o=>{o.open=false});
+ document.addEventListener('pointerdown',e=>{if(!e.target.closest?.('details.pfcMenuV363'))closeMenus()},true);
+ window.addEventListener('scroll',e=>{if(e.target?.closest?.('.pfcMenuListV363'))return;if(document.querySelector('details.pfcMenuV363[open]'))closeMenus()},true);
+ window.addEventListener('resize',()=>closeMenus());
  function scrollToday(smooth){
-   const sc=E('planScrollV362');if(!sc)return;const t=sc.querySelector('.planTodayV362');if(!t)return;
+   const sc=curSc();if(!sc)return;const t=sc.querySelector('.planTodayV362');if(!t)return;
    const x=parseFloat(t.style.left)-LABELW-DW*3;sc.scrollTo({left:Math.max(0,x),behavior:smooth?'smooth':'auto'});
  }
 
@@ -21350,7 +21378,8 @@ document.addEventListener('DOMContentLoaded',()=>{
      bar.addEventListener('pointerup',ev=>{
        const d=view.dragging;view.dragging=null;if(!d||d.bar!==bar)return;
        const p=projectById(bar.dataset.project),s=p&&stepById(p,bar.dataset.step);if(!s)return;
-       if(!d.moved||!editable){openPlanStepV362(p.id,s.id);return}
+       if(!editable){if(Math.abs(ev.clientX-d.x)<5)openPlanStepV362(p.id,s.id);return} // Nur Ansicht: Ziehen verschiebt die Ansicht
+       if(!d.moved){openPlanStepV362(p.id,s.id);return}
        const cols=Math.round((ev.clientX-d.x)/DW);
        const lateBefore=milestones(p).filter(m=>msInfo(p,m).state==='late').map(m=>m.id);
        if(d.resize){s.days=Math.max(1,(s.days|0)+cols)}
@@ -32627,7 +32656,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V369';
+   if(v)v.textContent='Aktuelle Version: V370';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
