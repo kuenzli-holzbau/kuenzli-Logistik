@@ -4555,6 +4555,19 @@ html body .projectsShell.planWideV366 .projectDetailBody,html body .projectsShel
 .planBarPeopleV367 b+b::before{content:'· ';color:inherit;opacity:.6}
 .planBarPeopleV367 b.clash{color:#b3261e}
 .planBarPeopleV367 b.clash::after{content:' ⚠'}
+/* V372: Text neben zu kurzen Balken */
+.planBarV362.lblOutV372{overflow:visible}
+.planBarV362.lblOutV372 .planBarStackV367{position:absolute;left:calc(100% + 7px);top:50%;transform:translateY(-50%);overflow:visible;flex:none;pointer-events:none;z-index:4}
+.planBarV362.lblLeftV372 .planBarStackV367{left:auto;right:calc(100% + 7px);align-items:flex-end}
+.planBarV362.lblOutV372 .planBarTextV362,.planBarV362.lblOutV372 .planBarPeopleV367{overflow:visible;padding:0;color:#14251d;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 2px #fff}
+.planBarV362.lblOutV372 .planBarPeopleV367 b{color:#2b3d34}
+.planBarV362.lblOutV372.lateV364 .planBarTextV362{color:#b3261e}
+b.wrapV372{white-space:normal!important;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.12!important;overflow:hidden!important;overflow-wrap:anywhere;text-overflow:clip!important}
+.planLabelV362.hasWrapV372>span{display:none}
+.planLabelV362.hasWrapV372>b.wrapV372{grid-row:1/3;align-self:center;font-size:13.5px}
+.planFloorRowV363 .planLabelV362>b.wrapV372{font-size:12px!important;line-height:1.05!important}
+.pfcTopV363>b.wrapV372{font-size:15px!important}
+.planFloorCornerV363.hasWrapV372>span{display:none}
 .planBarV362.st-done .planBarPeopleV367 b{color:#fff}
 
 /* V368 · Gruppen, Spaltenbreite */
@@ -4635,7 +4648,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V371</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V372</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -4849,7 +4862,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V371</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V372</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7578,7 +7591,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V371</b></p><div class="releaseNote"><b>Neu in V371</b><br>Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V372</b></p><div class="releaseNote"><b>Neu in V372</b><br>Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -21332,7 +21345,25 @@ document.addEventListener('DOMContentLoaded',()=>{
  }
  // V370: Projekt-Planung und Übersicht haben je eine eigene Tabelle → immer die sichtbare nehmen (vorher per ID → oft die versteckte)
  function curSc(){return [...document.querySelectorAll('.planScrollV362')].find(s=>s.offsetParent)||null}
- function afterRender(){document.querySelectorAll('.planScrollV362').forEach(attachPan);fitHeight();requestAnimationFrame(fitHeight)}
+ function afterRender(){document.querySelectorAll('.planScrollV362').forEach(attachPan);fitHeight();fitBarLabels();requestAnimationFrame(fitHeight)}
+ /* V372: Passt der Name (oder die Personen) nicht in einen Balken, steht der Text vollständig neben dem Balken. */
+ function fitBarLabels(){
+   const sc=curSc();if(!sc)return;
+   // Namen in der linken Spalte: statt «…» auf zwei Zeilen umbrechen (Zusatzzeile weicht dafür)
+   sc.querySelectorAll('.planLabelV362>b,.planGroupLabelV368>b,.pfcTopV363>b').forEach(b=>{
+     const box=b.closest('.planLabelV362,.planFloorCornerV363');b.classList.remove('wrapV372');box?.classList.remove('hasWrapV372');
+     if(b.scrollWidth>b.clientWidth+1){b.classList.add('wrapV372');box?.classList.add('hasWrapV372')}
+   });const inner=sc.querySelector('.planInnerV362');const maxR=inner?inner.scrollWidth:1e9;
+   sc.querySelectorAll('.planBarV362').forEach(bar=>{
+     bar.classList.remove('lblOutV372','lblLeftV372');
+     const st=bar.querySelector('.planBarStackV367');if(!st)return;
+     const parts=[...st.children];
+     if(!parts.some(x=>x.scrollWidth>x.clientWidth+1))return;
+     bar.classList.add('lblOutV372');
+     const w=st.getBoundingClientRect().width,l=bar.offsetLeft+bar.offsetWidth+8+(bar.parentElement?.offsetLeft||0);
+     if(l+w>maxR&&bar.offsetLeft>w+8)bar.classList.add('lblLeftV372');
+   });
+ }
  /* V370: «⋯»-Menü schwebt über der Tabelle (position:fixed), damit es nie von der nächsten Gruppe verdeckt wird */
  document.addEventListener('toggle',ev=>{
    const d=ev.target;if(!(d instanceof HTMLElement)||!d.classList.contains('pfcMenuV363'))return;
@@ -21792,8 +21823,14 @@ document.addEventListener('DOMContentLoaded',()=>{
          color(c[2]);doc.setFont('helvetica','bold');doc.setFontSize(6.6);
          const label=(sp.cutL?'< ':'')+(lateMs.length?'! ':'')+s.name+(pr!=null&&st!=='done'?' · '+pr+' %':'')+(sp.cutR?' >':'');
          const ty=opt.people&&ppl.length?by+bh/2-.4:by+bh/2+1.1;
-         if(bw>6){doc.text(fit(label,bw-2),bx+1,ty);if(opt.people&&ppl.length){doc.setFont('helvetica','normal');doc.setFontSize(5.8);doc.text(fit(ppl.join(', '),bw-2),bx+1,ty+2.8)}}
-         else{color('#17201c');const room=X0+days.length*DW-(bx+bw+1);if(room>10)doc.text(fit(label,room),bx+bw+1,ty)}
+         const pTxt=opt.people&&ppl.length?T(ppl.join(', ')):'';
+         const needW=Math.max(doc.getTextWidth(T(label)),pTxt?(doc.setFontSize(5.8),doc.getTextWidth(pTxt)):0);doc.setFontSize(6.6);
+         const roomR=X0+days.length*DW-(bx+bw+1.2),roomL=bx-X0-1.2;
+         // V372: passt der Text nicht in den Balken, steht er vollständig daneben (rechts, sonst links)
+         const out=needW>bw-2&&(roomR>=needW||roomL>=needW||Math.max(roomR,roomL)>bw);
+         const tx=!out?bx+1:roomR>=needW||roomR>=roomL?bx+bw+1.2:bx-1.2,al=!out||tx>bx?'left':'right',room=!out?bw-2:(al==='left'?roomR:roomL);
+         if(out)color('#17201c');
+         if(out||bw>6){doc.text(fit(label,room),tx,ty,{align:al});if(pTxt){doc.setFont('helvetica','normal');doc.setFontSize(5.8);if(out)color('#1d4f91');doc.text(fit(pTxt,room),tx,ty+2.8,{align:al})}}
          pos[p.id+'|'+s.id]={p,s,x0:sp.cutL?null:bx,x1:sp.cutR?null:bx+bw,y:by+bh/2};
        }
        y+=h;total++;
@@ -32656,7 +32693,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V371';
+   if(v)v.textContent='Aktuelle Version: V372';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
