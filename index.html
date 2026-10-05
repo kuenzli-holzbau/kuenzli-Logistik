@@ -4660,7 +4660,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V374</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V375</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -4874,7 +4874,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V374</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V375</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7603,7 +7603,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V374</b></p><div class="releaseNote"><b>Neu in V374</b><br>Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V375</b></p><div class="releaseNote"><b>Neu in V375</b><br>Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -21307,7 +21307,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  function openCtx(ev,p,s){
    closeCtx();const editable=canEdit(),linked=progLinked(p,s),pr=progress(p,s)??0,st=s.status||'open';
    const m=document.createElement('div');m.id='planCtxV374';m.className='planCtxV374';m.setAttribute('role','menu');
-   const pid=esc(p.id),sid=esc(s.id);
+   const pid0=p.id,sid0=s.id;
    m.innerHTML=`<div class="pcxHeadV374"><b>${esc(s.name)}</b><span>${fmtD(s.start)} – ${fmtD(stepEnd(s))}</span></div>
      <div class="pcxSecV374">Fortschritt <b id="pcxValV374">${pr} %</b>${linked?'<small>wird aus der Elementgruppe berechnet</small>':''}</div>
      ${editable&&!linked?`<div class="pcxProgV374">${[0,25,50,75,100].map(v=>`<button type="button" data-prog="${v}" class="${v===pr?'on':''}">${v} %</button>`).join('')}</div>
@@ -21319,16 +21319,18 @@ document.addEventListener('DOMContentLoaded',()=>{
    const w=m.offsetWidth,hh=m.offsetHeight;
    m.style.left=Math.max(8,Math.min(window.innerWidth-w-8,ev.clientX))+'px';
    m.style.top=Math.max(8,Math.min(window.innerHeight-hh-8,ev.clientY))+'px';
-   const apply=fn=>{if(!canEdit())return;const lateBefore=milestones(p).filter(x=>msInfo(p,x).state==='late').map(x=>x.id);fn();s.updatedAt=new Date().toISOString();save(p);closeCtx();window.renderPlanVisibleV362();warnMilestonesV364(p,lateBefore)};
+   // V375: Projekt und Schritt beim Klick frisch holen – der Cloud-Abgleich ersetzt die Objekte, während das Menü offen ist
+   const apply=fn=>{if(!canEdit())return;const P=projectById(pid0),S=P&&stepById(P,sid0);if(!S){closeCtx();alert('Dieser Arbeitsschritt wurde inzwischen gelöscht oder verschoben.');return}
+     const lateBefore=milestones(P).filter(x=>msInfo(P,x).state==='late').map(x=>x.id);fn(S);S.updatedAt=new Date().toISOString();save(P);closeCtx();window.renderPlanVisibleV362();warnMilestonesV364(P,lateBefore)};
    m.addEventListener('click',e=>{
      const b=e.target.closest('button');if(!b)return;
-     if(b.dataset.prog!=null)apply(()=>setStepProgress(s,+b.dataset.prog));
-     else if(b.dataset.st)apply(()=>setStepStatus(s,b.dataset.st));
-     else if(b.dataset.act==='open'){closeCtx();openPlanStepV362(p.id,s.id)}
-     else if(b.dataset.act==='dup'){closeCtx();duplicatePlanStepV368(p.id,s.id)}
+     if(b.dataset.prog!=null)apply(S=>setStepProgress(S,+b.dataset.prog));
+     else if(b.dataset.st)apply(S=>setStepStatus(S,b.dataset.st));
+     else if(b.dataset.act==='open'){closeCtx();openPlanStepV362(pid0,sid0)}
+     else if(b.dataset.act==='dup'){closeCtx();duplicatePlanStepV368(pid0,sid0)}
    });
    const r=m.querySelector('#pcxRangeV374');
-   if(r){r.addEventListener('input',()=>{E('pcxValV374').textContent=r.value+' %'});r.addEventListener('change',()=>apply(()=>setStepProgress(s,+r.value)))}
+   if(r){r.addEventListener('input',()=>{E('pcxValV374').textContent=r.value+' %'});r.addEventListener('change',()=>apply(S=>setStepProgress(S,+r.value)))}
  }
  document.addEventListener('contextmenu',ev=>{
    const t=ev.target.closest?.('.planBarV362[data-step],.planLabelV362[data-step]');if(!t)return;
@@ -21337,7 +21339,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  });
  document.addEventListener('pointerdown',e=>{if(E('planCtxV374')&&!e.target.closest('#planCtxV374'))closeCtx()},true);
  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCtx()});
- window.addEventListener('scroll',e=>{if(E('planCtxV374')&&!e.target?.closest?.('#planCtxV374'))closeCtx()},true);
+ window.addEventListener('scroll',e=>{if(E('planCtxV374')&&(e.target===document||e.target===document.scrollingElement))closeCtx()},true);
  window.addEventListener('resize',closeCtx);
  window.duplicatePlanStepV368=function(pid,sid){
    if(!canEdit())return;const p=projectById(pid);if(!p)return;const s=stepById(p,sid);if(!s)return;
@@ -32783,7 +32785,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V374';
+   if(v)v.textContent='Aktuelle Version: V375';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
