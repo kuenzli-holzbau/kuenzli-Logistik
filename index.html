@@ -4475,6 +4475,20 @@ html body nav .nav,html body .navMoreBtnV360{align-items:center!important;gap:10
 .planBarTextV362{position:relative;z-index:1;padding:0 10px;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .planBarFillV362{position:absolute;left:0;top:0;bottom:0;background:rgba(46,125,50,.28)}
 /* V376: Band für Schritte der übergeordneten Gruppe */
+/* V377: Schemas */
+#planSchemaModalV377{z-index:9600}
+.pschV377{max-width:760px}
+.pschListV377{display:grid;gap:6px;margin-top:12px;max-height:34vh;overflow:auto}
+.pschItemV377{display:flex!important;align-items:center;gap:10px;padding:8px 10px;border:1px solid #dde3e0;border-radius:12px;cursor:pointer;margin:0!important}
+.pschItemV377 input{width:20px!important;height:20px!important;min-height:0!important;flex:none;margin:0!important}
+.pschItemV377>span:first-of-type{flex:1;min-width:0}.pschItemV377 b{display:block}.pschItemV377 small{color:#6b7772}
+.pschItemV377:has(input:checked){border-color:#2e7d32;background:#f1f8f2}
+.pschActsV377{display:flex;gap:6px}.pschActsV377 .btn{min-height:34px;padding:4px 10px;font-size:13px}
+.pschPrevV377{margin-top:10px;max-height:28vh;overflow:auto;border:1px solid #e3e7e5;border-radius:10px}
+.pschPrevV377 table{width:100%;border-collapse:collapse;font-size:13px}.pschPrevV377 th{position:sticky;top:0;background:#f2f4f3;text-align:left;padding:6px 8px}.pschPrevV377 td{padding:5px 8px;border-top:1px solid #eef1f0}
+.pschRowV377{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}.pschRowV377 label{display:flex;flex-direction:column;gap:4px;font-weight:600;font-size:14px;flex:1 1 220px}
+.pschRowV377 input{min-height:44px;font-size:16px}
+.pschChkV377{display:flex!important;align-items:center;gap:8px;margin-top:10px!important;font-weight:600}.pschChkV377 input{width:20px!important;height:20px!important;min-height:0!important;margin:0!important}
 .planBandV376{position:absolute;top:0;bottom:-1px;z-index:1;pointer-events:none;border-left:2px dashed;border-right:2px dashed;box-sizing:border-box}
 .planBandV376.st-open{background:rgba(217,164,0,.13);border-color:rgba(217,164,0,.55)}
 .planBandV376.st-progress{background:rgba(46,125,50,.11);border-color:rgba(46,125,50,.5)}
@@ -4601,6 +4615,8 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
 .planGroupRowV368.lvl2{background:#fafcfa}
 .planGroupLabelV368{display:flex!important;align-items:center;gap:4px;background:#f1f6f2!important}
 .planGroupRowV368.lvl2 .planGroupLabelV368{background:#f7faf8!important}
+.planGroupRowV368.lvl3,.planGroupRowV368.lvl4,.planGroupRowV368.lvl5,.planGroupRowV368.lvl6,.planGroupRowV368.lvl7{background:#fafcfa}
+.planGroupRowV368.lvl3 .planGroupLabelV368,.planGroupRowV368.lvl4 .planGroupLabelV368,.planGroupRowV368.lvl5 .planGroupLabelV368,.planGroupRowV368.lvl6 .planGroupLabelV368,.planGroupRowV368.lvl7 .planGroupLabelV368{background:#f7faf8!important}
 .planGroupLabelV368 b{font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1 1 auto}
 .planGroupLabelV368>span{font-size:11px;color:var(--mut);white-space:nowrap;flex:0 0 auto}
 .pgCountV368{background:#e3ebe6;border-radius:999px;padding:1px 7px;font-weight:600}
@@ -4668,7 +4684,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V376</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V377</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -4882,7 +4898,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V376</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V377</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7611,7 +7627,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V376</b></p><div class="releaseNote"><b>Neu in V376</b><br>Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V377</b></p><div class="releaseNote"><b>Neu in V377</b><br>Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -10976,14 +10992,14 @@ async function checkCloudForUpdates(force=false){
 
 
 function entityCollections(){
- return ['areas','racks','packages','commissions','controls','users','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324'];
+ return ['areas','racks','packages','commissions','controls','users','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','planSchemasV377'];
 }
 function canWriteCloudEntity(type,action='save'){
  let role=currentRole();
  if(role==='Administrator')return true;
  if(role==='Lagerverantwortlicher'){
    if(type==='users')return false;
-   return ['areas','racks','packages','commissions','controls','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','__state'].includes(type);
+   return ['areas','racks','packages','commissions','controls','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','__state','planSchemasV377'].includes(type);
  }
  if(role==='Mitarbeiter'){
    if(action==='save')return ['packages','controls','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers'].includes(type);
@@ -21110,7 +21126,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     Gespeichert wie bisher in plan.floors (Feld parentId für Untergruppen) → bestehende Geschosse
     sind automatisch Gruppen der obersten Ebene, nichts muss umgebaut werden.
     Schritte gehören über floorId zu einer Gruppe. Auf-/Zuklappen merkt sich jedes Gerät selbst. */
- const MAX_DEPTH=3;
+ const MAX_DEPTH=8; // V377: mehr Ebenen (vorher 3)
  function groupsAll(p){const f=plan(p).floors;return Array.isArray(f)?f:[]}
  function gById(p,id){return id?groupsAll(p).find(g=>g.id===id):null}
  function gParent(p,g){const pid=g&&g.parentId;return pid&&pid!==g.id&&gById(p,pid)?pid:''}
@@ -21162,6 +21178,8 @@ document.addEventListener('DOMContentLoaded',()=>{
    const sib=gChildren(p,gParent(p,g)),i=sib.findIndex(x=>x.id===g.id),d=gDepth(p,g.id);
    return `<button type="button" onclick="${c}renamePlanFloorV363('${pid}','${gid}')">✎ Umbenennen</button>
      ${d<MAX_DEPTH-1?`<button type="button" onclick="${c}addPlanGroupV368('${pid}','${gid}')">＋ Untergruppe</button>`:''}
+     <button type="button" onclick="${c}openPlanSchemaV377('${pid}','${gid}')">◧ Schema einfügen …</button>
+     ${canManageSchemas()?`<button type="button" onclick="${c}saveGroupAsSchemaV377('${pid}','${gid}')">◧ Als Schema speichern</button>`:''}
      <button type="button" onclick="${c}duplicatePlanGroupV368('${pid}','${gid}')">⧉ Gruppe duplizieren</button>
      <button type="button" onclick="${c}movePlanGroupToV368('${pid}','${gid}')">⇄ Verschieben in …</button>
      ${i>0?`<button type="button" onclick="${c}movePlanFloorV363('${pid}','${gid}',-1)">↑ Nach oben</button>`:''}${i<sib.length-1?`<button type="button" onclick="${c}movePlanFloorV363('${pid}','${gid}',1)">↓ Nach unten</button>`:''}
@@ -21180,7 +21198,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    const editable=canEdit(),pid=esc(p.id);
    const days=range([p]);
    const tools=`<div class="planToolsV362">
-     ${editable?`<button class="btn" type="button" onclick="addPlanGroupV368('${pid}','')">+ Gruppe</button><button class="btn secondary" type="button" onclick="openPlanMilestoneV364('${pid}','','')">◆ Meilenstein</button>`:'<span class="muted">Nur Ansicht – Bearbeiten braucht das Recht «Produktionsplanung bearbeiten».</span>'}
+     ${editable?`<button class="btn" type="button" onclick="addPlanGroupV368('${pid}','')">+ Gruppe</button><button class="btn secondary" type="button" onclick="openPlanSchemaV377('${pid}','')">◧ Schema</button><button class="btn secondary" type="button" onclick="openPlanMilestoneV364('${pid}','','')">◆ Meilenstein</button>`:'<span class="muted">Nur Ansicht – Bearbeiten braucht das Recht «Produktionsplanung bearbeiten».</span>'}
      <button class="btn secondary" type="button" onclick="scrollPlanTodayV362()">Heute</button><button class="btn secondary" type="button" onclick="openPlanPdfV369('project')">⤓ PDF</button>
      <span class="planLegendV362"><em class="planChipV362 st-open">Geplant</em><em class="planChipV362 st-progress">In Arbeit</em><em class="planChipV362 st-done">Erledigt</em><em class="planChipV362 st-blocked">Blockiert</em></span></div>`;
    const tops=gChildren(p,'').map(g=>({g,virtual:false}));
@@ -21312,6 +21330,90 @@ document.addEventListener('DOMContentLoaded',()=>{
    enforceDeps(p);save(p);renderProjectPlan();
    alert('Gruppe dupliziert: '+copies.length+' Gruppe(n), '+st.length+' Arbeitsschritt(e).');
  };
+ /* ---------- V377: Schemas (Vorlagen) für wiederkehrende Abläufe, z.B. ein Transport ----------
+    Ein Schema speichert eine Gruppe mit allen Untergruppen und Arbeitsschritten (Dauer, Mannschaft,
+    Personen, Abhängigkeiten, Abstand in Arbeitstagen zum ersten Schritt). Beim Einfügen wird alles
+    ab einem gewählten Startdatum neu angelegt – danach nur noch anpassen.
+    Gespeichert als eigene Cloud-Objekte (st.planSchemasV377, je Schema ein Eintrag); Löschen = Markierung «deleted»,
+    damit es auf allen Geräten ankommt (der Abgleich löscht nie automatisch). */
+ function allSchemas(){if(!Array.isArray(st.planSchemasV377))st.planSchemasV377=[];return st.planSchemasV377}
+ function schemas(){return allSchemas().filter(x=>x&&x.id&&!x.deleted)}
+ function canManageSchemas(){if(!canEdit())return false;try{return ['Administrator','Lagerverantwortlicher'].includes(currentRole())}catch(_e){return false}}
+ function upsertSchema(sc){const a=allSchemas(),i=a.findIndex(x=>x&&x.id===sc.id);if(i>=0)a[i]=sc;else a.push(sc);persist()}
+ const wdiff=(a,b)=>b<=a?0:workdays(a,b).length-1;
+ function schemaFromGroup(p,gid){
+   const g=gById(p,gid),ids=[gid,...gDesc(p,gid)],steps=subtreeSteps(p,gid);
+   const keyG={};ids.forEach((id,i)=>keyG[id]=i?'g'+i:'');
+   const keyS={};steps.forEach((s,i)=>keyS[s.id]='s'+i);
+   const t0=steps.length?steps.map(s=>nextWork(s.start)).sort()[0]:'';
+   return {
+     groups:ids.slice(1).map(id=>{const o=gById(p,id);return {key:keyG[id],name:o.name,parentKey:keyG[gParent(p,o)]||''}}),
+     steps:sortSteps(steps).map(s=>({key:keyS[s.id],name:s.name,groupKey:keyG[floorIdOf(p,s)]||'',offset:t0?wdiff(t0,nextWork(s.start)):0,days:Math.max(1,s.days|0),crew:Math.max(0,s.crew|0),people:(s.people||[]).slice(),deps:(s.deps||[]).filter(d=>keyS[d]).map(d=>keyS[d]),note:s.note||''})),
+     source:g?.name||''
+   };
+ }
+ window.saveGroupAsSchemaV377=function(pid,gid){
+   if(!canManageSchemas()){alert('Schemas speichern dürfen Administrator und Lagerverantwortliche (mit Recht «Produktionsplanung bearbeiten»).');return}
+   const p=projectById(pid);if(!p)return;const g=gById(p,gid);if(!g)return;
+   const body=schemaFromGroup(p,gid);if(!body.steps.length){alert('Die Gruppe «'+g.name+'» enthält noch keine Arbeitsschritte.');return}
+   const name=String(prompt('Gruppe «'+g.name+'» als Schema speichern.\n'+body.steps.length+' Arbeitsschritt(e), '+body.groups.length+' Untergruppe(n).\n\nName des Schemas (z.B. Transport Kiste 3 Geschosse):',g.name)||'').trim();if(!name)return;
+   const same=schemas().find(x=>String(x.name).toLowerCase()===name.toLowerCase());
+   if(same&&!confirm('Es gibt bereits ein Schema «'+same.name+'». Ersetzen?'))return;
+   const now=new Date().toISOString(),by=(typeof cloudMember!=='undefined'&&cloudMember?.name)||'';
+   const sc=Object.assign({id:same?same.id:'sch_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name,createdAt:same?.createdAt||now,updatedAt:now,updatedBy:by},body);
+   upsertSchema(sc);
+   alert('Schema «'+name+'» gespeichert. Einfügen über «◧ Schema» oben oder im «⋯»-Menü einer Gruppe.');
+ };
+ function schemaDialog(){let m=E('planSchemaModalV377');if(!m){m=document.createElement('div');m.id='planSchemaModalV377';m.className='modal';document.body.appendChild(m)}return m}
+ // targetGid: '' = neue Gruppe oberste Ebene anlegen; sonst in diese Gruppe einfügen
+ window.openPlanSchemaV377=function(pid,targetGid){
+   if(!canEdit()){alert('Für die Produktionsplanung ist keine Bearbeitungs-Berechtigung freigeschaltet.');return}
+   const p=projectById(pid);if(!p)return;const list=schemas().slice().sort((a,b)=>String(a.name).localeCompare(String(b.name),'de-CH'));
+   const tg=targetGid?gById(p,targetGid):null;
+   const lastIn=tg?subtreeSteps(p,tg.id).map(stepEnd).sort().pop():'';
+   const start=lastIn?dayAfter(lastIn):nextWork(todayKey());
+   const m=schemaDialog(),manage=canManageSchemas();
+   m.innerHTML=`<div class="modalbox planDialogV362 pschV377"><div class="manageHead"><div><h2 style="margin:0">Schema einfügen</h2><p class="muted" style="margin:4px 0 0">${tg?'in Gruppe «'+esc(gPath(p,tg.id))+'»':'als neue Gruppe in '+esc(p.name||'Projekt')}</p></div><button class="btn secondary" type="button" onclick="closeM('planSchemaModalV377')">Schliessen</button></div>
+     ${list.length?`<div class="pschListV377">${list.map((s,i)=>`<label class="pschItemV377"><input type="radio" name="pschSel" value="${esc(s.id)}" ${i?'':'checked'}><span><b>${esc(s.name)}</b><small>${(s.steps||[]).length} Arbeitsschritte · ${(s.groups||[]).length} Untergruppen · ${schemaSpan(s)} Arbeitstage</small></span>${manage?`<span class="pschActsV377"><button type="button" class="btn secondary" data-ren="${esc(s.id)}">Umbenennen</button><button type="button" class="btn danger" data-del="${esc(s.id)}">Löschen</button></span>`:''}</label>`).join('')}</div>
+     <div class="pschPrevV377" id="pschPrev"></div>
+     <div class="pschRowV377">${tg?'':`<label>Name der neuen Gruppe<input id="pschName" placeholder="z.B. Transport KW-C-FA-53"></label>`}<label>Start (erster Arbeitsschritt)<input id="pschStart" type="date" value="${start}"></label></div>
+     <label class="pschChkV377"><input type="checkbox" id="pschPeople" checked> Personen übernehmen</label>
+     <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px"><button class="btn secondary" type="button" onclick="closeM('planSchemaModalV377')">Abbrechen</button><button class="btn" type="button" id="pschGo">Einfügen</button></div>`
+     :`<div class="planEmptyV362" style="margin-top:12px"><b>Noch kein Schema vorhanden.</b><br>So legst du eins an: eine fertig geplante Gruppe (z.B. einen Transport mit Geschossen und Arbeitsschritten) über ihr «⋯»-Menü → «◧ Als Schema speichern».</div>`}</div>`;
+   const prev=()=>{const id=m.querySelector('input[name=pschSel]:checked')?.value;const s=list.find(x=>x.id===id);const el=E('pschPrev');if(!s||!el)return;
+     const gname=k=>{const parts=[];let g=(s.groups||[]).find(x=>x.key===k);const seen=new Set();while(g&&!seen.has(g.key)){seen.add(g.key);parts.unshift(g.name);g=(s.groups||[]).find(x=>x.key===g.parentKey)}return parts.join(' › ')};
+     el.innerHTML=`<table><thead><tr><th>Arbeitsschritt</th><th>Gruppe</th><th>Tag</th><th>Dauer</th><th>MA</th></tr></thead><tbody>${(s.steps||[]).slice().sort((a,b)=>a.offset-b.offset).map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(gname(x.groupKey)||'Hauptgruppe')}</td><td>${x.offset+1}</td><td>${x.days} AT</td><td>${x.crew||''}</td></tr>`).join('')}</tbody></table>`;
+     const n=E('pschName');if(n&&!n.dataset.touched)n.value=s.name;};
+   m.querySelectorAll('input[name=pschSel]').forEach(r=>r.addEventListener('change',prev));
+   E('pschName')?.addEventListener('input',e=>{e.target.dataset.touched='1'});
+   m.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();const s=list.find(x=>x.id===b.dataset.del);if(!s||!confirm('Schema «'+s.name+'» löschen? Bereits eingefügte Planungen bleiben unverändert.'))return;upsertSchema(Object.assign({},s,{deleted:true,deletedAt:new Date().toISOString(),updatedAt:new Date().toISOString()}));openPlanSchemaV377(pid,targetGid)}));
+   m.querySelectorAll('[data-ren]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();const s=list.find(x=>x.id===b.dataset.ren);if(!s)return;const n=String(prompt('Neuer Name für das Schema:',s.name)||'').trim();if(!n)return;upsertSchema(Object.assign({},s,{name:n,updatedAt:new Date().toISOString()}));openPlanSchemaV377(pid,targetGid)}));
+   E('pschGo')?.addEventListener('click',()=>{
+     const id=m.querySelector('input[name=pschSel]:checked')?.value;const s=list.find(x=>x.id===id);if(!s)return;
+     const st0=E('pschStart').value;if(!st0){alert('Bitte ein Startdatum wählen.');return}
+     const P=projectById(pid);if(!P)return;
+     const r=applySchema(P,s,targetGid,String(E('pschName')?.value||s.name).trim()||s.name,nextWork(st0),E('pschPeople').checked);
+     if(!r)return;closeM('planSchemaModalV377');renderProjectPlan();
+     alert('Schema «'+s.name+'» eingefügt: '+r.steps+' Arbeitsschritt(e)'+(r.groups?', '+r.groups+' Gruppe(n)':'')+(r.pushed?'\n'+r.pushed+' Schritt(e) wegen Abhängigkeiten verschoben.':'')+'\nJetzt nur noch anpassen (Namen, Termine, Personen).');
+   });
+   prev();m.classList.add('open');
+ };
+ function schemaSpan(s){let mx=0;(s.steps||[]).forEach(x=>{mx=Math.max(mx,(x.offset|0)+Math.max(1,x.days|0))});return mx}
+ function applySchema(p,s,targetGid,newName,start,withPeople){
+   if(!canEdit())return null;const pl=plan(p,true);pl.floors=Array.isArray(pl.floors)?pl.floors:[];
+   let root=targetGid&&gById(p,targetGid)?targetGid:'';let made=0;
+   if(!root){root=newGid();pl.floors.push({id:root,name:newName,parentId:''});made++}
+   const gmap={'':root};
+   // Untergruppen in Reihenfolge der Eltern anlegen
+   const pending=(s.groups||[]).slice();let guard=0;
+   while(pending.length&&guard++<500){const g=pending.shift();if(gmap[g.parentKey||'']==null){pending.push(g);continue}const id=newGid();gmap[g.key]=id;pl.floors.push({id,name:g.name,parentId:gmap[g.parentKey||'']});made++}
+   const smap={};(s.steps||[]).forEach(x=>smap[x.key]=uid());
+   const now=new Date().toISOString();
+   (s.steps||[]).forEach(x=>pl.steps.push({id:smap[x.key],name:x.name,floorId:gmap[x.groupKey||'']||root,commissionId:commissions(p)[0]?.id||'',start:addWork(start,x.offset|0),days:Math.max(1,x.days|0),crew:Math.max(0,x.crew|0),people:withPeople?(x.people||[]).slice():[],groupId:'',deps:(x.deps||[]).map(d=>smap[d]).filter(Boolean),status:'open',note:x.note||'',updatedAt:now}));
+   const c=collapsed();c.delete(p.id+'|'+root);try{localStorage.setItem(COLL_KEY,JSON.stringify([...c]))}catch(_e){}
+   const pushed=enforceDeps(p);save(p);
+   return {steps:(s.steps||[]).length,groups:made,pushed};
+ }
  /* ---------- V374: Rechtsklick auf einen Arbeitsschritt → Fortschritt / Status ändern ---------- */
  function progLinked(p,s){const g=s.groupId&&(p.productionPlan?.groups||[]).find(x=>x.id===s.groupId);return !!(g&&(g.elements||[]).length)}
  function setStepProgress(s,v){
@@ -32809,7 +32911,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V376';
+   if(v)v.textContent='Aktuelle Version: V377';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
