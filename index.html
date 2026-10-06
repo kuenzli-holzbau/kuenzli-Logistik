@@ -4567,7 +4567,7 @@ body.planLinkingV378 .planBarV362:not(.linkSrcV378):not(.linkOffV378):hover{outl
 .planFloorCornerV363{display:flex;flex-direction:column;justify-content:center;width:100%;min-width:0;gap:1px}
 .pfcTopV363{display:flex;align-items:center;gap:4px;min-width:0}
 .pfcTopV363 b{flex:1 1 auto;min-width:0;font-size:18px;line-height:1.15;color:#14251d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.planFloorCornerV363>span{font-size:12px;font-weight:400;color:var(--mut);line-height:1.2}
+.planFloorCornerV363>span{font-size:12px;font-weight:400;color:var(--mut);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pfcBtnV363{flex:0 0 auto;display:inline-grid;place-items:center;border:1px solid var(--line);background:#fff;border-radius:8px;width:28px;height:28px;padding:0;font-size:16px;line-height:1;cursor:pointer;color:#24352d;list-style:none}
 .pfcMenuV363{position:relative}.pfcMenuV363>summary::-webkit-details-marker{display:none}
 .pfcMenuListV363{position:absolute;right:0;top:calc(100% + 4px);z-index:20;min-width:190px;display:grid;gap:2px;padding:6px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 28px rgba(0,0,0,.16)}
@@ -4578,7 +4578,7 @@ body.planLinkingV378 .planBarV362:not(.linkSrcV378):not(.linkOffV378):hover{outl
 .planFloorEmptyBtnsV363 .btn{min-height:34px!important;padding:4px 12px}
 .planFloorRowV363{height:30px}.planFloorRowV363 .planLabelV362{background:#f6f9f7}.planFloorRowV363 .planLabelV362 b{font-size:13px;color:var(--mut)}
 .planDepFloorV363{font-size:11px;font-weight:600;background:#eef2ef;border-radius:6px;padding:1px 6px}
-.planLoadSectionV363{border-top:6px solid #e6ece8}
+.planLoadSectionV363{border-top:6px solid #e6ece8;position:sticky;bottom:0;z-index:9;background:#fafbfa;box-shadow:0 -4px 10px rgba(0,0,0,.06)} /* V380: Auslastung bleibt unten sichtbar */
 .planHeadV362{z-index:8!important}
 @media(max-width:700px){.pfcTopV363 b{font-size:16px}.pfcBtnV363{width:30px;height:30px}}
 
@@ -4709,7 +4709,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V379</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V380</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -4923,7 +4923,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V379</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V380</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7652,7 +7652,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V379</b></p><div class="releaseNote"><b>Neu in V379</b><br>Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V380</b></p><div class="releaseNote"><b>Neu in V380</b><br>Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -21048,14 +21048,15 @@ document.addEventListener('DOMContentLoaded',()=>{
  }
  /* V379: Auslastung pro Kommission – Gruppen (z.B. Transporte) werden einer Kommission zugeordnet,
     alle Schritte darin übernehmen diese Kommission automatisch. */
+ function crewOf(s){return Math.max(Math.max(0,Number(s.crew)||0),(s.people||[]).filter(x=>String(x).trim()).length)} // V380: eingetragene Personen zählen mit
  function capacityC(c,date){const d=(c?.staffingDays||[]).find(x=>x.date===date);return d?Math.max(0,Number(d.employees)||0):null}
- function loadC(p,cid,date){return plan(p).steps.filter(s=>s.status!=='done'&&(s.commissionId||'')===cid&&s.start<=date&&stepEnd(s)>=date).reduce((n,s)=>n+Math.max(0,Number(s.crew)||0),0)}
+ function loadC(p,cid,date){return plan(p).steps.filter(s=>s.status!=='done'&&(s.commissionId||'')===cid&&s.start<=date&&stepEnd(s)>=date).reduce((n,s)=>n+crewOf(s),0)}
  function capacity(p,date){ // verfügbare MA laut Mitarbeiterplanung (Summe aller Kommissionen); null = nicht geplant
    let any=false,sum=0;
    commissions(p).forEach(c=>{const d=(c.staffingDays||[]).find(x=>x.date===date);if(d){any=true;sum+=Math.max(0,Number(d.employees)||0)}});
    return any?sum:null;
  }
- function load(p,date){return plan(p).steps.filter(s=>s.status!=='done'&&s.start<=date&&stepEnd(s)>=date).reduce((n,s)=>n+Math.max(0,Number(s.crew)||0),0)}
+ function load(p,date){return plan(p).steps.filter(s=>s.status!=='done'&&s.start<=date&&stepEnd(s)>=date).reduce((n,s)=>n+crewOf(s),0)}
 
  /* ---------- Darstellung ---------- */
  function range(projects){
@@ -21132,7 +21133,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    const w=Math.max(1,s.days|0)*DW-4,pr=progress(p,s);
    const st=s.status||'open';
    const lateMs=st==='done'?[]:lateMilestonesFor(p,s);
-   return `<div class="planBarV362 st-${st}${lateMs.length?' lateV364':''}" data-step="${esc(s.id)}" data-project="${esc(p.id)}" style="left:${i0*DW+2}px;width:${w}px" title="${esc(s.name)} · ${fmtD(s.start)} – ${fmtD(stepEnd(s))} · ${Math.max(1,s.days|0)} Arbeitstag(e)${s.crew?' · '+s.crew+' MA':''}${(s.people||[]).length?' · Personen: '+esc((s.people||[]).join(', ')):''}${lateMs.length?' · ⚠ zu spät für: '+lateMs.map(m=>msLabel(m)+' ('+fmtD(m.date)+')').join(', '):''}${(()=>{const c=peopleClashes(p,s);return c.length?' · ⚠ doppelt verplant: '+esc(c.map(x=>x.name+' ('+(x.project?x.project+': ':'')+x.step+')').join(', ')):''})()}">
+   return `<div class="planBarV362 st-${st}${lateMs.length?' lateV364':''}" data-step="${esc(s.id)}" data-project="${esc(p.id)}" style="left:${i0*DW+2}px;width:${w}px" title="${esc(s.name)} · ${fmtD(s.start)} – ${fmtD(stepEnd(s))} · ${Math.max(1,s.days|0)} Arbeitstag(e)${crewOf(s)?' · '+crewOf(s)+' MA':''}${(s.people||[]).length?' · Personen: '+esc((s.people||[]).join(', ')):''}${lateMs.length?' · ⚠ zu spät für: '+lateMs.map(m=>msLabel(m)+' ('+fmtD(m.date)+')').join(', '):''}${(()=>{const c=peopleClashes(p,s);return c.length?' · ⚠ doppelt verplant: '+esc(c.map(x=>x.name+' ('+(x.project?x.project+': ':'')+x.step+')').join(', ')):''})()}">
      ${pr!=null&&st!=='done'?`<div class="planBarFillV362" style="width:${pr}%"></div>`:''}
      <span class="planBarStackV367"><span class="planBarTextV362">${lateMs.length?'⚠ ':''}${st==='done'?'✓ ':st==='blocked'?'⛔ ':''}${esc(s.name)}${pr!=null&&st!=='done'?' · '+pr+' %':''}</span>${peopleHtml(p,s)}</span>
      ${editable?'<i class="planResizeV362" title="Dauer ziehen"></i>':''}</div>`;
@@ -21141,7 +21142,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    const c=commissions(p).find(x=>x.id===s.commissionId);
    const deps=(s.deps||[]).map(d=>stepById(p,d)?.name).filter(Boolean);
    const ind=floorIdOf(p,s)?gDepth(p,floorIdOf(p,s)):0;
-   return `<div class="planLabelV362" data-step="${esc(s.id)}" data-project="${esc(p.id)}" style="width:${LABELW}px;padding-left:${10+ind*16}px" onclick="openPlanStepV362('${esc(p.id)}','${esc(s.id)}')" title="${esc([s.name,(s.people||[]).length?'Personen: '+(s.people||[]).join(', '):'',deps.length?'nach: '+deps.join(', '):''].filter(Boolean).join('\n'))}"><b>${esc(s.name)}</b><span>${[(s.people||[]).length?'👤 '+(s.people||[]).join(', '):'',s.crew?s.crew+' MA':'',deps.length?'nach '+deps.join(', '):'',c?.name].filter(Boolean).map(esc).join(' · ')}</span><em class="planChipV362 st-${s.status||'open'}">${ST[s.status||'open']}</em></div>`;
+   return `<div class="planLabelV362" data-step="${esc(s.id)}" data-project="${esc(p.id)}" style="width:${LABELW}px;padding-left:${10+ind*16}px" onclick="openPlanStepV362('${esc(p.id)}','${esc(s.id)}')" title="${esc([s.name,(s.people||[]).length?'Personen: '+(s.people||[]).join(', '):'',deps.length?'nach: '+deps.join(', '):''].filter(Boolean).join('\n'))}"><b>${esc(s.name)}</b><span>${[(s.people||[]).length?'👤 '+(s.people||[]).join(', '):'',crewOf(s)?crewOf(s)+' MA':'',deps.length?'nach '+deps.join(', '):'',c?.name].filter(Boolean).map(esc).join(' · ')}</span><em class="planChipV362 st-${s.status||'open'}">${ST[s.status||'open']}</em></div>`;
  }
  function depsSvg(p,rows,days,top){
    const pos={};rows.forEach((s,r)=>{const i0=days.indexOf(nextWork(s.start));if(i0>=0)pos[s.id]={x0:i0*DW+2,x1:i0*DW+Math.max(1,s.days|0)*DW-2,y:top+r*ROWH+ROWH/2}});
@@ -21211,7 +21212,6 @@ document.addEventListener('DOMContentLoaded',()=>{
    return `<button type="button" onclick="${c}renamePlanFloorV363('${pid}','${gid}')">✎ Umbenennen</button>
      ${d<MAX_DEPTH-1?`<button type="button" onclick="${c}addPlanGroupV368('${pid}','${gid}')">＋ Untergruppe</button>`:''}
      <button type="button" onclick="${c}assignPlanCommissionV379('${pid}','${gid}')">🏷 Kommission zuordnen …</button>
-     ${groupComm(p,g.id)?`<button type="button" onclick="${c}openPlanStaffingV379('${pid}','${esc(groupComm(p,g.id))}')">👥 Mitarbeiterplanung ${esc(commissions(p).find(x=>x.id===groupComm(p,g.id))?.name||'')}</button>`:''}
      <button type="button" onclick="${c}openPlanSchemaV377('${pid}','${gid}')">◧ Schema einfügen …</button>
      ${canManageSchemas()?`<button type="button" onclick="${c}saveGroupAsSchemaV377('${pid}','${gid}')">◧ Als Schema speichern</button>`:''}
      <button type="button" onclick="${c}duplicatePlanGroupV368('${pid}','${gid}')">⧉ Gruppe duplizieren</button>
@@ -21267,7 +21267,7 @@ document.addEventListener('DOMContentLoaded',()=>{
      <svg class="planDepsV362 planDepsV367" style="left:0;top:0" width="0" height="0"></svg>
      <section class="planFloorV363 planLoadSectionV363">${(()=>{const used=new Set(plan(p).steps.map(s=>s.commissionId||''));const cs=commissions(p).filter(c=>used.has(c.id)||(c.staffingDays||[]).length);
        let o=cs.map(c=>loadRowHtml(days,k=>loadC(p,c.id,k),k=>capacityC(c,k),'Auslastung '+esc(c.name||'Kommission'),`<button type="button" class="pgStaffBtnV379" onclick="openPlanStaffingV379('${pid}','${esc(c.id)}')" title="Mitarbeiterplanung dieser Kommission öffnen">👥</button>`)).join('');
-       if(used.has('')||plan(p).steps.some(s=>s.commissionId&&!commissions(p).some(c=>c.id===s.commissionId)))o+=loadRowHtml(days,k=>plan(p).steps.filter(s=>s.status!=='done'&&!commissions(p).some(c=>c.id===s.commissionId)&&s.start<=k&&stepEnd(s)>=k).reduce((n,s)=>n+Math.max(0,Number(s.crew)||0),0),()=>null,'Ohne Kommission');
+       if(used.has('')||plan(p).steps.some(s=>s.commissionId&&!commissions(p).some(c=>c.id===s.commissionId)))o+=loadRowHtml(days,k=>plan(p).steps.filter(s=>s.status!=='done'&&!commissions(p).some(c=>c.id===s.commissionId)&&s.start<=k&&stepEnd(s)>=k).reduce((n,s)=>n+crewOf(s),0),()=>null,'Ohne Kommission');
        if(cs.length>1)o+=loadRowHtml(days,k=>load(p,k),k=>capacity(p,k),'Auslastung gesamt');
        return o||loadRowHtml(days,k=>load(p,k),k=>capacity(p,k),'Auslastung gesamt')})()}</section></div></div>`;
    // Meilenstein-Linien je Abschnitt aus der echten Höhe
@@ -22120,7 +22120,7 @@ document.addEventListener('DOMContentLoaded',()=>{
        const chipW=doc.getTextWidth(ST[st])*.85+3;
        doc.text(fit(s.name,LW-5-ind-chipW),M+1.5+ind,y+3.6);
        const ppl=(s.people||[]).filter(Boolean);const comm=commissions(p).find(x=>x.id===s.commissionId);
-       const subl=[s.crew?s.crew+' MA':'',Math.max(1,s.days|0)+' AT',comm?.name||''].filter(Boolean).join(' · ');
+       const subl=[crewOf(s)?crewOf(s)+' MA':'',Math.max(1,s.days|0)+' AT',comm?.name||''].filter(Boolean).join(' · ');
        doc.setFont('helvetica','normal');doc.setFontSize(6.2);
        {const x0=M+1.5+ind,room=LW-4-ind;let lx=x0;
         if(opt.people&&ppl.length){color('#1d4f91');const t=fit(ppl.join(', '),room*.6);doc.text(t,lx,y+6.4);lx+=doc.getTextWidth(t)}
@@ -33013,7 +33013,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V379';
+   if(v)v.textContent='Aktuelle Version: V380';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
