@@ -4475,6 +4475,23 @@ html body nav .nav,html body .navMoreBtnV360{align-items:center!important;gap:10
 .planBarTextV362{position:relative;z-index:1;padding:0 10px;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .planBarFillV362{position:absolute;left:0;top:0;bottom:0;background:rgba(46,125,50,.28)}
 /* V376: Band für Schritte der übergeordneten Gruppe */
+/* V379: Kommission je Gruppe */
+.pgCommV379{font-style:normal;font-size:11px;font-weight:700;background:#e8eef9;color:#1d4f91;border-radius:6px;padding:1px 6px;white-space:nowrap;margin-left:4px}
+.pgStaffBtnV379{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:1px solid var(--line);background:#fff;border-radius:8px;cursor:pointer;min-height:30px;padding:0 6px}
+.planLoadV362 .planLabelV362{position:sticky}
+#planCommModalV379{z-index:9600}
+#staffingPlanModal{z-index:9650}
+/* V378: Abhängigkeit per Klick */
+.pcxDepsV378{display:flex;flex-wrap:wrap;gap:4px}
+.pcxDepV378{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;background:#eef2ef;border-radius:8px;padding:3px 4px 3px 8px;max-width:100%}
+.pcxDepV378 b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:170px}
+.pcxDepV378 button{border:0;background:transparent;cursor:pointer;color:#8e1c12;font-size:13px;padding:0 4px;min-height:0}
+#planLinkBarV378{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:9800;display:flex;align-items:center;gap:12px;flex-wrap:wrap;max-width:calc(100vw - 24px);background:#14251d;color:#fff;padding:10px 14px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.3);font-size:15px}
+#planLinkBarV378 button{border:0;border-radius:10px;padding:8px 12px;background:#fff;color:#14251d;font-weight:700;cursor:pointer;min-height:40px}
+body.planLinkingV378 .planBarV362[data-step]{cursor:crosshair}
+body.planLinkingV378 .planBarV362:not(.linkSrcV378):not(.linkOffV378):hover{outline:3px solid #1565c0;outline-offset:2px}
+.planBarV362.linkSrcV378{outline:3px dashed #1565c0;outline-offset:2px}
+.planBarV362.linkOffV378{opacity:.35}
 /* V377: Schemas */
 #planSchemaModalV377{z-index:9600}
 .pschV377{max-width:760px}
@@ -4527,7 +4544,15 @@ html body nav .nav,html body .navMoreBtnV360{align-items:center!important;gap:10
 .planDialogV362{max-width:720px;width:calc(100vw - 24px);max-height:90vh;overflow:auto}
 .planFieldLabelV362{display:block;font-size:13px;font-weight:600;margin-bottom:4px}
 .planDepsListV362{display:grid;gap:4px;max-height:180px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:8px}
-.planDepsListV362 label{display:flex;gap:8px;align-items:center;font-weight:400!important}
+.planDepsListV362 label{display:grid!important;grid-template-columns:22px auto minmax(0,1fr) auto;gap:8px;align-items:center;font-weight:400!important;margin:0!important;padding:4px 6px;border-radius:8px;min-height:34px}
+.planDepsListV362 label:hover{background:#f3f6f4}
+.planDepsListV362 label:has(input:checked){background:#eaf4eb}
+.planDepsListV362 input[type=checkbox]{width:20px!important;height:20px!important;min-height:0!important;margin:0!important;padding:0!important;flex:none}
+.planDepsListV362 label b{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.planDepsListV362 label .muted{white-space:nowrap;font-size:12px}
+.planDepsListV362 .planDepFloorV363{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.planDepSearchV378{width:100%;min-height:40px;margin:4px 0 6px;font-size:15px}
+.planDepsListV362{max-height:260px!important}
 @media(max-width:700px){
   .planLabelV362{padding:4px 8px}
   .planLabelV362 .planChipV362{display:none}
@@ -4684,7 +4709,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V377</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V379</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -4898,7 +4923,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V377</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V379</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7627,7 +7652,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V377</b></p><div class="releaseNote"><b>Neu in V377</b><br>Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V379</b></p><div class="releaseNote"><b>Neu in V379</b><br>Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -8849,7 +8874,7 @@ function setProjectsHomeTab(tab='active'){
  if(projectsHomeActiveTab==='plan')window.renderPlanOverviewV362?.();
 }
 function setProjectDetailTab(tab='overview'){
- projectDetailActiveTab=['overview','plan','commissions'].includes(tab)?tab:'overview';
+ projectDetailActiveTab=['overview','plan'].includes(tab)?tab:'overview'; // V379: Kommissionen stehen in der Übersicht
  document.querySelectorAll('[data-project-detail-tab]').forEach(b=>b.classList.toggle('active',b.dataset.projectDetailTab===projectDetailActiveTab));
  document.querySelectorAll('.projectDetailTabPanel').forEach(p=>p.classList.toggle('active',p.dataset.projectDetailPanel===projectDetailActiveTab));
  E('projectDetail')?.classList.toggle('planWideV366',projectDetailActiveTab==='plan');
@@ -9082,7 +9107,6 @@ function openProjectDetail(id){
   <div class="projectMainTabs projectDetailTabs" role="tablist" aria-label="Projektansicht">
    <button class="projectMainTab active" type="button" data-project-detail-tab="overview" onclick="setProjectDetailTab('overview')">Übersicht</button>
    <button class="projectMainTab" type="button" data-project-detail-tab="plan" onclick="setProjectDetailTab('plan')">Planung</button>
-   <button class="projectMainTab" type="button" data-project-detail-tab="commissions" onclick="setProjectDetailTab('commissions')">Kommissionen</button>
   </div>
   <div class="projectTabPanel projectDetailTabPanel" data-project-detail-panel="plan"><div id="projectPlanV362" class="planHostV362"></div></div>
   <div class="projectTabPanel projectDetailTabPanel active" data-project-detail-panel="overview">
@@ -9091,8 +9115,8 @@ function openProjectDetail(id){
     ${canManageProjectAccess(p)?`<div class="toolbar" style="margin:10px 0"><button class="btn secondary" type="button" onclick="openProjectAccessManager('${p.id}')">Mitarbeiter einladen / Freigaben</button></div>`:''}
     ${p.note?`<p><b>Bemerkung:</b><br>${esc(p.note)}</p>`:''}
    </div>
-  </div>
-  <div class="projectTabPanel projectDetailTabPanel" data-project-detail-panel="commissions">${planInfo}</div>`;
+   ${planInfo}
+  </div>`;
  setProjectDetailTab(projectDetailActiveTab);
 }
 function openCommissionArea(commissionId){
@@ -9592,7 +9616,9 @@ function saveStaffingPlan(){
  c.staffingCalendarMonths=12;
  c.staffingDefaultEmployees=Math.max(0,Math.round(numCell(E('staffDefaultEmployees')?.value||0)));
  p.updatedAt=new Date().toISOString();saveProjects();
- closeM('staffingPlanModal');openCommissionArea(c.id);
+ closeM('staffingPlanModal');
+ if(window.__staffFromPlanV379){window.__staffFromPlanV379=false;openProjectDetail(p.id);setProjectDetailTab('plan');return}
+ openCommissionArea(c.id);
 }
 
 function elementProducedQty(p,elementId,excludeDate=''){
@@ -20988,7 +21014,9 @@ document.addEventListener('DOMContentLoaded',()=>{
  function plan(p,create){if(!p)return {steps:[]};if((!p.schedV362||!Array.isArray(p.schedV362.steps))&&create)p.schedV362={steps:[]};return p.schedV362&&Array.isArray(p.schedV362.steps)?p.schedV362:{steps:[]}}
  const uid=()=>'ps_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
  const commissions=p=>Array.isArray(p?.planningCommissions)?p.planningCommissions:[];
- function save(p){p.updatedAt=new Date().toISOString();saveProjects()}
+ function save(p){syncStepCommissions(p);p.updatedAt=new Date().toISOString();saveProjects()}
+ function groupComm(p,gid){let g=gid?groupsAll(p).find(x=>x.id===gid):null;const seen=new Set();while(g&&!seen.has(g.id)){seen.add(g.id);if(g.commissionId&&commissions(p).some(c=>c.id===g.commissionId))return g.commissionId;g=g.parentId?groupsAll(p).find(x=>x.id===g.parentId):null}return ''}
+ function syncStepCommissions(p){plan(p).steps.forEach(s=>{const c=groupComm(p,s.floorId&&groupsAll(p).some(g=>g.id===s.floorId)?s.floorId:'');if(c&&s.commissionId!==c)s.commissionId=c})}
  function stepById(p,id){return plan(p).steps.find(s=>s.id===id)}
  function wouldCycle(p,stepId,depId){ // depId als Vorgänger von stepId: Zyklus, wenn stepId (indirekt) Vorgänger von depId ist
    const seen=new Set(),stack=[depId];
@@ -21018,6 +21046,10 @@ document.addEventListener('DOMContentLoaded',()=>{
    }
    const m=Number(s.progress);return Number.isFinite(m)&&m>0?Math.max(0,Math.min(100,Math.round(m))):null;
  }
+ /* V379: Auslastung pro Kommission – Gruppen (z.B. Transporte) werden einer Kommission zugeordnet,
+    alle Schritte darin übernehmen diese Kommission automatisch. */
+ function capacityC(c,date){const d=(c?.staffingDays||[]).find(x=>x.date===date);return d?Math.max(0,Number(d.employees)||0):null}
+ function loadC(p,cid,date){return plan(p).steps.filter(s=>s.status!=='done'&&(s.commissionId||'')===cid&&s.start<=date&&stepEnd(s)>=date).reduce((n,s)=>n+Math.max(0,Number(s.crew)||0),0)}
  function capacity(p,date){ // verfügbare MA laut Mitarbeiterplanung (Summe aller Kommissionen); null = nicht geplant
    let any=false,sum=0;
    commissions(p).forEach(c=>{const d=(c.staffingDays||[]).find(x=>x.date===date);if(d){any=true;sum+=Math.max(0,Number(d.employees)||0)}});
@@ -21117,8 +21149,8 @@ document.addEventListener('DOMContentLoaded',()=>{
    rows.forEach(s=>(s.deps||[]).forEach(d=>{const a=pos[d],b=pos[s.id];if(!a||!b)return;const mx=Math.max(a.x1+8,b.x0-8);paths+=`<path d="M${a.x1} ${a.y} H${mx} V${b.y} H${b.x0}"/>`}));
    return paths;
  }
- function loadRowHtml(days,getLoad,getCap,label){
-   return `<div class="planRowV362 planLoadV362"><div class="planLabelV362" style="width:${LABELW}px"><b>${label}</b><span>geplant / verfügbar (MA)</span></div><div class="planTrackV362" style="width:${days.length*DW}px">${days.map(k=>{const l=getLoad(k),c=getCap(k);const over=c!=null&&l>c;const cls=over?'over':l&&c!=null?'ok':'';return `<div class="planLoadCellV362 ${cls}" style="width:${DW}px" title="${fmtD(k)}: ${l} MA geplant${c!=null?' · '+c+' MA verfügbar':' · keine Mitarbeiterplanung'}">${l||c!=null?`${l}${c!=null?'/'+c:''}`:''}</div>`}).join('')}</div></div>`;
+ function loadRowHtml(days,getLoad,getCap,label,extra){
+   return `<div class="planRowV362 planLoadV362"><div class="planLabelV362" style="width:${LABELW}px"><b>${label}</b><span>geplant / verfügbar (MA)</span>${extra||''}</div><div class="planTrackV362" style="width:${days.length*DW}px">${days.map(k=>{const l=getLoad(k),c=getCap(k);const over=c!=null&&l>c;const cls=over?'over':l&&c!=null?'ok':'';return `<div class="planLoadCellV362 ${cls}" style="width:${DW}px" title="${fmtD(k)}: ${l} MA geplant${c!=null?' · '+c+' MA verfügbar':' · keine Mitarbeiterplanung'}">${l||c!=null?`${l}${c!=null?'/'+c:''}`:''}</div>`}).join('')}</div></div>`;
  }
 
  /* ---------- V363: Geschosse ---------- */
@@ -21178,6 +21210,8 @@ document.addEventListener('DOMContentLoaded',()=>{
    const sib=gChildren(p,gParent(p,g)),i=sib.findIndex(x=>x.id===g.id),d=gDepth(p,g.id);
    return `<button type="button" onclick="${c}renamePlanFloorV363('${pid}','${gid}')">✎ Umbenennen</button>
      ${d<MAX_DEPTH-1?`<button type="button" onclick="${c}addPlanGroupV368('${pid}','${gid}')">＋ Untergruppe</button>`:''}
+     <button type="button" onclick="${c}assignPlanCommissionV379('${pid}','${gid}')">🏷 Kommission zuordnen …</button>
+     ${groupComm(p,g.id)?`<button type="button" onclick="${c}openPlanStaffingV379('${pid}','${esc(groupComm(p,g.id))}')">👥 Mitarbeiterplanung ${esc(commissions(p).find(x=>x.id===groupComm(p,g.id))?.name||'')}</button>`:''}
      <button type="button" onclick="${c}openPlanSchemaV377('${pid}','${gid}')">◧ Schema einfügen …</button>
      ${canManageSchemas()?`<button type="button" onclick="${c}saveGroupAsSchemaV377('${pid}','${gid}')">◧ Als Schema speichern</button>`:''}
      <button type="button" onclick="${c}duplicatePlanGroupV368('${pid}','${gid}')">⧉ Gruppe duplizieren</button>
@@ -21209,7 +21243,7 @@ document.addEventListener('DOMContentLoaded',()=>{
      let h='';sortSteps(plan(p).steps.filter(s=>floorIdOf(p,s)===gid)).forEach(s=>{h+=stepRow(s)});
      if(gid!=='')gChildren(p,gid).forEach(c=>{
        const n=subtreeSteps(p,c.id).length,cl=isColl(p,c.id);
-       h+=`<div class="planRowV362 planGroupRowV368 lvl${depth+1}"><div class="planLabelV362 planGroupLabelV368" style="width:${LABELW}px;padding-left:${10+(depth+1)*16}px"><button type="button" class="pgToggleV368" onclick="togglePlanGroupV368('${pid}','${esc(c.id)}')" title="${cl?'Aufklappen':'Zuklappen'}">${cl?'▸':'▾'}</button><b title="${esc(gPath(p,c.id))} · ${n} Schritt${n===1?'':'e'}">${esc(c.name)}</b><span class="pgCountV368">${n}</span><div class="pgBtnsV368">${groupButtons(p,c,false,editable)}</div></div><div class="planTrackV362" style="width:${days.length*DW}px">${bandsHtml(p,c.id,days,true)}${sumBar(p,c.id,days)}</div></div>`;
+       h+=`<div class="planRowV362 planGroupRowV368 lvl${depth+1}"><div class="planLabelV362 planGroupLabelV368" style="width:${LABELW}px;padding-left:${10+(depth+1)*16}px"><button type="button" class="pgToggleV368" onclick="togglePlanGroupV368('${pid}','${esc(c.id)}')" title="${cl?'Aufklappen':'Zuklappen'}">${cl?'▸':'▾'}</button><b title="${esc(gPath(p,c.id))} · ${n} Schritt${n===1?'':'e'}">${esc(c.name)}</b>${c.commissionId&&groupComm(p,c.id)?`<em class="pgCommV379" title="Kommission">🏷 ${esc(commissions(p).find(x=>x.id===c.commissionId)?.name||'')}</em>`:''}<span class="pgCountV368">${n}</span><div class="pgBtnsV368">${groupButtons(p,c,false,editable)}</div></div><div class="planTrackV362" style="width:${days.length*DW}px">${bandsHtml(p,c.id,days,true)}${sumBar(p,c.id,days)}</div></div>`;
        if(!cl)h+=body(c.id,depth+1);
      });
      return h;
@@ -21217,7 +21251,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    let html='';
    tops.forEach(({g,virtual})=>{
      const n=subtreeSteps(p,g.id).length,cl=!virtual&&isColl(p,g.id);
-     const corner=`<div class="planFloorCornerV363"><div class="pfcTopV363">${virtual?'':`<button type="button" class="pgToggleV368" onclick="togglePlanGroupV368('${pid}','${esc(g.id)}')" title="${cl?'Aufklappen':'Zuklappen'}">${cl?'▸':'▾'}</button>`}<b title="${esc(g.name)}">${esc(g.name)}</b>${groupButtons(p,g,virtual,editable)}</div><span>${n} Arbeitsschritt${n===1?'':'e'}${gChildren(p,g.id).length&&!virtual?' · '+gChildren(p,g.id).length+' Untergruppe'+(gChildren(p,g.id).length===1?'':'n'):''}</span></div>`;
+     const corner=`<div class="planFloorCornerV363"><div class="pfcTopV363">${virtual?'':`<button type="button" class="pgToggleV368" onclick="togglePlanGroupV368('${pid}','${esc(g.id)}')" title="${cl?'Aufklappen':'Zuklappen'}">${cl?'▸':'▾'}</button>`}<b title="${esc(g.name)}">${esc(g.name)}</b>${groupButtons(p,g,virtual,editable)}</div><span>${!virtual&&g.commissionId&&groupComm(p,g.id)?`<em class="pgCommV379" title="Kommission">🏷 ${esc(commissions(p).find(x=>x.id===g.commissionId)?.name||'')}</em> · `:''}${n} Arbeitsschritt${n===1?'':'e'}${gChildren(p,g.id).length&&!virtual?' · '+gChildren(p,g.id).length+' Untergruppe'+(gChildren(p,g.id).length===1?'':'n'):''}</span></div>`;
      const sub=virtual?new Set(['']):new Set([g.id,...gDesc(p,g.id)]);
      const msList=milestones(p).filter(m=>m.date&&(!m.floorId||sub.has(m.floorId)||(virtual&&!ids.has(m.floorId))));
      let rows='';
@@ -21231,7 +21265,11 @@ document.addEventListener('DOMContentLoaded',()=>{
    host.innerHTML=tools+`<div class="planScrollV362" id="planScrollV362"><div class="planInnerV362" style="width:${LABELW+days.length*DW}px">
      ${todayCol(days)}${html}
      <svg class="planDepsV362 planDepsV367" style="left:0;top:0" width="0" height="0"></svg>
-     <section class="planFloorV363 planLoadSectionV363">${loadRowHtml(days,k=>load(p,k),k=>capacity(p,k),'Auslastung gesamt')}</section></div></div>`;
+     <section class="planFloorV363 planLoadSectionV363">${(()=>{const used=new Set(plan(p).steps.map(s=>s.commissionId||''));const cs=commissions(p).filter(c=>used.has(c.id)||(c.staffingDays||[]).length);
+       let o=cs.map(c=>loadRowHtml(days,k=>loadC(p,c.id,k),k=>capacityC(c,k),'Auslastung '+esc(c.name||'Kommission'),`<button type="button" class="pgStaffBtnV379" onclick="openPlanStaffingV379('${pid}','${esc(c.id)}')" title="Mitarbeiterplanung dieser Kommission öffnen">👥</button>`)).join('');
+       if(used.has('')||plan(p).steps.some(s=>s.commissionId&&!commissions(p).some(c=>c.id===s.commissionId)))o+=loadRowHtml(days,k=>plan(p).steps.filter(s=>s.status!=='done'&&!commissions(p).some(c=>c.id===s.commissionId)&&s.start<=k&&stepEnd(s)>=k).reduce((n,s)=>n+Math.max(0,Number(s.crew)||0),0),()=>null,'Ohne Kommission');
+       if(cs.length>1)o+=loadRowHtml(days,k=>load(p,k),k=>capacity(p,k),'Auslastung gesamt');
+       return o||loadRowHtml(days,k=>load(p,k),k=>capacity(p,k),'Auslastung gesamt')})()}</section></div></div>`;
    // Meilenstein-Linien je Abschnitt aus der echten Höhe
    host.querySelectorAll('section.planFloorV363[data-group]').forEach(sec=>{
      const hostDiv=sec.querySelector('.planMsLinesHostV368');let idsMs=[];try{idsMs=JSON.parse(hostDiv.dataset.ms||'[]')}catch(_e){}
@@ -21329,6 +21367,22 @@ document.addEventListener('DOMContentLoaded',()=>{
    st.forEach(s=>{const c=JSON.parse(JSON.stringify(s));c.id=smap[s.id];c.floorId=gmap[s.floorId]||s.floorId;c.start=shift?addWork(nextWork(s.start),shift):s.start;c.status='open';c.deps=(s.deps||[]).map(d=>smap[d]||d);c.updatedAt=new Date().toISOString();pl.steps.push(c)});
    enforceDeps(p);save(p);renderProjectPlan();
    alert('Gruppe dupliziert: '+copies.length+' Gruppe(n), '+st.length+' Arbeitsschritt(e).');
+ };
+ window.assignPlanCommissionV379=function(pid,gid){
+   if(!canEdit())return;const p=projectById(pid);if(!p)return;const g=gById(p,gid);if(!g)return;
+   const cs=commissions(p);if(!cs.length){alert('Dieses Projekt hat noch keine Kommission. Zuerst in der Projekt-Übersicht eine Kommission anlegen.');return}
+   let m=E('planCommModalV379');if(!m){m=document.createElement('div');m.id='planCommModalV379';m.className='modal';document.body.appendChild(m)}
+   const inh=g.commissionId?'':groupComm(p,gid);
+   m.innerHTML=`<div class="modalbox planDialogV362" style="max-width:520px"><div class="manageHead"><div><h2 style="margin:0">Kommission zuordnen</h2><p class="muted" style="margin:4px 0 0">${esc(gPath(p,gid))}</p></div><button class="btn secondary" type="button" onclick="closeM('planCommModalV379')">Schliessen</button></div>
+     <p class="muted">Alle Arbeitsschritte dieser Gruppe und ihrer Untergruppen übernehmen die Kommission – auch neue, kopierte und aus Schemas eingefügte. Die Auslastung wird pro Kommission mit deren Mitarbeiterplanung verglichen.</p>
+     <div class="planMoveListV368">${cs.map(c=>`<button type="button" class="${g.commissionId===c.id?'on':''}" data-c="${esc(c.id)}">🏷 ${esc(c.name||'Kommission')}${(c.staffingDays||[]).length?'':' <span class="muted">(noch keine Mitarbeiterplanung)</span>'}</button>`).join('')}
+     <button type="button" data-c="" class="${g.commissionId?'':'on'}">– keine eigene Zuordnung${inh?' (übernimmt «'+esc(cs.find(x=>x.id===inh)?.name||'')+'» von oben)':''}</button></div></div>`;
+   m.querySelectorAll('[data-c]').forEach(b=>b.addEventListener('click',()=>{const P=projectById(pid),G=P&&gById(P,gid);if(!G)return;G.commissionId=b.dataset.c;save(P);closeM('planCommModalV379');renderProjectPlan()}));
+   m.classList.add('open');
+ };
+ window.openPlanStaffingV379=function(pid,cid){
+   const p=projectById(pid);if(!p)return;if(!commissions(p).some(c=>c.id===cid))return;
+   p.activePlanningCommissionId=cid;currentProjectId=pid;window.__staffFromPlanV379=true;openStaffingPlan();
  };
  /* ---------- V377: Schemas (Vorlagen) für wiederkehrende Abläufe, z.B. ein Transport ----------
     Ein Schema speichert eine Gruppe mit allen Untergruppen und Arbeitsschritten (Dauer, Mannschaft,
@@ -21439,7 +21493,12 @@ document.addEventListener('DOMContentLoaded',()=>{
      <input type="range" min="0" max="100" step="5" value="${pr}" id="pcxRangeV374" aria-label="Fortschritt in Prozent">`:`<div class="pcxBarV374"><i style="width:${pr}%"></i></div>`}
      <div class="pcxSecV374">Status</div>
      <div class="pcxStV374">${Object.entries(ST).map(([k,t])=>`<button type="button" data-st="${k}" class="planChipV362 st-${k}${k===st?' on':''}" ${editable?'':'disabled'}>${t}</button>`).join('')}</div>
-     <div class="pcxActsV374"><button type="button" data-act="open">${editable?'✎ Bearbeiten …':'Details …'}</button>${editable?'<button type="button" data-act="dup">⧉ Duplizieren</button>':''}</div>`;
+     <div class="pcxSecV374">Abhängigkeiten</div>
+     <div class="pcxDepsV378">${(()=>{const pre=(s.deps||[]).map(d=>stepById(p,d)).filter(Boolean),post=plan(p).steps.filter(x=>(x.deps||[]).includes(s.id));
+       const item=(x,kind)=>`<span class="pcxDepV378" title="${esc(floorName(p,floorIdOf(p,x)))}">${kind==='pre'?'nach':'vor'} <b>${esc(x.name)}</b>${editable?`<button type="button" data-undep="${kind}:${esc(x.id)}" title="Abhängigkeit entfernen">✕</button>`:''}</span>`;
+       return (pre.map(x=>item(x,'pre')).join('')+post.map(x=>item(x,'post')).join(''))||'<span class="muted">keine</span>'})()}</div>
+     ${editable?`<div class="pcxActsV374"><button type="button" data-link="pred" title="Danach den Schritt anklicken, der VORHER fertig sein muss">🔗 Vorgänger wählen</button><button type="button" data-link="succ" title="Danach den Schritt anklicken, der ERST DANACH beginnen darf">🔗 Nachfolger wählen</button></div>`:''}
+     <div class="pcxActsV374"><button type="button" data-act="open">${editable?'✎ Bearbeiten …':'Details …'}</button>${editable?'<button type="button" data-act="dup">⧉ Duplizieren</button>':''}${E('projectDetail')?.classList.contains('open')?'':'<button type="button" data-act="proj">↗ Projekt</button>'}</div>`;
    document.body.appendChild(m);
    const w=m.offsetWidth,hh=m.offsetHeight;
    m.style.left=Math.max(8,Math.min(window.innerWidth-w-8,ev.clientX))+'px';
@@ -21453,10 +21512,47 @@ document.addEventListener('DOMContentLoaded',()=>{
      else if(b.dataset.st)apply(S=>setStepStatus(S,b.dataset.st));
      else if(b.dataset.act==='open'){closeCtx();openPlanStepV362(pid0,sid0)}
      else if(b.dataset.act==='dup'){closeCtx();duplicatePlanStepV368(pid0,sid0)}
+     else if(b.dataset.act==='proj'){closeCtx();openProjectPlanV362(pid0)}
+     else if(b.dataset.link){closeCtx();startLink(pid0,sid0,b.dataset.link)}
+     else if(b.dataset.undep){const [kind,oid]=b.dataset.undep.split(':');apply(S=>{if(kind==='pre')S.deps=(S.deps||[]).filter(d=>d!==oid);else{const O=stepById(projectById(pid0),oid);if(O){O.deps=(O.deps||[]).filter(d=>d!==S.id);O.updatedAt=new Date().toISOString()}}})}
    });
    const r=m.querySelector('#pcxRangeV374');
    if(r){r.addEventListener('input',()=>{E('pcxValV374').textContent=r.value+' %'});r.addEventListener('change',()=>apply(S=>setStepProgress(S,+r.value)))}
  }
+ /* V378: Abhängigkeit direkt in der Tabelle: Menü → «Vorgänger/Nachfolger wählen» → anderen Balken anklicken */
+ let linkMode=null;
+ function linkBanner(){
+   let b=E('planLinkBarV378');if(!linkMode){b?.remove();document.body.classList.remove('planLinkingV378');document.querySelectorAll('.linkSrcV378,.linkOffV378').forEach(x=>x.classList.remove('linkSrcV378','linkOffV378'));return}
+   const p=projectById(linkMode.pid),s=p&&stepById(p,linkMode.sid);if(!s){linkMode=null;return linkBanner()}
+   if(!b){b=document.createElement('div');b.id='planLinkBarV378';document.body.appendChild(b)}
+   b.innerHTML=`<span>🔗 ${linkMode.dir==='pred'?`Jetzt den Arbeitsschritt anklicken, der <b>vor «${esc(s.name)}»</b> fertig sein muss`:`Jetzt den Arbeitsschritt anklicken, der <b>erst nach «${esc(s.name)}»</b> beginnen darf`}</span><button type="button" onclick="cancelPlanLinkV378()">Abbrechen (Esc)</button>`;
+   document.body.classList.add('planLinkingV378');
+   document.querySelectorAll('.planBarV362[data-step]').forEach(x=>{x.classList.toggle('linkSrcV378',x.dataset.project===linkMode.pid&&x.dataset.step===linkMode.sid);x.classList.toggle('linkOffV378',x.dataset.project!==linkMode.pid)});
+ }
+ function startLink(pid,sid,dir){if(!canEdit())return;linkMode={pid,sid,dir};linkBanner()}
+ window.cancelPlanLinkV378=()=>{linkMode=null;linkBanner()};
+ function finishLink(bar){
+   const P=projectById(linkMode.pid),S=P&&stepById(P,linkMode.sid);if(!S){window.cancelPlanLinkV378();return}
+   if(bar.dataset.project!==linkMode.pid){alert('Abhängigkeiten gehen nur innerhalb desselben Projekts.');return}
+   const T=stepById(P,bar.dataset.step);if(!T||T.id===S.id)return;
+   const [after,before]=linkMode.dir==='pred'?[S,T]:[T,S]; // «after» wartet auf «before»
+   if((after.deps||[]).includes(before.id)){alert('«'+after.name+'» hängt bereits von «'+before.name+'» ab.');window.cancelPlanLinkV378();return}
+   if(wouldCycle(P,after.id,before.id)){alert('Das geht nicht: «'+before.name+'» wartet bereits (direkt oder indirekt) auf «'+after.name+'».');return}
+   const lateBefore=milestones(P).filter(x=>msInfo(P,x).state==='late').map(x=>x.id);
+   after.deps=(after.deps||[]).concat(before.id);after.updatedAt=new Date().toISOString();
+   const pushed=enforceDeps(P);save(P);linkMode=null;linkBanner();window.renderPlanVisibleV362();
+   if(pushed)alert('«'+after.name+'» beginnt jetzt nach «'+before.name+'». '+pushed+' Schritt(e) wurden dafür verschoben.');
+   warnMilestonesV364(P,lateBefore);
+ }
+ document.addEventListener('pointerdown',ev=>{
+   if(!linkMode||ev.button!==0)return;
+   if(ev.target.closest('#planLinkBarV378'))return;
+   const bar=ev.target.closest('.planBarV362[data-step]');if(!bar)return; // anderes Klicken/Ziehen bleibt möglich
+   ev.preventDefault();ev.stopPropagation();
+   const stop=e=>{e.stopPropagation();e.preventDefault()};document.addEventListener('click',stop,{capture:true,once:true});setTimeout(()=>document.removeEventListener('click',stop,{capture:true}),400);
+   finishLink(bar);
+ },true);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&linkMode)window.cancelPlanLinkV378()});
  document.addEventListener('contextmenu',ev=>{
    const t=ev.target.closest?.('.planBarV362[data-step],.planLabelV362[data-step]');if(!t)return;
    const p=projectById(t.dataset.project),s=p&&stepById(p,t.dataset.step);if(!s)return;
@@ -21499,7 +21595,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    const cap=k=>{let any=false,sum=0;projects.forEach(p=>{const c=capacity(p,k);if(c!=null){any=true;sum+=c}});return any?sum:null};
    host.innerHTML=`<div class="planToolsV362"><span class="muted">Alle aktiven Projekte mit Planung. Zum Bearbeiten ein Projekt antippen.</span><button class="btn secondary" type="button" onclick="scrollPlanTodayV362()">Heute</button><button class="btn secondary" type="button" onclick="openPlanPdfV369('overview')">⤓ PDF exportieren</button></div>
    <div class="planScrollV362" id="planOvScrollV362"><div class="planInnerV362" style="width:${LABELW+days.length*DW}px">${headerHtml(days)}${todayCol(days)}${rows}${loadRowHtml(days,k=>projects.reduce((n,p)=>n+load(p,k),0),cap,'Auslastung gesamt')}</div></div>`;
-   host.querySelectorAll('.planBarV362').forEach(b=>b.addEventListener('click',()=>openProjectPlanV362(b.dataset.project)));
+   host.querySelectorAll('.planBarV362').forEach(b=>b.addEventListener('click',ev=>{const p=projectById(b.dataset.project),s=p&&stepById(p,b.dataset.step);if(s)openCtx(ev,p,s)}));
    bindColResize(host);
    afterRender();
    if(prevOv&&host.offsetParent){const sc=host.querySelector('.planScrollV362');sc.scrollLeft=prevOv.l;sc.scrollTop=prevOv.t}else scrollToday(false);
@@ -21555,7 +21651,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  }
  // V370: Projekt-Planung und Übersicht haben je eine eigene Tabelle → immer die sichtbare nehmen (vorher per ID → oft die versteckte)
  function curSc(){return [...document.querySelectorAll('.planScrollV362')].find(s=>s.offsetParent)||null}
- function afterRender(){document.querySelectorAll('.planScrollV362').forEach(attachPan);fitHeight();fitBarLabels();requestAnimationFrame(fitHeight)}
+ function afterRender(){document.querySelectorAll('.planScrollV362').forEach(attachPan);fitHeight();fitBarLabels();if(linkMode)linkBanner();requestAnimationFrame(fitHeight)}
  /* V372: Passt der Name (oder die Personen) nicht in einen Balken, steht der Text vollständig neben dem Balken. */
  function fitBarLabels(){
    const sc=curSc();if(!sc)return;
@@ -21619,8 +21715,8 @@ document.addEventListener('DOMContentLoaded',()=>{
      bar.addEventListener('pointerup',ev=>{
        const d=view.dragging;view.dragging=null;if(!d||d.bar!==bar)return;
        const p=projectById(bar.dataset.project),s=p&&stepById(p,bar.dataset.step);if(!s)return;
-       if(!editable){if(Math.abs(ev.clientX-d.x)<5)openPlanStepV362(p.id,s.id);return} // Nur Ansicht: Ziehen verschiebt die Ansicht
-       if(!d.moved){openPlanStepV362(p.id,s.id);return}
+       if(!editable){if(Math.abs(ev.clientX-d.x)<5)openCtx(ev,p,s);return} // Nur Ansicht: Ziehen verschiebt die Ansicht
+       if(!d.moved){openCtx(ev,p,s);return} // V378: Linksklick → Schnellmenü (Fortschritt, Status, Abhängigkeit, Bearbeiten)
        const cols=Math.round((ev.clientX-d.x)/DW);
        const lateBefore=milestones(p).filter(m=>msInfo(p,m).state==='late').map(m=>m.id);
        if(d.resize){s.days=Math.max(1,(s.days|0)+cols)}
@@ -21660,7 +21756,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     <label class="f">Mannschaft (MA)<input id="psCrew" type="number" min="0" step="1" inputmode="numeric" value="${Math.max(0,v.crew|0)}" ${dis}></label>
     <label class="f">Personen (mit Komma trennen)<input id="psPeople" value="${esc((v.people||[]).join(', '))}" list="psPeopleList" ${dis}><datalist id="psPeopleList">${allPeople.map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label>
     <label class="f span2">Fortschritt aus Tagesfortschritt (Elementgruppe)<select id="psGroup" ${dis}><option value="">– keine Verknüpfung –</option>${groups.map(g=>`<option value="${esc(g.id)}" ${g.id===v.groupId?'selected':''}>${esc(g.title||'Gruppe')} (${(g.elements||[]).length} Elemente)</option>`).join('')}</select></label>
-    <div class="f span2"><span class="planFieldLabelV362">Vorgänger (muss vorher fertig sein)</span><div class="planDepsListV362">${others.length?others.map(o=>`<label><input type="checkbox" value="${esc(o.id)}" ${(v.deps||[]).includes(o.id)?'checked':''} ${dis}> <span class="planDepFloorV363">${esc(floorName(p,floorIdOf(p,o)))}</span> ${esc(o.name)} <span class="muted">bis ${fmtD(stepEnd(o))}</span></label>`).join(''):'<span class="muted">Keine anderen Schritte.</span>'}</div></div>
+    <div class="f span2"><span class="planFieldLabelV362">Vorgänger (muss vorher fertig sein) <small class="muted">– schneller: Balken anklicken → «🔗 Vorgänger wählen»</small></span>${others.length>6?`<input type="search" class="planDepSearchV378" placeholder="Suchen (Name oder Gruppe) …" oninput="const q=this.value.toLowerCase();this.nextElementSibling.querySelectorAll('label').forEach(l=>{l.style.display=!q||l.textContent.toLowerCase().includes(q)?'':'none'})">`:''}<div class="planDepsListV362">${others.length?others.slice().sort((a,b)=>{const ca=(v.deps||[]).includes(a.id)?0:1,cb=(v.deps||[]).includes(b.id)?0:1;if(ca!==cb)return ca-cb;const fa=floorIdOf(p,a)===vFloor?0:1,fb=floorIdOf(p,b)===vFloor?0:1;if(fa!==fb)return fa-fb;return stepEnd(a).localeCompare(stepEnd(b))}).map(o=>`<label><input type="checkbox" value="${esc(o.id)}" ${(v.deps||[]).includes(o.id)?'checked':''} ${dis}><span class="planDepFloorV363">${esc(floorName(p,floorIdOf(p,o)))}</span><b>${esc(o.name)}</b><span class="muted">bis ${fmtD(stepEnd(o))}</span></label>`).join(''):'<span class="muted">Keine anderen Schritte.</span>'}</div></div>
     <label class="f span2">Notiz<textarea id="psNote" rows="2" ${dis}>${esc(v.note||'')}</textarea></label>
     ${s?`<div class="span2 muted">Ende: ${fmtD(stepEnd(s))}${progress(p,s)!=null?' · Fortschritt '+progress(p,s)+' %':''}</div>`:''}
     ${editable?`<div class="toolbar span2"><button class="btn" type="submit">Speichern</button>${s?`<button class="btn secondary" type="button" onclick="duplicatePlanStepV368('${esc(p.id)}','${esc(s.id)}')">⧉ Duplizieren</button><button class="btn danger" type="button" onclick="deletePlanStepV362('${esc(p.id)}','${esc(s.id)}')">Löschen</button>`:''}</div>`:''}
@@ -21685,7 +21781,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    }
    if(isNew)pl.steps.push(s);
    const pushed=enforceDeps(p);
-   save(p);closeM('planStepModalV362');renderProjectPlan();
+   save(p);closeM('planStepModalV362');window.renderPlanVisibleV362();
    if(pushed)alert(pushed+' Schritt(e) wurden wegen Abhängigkeiten verschoben.');
    warnMilestonesV364(p,lateBefore);
  };
@@ -22053,15 +22149,21 @@ document.addEventListener('DOMContentLoaded',()=>{
        }
        y+=h;total++;
      });
-     // Auslastung
+     // Auslastung (V379: pro Kommission)
      if(opt.load){
+       const groupsL=[];
+       if(scope==='project'){const p0=projects[0],cs=commissions(p0),used=new Set(plan(p0).steps.map(s=>s.commissionId||''));
+         cs.filter(c=>used.has(c.id)||(c.staffingDays||[]).length).forEach(c=>groupsL.push({label:'Auslastung '+(c.name||'Kommission'),l:k=>loadC(p0,c.id,k),c:k=>capacityC(c,k)}));
+         if(groupsL.length!==1)groupsL.push({label:'Auslastung gesamt',l:k=>load(p0,k),c:k=>capacity(p0,k)});
+       }else groupsL.push({label:'Auslastung gesamt',l:k=>projects.reduce((n,p)=>n+load(p,k),0),c:k=>{let any=false,cap=0;projects.forEach(p=>{const c=capacity(p,k);if(c!=null){any=true;cap+=c}});return any?cap:null}});
+       groupsL.forEach(G=>{
        const r={t:'load'};ensure(r,rows.length);flushMs();curProj=null;
        const h=RH.load;fill('#f2f4f3');doc.rect(M,y,PW-2*M,h,'F');stroke('#8d9893');doc.setLineWidth(.3);doc.line(M,y,PW-M,y);
-       doc.setFont('helvetica','bold');doc.setFontSize(7.5);color('#17201c');doc.text(scope==='project'?'Auslastung':'Auslastung gesamt',M+1.5,y+3);doc.setFont('helvetica','normal');doc.setFontSize(5.8);color('#55625c');doc.text('geplant / verfügbar (MA)',M+1.5,y+5.3);
-       days.forEach((k,j)=>{const l=projects.reduce((n,p)=>n+load(p,k),0);let any=false,cap=0;projects.forEach(p=>{const c=capacity(p,k);if(c!=null){any=true;cap+=c}});
+       doc.setFont('helvetica','bold');doc.setFontSize(7.5);color('#17201c');doc.text(fit(G.label,LW-3),M+1.5,y+3);doc.setFont('helvetica','normal');doc.setFontSize(5.8);color('#55625c');doc.text('geplant / verfügbar (MA)',M+1.5,y+5.3);
+       days.forEach((k,j)=>{const l=G.l(k),cap0=G.c(k),any=cap0!=null,cap=cap0||0;
          if(!l&&!any)return;const over=any&&l>cap;if(over){fill('#fde3e1');doc.rect(X0+j*DW,y+.3,DW,h-.6,'F')}
          color(over?'#c62828':'#17201c');doc.setFontSize(DW>=6?6.2:5);doc.setFont('helvetica',over?'bold':'normal');const txt=any&&DW>=6?l+'/'+cap:String(l);doc.text(fitDots(txt,DW-.4),X0+j*DW+DW/2,y+h/2+1,{align:'center'})});
-       y+=h;
+       y+=h;});
      }
      endPage();
    });
@@ -32911,7 +33013,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V377';
+   if(v)v.textContent='Aktuelle Version: V379';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
