@@ -4709,7 +4709,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V380</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V381</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -4923,7 +4923,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V380</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V381</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7652,7 +7652,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V380</b></p><div class="releaseNote"><b>Neu in V380</b><br>Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V381</b></p><div class="releaseNote"><b>Neu in V381</b><br>Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -17442,6 +17442,7 @@ function resetProductionZoom(){
 function applyOutsideZoom(){
  let m=E('mapin');if(!m)return;
  m.style.transform='none';m.style.width=(outsideZoom*100)+'%';
+ E('mapwrap')?.classList.toggle('mapZoomedV381',outsideZoom>1.001);
 }
 function zoomOutside(d){
  outsideZoom=Math.max(1,Math.min(4,+(outsideZoom+d).toFixed(2)));
@@ -27655,7 +27656,7 @@ renderPlatformReservationGantt=function(from='',to=''){
    function mid(a,b){return {x:(a.x+b.x)/2,y:(a.y+b.y)/2}}
 
    el.addEventListener('pointerdown',function(e){
-     if(window.innerWidth>700||e.pointerType!=='touch')return;
+     if(e.pointerType!=='touch')return; // V381: auch Tablets (vorher nur ≤700 px)
      touches.set(e.pointerId,{x:e.clientX,y:e.clientY});
      try{el.setPointerCapture(e.pointerId)}catch(_){}
      const p=pts();
@@ -27672,7 +27673,7 @@ renderPlatformReservationGantt=function(from='',to=''){
    },{passive:false});
 
    el.addEventListener('pointermove',function(e){
-     if(!touches.has(e.pointerId)||window.innerWidth>700)return;
+     if(!touches.has(e.pointerId))return;
      touches.set(e.pointerId,{x:e.clientX,y:e.clientY});
      const p=pts();
 
@@ -27695,6 +27696,7 @@ renderPlatformReservationGantt=function(from='',to=''){
      }
 
      if(p.length===1 && lastSingle){
+       if(window.innerWidth>700&&getZoom()<=1)return; // V381: Tablet ungezoomt → Seite normal scrollen lassen
        e.preventDefault();
        const q=p[0],dx=q.x-lastSingle.x,dy=q.y-lastSingle.y;
        if(Math.abs(dx)>2||Math.abs(dy)>2)moved=true;
@@ -33013,7 +33015,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V380';
+   if(v)v.textContent='Aktuelle Version: V381';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -37043,6 +37045,23 @@ body.v319ModalLock{
 .inventoryTodayCheckV353{white-space:nowrap}
 .inventoryTodayDateV353{white-space:nowrap;font-weight:700}
 </style>
+<style>
+/* V381 – Tablet/PC: «Heute kontrolliert» und «Kontrolldatum» bleiben rechts sichtbar, ohne die Tabelle hin und her zu ziehen */
+@media(min-width:641px){
+  #invTable tr:not(.materialGroupV484)>td:last-child,#invTable thead th:last-child{position:sticky!important;right:0;z-index:3;background:#fff;min-width:112px;box-shadow:-6px 0 8px -6px rgba(0,0,0,.18)}
+  #invTable tr:not(.materialGroupV484)>td:nth-last-child(2),#invTable thead th:nth-last-child(2){position:sticky!important;right:112px;z-index:3;background:#fff}
+  #invTable thead th:last-child,#invTable thead th:nth-last-child(2){z-index:32!important;background:#f8faf8!important}
+  #invTable tr:not(.materialGroupV484):hover>td:last-child,#invTable tr:not(.materialGroupV484):hover>td:nth-last-child(2){background:#f6f9f7}
+  .inventoryTodayCheckV353{min-height:40px}
+}
+/* V381 – Tablet: kein ungewolltes Hineinzoomen (Doppeltipp, Antippen von Eingabefeldern); Zwei-Finger-Zoom bleibt möglich */
+html{touch-action:manipulation}
+@media(pointer:coarse){
+  input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),select,textarea{font-size:max(16px,1em)!important}
+  #mapwrap.mapZoomedV381{touch-action:none!important}
+  #mapwrap:not(.mapZoomedV381){touch-action:pan-y!important}
+}
+</style>
 <script>
 /* V353 – Materialliste: zwei feste Schluss-Spalten für Tageskontrolle.
    Verwendet die bereits vorhandenen Package-Felder lastCheckedAt/lastCheckedBy. */
@@ -37086,8 +37105,18 @@ body.v319ModalLock{
     p.lastCheckedBy=currentUserName();
     p.updatedAt=now;
     addHistory(p,'Heute kontrolliert','Materialbestand kontrolliert');
-    persist();
-    renderInv();
+    /* V381: sofort nur die betroffene Zeile anpassen und leicht speichern – der komplette
+       Neuaufbau (refresh + renderInv über alle Pakete) liess den Knopf auf dem Tablet «hängen». */
+    const row=ev?.target?.closest?.('tr');
+    if(row){
+      const b=row.querySelector('.inventoryTodayCheckV353');if(b){b.textContent='✓ Heute kontrolliert';b.classList.add('secondary')}
+      const d=row.querySelector('.inventoryTodayDateV353');if(d)d.textContent=dateOnlyV353(now);
+    }
+    try{window.capturePackagePendingV318?.()}catch(e){console.warn('V318 Pending-Capture',e)}
+    try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){persist();return}
+    try{queueCloudSync()}catch(_e){}
+    try{renderInvKpisV360?.()}catch(_e){}
+    if(!row)renderInv();
   };
 
   const cellBeforeV353=inventoryCell;
