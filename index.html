@@ -4709,7 +4709,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V381</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V382</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -4923,7 +4923,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V381</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V382</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -5723,6 +5723,8 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
     </label>
     <label>Anzahl umbuchen<input id="wtCountV545" type="number" min="0.001" step="0.001" required oninput="updateWarehouseTransferPreviewV545()"></label>
    </div>
+   <div class="wtNewIdV382" id="wtNewIdV382"></div>
+   <label class="wtUsedUpV382"><input type="checkbox" id="wtUsedUpV382" onchange="updateWarehouseTransferPreviewV545()"><span><b>Umgebuchte Menge ist gleich aufgebraucht</b><small>Der umgebuchte Eintrag kommt direkt ins Archiv (Status «aufgebraucht») – die Bewertung auf die Ziel-Kommission bleibt.</small></span></label>
   </div>
   <div class="wtSectionV549">
    <div class="wtSectionTitleV549">Bewertung</div>
@@ -7652,7 +7654,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V381</b></p><div class="releaseNote"><b>Neu in V381</b><br>Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V382</b></p><div class="releaseNote"><b>Neu in V382</b><br>Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -17776,6 +17778,7 @@ function openWarehouseTransferV545(id){
  let po=warehouseTransferPriceOptionsV545(p);
  E('wtPriceMaterialV545').innerHTML=po.html;
  E('wtNoteV545').value='';
+ if(E('wtUsedUpV382'))E('wtUsedUpV382').checked=false;
  updateWarehouseTransferPreviewV545();
  E('warehouseTransferModalV545').classList.add('open');
 }
@@ -17788,6 +17791,25 @@ function updateWarehouseTransferPreviewV545(){
  let dims=`${p.length||'–'} × ${p.width||'–'} × ${p.height||'–'} mm`;
  if(E('wtCalcV545'))E('wtCalcV545').innerHTML=m?`<b>Berechnung:</b> ${esc(count)} Stk. · Format ${esc(dims)} → <b>${q.toLocaleString('de-CH',{maximumFractionDigits:4})} ${esc(m.unit||'Stk')}</b>`:'Bitte Preismaterial auswählen.';
  if(E('wtValueV545'))E('wtValueV545').textContent=m?`Umbuchungswert: ${moneyCHF(val)}`:'';
+ /* V382: neue Element-ID schon vor dem Speichern anzeigen */
+ const info=E('wtNewIdV382');if(info){
+   const avail=Number(p.qty)||0,used=!!E('wtUsedUpV382')?.checked;
+   if(!(count>0))info.innerHTML='';
+   else if(count>avail)info.innerHTML=`<span class="wtWarnV382">Mehr als verfügbar (${esc(avail)} Stk.).</span>`;
+   else if(Math.abs(count-avail)<0.000001)info.innerHTML=`Ganzes Paket – Element-ID bleibt <b class="wtIdV382">${esc(p.elementId||'–')}</b>${used?' · wird danach als <b>aufgebraucht</b> archiviert':''}`;
+   else info.innerHTML=`Neue Element-ID für die umgebuchten ${esc(count)} Stk.: <b class="wtIdV382">${esc(previewSplitElementIdV382(p))}</b>${used?' · direkt <b>aufgebraucht</b> (Archiv)':''}<br><span class="muted">Rest ${esc(Number((avail-count).toFixed(4)))} Stk. bleibt in ${esc(p.elementId||'–')}</span>`;
+ }
+}
+function previewSplitElementIdV382(p){
+ let parsed=parseElementId(p?.elementId||'');
+ let prefix=parsed?.prefix||String(p?.idCategory||'A').toUpperCase();
+ if(!['A','B','C','D','E','TB'].includes(prefix))prefix='A';
+ return formatElementId(prefix,scanNextId(prefix));
+}
+function showTransferResultV382(title,id,lines){
+ let m=E('wtResultModalV382');if(!m){m=document.createElement('div');m.id='wtResultModalV382';m.className='modal';document.body.appendChild(m)}
+ m.innerHTML=`<div class="box" style="max-width:480px;text-align:center"><h2 style="margin:4px 0 6px">${esc(title)}</h2>${id?`<div class="muted">Element-ID</div><div class="wtResultIdV382">${esc(id)}</div><button class="btn secondary" type="button" onclick="try{navigator.clipboard.writeText('${esc(id)}');this.textContent='✓ Kopiert'}catch(e){}">ID kopieren</button>`:''}<div style="margin:14px 0;text-align:left">${lines.map(l=>`<div>${l}</div>`).join('')}</div><button class="btn" type="button" style="min-width:140px" onclick="closeM('wtResultModalV382')">OK</button></div>`;
+ m.classList.add('open');
 }
 function nextSplitElementIdV545(p){
  let parsed=parseElementId(p?.elementId||'');
@@ -17816,6 +17838,7 @@ function saveWarehouseTransferV545(e){
  if(!to||to===from){alert('Bitte eine andere Ziel-Kommission auswählen.');return}
  if(!(count>0)||count>available){alert(`Die Anzahl muss grösser als 0 und höchstens ${available} sein.`);return}
  if(!m){alert('Bitte ein Material aus dem Material- & Preisstamm auswählen.');return}
+ let usedUp=!!E('wtUsedUpV382')?.checked;
  let now=new Date().toISOString(),by=currentUserName(),note=E('wtNoteV545').value.trim();
  let priceQty=warehouseTransferQtyForPriceV545(p,count,m.unit),unitPrice=Number(m.price||0);
  let full=Math.abs(count-available)<0.000001,newPkg=null,newElementId=p.elementId||'';
@@ -17834,6 +17857,9 @@ function saveWarehouseTransferV545(e){
    addHistory(newPkg,'Durch Umbuchung erstellt',`${count} Stk. aus ${p.elementId||'–'} · ${from||'Ohne Kommission'} → ${to} · Wert ${moneyCHF(priceQty*unitPrice)}`);
    st.packages.push(newPkg);
  }
+ /* V382: umgebuchte Menge direkt aufgebraucht → ins Archiv */
+ const usedPkg=usedUp?(newPkg||p):null;
+ if(usedPkg){usedPkg.status='aufgebraucht';usedPkg.archivedAt=now;addHistory(usedPkg,'Archiviert','Umgebuchte Menge direkt aufgebraucht ('+to+')')}
  rememberWarehousePriceMaterialV546(p,m.id);
  let transferId=warehouseTransferIdV546();
  let common={transferId,from,to,now,by,note,m,p,count,priceQty,unitPrice,sourceId:p.elementId||'',targetId:newElementId,sourcePkg:p.id,targetPkg:newPkg?.id||p.id};
@@ -17844,17 +17870,24 @@ function saveWarehouseTransferV545(e){
  if(currentPage==='inventory')renderInv();
  if(currentPage==='transfers')renderTransfers();
 
+ const fmt=v=>Number(v).toLocaleString('de-CH',{maximumFractionDigits:4});
  if(!full&&newPkg){
-   alert(`Umbuchung erfolgreich – Neues Paket: ${newElementId} · ${Number(count).toLocaleString('de-CH',{maximumFractionDigits:4})} Stk.\nRest im ursprünglichen Paket: ${Number(p.qty).toLocaleString('de-CH',{maximumFractionDigits:4})} Stk.\nWert: ${moneyCHF(priceQty*unitPrice)}`);
-   selectedPackage=newPkg.id;
-   showPage('inventory');
-   renderInv();
-   setTimeout(()=>{
-     let row=document.querySelector(`[data-pkg-id="${CSS.escape(String(newPkg.id))}"]`)||document.querySelector('.pkg.target');
-     if(row)row.scrollIntoView({behavior:'smooth',block:'center',inline:'center'});
-   },120);
+   showTransferResultV382('Umbuchung gespeichert',newElementId,[
+     `<b>${fmt(count)} Stk.</b> ${esc(p.material||'')} → <b>${esc(to)}</b>${usedUp?' · <b>aufgebraucht</b> (im Archiv)':''}`,
+     `Rest im ursprünglichen Paket ${esc(p.elementId||'–')}: <b>${fmt(p.qty)} Stk.</b>`,
+     `Wert: ${moneyCHF(priceQty*unitPrice)}`]);
+   if(!usedUp){
+     selectedPackage=newPkg.id;
+     if(currentPage!=='inventory'){showPage('inventory');renderInv()}
+     setTimeout(()=>{
+       let row=document.querySelector(`[data-pkg-id="${CSS.escape(String(newPkg.id))}"]`)||document.querySelector('.pkg.target');
+       if(row)row.scrollIntoView({behavior:'smooth',block:'center',inline:'center'});
+     },120);
+   }
  }else{
-   alert(`Umbuchung erfolgreich – Paket ${p.elementId||'–'} vollständig nach ${to} umgebucht.\nWert: ${moneyCHF(priceQty*unitPrice)}`);
+   showTransferResultV382('Umbuchung gespeichert',p.elementId||'',[
+     `Ganzes Paket nach <b>${esc(to)}</b> umgebucht${usedUp?' und als <b>aufgebraucht</b> archiviert':''}.`,
+     `Wert: ${moneyCHF(priceQty*unitPrice)}`]);
  }
 }
 
@@ -33015,7 +33048,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V381';
+   if(v)v.textContent='Aktuelle Version: V382';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -37041,6 +37074,19 @@ body.v319ModalLock{
 })();
 </script>
 
+<style>
+/* V382 – Umbuchung: neue ID vorab, «gleich aufgebraucht» */
+.wtNewIdV382{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#eef4f0;font-size:15px;line-height:1.45}
+.wtNewIdV382:empty{display:none}
+.wtIdV382{font-size:18px;letter-spacing:.02em;color:#14251d}
+.wtWarnV382{color:#b3261e;font-weight:700}
+.wtUsedUpV382{display:flex!important;flex-direction:row!important;align-items:flex-start;gap:10px;margin-top:10px!important;padding:10px 12px;border:1px solid #dde3e0;border-radius:10px;cursor:pointer}
+.wtUsedUpV382 input{width:22px!important;height:22px!important;min-height:0!important;margin:2px 0 0!important;flex:none}
+.wtUsedUpV382 small{display:block;color:#6b7772;font-weight:400}
+.wtUsedUpV382:has(input:checked){border-color:#b3261e;background:#fdf3f2}
+.wtResultIdV382{font-size:34px;font-weight:800;letter-spacing:.03em;margin:4px 0 10px;color:#14251d}
+#wtResultModalV382{z-index:9700}
+</style>
 <style>
 .inventoryTodayCheckV353{white-space:nowrap}
 .inventoryTodayDateV353{white-space:nowrap;font-weight:700}
