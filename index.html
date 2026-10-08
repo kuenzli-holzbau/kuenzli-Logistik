@@ -4709,7 +4709,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V382</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V383</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -4923,7 +4923,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V382</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V383</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7654,7 +7654,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V382</b></p><div class="releaseNote"><b>Neu in V382</b><br>Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V383</b></p><div class="releaseNote"><b>Neu in V383</b><br>Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -33048,7 +33048,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V382';
+   if(v)v.textContent='Aktuelle Version: V383';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -35261,6 +35261,7 @@ ${safeTypeLines}
      // Detect ALL local additions/edits before any Cloud→local replacement.
      for(const [id,p] of Object.entries(local)){
        const lh=stableJson(p),b=base[id],bh=b?.hash??null,r=remote[id],rh=r?stableJson(r.data):null;
+       if(r&&(rh===bh||rh===lh))noteBaseV383('packages|'+id,rh,r.data);
        if(!r || (bh!==null&&lh!==bh))pending.add(id);
      }
      writePendingV317([...pending]);
@@ -35295,7 +35296,7 @@ ${safeTypeLines}
      const oldBase=loadSyncBase(),all=loadSyncBase();Object.keys(all).filter(k=>k.startsWith('packages|')).forEach(k=>delete all[k]);
      rows.forEach(x=>{const id=String(x.entity_id),k='packages|'+id;
        if(pkgConflicts.has(id)){if(oldBase[k])all[k]=oldBase[k];return}   // Konflikt bleibt erkennbar
-       all[k]={version:Number(x.version||0),hash:stableJson(x.data)}});
+       all[k]={version:Number(x.version||0),hash:stableJson(x.data)};noteBaseV383(k,all[k].hash,x.data)});
      saveSyncBase(all);
      writePendingV317([]);
      try{refresh?.();renderHomeStats?.();renderInv?.()}catch(_e){}
@@ -35303,20 +35304,27 @@ ${safeTypeLines}
      /* V357: übrige Objekte (Flächen, Gestelle, Katalog, Pins, Projekte, Pritschen …) im selben Lauf. */
      const o=await othersV357(manual);
      o.pkgConflictKeys=[...pkgConflicts].map(id=>'packages|'+id);
-     o.conflicts=(o.conflicts||0)+pkgConflicts.size;
+     /* V383: Konflikte nicht mehr dem Benutzer vorlegen, sondern automatisch zusammenführen */
+     const am=await autoMergeV383([...o.pkgConflictKeys,...(o.conflictKeys||[])]);
+     o.merged=am.done.length;
+     o.pkgConflictKeys=o.pkgConflictKeys.filter(k=>am.failed.includes(k));
+     o.conflictKeys=(o.conflictKeys||[]).filter(k=>am.failed.includes(k));
+     o.conflicts=o.pkgConflictKeys.length+o.conflictKeys.length;
+     if(am.done.length){againV364=true;try{refresh?.()}catch(_e){}}
      o.at=Date.now();o.packages=rows.length;o.uploadedPackages=uploaded;
      let msg='Cloud aktuell · '+rows.length+' Pakete'+(uploaded?' · '+uploaded+' Paket(e) gesendet':'');
      if(o.pushed)msg+=' · '+o.pushed+' Änderung(en) gesendet';
      if(o.pulled)msg+=' · '+o.pulled+' Änderung(en) übernommen';
      if(o.remaining)msg+=' · noch '+o.remaining+' offen (läuft weiter)';
      if(o.failed)msg+=' · '+o.failed+' Objekt(e) von der Cloud abgelehnt';
-     if(o.conflicts)msg+=' · ⚠ '+o.conflicts+' Konflikt(e) – zum Lösen antippen';
+     if(o.merged)msg+=' · '+o.merged+' gleichzeitige Änderung(en) automatisch zusammengeführt';
+     if(o.conflicts)msg+=' · '+o.conflicts+' Änderung(en) werden erneut abgeglichen';
      lastV357=o;lastOkV359=Date.now();
      setSyncStatus('ok',msg);
-     if(o.conflicts){['syncStatusBadge','cloudManageStatus'].forEach(id=>{const el=E(id);if(el){el.textContent='⚠ '+o.conflicts+' Konflikt'+(o.conflicts>1?'e':'');el.className='syncBadge warnV359';el.title=msg}})}
+     /* V383: kein Konflikt-Hinweis mehr – nicht zusammenführbare Fälle (z.B. gleichzeitiges Speichern) werden beim nächsten regulären Abgleich erneut versucht */
      if(o.remaining)setTimeout(()=>syncV317(true),2500);
      if(o.later)againV364=true; /* V364: Versionskonflikt beim Senden → sofort neu prüfen, damit ein echter Konflikt angezeigt wird */
-     try{rerenderAfterSyncV359(o.pulled>0||uploaded>0)}catch(_e){}
+     try{rerenderAfterSyncV359(o.pulled>0||uploaded>0||o.merged>0)}catch(_e){}
      return true;
    }catch(e){
      const m=String(e?.message||e||'');
@@ -35326,6 +35334,125 @@ ${safeTypeLines}
    }finally{flightV317=false;if(againV364){againV364=false;setTimeout(()=>syncV317(true),700)}}
  }
  let againV364=false,againTimerV364=null;
+
+ /* ===== V383 · Konflikte automatisch zusammenführen statt nachfragen =====
+    Wenn ein Objekt auf diesem Gerät UND in der Cloud geändert wurde:
+    - Felder, die nur eine Seite geändert hat, werden übernommen (gleiche Werte bleiben).
+    - Listen mit IDs (z.B. Arbeitsschritte, Gruppen, Meilensteine, Kommissionen) werden pro Eintrag zusammengeführt.
+    - Bei echtem Widerspruch im selben Feld gewinnt die jüngere Änderung (updatedAt), bei Gleichstand dieses Gerät.
+    - Die verworfene Fassung wird lokal archiviert (letzte 25), damit nie etwas verloren geht.
+    Ergebnis wird versionsgeprüft in die Cloud geschrieben und lokal übernommen. */
+ const ARCH_V383='kuenzli_conflict_archive_v383';
+ const tsV383=o=>{if(!o||typeof o!=='object')return 0;const t=Date.parse(o.updatedAt||o.updated_at||o.changedAt||o.lastCheckedAt||o.createdAt||'');return Number.isFinite(t)?t:0};
+ const isObjV383=v=>v&&typeof v==='object'&&!Array.isArray(v);
+ function mergeV383(a,b,ta,tb){
+   if(stableJson(a)===stableJson(b))return a;
+   if(Array.isArray(a)&&Array.isArray(b)){
+     const idd=x=>x&&typeof x==='object'&&x.id!=null;
+     if(a.length&&b.length&&a.every(idd)&&b.every(idd)){
+       const ma=new Map(a.map(x=>[String(x.id),x])),mb=new Map(b.map(x=>[String(x.id),x])),out=[],seen=new Set();
+       const keepOnly=(x,own,other)=>own>=other||tsV383(x)>other;
+       const [first,firstTs,second,secondTs,fm,sm]=ta>=tb?[a,ta,b,tb,ma,mb]:[b,tb,a,ta,mb,ma];
+       first.forEach(x=>{const id=String(x.id);seen.add(id);const y=sm.get(id);
+         if(y){const xa=fm===ma?x:y,xb=fm===ma?y:x;out.push(mergeV383(xa,xb,tsV383(xa)||ta,tsV383(xb)||tb))}
+         else if(keepOnly(x,firstTs,secondTs))out.push(x)});
+       second.forEach(x=>{const id=String(x.id);if(seen.has(id))return;if(keepOnly(x,secondTs,firstTs))out.push(x)});
+       return out;
+     }
+     return ta>=tb?a:b;
+   }
+   if(isObjV383(a)&&isObjV383(b)){
+     const A=tsV383(a)||ta,B=tsV383(b)||tb,out={};
+     new Set([...Object.keys(b),...Object.keys(a)]).forEach(k=>{
+       if(!(k in b)){out[k]=a[k];return}
+       if(!(k in a)){out[k]=b[k];return}
+       out[k]=mergeV383(a[k],b[k],A,B);
+     });
+     if(a.updatedAt||b.updatedAt)out.updatedAt=String(a.updatedAt||'')>String(b.updatedAt||'')?a.updatedAt:b.updatedAt;
+     return out;
+   }
+   return ta>=tb?a:b;
+ }
+ window.mergeConflictV383=mergeV383;
+ /* Echte Dreiweg-Zusammenführung mit dem zuletzt gemeinsamen Stand (Basis):
+    nur was eine Seite gegenüber der Basis geändert hat, wird übernommen – so gehen keine Änderungen verloren
+    und Gelöschtes kommt nicht zurück. */
+ const SJ=v=>v===undefined?'∅':stableJson(v);
+ function merge3V383(base,a,b,ta,tb){
+   const sa=SJ(a),sb=SJ(b);if(sa===sb)return a;
+   const s0=SJ(base);if(sa===s0)return b;if(sb===s0)return a;
+   if(Array.isArray(a)&&Array.isArray(b)){
+     const idd=x=>x&&typeof x==='object'&&x.id!=null,B=Array.isArray(base)?base:[];
+     if(a.every(idd)&&b.every(idd)&&B.every(idd)){
+       const m0=new Map(B.map(x=>[String(x.id),x])),ma=new Map(a.map(x=>[String(x.id),x])),mb=new Map(b.map(x=>[String(x.id),x]));
+       const out=[],seen=new Set();
+       const one=id=>{if(seen.has(id))return;seen.add(id);const x0=m0.get(id),xa=ma.get(id),xb=mb.get(id);
+         if(xa&&xb){out.push(merge3V383(x0,xa,xb,tsV383(xa)||ta,tsV383(xb)||tb));return}
+         const only=xa||xb;if(!x0){out.push(only);return}            // neu auf einer Seite
+         if(SJ(only)!==SJ(x0))out.push(only);                          // auf einer Seite gelöscht, auf der anderen geändert → Änderung behalten
+       };
+       b.forEach(x=>one(String(x.id)));a.forEach(x=>one(String(x.id)));
+       return out;
+     }
+     return ta>=tb?a:b;
+   }
+   if(isObjV383(a)&&isObjV383(b)){
+     const A=tsV383(a)||ta,Bt=tsV383(b)||tb,b0=isObjV383(base)?base:{},out={};
+     new Set([...Object.keys(b),...Object.keys(a),...Object.keys(b0)]).forEach(k=>{
+       const v=merge3V383(b0[k],a[k],b[k],A,Bt);if(v!==undefined)out[k]=v;
+     });
+     if(a.updatedAt||b.updatedAt)out.updatedAt=String(a.updatedAt||'')>String(b.updatedAt||'')?a.updatedAt:b.updatedAt;
+     return out;
+   }
+   return ta>=tb?a:b;
+ }
+ window.merge3V383=merge3V383;
+ /* Basis-Stände (letzter gemeinsamer Stand je Objekt) in IndexedDB – localStorage wäre auf iPad/iPhone zu klein. */
+ const baseCacheV383=new Map();let idbV383=null,idbQueueV383=new Map(),idbTimerV383=0;
+ try{const rq=indexedDB.open('kuenzli_syncbase_v383',1);rq.onupgradeneeded=()=>rq.result.createObjectStore('b');
+   rq.onsuccess=()=>{idbV383=rq.result;try{const t=idbV383.transaction('b','readonly'),s=t.objectStore('b'),c=s.openCursor();c.onsuccess=()=>{const cur=c.result;if(cur){if(!baseCacheV383.has(cur.key))baseCacheV383.set(cur.key,cur.value);cur.continue()}}}catch(_e){}}}catch(_e){}
+ function noteBaseV383(k,hash,data){
+   const c=baseCacheV383.get(k);if(c&&c.h===hash)return;
+   const v={h:hash,d:JSON.parse(JSON.stringify(data))};baseCacheV383.set(k,v);idbQueueV383.set(k,v);
+   clearTimeout(idbTimerV383);idbTimerV383=setTimeout(()=>{if(!idbV383)return;try{const t=idbV383.transaction('b','readwrite'),s=t.objectStore('b');idbQueueV383.forEach((val,key)=>s.put(val,key));idbQueueV383.clear()}catch(_e){}},800);
+ }
+ window.noteBaseV383=noteBaseV383;
+ function archiveV383(k,local,cloud,merged){
+   try{let a=JSON.parse(localStorage.getItem(ARCH_V383)||'[]');if(!Array.isArray(a))a=[];
+     a.unshift({k,at:new Date().toISOString(),local,cloud,merged:stableJson(merged)===stableJson(local)?'local':stableJson(merged)===stableJson(cloud)?'cloud':'merged'});
+     a=a.slice(0,25);let s=JSON.stringify(a);while(s.length>1500000&&a.length>1){a.pop();s=JSON.stringify(a)}
+     localStorage.setItem(ARCH_V383,s)}catch(_e){}
+ }
+ async function autoMergeV383(keys){
+   const res={done:[],failed:[]};if(!keys.length)return res;
+   let remote;try{remote=await fetchRemoteEntities()}catch(e){res.failed=keys.slice();return res}
+   for(const k of keys){
+     try{
+       const [type,...rest]=String(k).split('|'),id=rest.join('|'),r=remote[k];
+       let ldata=null,pi=-1;
+       if(type==='packages'){pi=(st.packages||[]).findIndex((p,ix)=>String(entityId('packages',p,ix))===id);ldata=pi>=0?st.packages[pi]:null}
+       else ldata=localEntityMap()[k]?.data||null;
+       if(!r||!ldata){res.failed.push(k);continue}
+       const local=JSON.parse(JSON.stringify(ldata)),cloud=JSON.parse(JSON.stringify(r.data));
+       const bh=loadSyncBase()[k]?.hash,bc=baseCacheV383.get(k),base=bc&&bc.h===bh?bc.d:null;
+       let merged=!canWriteCloudEntity(type,'save')?cloud:base?merge3V383(base,local,cloud,tsV383(local),tsV383(cloud)):mergeV383(local,cloud,tsV383(local),tsV383(cloud));
+       merged=JSON.parse(JSON.stringify(merged));
+       archiveV383(k,local,cloud,merged);
+       let version=Number(r.version||0),hash=stableJson(merged);
+       if(stableJson(merged)!==stableJson(cloud)){
+         const val=await rpcEntitySave(type,id,merged,version,false);
+         version=Number(val?.version||(version+1));
+       }
+       // lokal übernehmen
+       if(type==='packages'){if(pi>=0)st.packages[pi]=merged;else st.packages.push(merged);localStorage.setItem(KEY,JSON.stringify(st))}
+       else window.applyOneRemoteV272?.({type,id,data:merged,version});
+       const nb=loadSyncBase();nb[k]={version,hash};saveSyncBase(nb);noteBaseV383(k,hash,merged);
+       res.done.push(k);
+     }catch(e){res.failed.push(k)} // Versionskonflikt o.ä. → im nächsten Lauf erneut
+   }
+   return res;
+ }
+ window.conflictArchiveV383=()=>{try{return JSON.parse(localStorage.getItem(ARCH_V383)||'[]')}catch(_e){return []}};
 
  /* ===== V357 · objektweiser Abgleich aller übrigen Objekte =====
     Regeln (identisch zur bisherigen Sicherheitslogik, nur jetzt in EINEM Pfad):
@@ -35354,6 +35481,7 @@ ${safeTypeLines}
      /* Material-Pins: lokal gelöschte Pins (V308-Löschliste) nie zurückholen; fehlende Cloud-Löschmarkierung nachsenden. */
      if(!l&&r&&r.type==='materialPinsV552'&&pinTombs[String(r.id)]){if(!r.data?.deletedAt)tombPush.push(k);continue}
      const lh=l?stableJson(l.data):null,rh=r?stableJson(r.data):null,bh=b?.hash??null;
+     if(r&&rh===bh)noteBaseV383(k,rh,r.data);else if(l&&r&&lh===rh)noteBaseV383(k,rh,r.data);
      if(l&&r&&lh===rh){if(!b||b.hash!==rh||Number(b.version||0)!==Number(r.version||0))ident.push(k);continue}
      if(l&&!r){if(!b)push.push(k);continue}
      if(!l&&r){if(!b&&(r.type!=='projects'||projectVisibleV365(r)))pull.push(k);continue}
@@ -35373,7 +35501,7 @@ ${safeTypeLines}
      if(!canWriteCloudEntity(l.type,'save')){denied++;continue}
      try{
        const val=await rpcEntitySave(l.type,l.id,JSON.parse(JSON.stringify(l.data)),Number(r?.version??b?.version??0),false);
-       const nb=loadSyncBase();nb[k]={version:Number(val?.version||(Number(r?.version||0)+1)),hash:stableJson(l.data)};saveSyncBase(nb);pushed++;
+       const nb=loadSyncBase();nb[k]={version:Number(val?.version||(Number(r?.version||0)+1)),hash:stableJson(l.data)};saveSyncBase(nb);noteBaseV383(k,nb[k].hash,l.data);pushed++;
      }catch(e){if(e?.syncConflict){later++;continue}if(transientV317(e?.message))throw e;failed++;failedKeys.push(k+': '+String(e?.message||e).slice(0,120))}
    }
    for(const k of tombPush){
@@ -35391,7 +35519,7 @@ ${safeTypeLines}
      if(!window.applyOneRemoteV272?.(r))continue;
      /* Lokale Normalisierung (z.B. Standardfelder) darf keinen Fehler auslösen: Basis = Cloud-Stand;
         eine echte lokale Abweichung wird im nächsten Lauf normal gesendet. */
-     const nb=loadSyncBase();nb[k]={version:Number(r.version||0),hash:stableJson(r.data)};saveSyncBase(nb);pulled++;
+     const nb=loadSyncBase();nb[k]={version:Number(r.version||0),hash:stableJson(r.data)};saveSyncBase(nb);noteBaseV383(k,nb[k].hash,r.data);pulled++;
    }
    if(pulled){try{loadPlatformStore?.();refresh?.();renderProjectCards?.();renderPlatformProjectOverview?.();refreshPermissionVisibility?.()}catch(_e){}}
    try{let mx='';Object.values(remote).forEach(x=>{if(x?.updated_at&&String(x.updated_at)>mx)mx=String(x.updated_at)});if(mx)localStorage.setItem('kuenzli_cloud_seen_v359',mx)}catch(_e){}
