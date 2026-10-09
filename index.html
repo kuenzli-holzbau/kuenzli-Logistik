@@ -4492,6 +4492,31 @@ body.planLinkingV378 .planBarV362[data-step]{cursor:crosshair}
 body.planLinkingV378 .planBarV362:not(.linkSrcV378):not(.linkOffV378):hover{outline:3px solid #1565c0;outline-offset:2px}
 .planBarV362.linkSrcV378{outline:3px dashed #1565c0;outline-offset:2px}
 .planBarV362.linkOffV378{opacity:.35}
+/* V389: Einsatzplan-Bilder oben in der Planung */
+.planBoardV389{border:1px solid #d7e0db;border-radius:14px;background:#fff;margin:0 0 10px;overflow:hidden}
+.planBoardHeadV389{display:flex;gap:12px;align-items:center;width:100%;padding:9px 14px;border:0;background:#f4f7f5;cursor:pointer;font:inherit;text-align:left}
+.planBoardHeadV389 span{flex:1;color:#5d6d66;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.planBoardHeadV389 i{font-style:normal;font-weight:700;color:#173d31;font-size:13px}
+.planBoardGridV389{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:12px}
+.planBoardCardV389{border:1px solid #e1e7e4;border-radius:12px;padding:8px;min-width:0;position:relative}
+.planBoardCardV389.busyV389{opacity:.5;pointer-events:none}
+.planBoardCardV389.busyV389::after{content:'wird hochgeladen …';position:absolute;inset:0;display:grid;place-items:center;font-weight:800}
+.planBoardCardHeadV389{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.planBoardCardHeadV389 small{color:#6b7772;flex:1}
+.planBoardCardHeadV389 .btn{padding:5px 10px;font-size:13px;margin-left:4px}
+.planBoardImgV389{display:block;width:100%;height:230px;border:0;padding:0;background:#f6f8f7;border-radius:8px;cursor:zoom-in;overflow:hidden;position:relative}
+.planBoardImgV389 img{width:100%;height:100%;object-fit:contain;display:block}
+.planBoardImgV389 span{position:absolute;inset:auto 0 8px 0;text-align:center;color:#6b7772;font-size:13px}
+.planBoardEmptyV389{height:120px;display:grid;place-items:center;text-align:center;color:#6b7772;border:1.5px dashed #c5d0ca;border-radius:8px;padding:10px;font-size:14px}
+#planBoardViewV389{display:none;position:fixed;inset:0;z-index:9800;background:#25302b!important;opacity:1!important;flex-direction:column}
+#planBoardViewV389.open{display:flex}
+.pbvBarV389{display:flex;gap:8px;align-items:center;padding:10px 14px;background:#fff;flex-wrap:wrap}
+.pbvBarV389 span{flex:1;color:#6b7772;font-size:13px}
+.pbvBarV389 button,.pbvBarV389 .btnLike{min-height:40px;min-width:44px;padding:6px 12px;border:1px solid #cfd9d3;border-radius:10px;background:#f4f7f5;font-weight:800;cursor:pointer;color:#173d31;text-decoration:none;display:inline-grid;place-items:center}
+.pbvScrollV389{flex:1;overflow:auto;cursor:grab;touch-action:pan-x pan-y}
+.pbvScrollV389 img{display:block;margin:0 auto;max-width:none;user-select:none;-webkit-user-drag:none}
+.pbvScrollV389 img.fit{max-width:100%;max-height:calc(100vh - 80px);width:auto;height:auto;object-fit:contain}
+@media(max-width:760px){.planBoardGridV389{grid-template-columns:1fr}.planBoardImgV389{height:180px}}
 /* V387: Endtermin je Zuschnitt in der eigenen Zeile */
 .planDueV387{position:absolute;top:3px;bottom:3px;width:4px;border-radius:2px;background:#1e4f8a;z-index:1;pointer-events:auto;cursor:help}
 .planDueV387 i{position:absolute;top:-3px;left:2px;font-style:normal;font-size:13px;line-height:1;filter:drop-shadow(0 0 1px #fff)}
@@ -4803,7 +4828,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V388</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V389</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -5021,7 +5046,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V388</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V389</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7753,7 +7778,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V388</b></p><div class="releaseNote"><b>Neu in V388</b><br>Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V389</b></p><div class="releaseNote"><b>Neu in V389</b><br>Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -11119,17 +11144,17 @@ async function checkCloudForUpdates(force=false){
 
 
 function entityCollections(){
- return ['areas','racks','packages','commissions','controls','users','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','planSchemasV377','sibChecklistsV385'];
+ return ['areas','racks','packages','commissions','controls','users','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','planSchemasV377','sibChecklistsV385','planBoardV389'];
 }
 function canWriteCloudEntity(type,action='save'){
  let role=currentRole();
  if(role==='Administrator')return true;
  if(role==='Lagerverantwortlicher'){
    if(type==='users')return false;
-   return ['areas','racks','packages','commissions','controls','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','__state','planSchemasV377','sibChecklistsV385'].includes(type);
+   return ['areas','racks','packages','commissions','controls','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','__state','planSchemasV377','sibChecklistsV385','planBoardV389'].includes(type);
  }
  if(role==='Mitarbeiter'){
-   if(action==='save')return ['packages','controls','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','sibChecklistsV385'].includes(type);
+   if(action==='save')return ['packages','controls','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','sibChecklistsV385','planBoardV389'].includes(type);
    if(action==='delete')return type==='packages' && !!st.settings?.allowMaterialDelete;
  }
  return false;
@@ -21243,7 +21268,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    try{doc.destroy()}catch(_e){}
    return res;
  }
- window.parseSibChecklistV385=parseChecklist;
+ window.parseSibChecklistV385=parseChecklist;window.loadPdfJsV385=loadPdfJs;
  /* ---------- Hochladen ---------- */
  window.uploadSibChecklistsV385=function(){
    if(!canEditSib()){alert('Für «Sonstiges» besteht keine Bearbeitungs-Freigabe.');return}
@@ -21698,7 +21723,7 @@ document.addEventListener('DOMContentLoaded',()=>{
      html+=`<section class="planFloorV363" data-group="${esc(g.id)}">${headerHtml(days,corner)}${rows}<div class="planMsLinesHostV368" data-ms='${esc(JSON.stringify(cl?[]:msList.map(m=>m.id)))}'></div></section>`;
    });
    if(fltOn()&&!html)html=`<section class="planFloorV363"><div class="planEmptyV362" style="margin:14px"><b>Keine Arbeitsschritte passen zum Filter.</b></div></section>`;
-   host.innerHTML=tools+`<div class="planScrollV362" id="planScrollV362"><div class="planInnerV362" style="width:${LABELW+days.length*DW}px">
+   host.innerHTML=boardHtml()+tools+`<div class="planScrollV362" id="planScrollV362"><div class="planInnerV362" style="width:${LABELW+days.length*DW}px">
      ${todayCol(days)}${html}
      <svg class="planDepsV362 planDepsV367" style="left:0;top:0" width="0" height="0"></svg>
      <section class="planFloorV363 planLoadSectionV363">${p.id===ZS_PID?zsLoadRows(p,days):(()=>{const used=new Set(plan(p).steps.map(s=>s.commissionId||''));const cs=commissions(p).filter(c=>used.has(c.id)||(c.staffingDays||[]).length);
@@ -21712,7 +21737,7 @@ document.addEventListener('DOMContentLoaded',()=>{
      const list=milestones(p).filter(m=>idsMs.includes(m.id));if(!list.length)return;
      hostDiv.outerHTML=msLinesHtml(p,days,list,HEADH,sec.offsetHeight-HEADH);
    });
-   bindFilter(host,renderProjectPlan);
+   bindFilter(host,renderProjectPlan);fillBoard(host);
    bind(host,days,editable);
    bindColResize(host);
    afterRender();
@@ -22038,10 +22063,10 @@ document.addEventListener('DOMContentLoaded',()=>{
        st.forEach(s=>{rows+=`<div class="planRowV362">${rowLabel(p,s)}<div class="planTrackV362" style="width:${days.length*DW}px">${bandsHtml(p,f.id,days,false)}${dueMark(p,s,days)}${barHtml(p,s,0,days,false)}</div></div>`;r++})});
    });
    const cap=k=>{let any=false,sum=0;projects.forEach(p=>{const c=capacity(p,k);if(c!=null){any=true;sum+=c}});return any?sum:null};
-   host.innerHTML=`<div class="planToolsV362"><span class="muted">Alle aktiven Projekte mit Planung. Zum Bearbeiten ein Projekt antippen.</span>${canEdit()?`<button class="btn secondary" type="button" onclick="openZuschnittImportV384()">⤓ Zuschnitte aus monday (Excel)</button>`:''}<button class="btn secondary" type="button" onclick="scrollPlanTodayV362()">Heute</button><button class="btn secondary" type="button" onclick="openPlanPdfV369('overview')">⤓ PDF exportieren</button></div>${filterBar(projects)}
+   host.innerHTML=boardHtml()+`<div class="planToolsV362"><span class="muted">Alle aktiven Projekte mit Planung. Zum Bearbeiten ein Projekt antippen.</span>${canEdit()?`<button class="btn secondary" type="button" onclick="openZuschnittImportV384()">⤓ Zuschnitte aus monday (Excel)</button>`:''}<button class="btn secondary" type="button" onclick="scrollPlanTodayV362()">Heute</button><button class="btn secondary" type="button" onclick="openPlanPdfV369('overview')">⤓ PDF exportieren</button></div>${filterBar(projects)}
    <div class="planScrollV362" id="planOvScrollV362"><div class="planInnerV362" style="width:${LABELW+days.length*DW}px">${headerHtml(days)}${todayCol(days)}${rows}${loadRowHtml(days,k=>projects.reduce((n,p)=>n+load(p,k),0),cap,'Auslastung gesamt')}</div></div>`;
    host.querySelectorAll('.planBarV362').forEach(b=>b.addEventListener('click',ev=>{const p=projectById(b.dataset.project),s=p&&stepById(p,b.dataset.step);if(s)openCtx(ev,p,s)}));
-   bindFilter(host,renderOverview);
+   bindFilter(host,renderOverview);fillBoard(host);
    bindColResize(host);
    afterRender();
    if(prevOv&&host.offsetParent){const sc=host.querySelector('.planScrollV362');sc.scrollLeft=prevOv.l;sc.scrollTop=prevOv.t}else scrollToday(false);
@@ -22487,6 +22512,87 @@ document.addEventListener('DOMContentLoaded',()=>{
    plan(p,true).steps.forEach(s=>{if(s.status==='done'||s.hoursManual)return;const h=zsEstimate(p,s);const d=s.daysManual?s.days:zsDaysFor(p,h,s.machine);if(h!==s.hours||d!==s.days){s.hours=h;s.days=d;zsAutoStart(s);s.updatedAt=now;n++}});
    const pushed=enforceDeps(p);save(p);closeM('zsRatesModalV385');window.renderPlanVisibleV362();
    alert('Richtwerte gespeichert.'+(n?' '+n+' Zuschnitt(e) neu berechnet.':'')+(pushed?' '+pushed+' wegen Abhängigkeiten verschoben.':''));
+ };
+
+ /* ---------- V389: Einsatzplan – 2 Bilder/PDFs oben in der Planung (wöchentlich ersetzen) ----------
+    Gespeichert als Cloud-Objekte st.planBoardV389 (je Feld ein Eintrag). Das Bild selbst liegt im Cloud-Speicher
+    (Foto-Bucket, Pfad im Eintrag); ohne Cloud direkt als komprimiertes Bild. PDFs werden beim Hochladen in ein Bild umgewandelt. */
+ const BOARD_SLOTS=['ep1','ep2'];
+ function boardAll(){if(!Array.isArray(st.planBoardV389))st.planBoardV389=[];return st.planBoardV389}
+ function boardGet(id){return boardAll().find(x=>x&&x.id===id&&!x.deleted)||null}
+ function boardOpen(){try{return localStorage.getItem('planBoardOpenV389')!=='0'}catch(_e){return true}}
+ window.togglePlanBoardV389=function(){try{localStorage.setItem('planBoardOpenV389',boardOpen()?'0':'1')}catch(_e){}window.renderPlanVisibleV362()};
+ const fmtTs=t=>{try{const d=new Date(t);return d.toLocaleDateString('de-CH',{weekday:'short',day:'numeric',month:'numeric'})+' '+d.toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'})}catch(_e){return ''}};
+ function boardHtml(){
+   const ed=canEdit(),open=boardOpen(),items=BOARD_SLOTS.map(id=>({id,b:boardGet(id)}));
+   if(!ed&&!items.some(x=>x.b))return '';
+   return `<div class="planBoardV389${open?' open':''}"><button type="button" class="planBoardHeadV389" onclick="togglePlanBoardV389()"><b>📋 Einsatzplan</b><span>${items.filter(x=>x.b).map(x=>esc(x.b.title||'')).join(' · ')||'noch kein Bild'}</span><i>${open?'▾ ausblenden':'▸ anzeigen'}</i></button>
+     ${open?`<div class="planBoardGridV389">${items.map(({id,b},i)=>`<div class="planBoardCardV389">
+       <div class="planBoardCardHeadV389"><b>${esc(b?.title||('Einsatzplan '+(i+1)))}</b><small>${b?esc(fmtTs(b.updatedAt))+(b.updatedBy?' · '+esc(b.updatedBy):''):''}</small>
+         ${ed?`<span><button type="button" class="btn secondary" onclick="uploadPlanBoardV389('${id}')">${b?'⤒ Ersetzen':'⤒ Hochladen'}</button>${b?`<button type="button" class="btn secondary" title="Titel ändern" onclick="renamePlanBoardV389('${id}')">✎</button>`:''}</span>`:''}</div>
+       ${b?`<button type="button" class="planBoardImgV389" onclick="viewPlanBoardV389('${id}')"><img alt="${esc(b.title||'Einsatzplan')}" data-board="${id}" ${b.img?`src="${b.img}"`:''}><span>${b.img||b.path?'':'Bild fehlt'}</span></button>`:`<div class="planBoardEmptyV389">${ed?'Bild (JPG/PNG) oder PDF hochladen – wird wöchentlich ersetzt':'Noch kein Einsatzplan'}</div>`}
+     </div>`).join('')}</div>`:''}</div>`;
+ }
+ const boardUrlCache={};
+ async function boardSrc(b){
+   if(b.img)return b.img;if(!b.path)return '';
+   const k=b.path+'|'+(b.updatedAt||'');if(boardUrlCache[k])return boardUrlCache[k];
+   try{const u=await getSignedPhotoUrl(b.path);if(u)boardUrlCache[k]=u;return u||''}catch(_e){return ''}
+ }
+ function fillBoard(host){host.querySelectorAll('img[data-board]').forEach(async im=>{if(im.getAttribute('src'))return;const b=boardGet(im.dataset.board);if(!b)return;const u=await boardSrc(b);if(u)im.src=u;else{const sp=im.nextElementSibling;if(sp)sp.textContent='Bild wird geladen, sobald die Cloud verbunden ist'}})}
+ async function fileToPlanImage(f){
+   const isPdf=/pdf$/i.test(f.type||'')||/\.pdf$/i.test(f.name||'');
+   let cv;
+   if(isPdf){
+     const lib=await window.loadPdfJsV385();const doc=await lib.getDocument({data:new Uint8Array(await f.arrayBuffer()),isEvalSupported:false}).promise;
+     const pg=await doc.getPage(1),v1=pg.getViewport({scale:1}),sc=Math.min(4,2600/Math.max(v1.width,v1.height)),vp=pg.getViewport({scale:sc});
+     cv=document.createElement('canvas');cv.width=Math.ceil(vp.width);cv.height=Math.ceil(vp.height);const ctx=cv.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+     await pg.render({canvasContext:ctx,viewport:vp}).promise;try{doc.destroy()}catch(_e){}
+   }else{
+     const url=URL.createObjectURL(f);const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error('Bild konnte nicht gelesen werden'));i.src=url});
+     const sc=Math.min(1,2600/Math.max(img.naturalWidth,img.naturalHeight));cv=document.createElement('canvas');cv.width=Math.round(img.naturalWidth*sc);cv.height=Math.round(img.naturalHeight*sc);
+     const ctx=cv.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);ctx.drawImage(img,0,0,cv.width,cv.height);URL.revokeObjectURL(url);
+   }
+   return {dataUrl:cv.toDataURL('image/jpeg',0.85),w:cv.width,h:cv.height};
+ }
+ window.uploadPlanBoardV389=function(id){
+   if(!canEdit()){alert('Für die Produktionsplanung ist keine Bearbeitungs-Berechtigung freigeschaltet.');return}
+   let inp=E('planBoardFileV389');if(!inp){inp=document.createElement('input');inp.type='file';inp.id='planBoardFileV389';inp.accept='image/*,application/pdf,.pdf';inp.style.display='none';document.body.appendChild(inp)}
+   inp.value='';inp.onchange=async()=>{const f=inp.files?.[0];if(!f)return;
+     const card=document.querySelector(`img[data-board="${id}"]`)?.closest('.planBoardCardV389')||document.querySelectorAll('.planBoardCardV389')[BOARD_SLOTS.indexOf(id)];
+     if(card)card.classList.add('busyV389');
+     try{
+       const r=await fileToPlanImage(f);const old=boardGet(id);
+       const now=new Date().toISOString(),by=(typeof cloudMember!=='undefined'&&cloudMember?.name)||'';
+       const b={id,title:old?.title||('Einsatzplan '+(BOARD_SLOTS.indexOf(id)+1)),fileName:f.name,w:r.w,h:r.h,updatedAt:now,updatedBy:by,img:'',path:''};
+       let stored=false;
+       if(typeof photoStorageReady==='function'&&photoStorageReady()){try{b.path=await Promise.race([uploadDataUrlToCloud(r.dataUrl,'einsatzplan-'+id+'.jpg'),new Promise((_,rej)=>setTimeout(()=>rej(new Error('Zeitüberschreitung')),30000))]);stored=!!b.path}catch(e){console.warn('Einsatzplan Cloud-Speicher',e)}}
+       if(!stored)b.img=r.dataUrl;
+       const a=boardAll(),i=a.findIndex(x=>x&&x.id===id);if(i>=0)a[i]=b;else a.push(b);persist();
+       if(old?.path&&old.path!==b.path&&typeof deletePhotoFromCloud==='function')deletePhotoFromCloud(old.path).catch(()=>{});
+       window.renderPlanVisibleV362();
+     }catch(e){console.error('Einsatzplan',e);alert('Die Datei konnte nicht übernommen werden: '+(e?.message||e))}
+     finally{if(card)card.classList.remove('busyV389')}};
+   inp.click();
+ };
+ window.renamePlanBoardV389=function(id){
+   if(!canEdit())return;const b=boardGet(id);if(!b)return;const t=String(prompt('Titel für dieses Bild:',b.title||'')||'').trim();if(!t)return;
+   b.title=t;b.updatedAt=new Date().toISOString();persist();window.renderPlanVisibleV362();
+ };
+ window.viewPlanBoardV389=async function(id){
+   const b=boardGet(id);if(!b)return;const src=await boardSrc(b);if(!src)return;
+   let m=E('planBoardViewV389');if(!m){m=document.createElement('div');m.id='planBoardViewV389';document.body.appendChild(m)}
+   let z=1;
+   m.innerHTML=`<div class="pbvBarV389"><b>${esc(b.title||'Einsatzplan')}</b><span>${esc(fmtTs(b.updatedAt))}</span><button type="button" data-z="-">−</button><button type="button" data-z="fit">Ganze Seite</button><button type="button" data-z="+">+</button><a class="btnLike" href="${src}" target="_blank" rel="noopener" download="${esc((b.title||'einsatzplan')+'.jpg')}">⤓</a><button type="button" data-z="x">✕ Schliessen</button></div><div class="pbvScrollV389"><img src="${src}" alt=""></div>`;
+   m.classList.add('open');const sc=m.querySelector('.pbvScrollV389'),im=m.querySelector('img');
+   const apply=()=>{im.style.width=z===1?'':(z*100)+'%';im.classList.toggle('fit',z===1)};apply();
+   m.querySelector('.pbvBarV389').onclick=e=>{const t=e.target.closest('button')?.dataset.z;if(!t)return;if(t==='x'){m.classList.remove('open');m.innerHTML='';return}
+     if(t==='fit')z=1;else if(t==='+')z=Math.min(6,(z===1?1.5:z+0.5));else z=Math.max(1,z-0.5);apply()};
+   // mit der Maus ziehen
+   let d=null;sc.onpointerdown=e=>{d={x:e.clientX,y:e.clientY,l:sc.scrollLeft,t:sc.scrollTop};sc.setPointerCapture(e.pointerId)};
+   sc.onpointermove=e=>{if(!d)return;sc.scrollLeft=d.l-(e.clientX-d.x);sc.scrollTop=d.t-(e.clientY-d.y)};sc.onpointerup=()=>{d=null};
+   im.ondblclick=()=>{z=z===1?2:1;apply()};
+   document.addEventListener('keydown',function esc_(e){if(e.key==='Escape'){m.classList.remove('open');m.innerHTML='';document.removeEventListener('keydown',esc_)}});
  };
  window.insertPlanTemplateV362=function(pid,floorId){
    if(!canEdit())return;const p=projectById(pid);if(!p)return;const pl=plan(p,true);pl.floors=Array.isArray(pl.floors)?pl.floors:[];
@@ -33711,7 +33817,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V388';
+   if(v)v.textContent='Aktuelle Version: V389';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
