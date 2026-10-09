@@ -4492,6 +4492,18 @@ body.planLinkingV378 .planBarV362[data-step]{cursor:crosshair}
 body.planLinkingV378 .planBarV362:not(.linkSrcV378):not(.linkOffV378):hover{outline:3px solid #1565c0;outline-offset:2px}
 .planBarV362.linkSrcV378{outline:3px dashed #1565c0;outline-offset:2px}
 .planBarV362.linkOffV378{opacity:.35}
+/* V386: Maschine farbig, Anzahl Teile, Suche/Filter in der Planung */
+.planMachV386{display:inline-block;font-style:normal;color:#fff;font-weight:900;font-size:11px;letter-spacing:.02em;text-transform:uppercase;padding:2px 7px;border-radius:6px;margin-right:6px;vertical-align:1px;line-height:1.35;box-shadow:0 1px 0 rgba(0,0,0,.15)}
+.planMachV386.big{font-size:11.5px;padding:2px 8px}
+.planBarV362 .planMachV386,.planBarTextV362 .planMachV386{text-shadow:none!important;color:#fff!important}
+.planBarV362.hasMachV386{box-shadow:inset 7px 0 0 var(--mach)!important}
+.planFilterV386{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 10px}
+.planFilterV386 input[type=search]{flex:1 1 260px;max-width:420px;min-height:40px}
+.planFilterV386 select{min-height:40px;max-width:230px}
+.planFilterV386 .on{border-color:#173d31!important;background:#eaf3ee!important;font-weight:700}
+.planFltInfoV386{font-weight:800;color:#173d31}
+.planFilterV386 .searchSelectWrap{flex:0 1 230px;min-width:180px;max-width:240px}
+.planFilterV386 .searchSelectWrap:has(select.on) input{border-color:#173d31!important;background:#eaf3ee!important;font-weight:800}
 /* V385: Zuschnitte in Stunden + Sicherheit/Baustellenchecklisten */
 #zsRatesModalV385{z-index:9600}
 .zsRatesV385{max-width:1100px!important;width:96vw}
@@ -4784,7 +4796,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V385</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V386</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -5002,7 +5014,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V385</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V386</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7734,7 +7746,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V385</b></p><div class="releaseNote"><b>Neu in V385</b><br>Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V386</b></p><div class="releaseNote"><b>Neu in V386</b><br>Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -21503,16 +21515,16 @@ document.addEventListener('DOMContentLoaded',()=>{
    const w=Math.max(1,s.days|0)*DW-4,pr=progress(p,s);
    const st=s.status||'open';
    const lateMs=st==='done'?[]:lateMilestonesFor(p,s);
-   return `<div class="planBarV362 st-${st}${lateMs.length?' lateV364':''}" data-step="${esc(s.id)}" data-project="${esc(p.id)}" style="left:${i0*DW+2}px;width:${w}px" title="${esc(s.name)} · ${fmtD(s.start)} – ${fmtD(stepEnd(s))} · ${Math.max(1,s.days|0)} Arbeitstag(e)${crewOf(s)?' · '+crewOf(s)+' MA':''}${(s.people||[]).length?' · Personen: '+esc((s.people||[]).join(', ')):''}${lateMs.length?' · ⚠ zu spät für: '+lateMs.map(m=>msLabel(m)+' ('+fmtD(m.date)+')').join(', '):''}${(()=>{const c=peopleClashes(p,s);return c.length?' · ⚠ doppelt verplant: '+esc(c.map(x=>x.name+' ('+(x.project?x.project+': ':'')+x.step+')').join(', ')):''})()}">
+   return `<div class="planBarV362 st-${st}${lateMs.length?' lateV364':''}${s.machine?' hasMachV386':''}" data-step="${esc(s.id)}" data-project="${esc(p.id)}" style="left:${i0*DW+2}px;width:${w}px${s.machine?';--mach:'+machColor(s.machine):''}" title="${esc(s.name)} · ${fmtD(s.start)} – ${fmtD(stepEnd(s))} · ${Math.max(1,s.days|0)} Arbeitstag(e)${crewOf(s)?' · '+crewOf(s)+' MA':''}${(s.people||[]).length?' · Personen: '+esc((s.people||[]).join(', ')):''}${lateMs.length?' · ⚠ zu spät für: '+lateMs.map(m=>msLabel(m)+' ('+fmtD(m.date)+')').join(', '):''}${(()=>{const c=peopleClashes(p,s);return c.length?' · ⚠ doppelt verplant: '+esc(c.map(x=>x.name+' ('+(x.project?x.project+': ':'')+x.step+')').join(', ')):''})()}">
      ${pr!=null&&st!=='done'?`<div class="planBarFillV362" style="width:${pr}%"></div>`:''}
-     <span class="planBarStackV367"><span class="planBarTextV362">${lateMs.length?'⚠ ':''}${st==='done'?'✓ ':st==='blocked'?'⛔ ':''}${esc(s.name)}${p.id===ZS_PID?' · '+fmtH(zsHours(p,s))+' h':''}${pr!=null&&st!=='done'?' · '+pr+' %':''}${s.timerStart?' ⏱':''}</span>${peopleHtml(p,s)}</span>
+     <span class="planBarStackV367"><span class="planBarTextV362">${lateMs.length?'⚠ ':''}${st==='done'?'✓ ':st==='blocked'?'⛔ ':''}${machPill(s.machine)}${esc(s.name)}${Number(s.qty)>0?' · '+fmtH(s.qty)+' Stk':''}${p.id===ZS_PID?' · '+fmtH(zsHours(p,s))+' h':''}${pr!=null&&st!=='done'?' · '+pr+' %':''}${s.timerStart?' ⏱':''}</span>${peopleHtml(p,s)}</span>
      ${editable?'<i class="planResizeV362" title="Dauer ziehen"></i>':''}</div>`;
  }
  function rowLabel(p,s){
    const c=commissions(p).find(x=>x.id===s.commissionId);
    const deps=(s.deps||[]).map(d=>stepById(p,d)?.name).filter(Boolean);
    const ind=floorIdOf(p,s)?gDepth(p,floorIdOf(p,s)):0;
-   return `<div class="planLabelV362" data-step="${esc(s.id)}" data-project="${esc(p.id)}" style="width:${LABELW}px;padding-left:${10+ind*16}px" onclick="openPlanStepV362('${esc(p.id)}','${esc(s.id)}')" title="${esc([s.name,(s.people||[]).length?'Personen: '+(s.people||[]).join(', '):'',deps.length?'nach: '+deps.join(', '):''].filter(Boolean).join('\n'))}"><b>${esc(s.name)}</b><span>${[(s.people||[]).length?'👤 '+(s.people||[]).join(', '):'',s.machine?'⚙ '+s.machine:'',p.id===ZS_PID?'⏱ '+fmtH(zsHours(p,s))+' h'+(Number(s.actualHours)>0?' (Ist '+fmtH(s.actualHours)+' h)':''):(crewOf(s)?crewOf(s)+' MA':''),deps.length?'nach '+deps.join(', '):'',c?.name].filter(Boolean).map(esc).join(' · ')}</span><em class="planChipV362 st-${s.status||'open'}">${ST[s.status||'open']}</em></div>`;
+   return `<div class="planLabelV362" data-step="${esc(s.id)}" data-project="${esc(p.id)}" style="width:${LABELW}px;padding-left:${10+ind*16}px" onclick="openPlanStepV362('${esc(p.id)}','${esc(s.id)}')" title="${esc([s.name,(s.people||[]).length?'Personen: '+(s.people||[]).join(', '):'',deps.length?'nach: '+deps.join(', '):''].filter(Boolean).join('\n'))}"><b>${s.machine?machPill(s.machine,true):''}${esc(s.name)}</b><span>${[(s.people||[]).length?'👤 '+(s.people||[]).join(', '):'',Number(s.qty)>0?fmtH(s.qty)+' Stk':'',p.id===ZS_PID?'⏱ '+fmtH(zsHours(p,s))+' h'+(Number(s.actualHours)>0?' (Ist '+fmtH(s.actualHours)+' h)':''):(crewOf(s)?crewOf(s)+' MA':''),deps.length?'nach '+deps.join(', '):'',c?.name].filter(Boolean).map(esc).join(' · ')}</span><em class="planChipV362 st-${s.status||'open'}">${ST[s.status||'open']}</em></div>`;
  }
  function depsSvg(p,rows,days,top){
    const pos={};rows.forEach((s,r)=>{const i0=days.indexOf(nextWork(s.start));if(i0>=0)pos[s.id]={x0:i0*DW+2,x1:i0*DW+Math.max(1,s.days|0)*DW-2,y:top+r*ROWH+ROWH/2}});
@@ -21553,7 +21565,42 @@ document.addEventListener('DOMContentLoaded',()=>{
  const COLL_KEY='kuenzli_plan_collapsed_v368';
  function collapsed(){try{return new Set(JSON.parse(localStorage.getItem(COLL_KEY)||'[]'))}catch(_e){return new Set()}}
  window.togglePlanGroupV368=function(pid,gid){const c=collapsed(),k=pid+'|'+gid;c.has(k)?c.delete(k):c.add(k);try{localStorage.setItem(COLL_KEY,JSON.stringify([...c]))}catch(_e){}renderProjectPlan()};
- const isColl=(p,gid)=>collapsed().has(p.id+'|'+gid);
+ const isColl=(p,gid)=>!fltOn()&&collapsed().has(p.id+'|'+gid);
+ /* V386: Suche und Filter (Gruppe, Person, Maschine) für Projekt-Planung und Übersicht.
+    Gefilterte Ansicht klappt Gruppen automatisch auf und blendet leere Gruppen aus; die Auslastung bleibt ungefiltert. */
+ const FLT={q:'',group:'',person:'',machine:''};
+ function fltOn(){return !!(FLT.q||FLT.group||FLT.person||FLT.machine)}
+ function stepGroupNames(p,s){const out=[];let g=gById(p,floorIdOf(p,s));const seen=new Set();while(g&&!seen.has(g.id)){seen.add(g.id);out.push(String(g.name||''));g=gById(p,gParent(p,g))}return out}
+ function fOK(p,s){
+   if(!fltOn())return true;
+   if(FLT.machine&&String(s.machine||'').trim()!==FLT.machine)return false;
+   if(FLT.person&&!(s.people||[]).some(n=>String(n).trim().toLowerCase()===FLT.person.toLowerCase()))return false;
+   if(FLT.group&&!stepGroupNames(p,s).includes(FLT.group))return false;
+   if(FLT.q){const q=FLT.q.toLowerCase();const hay=[s.name,s.note,s.machine,s.extId,(s.people||[]).join(' '),stepGroupNames(p,s).join(' '),p.name].join(' ').toLowerCase();if(!q.split(/\s+/).filter(Boolean).every(w=>hay.includes(w)))return false}
+   return true;
+ }
+ function fCount(p,gid){return subtreeSteps(p,gid).filter(s=>fOK(p,s)).length}
+ function filterBar(projs){
+   const steps=projs.flatMap(p=>plan(p).steps.map(s=>[p,s]));
+   const uniq=a=>[...new Set(a.map(x=>String(x||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'de-CH'));
+   const groups=uniq(projs.flatMap(p=>groupsAll(p).filter(g=>subtreeSteps(p,g.id).length).map(g=>g.name)));
+   const people=uniq(steps.flatMap(([,s])=>s.people||[]));
+   const machines=uniq(steps.map(([,s])=>s.machine));
+   const sel=(k,label,opts)=>opts.length?`<select class="planFltSelV386${FLT[k]?' on':''}" data-flt="${k}" aria-label="${label}"><option value="">${label}: alle</option>${opts.map(o=>`<option value="${esc(o)}" ${o===FLT[k]?'selected':''}>${k==='machine'?'⚙ ':k==='person'?'👤 ':''}${esc(o)}</option>`).join('')}</select>`:'';
+   const tot=steps.length,hit=steps.filter(([p,s])=>fOK(p,s)).length;
+   return `<div class="planFilterV386"><input type="search" id="planFltQV386" class="${FLT.q?'on':''}" placeholder="🔍 Suchen (Name, Notiz, Person, Maschine …)" value="${esc(FLT.q)}" autocomplete="off">${sel('group','Gruppe',groups)}${sel('person','Person',people)}${sel('machine','Maschine',machines)}${fltOn()?`<span class="planFltInfoV386">${hit} von ${tot} Schritten</span><button type="button" class="btn secondary" data-flt-clear="1">✕ Filter löschen</button>`:''}</div>`;
+ }
+ function bindFilter(host,rerender){
+   const q=host.querySelector('#planFltQV386');
+   if(q)q.addEventListener('input',()=>{clearTimeout(window.__planFltT);window.__planFltT=setTimeout(()=>{FLT.q=q.value.trim();const pos=q.selectionStart;rerender();const n=E('planFltQV386');if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(_e){}}},220)});
+   host.querySelectorAll('select[data-flt]').forEach(x=>x.addEventListener('change',()=>{FLT[x.dataset.flt]=x.value;rerender()}));
+   host.querySelector('[data-flt-clear]')?.addEventListener('click',()=>{FLT.q=FLT.group=FLT.person=FLT.machine='';rerender()});
+ }
+ window.setPlanFilterV386=(o)=>{Object.assign(FLT,o||{});window.renderPlanVisibleV362()};
+ // Maschinenfarben: aus «⚙ Richtwerte» (Farbe je Maschine), sonst feste Farbe aus dem Namen
+ const MCOL=['#d62828','#1d4ed8','#7c3aed','#0f766e','#ea580c','#be185d','#4d7c0f','#0369a1','#a16207','#475569'];
+ function machColor(m){m=String(m||'').trim();if(!m)return '';const zp=projectById(ZS_PID),c=zp?.zsRatesV385?.machines?.[m]?.color;if(c&&/^#[0-9a-f]{6}$/i.test(c))return c;let h=0;for(const ch of m.toLowerCase())h=(h*31+ch.charCodeAt(0))>>>0;return MCOL[h%MCOL.length]}
+ function machPill(m,big){m=String(m||'').trim();return m?`<em class="planMachV386${big?' big':''}" style="background:${machColor(m)}">⚙ ${esc(m)}</em>`:''}
  function sumBar(p,gid,days){
    const st=subtreeSteps(p,gid);if(!st.length)return '';
    const a=st.map(s=>nextWork(s.start)).sort()[0],b=st.map(stepEnd).sort().pop();
@@ -21605,14 +21652,15 @@ document.addEventListener('DOMContentLoaded',()=>{
    const tools=`<div class="planToolsV362">
      ${editable?`<button class="btn" type="button" onclick="addPlanGroupV368('${pid}','')">+ Gruppe</button><button class="btn secondary" type="button" onclick="openPlanSchemaV377('${pid}','')">◧ Schema</button>${p.id===ZS_PID?`<button class="btn secondary" type="button" onclick="openZuschnittImportV384()">⟳ monday-Excel einlesen</button><button class="btn secondary" type="button" onclick="openZsRatesV385()">⚙ Richtwerte</button>`:''}<button class="btn secondary" type="button" onclick="openPlanMilestoneV364('${pid}','','')">◆ Meilenstein</button>`:'<span class="muted">Nur Ansicht – Bearbeiten braucht das Recht «Produktionsplanung bearbeiten».</span>'}
      <button class="btn secondary" type="button" onclick="scrollPlanTodayV362()">Heute</button><button class="btn secondary" type="button" onclick="openPlanPdfV369('project')">⤓ PDF</button>
-     <span class="planLegendV362"><em class="planChipV362 st-open">Geplant</em><em class="planChipV362 st-progress">In Arbeit</em><em class="planChipV362 st-done">Erledigt</em><em class="planChipV362 st-blocked">Blockiert</em></span></div>`;
+     <span class="planLegendV362"><em class="planChipV362 st-open">Geplant</em><em class="planChipV362 st-progress">In Arbeit</em><em class="planChipV362 st-done">Erledigt</em><em class="planChipV362 st-blocked">Blockiert</em></span></div>${filterBar([p])}`;
    const tops=gChildren(p,'').map(g=>({g,virtual:false}));
    const ids=new Set(groupsAll(p).map(g=>g.id));
    if(plan(p).steps.some(s=>!s.floorId||!ids.has(s.floorId))||!tops.length)tops.unshift({g:{id:'',name:tops.length?'Ohne Gruppe':'Gruppe 1'},virtual:true});
    const stepRow=s=>`<div class="planRowV362">${rowLabel(p,s)}<div class="planTrackV362" style="width:${days.length*DW}px">${bandsHtml(p,floorIdOf(p,s),days,false)}${barHtml(p,s,0,days,editable)}</div></div>`;
    const body=(gid,depth)=>{ // Schritte der Gruppe, danach Untergruppen
-     let h='';sortSteps(plan(p).steps.filter(s=>floorIdOf(p,s)===gid)).forEach(s=>{h+=stepRow(s)});
+     let h='';sortSteps(plan(p).steps.filter(s=>floorIdOf(p,s)===gid&&fOK(p,s))).forEach(s=>{h+=stepRow(s)});
      if(gid!=='')gChildren(p,gid).forEach(c=>{
+       if(fltOn()&&!fCount(p,c.id))return;
        const n=subtreeSteps(p,c.id).length,cl=isColl(p,c.id);
        h+=`<div class="planRowV362 planGroupRowV368 lvl${depth+1}"><div class="planLabelV362 planGroupLabelV368" style="width:${LABELW}px;padding-left:${10+(depth+1)*16}px"><button type="button" class="pgToggleV368" onclick="togglePlanGroupV368('${pid}','${esc(c.id)}')" title="${cl?'Aufklappen':'Zuklappen'}">${cl?'▸':'▾'}</button><b title="${esc(gPath(p,c.id))} · ${n} Schritt${n===1?'':'e'}">${esc(c.name)}</b>${c.commissionId&&groupComm(p,c.id)?`<em class="pgCommV379" title="Kommission">🏷 ${esc(commissions(p).find(x=>x.id===c.commissionId)?.name||'')}</em>`:''}<span class="pgCountV368">${n}</span><div class="pgBtnsV368">${groupButtons(p,c,false,editable)}</div></div><div class="planTrackV362" style="width:${days.length*DW}px">${bandsHtml(p,c.id,days,true)}${sumBar(p,c.id,days)}</div></div>`;
        if(!cl)h+=body(c.id,depth+1);
@@ -21621,6 +21669,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    };
    let html='';
    tops.forEach(({g,virtual})=>{
+     if(fltOn()&&!(virtual?plan(p).steps.filter(s=>!floorIdOf(p,s)&&fOK(p,s)).length:fCount(p,g.id)))return;
      const n=subtreeSteps(p,g.id).length,cl=!virtual&&isColl(p,g.id);
      const corner=`<div class="planFloorCornerV363"><div class="pfcTopV363">${virtual?'':`<button type="button" class="pgToggleV368" onclick="togglePlanGroupV368('${pid}','${esc(g.id)}')" title="${cl?'Aufklappen':'Zuklappen'}">${cl?'▸':'▾'}</button>`}<b title="${esc(g.name)}">${esc(g.name)}</b>${groupButtons(p,g,virtual,editable)}</div><span>${!virtual&&g.commissionId&&groupComm(p,g.id)?`<em class="pgCommV379" title="Kommission">🏷 ${esc(commissions(p).find(x=>x.id===g.commissionId)?.name||'')}</em> · `:''}${n} Arbeitsschritt${n===1?'':'e'}${gChildren(p,g.id).length&&!virtual?' · '+gChildren(p,g.id).length+' Untergruppe'+(gChildren(p,g.id).length===1?'':'n'):''}</span></div>`;
      const sub=virtual?new Set(['']):new Set([g.id,...gDesc(p,g.id)]);
@@ -21629,10 +21678,11 @@ document.addEventListener('DOMContentLoaded',()=>{
      if(cl){rows=`<div class="planRowV362 planGroupRowV368 lvl0"><div class="planLabelV362 planGroupLabelV368" style="width:${LABELW}px"><span>zugeklappt</span></div><div class="planTrackV362" style="width:${days.length*DW}px">${sumBar(p,g.id,days)}</div></div>`}
      else{
        rows=msRowHtml(p,days,msList,editable)+body(g.id,0);
-       if(!n&&!gChildren(p,g.id).length)rows+=`<div class="planRowV362 planFloorEmptyV363"><div class="planLabelV362" style="width:${LABELW}px"><span>Noch keine Schritte</span></div><div class="planTrackV362" style="width:${days.length*DW}px">${editable?`<div class="planFloorEmptyBtnsV363" style="left:${LABELW+8}px"><button class="btn secondary" type="button" onclick="openPlanStepV362('${pid}','','${esc(g.id)}')">+ Arbeitsschritt</button><button class="btn secondary" type="button" onclick="insertPlanTemplateV362('${pid}','${esc(g.id)}')">Vorlage Holzbau einfügen</button></div>`:''}</div></div>`;
+       if(fltOn());else if(!n&&!gChildren(p,g.id).length)rows+=`<div class="planRowV362 planFloorEmptyV363"><div class="planLabelV362" style="width:${LABELW}px"><span>Noch keine Schritte</span></div><div class="planTrackV362" style="width:${days.length*DW}px">${editable?`<div class="planFloorEmptyBtnsV363" style="left:${LABELW+8}px"><button class="btn secondary" type="button" onclick="openPlanStepV362('${pid}','','${esc(g.id)}')">+ Arbeitsschritt</button><button class="btn secondary" type="button" onclick="insertPlanTemplateV362('${pid}','${esc(g.id)}')">Vorlage Holzbau einfügen</button></div>`:''}</div></div>`;
      }
      html+=`<section class="planFloorV363" data-group="${esc(g.id)}">${headerHtml(days,corner)}${rows}<div class="planMsLinesHostV368" data-ms='${esc(JSON.stringify(cl?[]:msList.map(m=>m.id)))}'></div></section>`;
    });
+   if(fltOn()&&!html)html=`<section class="planFloorV363"><div class="planEmptyV362" style="margin:14px"><b>Keine Arbeitsschritte passen zum Filter.</b></div></section>`;
    host.innerHTML=tools+`<div class="planScrollV362" id="planScrollV362"><div class="planInnerV362" style="width:${LABELW+days.length*DW}px">
      ${todayCol(days)}${html}
      <svg class="planDepsV362 planDepsV367" style="left:0;top:0" width="0" height="0"></svg>
@@ -21647,6 +21697,7 @@ document.addEventListener('DOMContentLoaded',()=>{
      const list=milestones(p).filter(m=>idsMs.includes(m.id));if(!list.length)return;
      hostDiv.outerHTML=msLinesHtml(p,days,list,HEADH,sec.offsetHeight-HEADH);
    });
+   bindFilter(host,renderProjectPlan);
    bind(host,days,editable);
    bindColResize(host);
    afterRender();
@@ -21964,16 +22015,18 @@ document.addEventListener('DOMContentLoaded',()=>{
    const oldSc=host.querySelector('.planScrollV362'),prevOv=oldSc?{l:oldSc.scrollLeft,t:oldSc.scrollTop}:null;
    const days=range(projects);let rows='',r=0;const items=[];
    projects.forEach(p=>{
+     if(fltOn()&&!plan(p).steps.some(s=>fOK(p,s)))return;
      const projMsH=Math.max(46,12+msLanes(days,milestones(p).filter(m=>m.date)).lanes*MS_LANE_H);
      rows+=`<div class="planRowV362 planProjRowV362" style="height:${projMsH}px"><div class="planLabelV362" style="width:${LABELW}px" onclick="openProjectPlanV362('${esc(p.id)}')"><b>${esc(p.name||'Projekt')}</b><span>${esc([p.number,p.customer].filter(Boolean).join(' · '))}</span></div><div class="planTrackV362" style="width:${days.length*DW}px">${(()=>{const L=msLanes(days,milestones(p).filter(m=>m.date));return L.items.map(({m,i,lane})=>{const info=msInfo(p,m);return `<span class="planMsV364 ms-${info.state} static" style="left:${(i+1)*DW-11}px;top:${6+lane*MS_LANE_H}px" title="${esc(msLabel(m))} · spätestens ${fmtD(m.date)}"><i></i><span>${esc(msLabel(m))}</span></span>`}).join('')})()}</div></div>`;r++;
-     floorsOf(p).forEach(f=>{if(!subtreeSteps(p,f.id).length)return;const st=sortSteps(plan(p).steps.filter(s=>floorIdOf(p,s)===f.id));
+     floorsOf(p).forEach(f=>{if(!fCount(p,f.id))return;const st=sortSteps(plan(p).steps.filter(s=>floorIdOf(p,s)===f.id&&fOK(p,s)));
        rows+=`<div class="planRowV362 planFloorRowV363"><div class="planLabelV362" style="width:${LABELW}px;padding-left:${12+(f.depth||0)*16}px"><b>${esc(f.name)}</b></div><div class="planTrackV362" style="width:${days.length*DW}px">${f.id?bandsHtml(p,f.id,days,true)+sumBar(p,f.id,days):''}</div></div>`;
        st.forEach(s=>{rows+=`<div class="planRowV362">${rowLabel(p,s)}<div class="planTrackV362" style="width:${days.length*DW}px">${bandsHtml(p,f.id,days,false)}${barHtml(p,s,0,days,false)}</div></div>`;r++})});
    });
    const cap=k=>{let any=false,sum=0;projects.forEach(p=>{const c=capacity(p,k);if(c!=null){any=true;sum+=c}});return any?sum:null};
-   host.innerHTML=`<div class="planToolsV362"><span class="muted">Alle aktiven Projekte mit Planung. Zum Bearbeiten ein Projekt antippen.</span>${canEdit()?`<button class="btn secondary" type="button" onclick="openZuschnittImportV384()">⤓ Zuschnitte aus monday (Excel)</button>`:''}<button class="btn secondary" type="button" onclick="scrollPlanTodayV362()">Heute</button><button class="btn secondary" type="button" onclick="openPlanPdfV369('overview')">⤓ PDF exportieren</button></div>
+   host.innerHTML=`<div class="planToolsV362"><span class="muted">Alle aktiven Projekte mit Planung. Zum Bearbeiten ein Projekt antippen.</span>${canEdit()?`<button class="btn secondary" type="button" onclick="openZuschnittImportV384()">⤓ Zuschnitte aus monday (Excel)</button>`:''}<button class="btn secondary" type="button" onclick="scrollPlanTodayV362()">Heute</button><button class="btn secondary" type="button" onclick="openPlanPdfV369('overview')">⤓ PDF exportieren</button></div>${filterBar(projects)}
    <div class="planScrollV362" id="planOvScrollV362"><div class="planInnerV362" style="width:${LABELW+days.length*DW}px">${headerHtml(days)}${todayCol(days)}${rows}${loadRowHtml(days,k=>projects.reduce((n,p)=>n+load(p,k),0),cap,'Auslastung gesamt')}</div></div>`;
    host.querySelectorAll('.planBarV362').forEach(b=>b.addEventListener('click',ev=>{const p=projectById(b.dataset.project),s=p&&stepById(p,b.dataset.step);if(s)openCtx(ev,p,s)}));
+   bindFilter(host,renderOverview);
    bindColResize(host);
    afterRender();
    if(prevOv&&host.offsetParent){const sc=host.querySelector('.planScrollV362');sc.scrollLeft=prevOv.l;sc.scrollTop=prevOv.t}else scrollToday(false);
@@ -22328,7 +22381,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    const act=s=>s.status!=='done';
    const per=(k,fn)=>plan(p).steps.filter(s=>act(s)&&fn(s)&&s.start<=k&&stepEnd(s)>=k).reduce((n,s)=>n+zsHours(p,s)/Math.max(1,s.days|0),0);
    const ms=zsMachines(p).filter(m=>plan(p).steps.some(s=>act(s)&&String(s.machine||'').trim()===m));
-   let o=ms.map(m=>loadRowHtml(days,k=>per(k,s=>String(s.machine||'').trim()===m),()=>zsCap(p,m),'⚙ '+esc(m),'','h')).join('');
+   let o=ms.map(m=>loadRowHtml(days,k=>per(k,s=>String(s.machine||'').trim()===m),()=>zsCap(p,m),machPill(m,true),'','h')).join('');
    if(plan(p).steps.some(s=>act(s)&&!String(s.machine||'').trim()))o+=loadRowHtml(days,k=>per(k,s=>!String(s.machine||'').trim()),()=>zsCfg(p).cap,'Ohne Maschine','','h');
    return o||loadRowHtml(days,()=>0,()=>zsCfg(p).cap,'Auslastung','','h');
  }
@@ -22379,10 +22432,11 @@ document.addEventListener('DOMContentLoaded',()=>{
      <td><input class="zsrPer" inputmode="decimal" value="${r.perPiece!=null&&r.perPiece!==''?esc(r.perPiece):''}" placeholder="–" ${dis}></td>
      <td><input class="zsrDef" inputmode="decimal" value="${r.def!=null&&r.def!==''?esc(r.def):''}" placeholder="${fmtH(c.def)}" ${dis}></td>
      <td><input class="zsrCap" inputmode="decimal" value="${r.cap!=null&&r.cap!==''?esc(r.cap):''}" placeholder="${fmtH(c.cap)}" ${dis}></td>
+     <td><input class="zsrColor" type="color" value="${isNew?'#475569':machColor(name)}" ${dis}></td>
      <td class="zsrLearn">${L&&L.n?`${L.ratio!=null?`<div>Ist = <b>${L.ratio} %</b> der Planung (${L.n})</div>`:''}${L.perPiece!=null?`<button type="button" class="btn secondary" ${dis} onclick="this.closest('tr').querySelector('.zsrPer').value='${L.perPiece}'">${L.perPiece} Min./Teil übernehmen</button>`:''}${L.def!=null?`<button type="button" class="btn secondary" ${dis} onclick="this.closest('tr').querySelector('.zsrDef').value='${L.def}'">${fmtH(L.def)} h übernehmen</button>`:''}${L.perPiece==null&&L.def==null?'<small>ab 3 erledigten mit Ist-Stunden</small>':''}`:'<small>noch keine Ist-Stunden</small>'}</td></tr>`};
    m.innerHTML=`<div class="modalbox planDialogV362 zsRatesV385"><div class="manageHead"><div><h2 style="margin:0">Richtwerte Zuschnitte</h2><p class="muted" style="margin:4px 0 0">Dauer = Rüsten + Anzahl Teile × Minuten pro Teil. Ohne Anzahl gilt «Standard». Leere Felder = allgemeiner Wert.</p></div><button class="btn secondary" type="button" onclick="closeM('zsRatesModalV385')">Schliessen</button></div>
     <div class="zsRatesGlobalV385"><label>Standard ohne Maschine/Anzahl (Std.)<input id="zsrDefAll" inputmode="decimal" value="${fmtH(c.def)}" ${dis}></label><label>Stunden pro Arbeitstag<input id="zsrCapAll" inputmode="decimal" value="${fmtH(c.cap)}" ${dis}></label></div>
-    <div class="zsRatesWrapV385"><table class="zsRatesTblV385"><thead><tr><th>Maschine</th><th>Rüsten (h)</th><th>Min. pro Teil</th><th>Standard (h)</th><th>Std./Tag</th><th>Gelernt aus Ist-Stunden</th></tr></thead><tbody>
+    <div class="zsRatesWrapV385"><table class="zsRatesTblV385"><thead><tr><th>Maschine</th><th>Rüsten (h)</th><th>Min. pro Teil</th><th>Standard (h)</th><th>Std./Tag</th><th>Farbe</th><th>Gelernt aus Ist-Stunden</th></tr></thead><tbody>
      ${zsMachines(p).map(n=>row(n,c.machines[n])).join('')}${ed?row('',null,true):''}</tbody></table></div>
     <p class="muted" style="font-size:13px">Beim Speichern werden alle offenen Zuschnitte ohne von Hand gesetzte Dauer neu berechnet. Ist-Stunden erfasst du im Schnellmenü (Balken anklicken → ▶ Start / ⏹ Stopp oder «Ist-Stunden …») oder beim Abschliessen.</p>
     ${ed?`<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn secondary" type="button" onclick="closeM('zsRatesModalV385')">Abbrechen</button><button class="btn" type="button" onclick="saveZsRatesV385()">Speichern</button></div>`:''}</div>`;
@@ -22391,9 +22445,10 @@ document.addEventListener('DOMContentLoaded',()=>{
  window.saveZsRatesV385=function(){
    if(!canEdit())return;const p=projectById(ZS_PID);if(!p)return;const m=E('zsRatesModalV385');
    const num=v=>{const n=numIn(v);return n>=0&&String(v).trim()?n:''};
-   const machines={};
+   const machines={},c0=zsCfg(p);
    m.querySelectorAll('tbody tr').forEach(tr=>{const name=String(tr.dataset.m||tr.querySelector('.zsrName')?.value||'').trim();if(!name)return;
      const r={setup:num(tr.querySelector('.zsrSetup').value),perPiece:num(tr.querySelector('.zsrPer').value),def:num(tr.querySelector('.zsrDef').value),cap:num(tr.querySelector('.zsrCap').value)};
+     const col=tr.querySelector('.zsrColor')?.value||'';const nameC=String(tr.dataset.m||'');if(col&&(!nameC||col.toLowerCase()!==machColor(nameC).toLowerCase()||c0.machines[nameC]?.color))r.color=col;
      if(Object.values(r).some(x=>x!==''))machines[name]=r});
    const def=numIn(E('zsrDefAll').value),cap=numIn(E('zsrCapAll').value);
    p.zsRatesV385={def:def>0?def:2,cap:cap>0?cap:8.5,machines,updatedAt:new Date().toISOString()};
@@ -33625,7 +33680,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V385';
+   if(v)v.textContent='Aktuelle Version: V386';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
