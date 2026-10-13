@@ -4831,7 +4831,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V393</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V394</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -5049,7 +5049,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V393</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V394</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7781,7 +7781,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V393</b></p><div class="releaseNote"><b>Neu in V393</b><br>Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V394</b></p><div class="releaseNote"><b>Neu in V394</b><br>Pritschen/Transporte: Übersicht nach Kalenderwoche mit lesbarem Datum (Datumsfehler behoben), Ladung kompakt als Schilder (LKW/Anhänger, Pritsche, Container, Geräte, Rungen) statt Fahrzeugbilder, Route ohne «Projekt → Projekt». V393: Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -12625,35 +12625,44 @@ function platformTransportVehiclePairHtml(t){
    trailerFallback=a?(String(a.status||'Belegt')==='Belegt'?'Abholbereit':String(a.status||'Belegt')):(planned?(trailerPlan?'Geplant · wartet auf '+trailerPlan:'Transport geplant'):'');
  }
 
- let truck=platformTransportVehicleSvg('truck',t.tractor||'',truckDisplayId,truckFallback,truckType);
- const usesTrailer=!!trailerId||!!trailerPlan|| (!!t.trailer&&t.trailer!=='Kein Anhänger / LKW solo');
- let trailer=usesTrailer?platformTransportVehicleSvg('trailer',t.trailer||'Nicht festgelegt',trailerDisplayId,trailerFallback,trailerType):'';
-
- function setPlateStatusV556(html,text){
-   if(!html||!text)return html;
-   // V77: Im Statusfeld steht ausschliesslich der Ist-Status der konkreten Pritsche.
-   return html.replace(/(<div class="platformVehicleLoadPlate(?: [^"]*)?">)[\s\S]*?(<\/div>)/,
-     (_,a,b)=>a+'<strong>'+esc(text)+'</strong>'+b);
- }
- if(truckFallback)truck=setPlateStatusV556(truck,truckFallback);
- if(trailer&&trailerFallback)trailer=setPlateStatusV556(trailer,trailerFallback);
-
- let html=`<div class="platformTransportVehiclePair">
-   <div class="platformTransportVehicleMini">${truck}${rungBox(truckId)}</div>
-   ${trailer?`<span class="platformTransportVehiclePlus">+</span><div class="platformTransportVehicleMini">${trailer}${rungBox(trailerId)}</div>`:''}
- </div>`;
-
- if(delivered){
-   const host=document.createElement('div');host.innerHTML=html;
-   host.querySelectorAll('.platformTransportVehicleMini').forEach(mini=>{
-     [...mini.querySelectorAll('*')].forEach(el=>{
-       const tx=String(el.textContent||'').trim();
-       if(/^(Abgeholt|Transport geplant|In Beladung|Beladen|Beladung|Geplant · wartet auf .+)$/i.test(tx))el.textContent='Geliefert';
-     });
-   });
-   html=host.innerHTML;
- }
- return html;
+ /* V394: kompakte Ladungsanzeige statt Fahrzeugbildern (ersetzt die früheren Zusatzschichten V105/V106/V558).
+    Pro Fahrzeugseite eine Zeile: LKW/Anhänger · Pritsche bzw. Container (Nummer + Beladung) · mitgeführte Container/Geräte · Rungen. */
+ const chip=(txt,cls)=>`<span class="ptChipV394 ${cls||''}">${esc(txt)}</span>`;
+ const contName=id=>{const c=(platformStore.containerStock||[]).find(x=>String(x.id)===String(id));return String(c?.name||c?.number||c?.label||'Container').trim()};
+ const equipName=id=>{try{return platformEquipmentLabelV100(id)||String(id)}catch(_e){const e=(platformStore.equipmentStock||[]).find(x=>String(x.id)===String(id));return e?.name||String(id)}};
+ const extrasOf=side=>{
+   const pre=side,cs=[];
+   ['ContainerIdsV524','OnPlatformContainerIdsV524','ContainersV524','ContainerIds','OnPlatformContainerIds'].forEach(k=>{const v=t[pre+k];if(Array.isArray(v))cs.push(...v.filter(Boolean))});
+   const ds=(t[pre+'EquipmentIdsV102']||[]).filter(Boolean);
+   return {c:[...new Set(cs.map(String))],d:[...new Set(ds.map(String))]};
+ };
+ const rungTxt=id=>{
+   const a=actualById(id);if(!a||!Array.isArray(a.rungAllocations)||!a.rungAllocations.length)return '';
+   return a.rungAllocations.map(x=>{const q=x.qty??x.quantity??x.count,l=x.height??x.length??x.laenge;return [x.supplier||x.owner||'',q!==undefined&&q!==''?q+' Stk':'',l!==undefined&&l!==''?(Number(l)<20?l+' m':l+' mm'):''].filter(Boolean).join(' ')}).join(', ');
+ };
+ const sideHtml=(side,label,vehicle,type,id,plan)=>{
+   const parts=[];
+   if(type==='container'){if(id)parts.push(chip(contName(id),'cont'))}
+   else if(type==='equipment'){const eid=id||t[side+'EquipmentId'];if(eid)parts.push(chip(equipName(eid),'equip'))}
+   else{
+     if(id){const info=platformTransportCarrierInfo('platform',id)||{};const pr=actualPr(id);const load=String(info.load||actualById(id)?.loadedWith||'').trim();
+       const nz=x=>String(x||'').toUpperCase().replace(/[^A-Z0-9]/g,'');const txt=load?(pr&&!nz(load).includes(nz(pr))?pr+' · '+load:load):(pr||String(info.label||'Pritsche').trim());
+       parts.push(`<span class="ptChipV394 pr" title="${esc(String(info.label||'').trim())}">${esc(txt)}</span>`)}
+     else if(plan)parts.push(chip((delivered?'':'reserviert · ')+plan,'plan'));
+     else if(!delivered)parts.push(chip('Pritsche reserviert','plan'));
+   }
+   const ex=extrasOf(side);
+   ex.c.forEach(c=>parts.push(chip(contName(c),'cont')));
+   ex.d.forEach(d=>parts.push(chip(equipName(d),'equip')));
+   const r=type==='platform'&&id?rungTxt(id):'';
+   if(!parts.length&&!r)return '';
+   const veh=String(vehicle||'').trim();
+   return `<div class="ptSideV394"><b>${label}</b><span class="ptPartsV394">${parts.join('')}${r?`<small class="ptRungV394">Rungen: ${esc(r)}</small>`:''}</span>${veh&&veh!=='Nicht festgelegt'&&veh!=='Kein Anhänger / LKW solo'?`<small class="ptVehV394">${esc(veh)}</small>`:''}</div>`;
+ };
+ const usesTrailer=!!trailerId||!!trailerPlan||(!!t.trailer&&t.trailer!=='Kein Anhänger / LKW solo')||extrasOf('trailer').c.length||extrasOf('trailer').d.length;
+ const truckH=sideHtml('truck','LKW',t.tractor,truckType,truckId,truckPlan);
+ const trailerH=usesTrailer?sideHtml('trailer','Anhänger',t.trailer,trailerType,trailerId,trailerPlan):'';
+ return `<div class="ptLoadV394">${truckH}${trailerH}${!truckH&&!trailerH?'<span class="muted">–</span>':''}</div>`;
 }
 
 
@@ -13245,6 +13254,11 @@ function togglePlatformTransportOverview(){
  let b=E('platformTransportOverviewBody');if(b)b.style.display=b.style.display==='none'?'block':'none';
 }
 
+function platformRouteV394(t){ // V394: «Baumgartner → Baumgartner» vermeiden – Werk ist Davos
+ const ret=(t.transportType||'delivery')==='return';let f=String(t.from||'').trim(),to=String(t.to||'').trim();
+ if(!ret&&(!f||f===to))f='Davos';if(ret&&(!to||to===f))to='Davos';
+ return (f||'–')+' → '+(to||'–');
+}
 function platformTransportDayLabel(iso){
  let d=kwDateFromIso(iso);
  if(!d)return iso||'';
@@ -13334,7 +13348,7 @@ function renderPlatformTransportOverview(){
      <td><b>${esc(t.transportName||'–')}</b></td>
      <td>${esc(t.carrier||'–')}</td>
      <td class="platformTransportVehicleCell">${platformTransportVehiclePairHtml(t)}</td>
-     <td><span class="transportDirectionPillV529 ${(t.transportType||'delivery')==='return'?'return':'delivery'}">${(t.transportType||'delivery')==='return'?'← RÜCKTRANSPORT':'→ BAUSTELLE'}</span><div>${esc(t.from||'')} → ${esc(t.to||'')}</div></td>
+     <td><span class="transportDirectionPillV529 ${(t.transportType||'delivery')==='return'?'return':'delivery'}">${(t.transportType||'delivery')==='return'?'← RÜCKTRANSPORT':'→ BAUSTELLE'}</span><div>${esc(platformRouteV394(t))}</div></td>
      <td>${platformTransportStatusSelectV523(t)}</td>
      <td><details class="actionMenuV451"><summary title="Aktionen">⋮</summary><div class="actionMenuPanelV451">
        <button class="btn secondary small" onclick="closeActionMenuV451(this);editPlatformTransport('${t.id}')">Bearbeiten</button>
@@ -17009,7 +17023,7 @@ function kwIsoDate(date){
  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
 }
 function kwDateFromIso(value){
- if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(String(value||'')))return null;
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(String(value||'')))return null; // V394: Suchmuster korrigiert (erkannte vorher nie ein Datum)
  let [y,m,d]=value.split('-').map(Number);
  let x=new Date(y,m-1,d,12,0,0,0);
  return Number.isNaN(x.getTime())?null:x;
@@ -25337,17 +25351,7 @@ window.addEventListener('load',()=>setTimeout(runImportV481,1800));
 </style>
 <script>
 (function(){
- const oldPair=platformTransportVehiclePairHtml;
- platformTransportVehiclePairHtml=function(t){
-   let html=oldPair(t);
-   return html.replace(/(<div class="platformVehicleLoadPlate[^"]*v557-plan[^"]*"[^>]*>)([\s\S]*?)(<\/div>)/g,function(all,a,inside,z){
-     const txt=inside.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-     const m=txt.match(/Geplant\s*[·.]?\s*wartet\s+auf\s+(PR\s*[-.]?\s*[A-Za-z0-9.-]+)/i);
-     if(!m)return all;
-     const pr=m[1].replace(/\s+/g,'').replace(/^PR(?!-)/i,'PR-').toUpperCase();
-     return a.replace('v557-plan','v557-plan v558-wait')+'<strong>Geplant</strong><span class="v558-middle">wartet auf</span><span class="v558-pr">'+pr+'</span>'+z;
-   });
- };
+ /* V394: frühere Nachbearbeitung der Fahrzeugbilder entfernt (kompakte Anzeige) */
 })();
 </script>
 
@@ -26303,6 +26307,30 @@ renderPlatformReservationGantt=function(from='',to=''){
 </script>
 
 
+<style id="v394PlatformCompact">
+/* V394: Transportübersicht kompakt – Ladung als Schilder statt Fahrzeugbilder */
+.platformTransportOverviewTable .platformTransportVehicleCell{min-width:260px;max-width:520px}
+.ptLoadV394{display:flex;flex-direction:column;gap:5px}
+.ptSideV394{display:grid;grid-template-columns:78px minmax(0,1fr);column-gap:8px;row-gap:2px;align-items:start}
+.ptSideV394 .ptVehV394{grid-column:2;padding-top:0}
+.ptSideV394>b{flex:none;min-width:70px;font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:#53645c;padding-top:4px}
+.ptPartsV394{display:flex;gap:5px;flex-wrap:wrap;align-items:center;min-width:0}
+.ptChipV394{display:inline-block;padding:3px 9px;border-radius:999px;font-weight:800;font-size:13px;border:1px solid #cfd9d3;background:#f4f7f5;color:#173d31;white-space:nowrap}
+.ptChipV394.pr{background:#e8f0fb;border-color:#b9cdea;color:#173b6b}
+.ptChipV394.cont{background:#f3eafb;border-color:#d8c2ec;color:#5b2d82}
+.ptChipV394.equip{background:#fff3df;border-color:#ecd2a2;color:#7a4b00}
+.ptChipV394.plan{background:#fff;border-style:dashed;color:#6b7772;font-weight:700}
+.ptRungV394{color:#5d6d66;font-size:12px}
+.ptVehV394{color:#7a8781;font-size:12px;padding-top:4px}
+.platformTransportOverviewTable td{vertical-align:top}
+.platformTransportWeek .platformTransportOverviewTable,.platformArchivedTransportsV388 .platformTransportOverviewTable{table-layout:fixed!important;width:100%!important;min-width:900px!important}
+.platformTransportOverviewTable th:nth-child(1){width:14%}.platformTransportOverviewTable th:nth-child(2){width:6%}.platformTransportOverviewTable th:nth-child(3){width:11%}.platformTransportOverviewTable th:nth-child(4){width:10%}
+.platformTransportOverviewTable th:nth-child(5){width:35%}.platformTransportOverviewTable th:nth-child(6){width:11%}.platformTransportOverviewTable th:nth-child(7){width:10%}.platformTransportOverviewTable th:nth-child(8){width:3%}
+.platformTransportOverviewTable td{overflow-wrap:anywhere}
+.platformTransportOverviewTable td select{max-width:100%;min-width:0!important;width:100%}
+.platformTransportOverviewTable .platformTransportVehicleCell{min-width:0!important;max-width:none!important}
+.platformTransportDayHead{font-weight:800}
+</style>
 <style>
 /* BV2026-1-172 · mitgeführte Container/Geräte direkt am Fahrzeug anzeigen */
 .transportExtrasV105{margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#f7f9f8;font-size:14px;line-height:1.45}
@@ -26337,25 +26365,7 @@ renderPlatformReservationGantt=function(from='',to=''){
    if(d.length)rows+=`<div class="extraRowV105"><b>Fahrzeuge / Geräte:</b> ${d.map(x=>esc(equipmentNameV105(x))).join(' · ')}</div>`;
    return `<div class="transportExtrasV105">${rows}</div>`;
  }
- const oldPairV105=platformTransportVehiclePairHtml;
- platformTransportVehiclePairHtml=function(t){
-   let html=oldPairV105.apply(this,arguments);
-   const host=document.createElement('div');host.innerHTML=html;
-   const cards=[...host.children];
-   // Pair renderer normally has truck, separator, trailer. Add details to the corresponding visual card.
-   const truckExtra=extraHtmlV105(t,'truck'),trailerExtra=extraHtmlV105(t,'trailer');
-   if(truckExtra){
-     const truck=cards.find(x=>x.querySelector?.('img'))||host.firstElementChild;
-     if(truck)truck.insertAdjacentHTML('beforeend',truckExtra);
-   }
-   if(trailerExtra){
-     const visual=cards.filter(x=>x.querySelector?.('img'));
-     const trailer=visual.length>1?visual[visual.length-1]:null;
-     if(trailer)trailer.insertAdjacentHTML('beforeend',trailerExtra);
-     else host.insertAdjacentHTML('beforeend',trailerExtra);
-   }
-   return host.innerHTML;
- };
+ /* V394: Container/Geräte zeigt die kompakte Anzeige selbst */
 })();
 </script>
 
@@ -26372,31 +26382,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 </style>
 <script>
 (function(){
- const previous=platformTransportVehiclePairHtml;
- platformTransportVehiclePairHtml=function(t){
-   let html=previous.apply(this,arguments);
-   const host=document.createElement('div');host.innerHTML=html;
-   const extras=[...host.querySelectorAll('.transportExtrasV105')];
-   if(!extras.length)return html;
-
-   /* Die V105-Blöcke anhand der gespeicherten Seite eindeutig beschriften. */
-   const truckHas=(t.truckEquipmentIdsV102||[]).length ||
-     (t.truckContainerIdsV524||[]).length || (t.truckOnPlatformContainerIdsV524||[]).length ||
-     (t.truckContainersV524||[]).length || (t.truckContainerIds||[]).length || (t.truckOnPlatformContainerIds||[]).length;
-   const trailerHas=(t.trailerEquipmentIdsV102||[]).length ||
-     (t.trailerContainerIdsV524||[]).length || (t.trailerOnPlatformContainerIdsV524||[]).length ||
-     (t.trailerContainersV524||[]).length || (t.trailerContainerIds||[]).length || (t.trailerOnPlatformContainerIds||[]).length;
-
-   if(truckHas && trailerHas && extras.length>=2){
-     extras[0].classList.add('v106-truck');
-     extras[1].classList.add('v106-trailer');
-   }else if(truckHas && extras.length){
-     extras[0].classList.add('v106-truck');
-   }else if(trailerHas && extras.length){
-     extras[extras.length-1].classList.add('v106-trailer');
-   }
-   return host.innerHTML;
- };
+ /* V394: Beschriftung LKW/Anhänger ist in der kompakten Anzeige enthalten */
 })();
 </script>
 
@@ -33835,7 +33821,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V393';
+   if(v)v.textContent='Aktuelle Version: V394';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
