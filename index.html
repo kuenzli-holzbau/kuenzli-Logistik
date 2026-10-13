@@ -3764,6 +3764,13 @@ window.APP_RELEASE = {
 .pgAllV399{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:#173d31;margin-right:8px}
 .pgAllV399 input{width:18px;height:18px;margin:0}
 
+
+/* V401: Vorschau im Transportformular (nur eigene Ladung je Fahrzeug) */
+.ptVisV394.ptFormV401{max-width:440px;width:100%;min-width:300px;flex:1 1 auto}
+.platformVehiclePreview:has(.ptFormV401){display:flex;justify-content:center;align-items:center;min-width:0}
+.ptFormV401 .ptPlateV394 strong{font-size:13px}
+.ptFormV401 .ptPlateV394 span{font-size:11px;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.extraLoadTitleV401{font-weight:800}
 /* V444 – Gantt mit Monat + Kalenderwoche */
 .platformGanttRow:first-child{min-height:68px}
 .platformGanttDayV444{
@@ -4859,7 +4866,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V400</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V401</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -5077,7 +5084,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V400</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V401</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7809,7 +7816,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V400</b></p><div class="releaseNote"><b>Neu in V400</b><br>Pritschen-Gantt im Projekt: auch Container und Fahrzeuge/Geräte anderer Projekte ausgeblendet – sichtbar sind nur eigene und freie. V399: Pritschen-Gantt: Reservationen mit der Maus verschieben bzw. am Rand verlängern (mit Konfliktmeldung); Belegung endet beim Reservationsende (rot, wenn länger belegt); im Projekt nur zugeordnete und freie Pritschen. V398: Pritschen-Gantt: zurück bis zum allerersten Eintrag ziehbar. V397: Pritschen-Gantt: mit gedrückter Maustaste hin und her ziehen, grösserer Zeitraum (4 Wochen zurück bis ca. 7 Monate voraus), heute markiert. V396: Pritschenverwaltung: Suchfeld für Projekte (Name, Nummer, PL – auch Teilwörter, z.B. «26160002» oder «baum»). V395: Transporte: LKW-/Anhängerbild wieder in der Übersicht (mit Pritschen-/Container-Schild, Zusatzladung darunter); Status-Auswahl und ⋮-Menü werden nicht mehr abgeschnitten. V394: Pritschen/Transporte: Übersicht nach Kalenderwoche mit lesbarem Datum (Datumsfehler behoben), Ladung kompakt als Schilder (LKW/Anhänger, Pritsche, Container, Geräte, Rungen) statt Fahrzeugbilder, Route ohne «Projekt → Projekt». V393: Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V401</b></p><div class="releaseNote"><b>Neu in V401</b><br>Transportplanung: LKW- und Anhängerbild zeigen nur die eigene Ladung; zusätzliche Container und Fahrzeuge/Geräte bei jedem Ladungsträger möglich (2 Container auf Pritsche oder direkt auf LKW, Container + Gerät, 2 Geräte). V400: Pritschen-Gantt im Projekt: auch Container und Fahrzeuge/Geräte anderer Projekte ausgeblendet – sichtbar sind nur eigene und freie. V399: Pritschen-Gantt: Reservationen mit der Maus verschieben bzw. am Rand verlängern (mit Konfliktmeldung); Belegung endet beim Reservationsende (rot, wenn länger belegt); im Projekt nur zugeordnete und freie Pritschen. V398: Pritschen-Gantt: zurück bis zum allerersten Eintrag ziehbar. V397: Pritschen-Gantt: mit gedrückter Maustaste hin und her ziehen, grösserer Zeitraum (4 Wochen zurück bis ca. 7 Monate voraus), heute markiert. V396: Pritschenverwaltung: Suchfeld für Projekte (Name, Nummer, PL – auch Teilwörter, z.B. «26160002» oder «baum»). V395: Transporte: LKW-/Anhängerbild wieder in der Übersicht (mit Pritschen-/Container-Schild, Zusatzladung darunter); Status-Auswahl und ⋮-Menü werden nicht mehr abgeschnitten. V394: Pritschen/Transporte: Übersicht nach Kalenderwoche mit lesbarem Datum (Datumsfehler behoben), Ladung kompakt als Schilder (LKW/Anhänger, Pritsche, Container, Geräte, Rungen) statt Fahrzeugbilder, Route ohne «Projekt → Projekt». V393: Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -12099,7 +12106,9 @@ function platformCarrierOptions(){
  return names.length?names.map(x=>`<option>${esc(x)}</option>`).join(''):'<option value="">Transportfirma wählen</option>';
 }
 function renderPlatformCarrierOptions(){
- let s=E('platformTransportCarrier');if(s)s.innerHTML=platformCarrierOptions();
+ let s=E('platformTransportCarrier');if(!s)return;const keep=s.value; // V401: gewählte Firma beim Neuaufbau behalten
+ s.innerHTML=platformCarrierOptions();
+ if(keep&&[...s.options].some(o=>o.value===keep))s.value=keep;
 }
 const FREI_TRANSPORT_TRACTORS=[
  'Scania 440 mit Kran',
@@ -12126,6 +12135,7 @@ function isFreiTransportCarrier(name=''){
 function renderPlatformVehicleOptions(tractorValue='',trailerValue=''){
  let carrier=E('platformTransportCarrier')?.value||'';
  let tractor=E('platformTransportTractor'),trailer=E('platformTransportTrailer');if(!tractor||!trailer)return;
+ if(arguments.length===0){tractorValue=tractor.value||'';trailerValue=trailer.value||''} // V401: ohne Angabe die gewählten Fahrzeuge behalten
  let isFrei=isFreiTransportCarrier(carrier);
  let tractors=isFrei?FREI_TRANSPORT_TRACTORS:['Nicht festgelegt'];
  let trailers=isFrei?FREI_TRANSPORT_TRAILERS:['Kein Anhänger / LKW solo','Nicht festgelegt'];
@@ -12271,9 +12281,13 @@ function platformSelectedContainersV523(id){
  return [...el.selectedOptions].map(o=>String(o.value)).filter(Boolean);
 }
 function updatePlatformOnPlatformVisibilityV521(){
- const tw=E('platformTransportTruckOnPlatformWrapV521'),aw=E('platformTransportTrailerOnPlatformWrapV521');
- if(tw)tw.style.display=platformTransportLoadType('truck')==='platform'?'flex':'none';
- if(aw)aw.style.display=platformTransportLoadType('trailer')==='platform'?'flex':'none';
+ // V401: Zusatzladung (weitere Container, Fahrzeuge/Geräte) bei jedem Ladungsträger möglich – auch direkt auf LKW/Anhänger
+ [['truck','platformTransportTruckOnPlatformWrapV521','LKW'],['trailer','platformTransportTrailerOnPlatformWrapV521','Anhänger']].forEach(([side,id,nm])=>{
+   const w=E(id);if(!w)return;w.style.display='flex';
+   const t=platformTransportLoadType(side),lab=w.querySelector('.extraLoadTitleV401');
+   if(lab)lab.textContent=t==='platform'?'Zusätzlich auf der Pritsche ('+nm+')':'Zusätzlich direkt auf dem '+nm;
+   const pl=E('platformTransport'+(side==='truck'?'Truck':'Trailer')+'PlannedPlatformV516')?.closest('label');if(pl)pl.style.display=t==='platform'?'':'none'; // «Pritsche vorausplanen» nur bei Pritsche
+ });
 }
 
 // V321: Pritsche oder Container als Ladungsträger im Transport
@@ -12391,9 +12405,9 @@ function platformProjectActualOptions(truckValue='',trailerValue=''){
  }
  if(truckValue&&Array.from(truck.options).some(o=>o.value===truckValue))truck.value=truckValue;
  if(trailerValue&&Array.from(trail.options).some(o=>o.value===trailerValue))trail.value=trailerValue;
- renderPlatformOnPlatformContainersV521(
-   E('platformTransportTruckOnPlatformContainerV521')?.value||'',
-   E('platformTransportTrailerOnPlatformContainerV521')?.value||''
+ renderPlatformOnPlatformContainersV521( // V401: alle gewählten Zusatz-Container behalten (vorher nur der erste)
+   [...(E('platformTransportTruckOnPlatformContainerV521')?.selectedOptions||[])].map(o=>o.value).filter(Boolean),
+   [...(E('platformTransportTrailerOnPlatformContainerV521')?.selectedOptions||[])].map(o=>o.value).filter(Boolean)
  );
  updatePlatformTransportLoadLabels();
  updatePlatformTrailerPlatformState();
@@ -12507,6 +12521,7 @@ function platformTransportVehicleSvg(kind='truck',vehicle='',carrierId='',fallba
 
 function platformCarrierShortNameV532(type,id){
  if(!id)return '';
+ if(type==='equipment'){try{return platformEquipmentLabelV100(id)||String(id)}catch(_e){return String(id)}} // V401
  if(type==='container'){
    const c=(platformStore.containerStock||[]).find(x=>String(x.id)===String(id));
    return String(c?.number||c?.name||'Container').trim();
@@ -12539,10 +12554,26 @@ function updatePlatformTransportLoadSummaryV532(){
 
 function renderPlatformTransportVehiclePreviews(){
  updatePlatformTransportLoadSummaryV532();
+ // V401: jedes Fahrzeug zeigt nur seine eigene Ladung (vorher stand auf LKW und Anhänger die ganze Beladung)
+ const cont=id=>{const c=(platformStore.containerStock||[]).find(x=>String(x.id)===String(id));return String(c?.name||c?.number||'Container').trim()};
+ const equip=id=>{try{return platformEquipmentLabelV100(id)||String(id)}catch(_e){return String(id)}};
+ const selVals=id=>{const el=E(id);return el?[...el.selectedOptions].map(o=>o.value).filter(Boolean):[]};
+ const side=(kind,cap,img,veh)=>{
+   const C=kind==='truck'?'Truck':'Trailer',type=platformTransportLoadType(kind),id=E('platformTransport'+C+'Platform')?.value||'';
+   let main='',sub='',cls='pr';
+   if(type==='container'){if(id){main=cont(id);cls='cont'}}
+   else if(type==='equipment'){if(id){main=equip(id);cls='equip'}}
+   else if(id){const pr=platformCarrierShortNameV532('platform',id);const a=(platformStore.actual||[]).find(x=>String(x.id)===String(id));const ld=String(a?.loadedWith||'').trim();main=pr||ld||'Pritsche';if(ld&&ld!==pr&&!ld.toUpperCase().replace(/\W/g,'').includes(String(pr).toUpperCase().replace(/\W/g,'')))sub=ld}
+   else{const pl=String(E('platformTransport'+C+'PlannedPlatformV516')?.value||'').trim();if(pl){main=pl;sub='vorausgeplant';cls='plan'}}
+   const extras=[...selVals('platformTransport'+C+'OnPlatformContainerV521').filter(x=>!(type==='container'&&String(x)===String(id))).map(cont),...selVals('platformTransport'+C+'EquipmentSelectV102').map(equip)];
+   if(!main&&extras.length){main=extras.shift();cls='cont'}
+   const extraTxt=extras.length?'+ '+extras.join(' + '):'';
+   const v=String(veh||'').trim();
+   return `<div class="ptVisV394 ${kind} ptFormV401"><div class="ptPhotoV394 ${kind}"><img src="${img}" alt="${cap}">${main?`<div class="ptPlateV394 ${cls}" title="${esc([main,sub,extraTxt].filter(Boolean).join(' · '))}"><strong>${esc(main)}</strong>${sub||extraTxt?`<span>${esc(sub||extraTxt)}</span>`:''}</div>`:'<div class="ptPlateV394 plan"><strong>Ladung wählen</strong></div>'}</div><div class="ptCapV394"><b>${cap}</b>${v&&v!=='__unknown__'&&v!=='Nicht festgelegt'?' · '+esc(v):''}</div>${sub&&extraTxt?`<div class="ptPartsV394"><span class="ptChipV394 cont">${esc(extraTxt)}</span></div>`:''}</div>`;
+ };
  let truck=E('platformTransportTruckPreview'),trail=E('platformTransportTrailerPreview');
- let load=String(E('platformTransportLoad')?.value||'').trim();
- if(truck)truck.innerHTML=platformTransportVehicleSvg('truck',E('platformTransportTractor')?.value||'',E('platformTransportTruckPlatform')?.value||'',load,platformTransportLoadType('truck'));
- if(trail)trail.innerHTML=platformTransportVehicleSvg('trailer',E('platformTransportTrailer')?.value||'',E('platformTransportTrailerPlatform')?.value||'',load,platformTransportLoadType('trailer'));
+ if(truck)truck.innerHTML=side('truck','LKW',PLATFORM_REAL_TRUCK_IMG,E('platformTransportTractor')?.value);
+ if(trail)trail.innerHTML=side('trailer','Anhänger',PLATFORM_REAL_TRAILER_IMG,E('platformTransportTrailer')?.value);
 }
 function platformTransportVehiclePairHtml(t){
  const actualById=id=>(platformStore.actual||[]).find(a=>String(a.id)===String(id||''))||null;
@@ -12917,8 +12948,9 @@ function savePlatformTransport(){
  let trailerContainerId=trailerLoadType==='container'?trailerCarrierId:'';
  let truckEquipmentId=truckLoadType==='equipment'?truckCarrierId:'';
  let trailerEquipmentId=trailerLoadType==='equipment'?trailerCarrierId:'';
- let truckOnPlatformContainerIds=truckLoadType==='platform'?platformSelectedContainersV523('platformTransportTruckOnPlatformContainerV521'):[];
- let trailerOnPlatformContainerIds=trailerLoadType==='platform'?platformSelectedContainersV523('platformTransportTrailerOnPlatformContainerV521'):[];
+ // V401: weitere Container auch ohne Pritsche (z.B. 2 Container direkt auf dem LKW); Haupt-Container nicht doppelt
+ let truckOnPlatformContainerIds=platformSelectedContainersV523('platformTransportTruckOnPlatformContainerV521').filter(id=>!(truckLoadType==='container'&&String(id)===String(E('platformTransportTruckPlatform')?.value||'')));
+ let trailerOnPlatformContainerIds=platformSelectedContainersV523('platformTransportTrailerOnPlatformContainerV521').filter(id=>!(trailerLoadType==='container'&&String(id)===String(E('platformTransportTrailerPlatform')?.value||'')));
  let truckOnPlatformContainerId=truckOnPlatformContainerIds[0]||'';
  let trailerOnPlatformContainerId=trailerOnPlatformContainerIds[0]||'';
  let transportName=String(E('platformTransportName')?.value||'').trim();
@@ -12982,7 +13014,8 @@ function savePlatformTransport(){
  ['platformTransportName','platformTransportDate','platformTransportTime','platformTransportLoad','platformTransportNote','platformTransportTruckPlannedPlatformV516','platformTransportTrailerPlannedPlatformV516'].forEach(id=>{if(E(id))E(id).value=''});
  if(E('platformTransportTruckLoadType'))E('platformTransportTruckLoadType').value='platform';
  if(E('platformTransportTrailerLoadType'))E('platformTransportTrailerLoadType').value='platform';
- platformProjectActualOptions();
+ platformProjectActualOptions('','');
+ try{renderPlatformOnPlatformContainersV521([],[])}catch(_e){} // V401: Zusatz-Container für den nächsten Transport leeren
  if(E('platformTransportTruckPlatform'))E('platformTransportTruckPlatform').value='';
  if(E('platformTransportTrailerPlatform'))E('platformTransportTrailerPlatform').value='';
  if(E('platformTransportTo'))E('platformTransportTo').value=platformProjectById(selectedPlatformProjectId)?.name||'';
@@ -13145,7 +13178,8 @@ function cancelPlatformTransportEdit(){
  ['platformTransportName','platformTransportDate','platformTransportTime','platformTransportLoad','platformTransportNote'].forEach(id=>{if(E(id))E(id).value=''});
  if(E('platformTransportTruckLoadType'))E('platformTransportTruckLoadType').value='platform';
  if(E('platformTransportTrailerLoadType'))E('platformTransportTrailerLoadType').value='platform';
- platformProjectActualOptions();
+ platformProjectActualOptions('','');
+ try{renderPlatformOnPlatformContainersV521([],[]);renderPlatformTransportEquipmentMultiV102([],[])}catch(_e){}
  if(E('platformTransportTruckPlatform'))E('platformTransportTruckPlatform').value='';
  if(E('platformTransportTrailerPlatform'))E('platformTransportTrailerPlatform').value='';
  if(E('platformTransportTo'))E('platformTransportTo').value=platformProjectById(selectedPlatformProjectId)?.name||'';
@@ -23421,7 +23455,7 @@ document.addEventListener('DOMContentLoaded',()=>{
                 <label>LKW<select id="platformTransportTractor" onchange="renderPlatformTransportVehiclePreviews()"><option value="__unknown__">LKW unbekannt</option></select></label>
                 <label>Ladungsträger<select id="platformTransportTruckLoadType" onchange="setPlatformTransportLoadType('truck')"><option value="platform">Pritsche</option><option value="container">Container</option><option value="equipment">Fahrzeug / Gerät</option></select></label>
                 <label><span id="platformTransportTruckLoadLabel">Pritsche LKW</span><select id="platformTransportTruckPlatform" onchange="prefillPlatformTransport();syncPlatformTransportPlatformOptions('truck');renderPlatformTransportVehiclePreviews()"></select></label>
-<label class="plannedPlatformV516">Pritsche vorausplanen<input id="platformTransportTruckPlannedPlatformV516" placeholder="z. B. PR-02" oninput="renderPlatformTransportVehiclePreviews()"><small>Nur verwenden, wenn die Pritsche noch nicht verfügbar ist.</small></label><label id="platformTransportTruckOnPlatformWrapV521">Container auf Pritsche
+<label class="plannedPlatformV516">Pritsche vorausplanen<input id="platformTransportTruckPlannedPlatformV516" placeholder="z. B. PR-02" oninput="renderPlatformTransportVehiclePreviews()"><small>Nur verwenden, wenn die Pritsche noch nicht verfügbar ist.</small></label><label id="platformTransportTruckOnPlatformWrapV521"><span class="extraLoadTitleV401">Zusätzlich auf der Pritsche (LKW)</span>
 <div class="multiContainerV524" id="platformTransportTruckContainerMultiV524">
  <label class="containerEnableV525"><input type="checkbox" id="platformTransportTruckContainerEnableV525" onchange="toggleContainerLoadV525('truck',this.checked)"> Container mitführen</label>
  <div class="containerSelectLabelV526" id="platformTransportTruckContainerLabelV526" style="display:none">Container auswählen</div><button type="button" class="multiContainerBtnV524" id="platformTransportTruckContainerBtnV525" style="display:none" onclick="toggleContainerMultiV524('truck',event)">Keine Container ausgewählt</button>
@@ -23445,7 +23479,7 @@ document.addEventListener('DOMContentLoaded',()=>{
                 <label>Anhänger<select id="platformTransportTrailer" onchange="updatePlatformTrailerPlatformState();renderPlatformTransportVehiclePreviews()"><option value="__unknown__">Anhänger unbekannt</option></select></label>
                 <label>Ladungsträger<select id="platformTransportTrailerLoadType" onchange="setPlatformTransportLoadType('trailer')"><option value="platform">Pritsche</option><option value="container">Container</option><option value="equipment">Fahrzeug / Gerät</option></select></label>
                 <label><span id="platformTransportTrailerLoadLabel">Pritsche Anhänger</span><select id="platformTransportTrailerPlatform" onchange="syncPlatformTransportPlatformOptions('trailer');renderPlatformTransportVehiclePreviews()"></select></label>
-<label class="plannedPlatformV516">Pritsche vorausplanen<input id="platformTransportTrailerPlannedPlatformV516" placeholder="z. B. PR-02" oninput="renderPlatformTransportVehiclePreviews()"><small>Wird später automatisch der echten Pritsche zugeordnet.</small></label><label id="platformTransportTrailerOnPlatformWrapV521">Container auf Pritsche
+<label class="plannedPlatformV516">Pritsche vorausplanen<input id="platformTransportTrailerPlannedPlatformV516" placeholder="z. B. PR-02" oninput="renderPlatformTransportVehiclePreviews()"><small>Wird später automatisch der echten Pritsche zugeordnet.</small></label><label id="platformTransportTrailerOnPlatformWrapV521"><span class="extraLoadTitleV401">Zusätzlich auf der Pritsche (Anhänger)</span>
 <div class="multiContainerV524" id="platformTransportTrailerContainerMultiV524">
  <label class="containerEnableV525"><input type="checkbox" id="platformTransportTrailerContainerEnableV525" onchange="toggleContainerLoadV525('trailer',this.checked)"> Container mitführen</label>
  <div class="containerSelectLabelV526" id="platformTransportTrailerContainerLabelV526" style="display:none">Container auswählen</div><button type="button" class="multiContainerBtnV524" id="platformTransportTrailerContainerBtnV525" style="display:none" onclick="toggleContainerMultiV524('trailer',event)">Keine Container ausgewählt</button>
@@ -26186,16 +26220,18 @@ renderPlatformReservationGantt=function(from='',to=''){
  editPlatformTransport=function(id){
    const t=(platformStore.transports||[]).find(x=>String(x.id)===String(id));
    const result=oldEditV102.apply(this,arguments);
-   setTimeout(()=>renderPlatformTransportEquipmentMultiV102(
+   setTimeout(()=>{renderPlatformTransportEquipmentMultiV102(
      t?.truckEquipmentIdsV102||[],t?.trailerEquipmentIdsV102||[]
-   ),120);
+   );try{renderPlatformTransportVehiclePreviews()}catch(_e){}},120);
    return result;
  };
 
  /* Keep lists current when transport date/project changes. */
  const oldOptsV102=platformProjectActualOptions;
  platformProjectActualOptions=function(){
-   const result=oldOptsV102.apply(this,arguments);
+   // V401: ohne Angabe die aktuelle Auswahl behalten (vorher wurde beim Bearbeiten die gewählte Pritsche/Container/Gerät wieder geleert)
+   const args=arguments.length?[...arguments]:[E('platformTransportTruckPlatform')?.value||'',E('platformTransportTrailerPlatform')?.value||''];
+   const result=oldOptsV102.apply(this,args);
    renderPlatformTransportEquipmentMultiV102(selectedV102('truck'),selectedV102('trailer'));
    return result;
  };
@@ -33998,7 +34034,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V400';
+   if(v)v.textContent='Aktuelle Version: V401';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
