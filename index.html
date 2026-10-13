@@ -3749,6 +3749,21 @@ window.APP_RELEASE = {
 .platformGanttScroller .platformGanttBar{overflow:clip}
 .pgTxtV397{position:sticky;left:216px;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:top}
 
+/* V399: Reservation oben, Belegung unten, ziehbare Reservationsbalken */
+.platformGanttScroller .platformGanttRow:not(:first-child){min-height:44px}
+.platformGanttScroller .platformGanttBar{height:18px!important;padding:1px 7px!important;line-height:15px}
+.platformGanttScroller .platformGanttBar.reservation,.platformGanttScroller .platformGanttBar.container:not(.actualC){top:3px!important}
+.platformGanttScroller .platformGanttBar.actual,.platformGanttScroller .platformGanttBar.overdue,.platformGanttScroller .platformGanttBar.actualC{top:23px!important}
+.platformGanttBar.overdue{background:#f8c9c3;color:#8a1f12;border:1px solid #e79a90}
+.platformGanttBar.dragV399{cursor:grab;touch-action:none}
+.platformGanttBar.dragV399.draggingV399{cursor:grabbing;box-shadow:0 3px 10px rgba(0,0,0,.25);z-index:6;opacity:.92}
+.platformGanttBar .pgHL,.platformGanttBar .pgHR{position:absolute;top:0;bottom:0;width:8px;cursor:ew-resize;z-index:3}
+.platformGanttBar .pgHL{left:0}.platformGanttBar .pgHR{right:0}
+.platformGanttBar.dragV399:hover .pgHL,.platformGanttBar.dragV399:hover .pgHR{background:rgba(111,80,0,.25)}
+.platformGanttRow.mineV399 .platformGanttLabel{font-weight:800;background:#fff8e1}
+.pgAllV399{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:#173d31;margin-right:8px}
+.pgAllV399 input{width:18px;height:18px;margin:0}
+
 /* V444 – Gantt mit Monat + Kalenderwoche */
 .platformGanttRow:first-child{min-height:68px}
 .platformGanttDayV444{
@@ -4844,7 +4859,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V398</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V399</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -5062,7 +5077,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V398</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V399</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7794,7 +7809,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V398</b></p><div class="releaseNote"><b>Neu in V398</b><br>Pritschen-Gantt: zurück bis zum allerersten Eintrag ziehbar. V397: Pritschen-Gantt: mit gedrückter Maustaste hin und her ziehen, grösserer Zeitraum (4 Wochen zurück bis ca. 7 Monate voraus), heute markiert. V396: Pritschenverwaltung: Suchfeld für Projekte (Name, Nummer, PL – auch Teilwörter, z.B. «26160002» oder «baum»). V395: Transporte: LKW-/Anhängerbild wieder in der Übersicht (mit Pritschen-/Container-Schild, Zusatzladung darunter); Status-Auswahl und ⋮-Menü werden nicht mehr abgeschnitten. V394: Pritschen/Transporte: Übersicht nach Kalenderwoche mit lesbarem Datum (Datumsfehler behoben), Ladung kompakt als Schilder (LKW/Anhänger, Pritsche, Container, Geräte, Rungen) statt Fahrzeugbilder, Route ohne «Projekt → Projekt». V393: Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V399</b></p><div class="releaseNote"><b>Neu in V399</b><br>Pritschen-Gantt: Reservationen mit der Maus verschieben bzw. am Rand verlängern (mit Konfliktmeldung); Belegung endet beim Reservationsende (rot, wenn länger belegt); im Projekt nur zugeordnete und freie Pritschen. V398: Pritschen-Gantt: zurück bis zum allerersten Eintrag ziehbar. V397: Pritschen-Gantt: mit gedrückter Maustaste hin und her ziehen, grösserer Zeitraum (4 Wochen zurück bis ca. 7 Monate voraus), heute markiert. V396: Pritschenverwaltung: Suchfeld für Projekte (Name, Nummer, PL – auch Teilwörter, z.B. «26160002» oder «baum»). V395: Transporte: LKW-/Anhängerbild wieder in der Übersicht (mit Pritschen-/Container-Schild, Zusatzladung darunter); Status-Auswahl und ⋮-Menü werden nicht mehr abgeschnitten. V394: Pritschen/Transporte: Übersicht nach Kalenderwoche mit lesbarem Datum (Datumsfehler behoben), Ladung kompakt als Schilder (LKW/Anhänger, Pritsche, Container, Geräte, Rungen) statt Fahrzeugbilder, Route ohne «Projekt → Projekt». V393: Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -14386,6 +14401,7 @@ function selectPlatformProject(id){
  let p=platformProjectById(selectedPlatformProjectId),label=p?`${p.number?`${p.number} · `:''}${p.name||''}`:'Bitte ein Projekt auswählen.';
  ['platformPlanningProjectHint','platformActualProjectHint'].forEach(hid=>{let el=E(hid);if(el){el.textContent=p?`Projekt: ${label}`:'Bitte ein Projekt auswählen.';el.classList.toggle('ready',!!p)}});
  if(E('platformTransportTo'))E('platformTransportTo').value=p?.name||'';applyPlatformMainTab();setPlatformProjectSubTab(window.platformProjectSubTab||'planning',true);
+ try{if(E('platformReservationGantt'))renderPlatformReservationGantt(E('platformFrom')?.value||'',E('platformTo')?.value||'')}catch(e){console.warn('Gantt',e)} // V399: Gantt sofort auf das gewählte Projekt filtern
  setTimeout(()=>E('platformProjectWorkspace')?.scrollIntoView({behavior:'smooth',block:'start'}),20);
 }
 function renderPlatformProjectOverview(){
@@ -15250,7 +15266,7 @@ function platformGanttDateRange(from,to){
  return out;
 }
 
-function platformGanttBarHtml(from,to,days,label,cls){
+function platformGanttBarHtml(from,to,days,label,cls,needId){
  if(!from||!to||!days.length)return '';
  let first=days[0],last=days[days.length-1];
  if(!platformOverlap(first,last,from,to))return '';
@@ -15258,7 +15274,8 @@ function platformGanttBarHtml(from,to,days,label,cls){
  let start=days.indexOf(f),end=days.indexOf(t);
  if(start<0||end<0)return '';
  let left=(start/days.length)*100,width=((end-start+1)/days.length)*100;
- return `<div class="platformGanttBar ${cls}" style="left:${left}%;width:${width}%;" title="${esc(label)}"><span class="pgTxtV397">${esc(label)}</span></div>`;
+ const dr=needId&&cls==='reservation'&&from>=first&&to<=last?` data-need="${esc(needId)}" data-from="${from}" data-to="${to}"`:'';
+ return `<div class="platformGanttBar ${cls}${dr?' dragV399':''}"${dr} style="left:${left}%;width:${width}%;" title="${esc(label)}${dr?' – ziehen zum Verschieben, am Rand ziehen zum Ändern':''}">${dr?'<i class="pgHL"></i>':''}<span class="pgTxtV397">${esc(label)}</span>${dr?'<i class="pgHR"></i>':''}</div>`;
 }
 
 
@@ -15287,10 +15304,10 @@ function renderPlatformReservationGantt(from='',to=''){
  let box=E('platformReservationGantt');if(!box)return;
  // V397: Scrollposition merken und nach dem Neuaufbau wiederherstellen; beim ersten Mal auf heute bzw. Startdatum springen
  {const old=box.querySelector('.platformGanttScroller');const key=(from||'')+'|'+(to||'');
-  const prevLeft=old&&box.dataset.ganttKey===key?old.scrollLeft:null;box.dataset.ganttKey=key;
+  const prevLeft=old&&box.dataset.ganttKey===key&&old.clientWidth?old.scrollLeft:null;const prevFirst=old?.dataset.first||'';box.dataset.ganttKey=key;
   requestAnimationFrame(()=>{const sc=box.querySelector('.platformGanttScroller');if(!sc)return;
     const place=()=>{if(sc.dataset.placed||!sc.clientWidth)return;sc.dataset.placed='1';
-      if(prevLeft!=null){sc.scrollLeft=prevLeft;return}
+      if(prevLeft!=null){const shift=prevFirst&&sc.dataset.first?Math.round((new Date(prevFirst+'T12:00:00')-new Date(sc.dataset.first+'T12:00:00'))/864e5)*34:0;sc.scrollLeft=prevLeft+shift;return}
       const first=sc.dataset.first;const target=from||platformTodayIsoV397();if(!first)return;
       const n=Math.round((new Date(target+'T12:00:00')-new Date(first+'T12:00:00'))/864e5);sc.scrollLeft=Math.max(0,(n-3)*34)};
     place();if(!sc.dataset.placed&&window.ResizeObserver){const ro=new ResizeObserver(()=>{place();if(sc.dataset.placed||!sc.isConnected)ro.disconnect()});ro.observe(sc)}});}
@@ -15299,40 +15316,48 @@ function renderPlatformReservationGantt(from='',to=''){
  let projects=projectStore?.projects||[];
  let rows=[];
 
+ /* V399: Reservationen aller Projekte als verschiebbare Balken (oben), tatsächliche Belegung bis Reservationsende (unten);
+    im Projekt nur die dem Projekt zugeordneten und die freien Pritschen (Schalter «Alle anzeigen»). */
+ const pid=selectedPlatformProjectId||'',showAll=!pid||!!window.platformGanttAllV399,today=platformTodayIsoV397();
+ const activeProjects=projects.filter(p=>!p.archived);
+ const needsOf=(projectId,supplier)=>(platformStore.needs||[]).filter(n=>n.projectId===projectId&&(n.needKind||'platforms')==='platforms'&&(n.supplier||'Künzli')===supplier&&!['Aufgehoben','Erledigt'].includes(n.status||'Reserviert')&&n.from&&n.to);
+ const pName=id=>projects.find(x=>x.id===id)?.name||'Projekt';
+ const resBar=(n,projectId)=>platformGanttBarHtml(n.from,n.to,days,`Reserviert · ${pName(projectId||n.projectId)} · ${platformDateFmt(n.from)}–${platformDateFmt(n.to)}`,'reservation',n.id);
+ let hidden=0;
  (platformStore.stock||[]).filter(s=>s.active!==false).forEach(s=>{
-   let bars=[];
-   platformStockReservationRows(s.id).forEach(n=>{
-     let p=projects.find(x=>x.id===n.projectId);
-     bars.push(platformGanttBarHtml(n.from,n.to,days,`Reserviert · ${p?.name||'Projekt'}`,'reservation'));
+   let bars=[],seen=new Set(),projOf=new Set();
+   platformStockReservationRows(s.id).forEach(n=>{if(seen.has(n.id))return;seen.add(n.id);projOf.add(n.projectId);bars.push(resBar(n))});
+   activeProjects.forEach(p=>{
+     if(!platformAssignedIdsV439(p.id,s.supplier||'Künzli').includes(String(s.id)))return;projOf.add(p.id);
+     needsOf(p.id,s.supplier||'Künzli').forEach(n=>{if(seen.has(n.id))return;seen.add(n.id);bars.push(resBar(n,p.id))});
    });
-   // V444: Nach Schritt 2 übernimmt die konkret zugewiesene Pritsche
-   // den ursprünglichen Bedarfs-/Reservationszeitraum des Lieferanten.
-   platformAssignedReservationPeriodsV444(s).forEach(n=>{
-     let p=projects.find(x=>x.id===n.projectId);
-     bars.push(platformGanttBarHtml(n.from,n.to,days,`Reserviert · ${p?.name||'Projekt'}`,'reservation'));
-   });
-   let a=platformLatestActualForStock(s.id);
+   let a=platformLatestActualForStock(s.id),busyOther=false;
    if(a&&a.projectId&&(a.status||'Belegt')!=='Frei'){
-     let p=projects.find(x=>x.id===a.projectId);
-     let af=(a.updatedAt||a.createdAt||days[0]).slice(0,10);
-     bars.push(platformGanttBarHtml(af,days[days.length-1],days,`${a.status==='Abgeholt'?'Baustelle':a.status||'Belegt'} · ${p?.name||'Projekt'}`,'actual'));
+     projOf.add(a.projectId);if(a.projectId!==pid)busyOther=true;
+     const af=String(a.createdAt||a.updatedAt||today).slice(0,10);
+     const ends=needsOf(a.projectId,s.supplier||'Künzli').map(n=>n.to).sort();const resEnd=ends.length?ends[ends.length-1]:'';
+     const lab=`${a.status==='Abgeholt'?'Baustelle':a.status||'Belegt'} · ${pName(a.projectId)}`;
+     if(resEnd){
+       bars.push(platformGanttBarHtml(af<=resEnd?af:resEnd,resEnd,days,lab+' · bis '+platformDateFmt(resEnd),'actual'));
+       if(resEnd<today)bars.push(platformGanttBarHtml(platformIsoAddDays(resEnd,1),today,days,'Noch belegt – Reservation abgelaufen am '+platformDateFmt(resEnd),'overdue'));
+     }else bars.push(platformGanttBarHtml(af,today>af?today:af,days,lab+' · ohne Reservation','overdue'));
    }
-   rows.push({label:`${s.supplier} · ${s.name}`,bars:bars.join('')});
+   if(!showAll){const mine=projOf.has(pid);const other=[...projOf].some(x=>x&&x!==pid);if(!mine&&(other||busyOther)){hidden++;return}}
+   rows.push({label:`${s.supplier} · ${s.name}`,bars:bars.join(''),mine:projOf.has(pid)});
  });
 
  (platformStore.containerStock||[]).filter(c=>c.active!==false).forEach(c=>{
-   let bars=[];
-   platformContainerReservations(c).forEach(r=>{
-     let p=projects.find(x=>x.id===r.projectId);
-     bars.push(platformGanttBarHtml(r.from,r.to,days,`Reserviert · ${p?.name||'Projekt'}`,'container'));
-   });
+   let bars=[],projOf=new Set();
+   platformContainerReservations(c).forEach(r=>{projOf.add(r.projectId);bars.push(platformGanttBarHtml(r.from,r.to,days,`Reserviert · ${pName(r.projectId)}`,'container'))});
    if(c.currentUsage){
-     let p=projects.find(x=>x.id===c.currentUsage.projectId);
+     projOf.add(c.currentUsage.projectId);
      let cf=c.currentUsage.from||days[0];
-     bars.push(platformGanttBarHtml(cf,days[days.length-1],days,`In Gebrauch · ${p?.name||c.currentUsage.projectName||'Projekt'}`,'container'));
+     bars.push(platformGanttBarHtml(cf,c.currentUsage.to&&c.currentUsage.to>today?c.currentUsage.to:today,days,`In Gebrauch · ${projects.find(x=>x.id===c.currentUsage.projectId)?.name||c.currentUsage.projectName||'Projekt'}`,'container actualC'));
    }
-   rows.push({label:`Container · ${c.name||''}`,bars:bars.join('')});
+   if(!showAll&&!projOf.has(pid)&&c.currentUsage&&c.currentUsage.projectId&&c.currentUsage.projectId!==pid){hidden++;return}
+   rows.push({label:`Container · ${c.name||''}`,bars:bars.join(''),mine:projOf.has(pid)});
  });
+ if(pid&&!showAll)rows.sort((x,y)=>(y.mine?1:0)-(x.mine?1:0));
 
  let dayHead=days.map((d,i)=>{
    let dt=new Date(d+'T12:00:00'),weekend=[0,6].includes(dt.getDay());
@@ -15350,8 +15375,10 @@ function renderPlatformReservationGantt(from='',to=''){
  box.innerHTML=`<div class="platformGanttHead">
    <div><h3>Gantt · Reservationen & aktuelle Belegung</h3><div class="muted">${platformDateFmt(days[0])} – ${platformDateFmt(days[days.length-1])}</div></div>
    <div class="platformGanttLegend">
-     <span><i style="background:#ffe7a8"></i>Reservation / konkrete Zuweisung</span>
-     <span><i style="background:#cfe2f7"></i>Aktuelle Nutzung</span>
+     ${pid?`<label class="pgAllV399"><input type="checkbox" ${window.platformGanttAllV399?'checked':''} onchange="window.platformGanttAllV399=this.checked;renderPlatformReservationGantt(E('platformFrom')?.value||'',E('platformTo')?.value||'')"> Alle Pritschen anzeigen${hidden?` (${hidden} ausgeblendet)`:''}</label>`:''}
+     <span><i style="background:#ffe7a8"></i>Reservation (ziehen = verschieben, Rand = verlängern)</span>
+     <span><i style="background:#cfe2f7"></i>Aktuelle Belegung</span>
+     <span><i style="background:#f8c9c3"></i>Belegt ohne gültige Reservation</span>
      <span><i style="background:#eadcf5"></i>Container</span>
    </div>
  </div>
@@ -15361,7 +15388,7 @@ function renderPlatformReservationGantt(from='',to=''){
     <div class="platformGanttLabel"><b>Objekt</b></div>
     <div class="platformGanttTrack">${dayHead}</div>
    </div>
-   ${rows.map(r=>`<div class="platformGanttRow"><div class="platformGanttLabel">${esc(r.label)}</div><div class="platformGanttTrack">${r.bars}</div></div>`).join('')}
+   ${rows.map(r=>`<div class="platformGanttRow${r.mine&&pid?' mineV399':''}"><div class="platformGanttLabel">${esc(r.label)}</div><div class="platformGanttTrack">${r.bars}</div></div>`).join('')}
   </div>
  </div>`;
 }
@@ -26359,7 +26386,7 @@ renderPlatformReservationGantt=function(from='',to=''){
 /* V397: Pritschen-Gantt mit gedrückter Maustaste (oder Finger) seitwärts ziehen */
 (function(){
  let d=null;
- document.addEventListener('pointerdown',e=>{const sc=e.target.closest&&e.target.closest('.platformGanttScroller');if(!sc||e.button>0)return;
+ document.addEventListener('pointerdown',e=>{const sc=e.target.closest&&e.target.closest('.platformGanttScroller');if(!sc||e.button>0)return;if(e.target.closest('.platformGanttBar[data-need]'))return;
    d={sc,x:e.clientX,y:e.clientY,l:sc.scrollLeft,moved:false,id:e.pointerId}},true);
  window.addEventListener('pointermove',e=>{if(!d)return;const dx=e.clientX-d.x;if(!d.moved&&Math.abs(dx)<5)return;
    if(!d.moved){d.moved=true;d.sc.classList.add('draggingV397');try{d.sc.setPointerCapture(d.id)}catch(_e){}}
@@ -26367,6 +26394,70 @@ renderPlatformReservationGantt=function(from='',to=''){
  const end=()=>{if(!d)return;const {sc,moved}=d;d=null;sc.classList.remove('draggingV397');
    if(moved){const stop=ev=>{ev.stopPropagation();ev.preventDefault()};sc.addEventListener('click',stop,{capture:true,once:true});setTimeout(()=>sc.removeEventListener('click',stop,{capture:true}),60)}};
  window.addEventListener('pointerup',end);window.addEventListener('pointercancel',end);
+})();
+</script>
+<script>
+/* V399: Reservationsbalken im Pritschen-Gantt ziehen: Mitte = verschieben, Rand = Beginn/Ende ändern. Mit Konfliktprüfung. */
+(function(){
+ const DAY=34;let g=null;
+ const add=(iso,n)=>platformIsoAddDays(iso,n);
+ function conflicts(n,from,to){
+   const msgs=[],sup=n.supplier||'Künzli',type=n.platformType||'any';
+   const idx=platformStore.needs.indexOf(n);let rental=0,shared=0;
+   try{if(idx>=0)platformStore.needs.splice(idx,1);rental=platformRentalAvailable(n.projectId,sup,from,to,type);shared=platformAvailableCount(sup,from,to,type)}catch(e){console.warn(e)}finally{if(idx>=0)platformStore.needs.splice(idx,0,n)}
+   const qty=Math.max(1,Number(n.qty)||1);
+   if(qty>rental+shared)msgs.push(`Kapazität: Von ${sup} sind vom ${platformDateFmt(from)} bis ${platformDateFmt(to)} nur ${rental+shared} Pritsche(n) verfügbar – diese Reservation braucht ${qty}.`);
+   const mine=new Set([...platformAssignedIdsV439(n.projectId,sup),n.exactPlatformId,...(n.selectedPlatformIds||[])].filter(Boolean).map(String));
+   const projs=(projectStore?.projects||[]).filter(p=>!p.archived&&p.id!==n.projectId);
+   mine.forEach(id=>{
+     const st=(platformStore.stock||[]).find(x=>String(x.id)===id);const nm=st?`${st.supplier||''} ${st.name||''}`.trim():id;
+     projs.forEach(p=>{
+       const theirs=platformAssignedIdsV439(p.id,sup).includes(id);
+       (platformStore.needs||[]).filter(m=>m!==n&&m.projectId===p.id&&(m.needKind||'platforms')==='platforms'&&(m.supplier||'Künzli')===sup&&!['Aufgehoben','Erledigt'].includes(m.status||'Reserviert')&&m.from&&m.to&&(theirs||m.exactPlatformId===id||(m.selectedPlatformIds||[]).map(String).includes(id))&&platformOverlap(from,to,m.from,m.to))
+         .forEach(m=>msgs.push(`Pritsche ${nm} ist vom ${platformDateFmt(m.from)} bis ${platformDateFmt(m.to)} für «${p.name||'Projekt'}» reserviert.`));
+     });
+     const a=platformLatestActualForStock(id);
+     if(a&&a.projectId&&a.projectId!==n.projectId&&(a.status||'Belegt')!=='Frei'&&from<=platformTodayIsoV397())msgs.push(`Pritsche ${nm} ist zurzeit noch bei «${(projectStore?.projects||[]).find(x=>x.id===a.projectId)?.name||'anderem Projekt'}» (${a.status||'Belegt'}).`);
+   });
+   return [...new Set(msgs)];
+ }
+ document.addEventListener('pointerdown',e=>{
+   const bar=e.target.closest&&e.target.closest('.platformGanttBar[data-need]');if(!bar||e.button>0)return;
+   if(typeof hasAppPermission==='function'&&!hasAppPermission('platforms'))return;
+   const r=bar.getBoundingClientRect(),x=e.clientX-r.left;
+   const mode=e.target.classList.contains('pgHL')||x<8?'from':e.target.classList.contains('pgHR')||x>r.width-8?'to':'move';
+   g={bar,mode,x0:e.clientX,left:bar.offsetLeft,width:bar.offsetWidth,days:0,id:e.pointerId,moved:false};
+   try{bar.setPointerCapture(e.pointerId)}catch(_e){}e.preventDefault();e.stopPropagation();
+ },true);
+ window.addEventListener('pointermove',e=>{
+   if(!g)return;const d=Math.round((e.clientX-g.x0)/DAY);if(!g.moved&&Math.abs(e.clientX-g.x0)<4)return;g.moved=true;g.days=d;
+   const b=g.bar;b.classList.add('draggingV399');
+   if(g.mode==='move')b.style.left=(g.left+d*DAY)+'px';
+   else if(g.mode==='to')b.style.width=Math.max(DAY,g.width+d*DAY)+'px';
+   else{const w=Math.max(DAY,g.width-d*DAY);b.style.left=(g.left+g.width-w)+'px';b.style.width=w+'px'}
+   const f=b.dataset.from,t=b.dataset.to;const nf=g.mode==='to'?f:add(f,d),nt=g.mode==='from'?t:add(t,d);
+   b.querySelector('.pgTxtV397').textContent=`${platformDateFmt(nf<=nt?nf:nt)} – ${platformDateFmt(nt>=nf?nt:nf)}`;
+ });
+ const end=()=>{
+   if(!g)return;const {bar,mode,days,moved}=g;g=null;
+   const stop=ev=>{ev.stopPropagation();ev.preventDefault()};bar.addEventListener('click',stop,{capture:true,once:true});setTimeout(()=>bar.removeEventListener('click',stop,{capture:true}),60);
+   const rerender=()=>renderPlatformReservationGantt(E('platformFrom')?.value||'',E('platformTo')?.value||'');
+   if(!moved||!days){rerender();return}
+   const n=(platformStore.needs||[]).find(x=>x.id===bar.dataset.need);if(!n){rerender();return}
+   let from=n.from,to=n.to;
+   if(mode==='move'){from=add(n.from,days);to=add(n.to,days)}else if(mode==='to'){to=add(n.to,days);if(to<from)to=from}else{from=add(n.from,days);if(from>to)from=to}
+   const pn=(projectStore?.projects||[]).find(x=>x.id===n.projectId)?.name||'Projekt';
+   const c=conflicts(n,from,to);
+   const head=`Reservation «${pn}» (${n.qty||1} × ${n.supplier||'Künzli'})\nvon ${platformDateFmt(n.from)} – ${platformDateFmt(n.to)}\nauf ${platformDateFmt(from)} – ${platformDateFmt(to)} ändern?`;
+   if(c.length){if(!confirm('⚠ KONFLIKT\n\n'+c.join('\n')+'\n\n'+head+'\n\nTrotz Konflikt speichern?')){rerender();return}}
+   else if(!confirm(head)){rerender();return}
+   n.from=from;n.to=to;n.updatedAt=new Date().toISOString();
+   savePlatformStore();
+   try{renderPlatformManagement()}catch(_e){}
+   rerender();
+ };
+ window.addEventListener('pointerup',end);window.addEventListener('pointercancel',()=>{if(g){g=null;renderPlatformReservationGantt(E('platformFrom')?.value||'',E('platformTo')?.value||'')}});
+ window.platformNeedConflictsV399=conflicts;
 })();
 </script>
 <style id="v396PlatformSearch">
@@ -33903,7 +33994,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V398';
+   if(v)v.textContent='Aktuelle Version: V399';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
