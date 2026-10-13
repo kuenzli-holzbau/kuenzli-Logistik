@@ -4864,6 +4864,45 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
 </script>
 
 <style id="v406PlanGroups">
+/* V410: ZS-Zuordnung pro Schritt */
+#zsAssignModalV410{z-index:9600}
+.zaBoxV410{max-width:720px;width:100%;max-height:92vh;overflow:auto}
+.zaSearchV410{width:100%;box-sizing:border-box;margin:4px 0 8px;padding:8px 10px;border:1px solid #cfd9d3;border-radius:10px;font:inherit}
+.zaHV410{margin:10px 0 6px;font-size:15px}
+.zaGrpV410{border:1px solid #dfe6e2;border-radius:10px;margin:5px 0;background:#fff}
+.zaGrpV410>summary{display:flex;flex-direction:column;gap:2px;padding:8px 10px;cursor:pointer}
+.zaGrpV410>summary label{display:flex;align-items:center;gap:8px}
+.zaGrpV410>summary input,.zaItemsV410 input{width:18px;height:18px;margin:0}
+.zaGrpV410>summary small{color:var(--muted);font-size:12px;padding-left:26px}
+.zaItemsV410{display:flex;flex-direction:column;gap:2px;padding:0 10px 8px 34px}
+.zaItemsV410 label{display:flex;gap:8px;align-items:flex-start;padding:4px 6px;border-radius:8px}
+.zaItemsV410 label:hover{background:#f3f7f5}
+.zaItemsV410 label span{display:flex;flex-direction:column;font-size:13px;font-weight:700}
+.zaItemsV410 label em{font-style:normal;background:#eef1ef;border-radius:5px;padding:0 5px;margin-right:5px;font-size:11px;display:inline-block;width:max-content}
+.zaItemsV410 label small{font-weight:500;color:var(--muted);font-size:11px}
+.zaItemsV410 label.taken small{color:#9a5b00}
+.zaOtherV410{margin-top:10px}.zaOtherV410>summary{cursor:pointer;padding:6px 0}
+
+/* V409: Abwesenheiten */
+#absModalV409,#zsLinkModalV408{z-index:9600}
+.absItemV409{flex:1 1 380px;flex-wrap:wrap}
+.absChipsV409{display:flex;flex-wrap:wrap;gap:4px;flex:1 1 auto;min-width:0}
+.absChipV409{font-size:11px;padding:2px 7px;border-radius:999px;background:color-mix(in srgb,var(--ac,#6b7772) 14%,#fff);border:1px solid color-mix(in srgb,var(--ac,#6b7772) 45%,#fff);color:#1d2b25;cursor:pointer;white-space:nowrap}
+.absChipV409 b{color:var(--ac,#333)}.absChipV409.more{--ac:#6b7772;font-weight:800}
+.absBoxV409{max-width:760px;width:100%;max-height:92vh;overflow:auto}
+.absFormV409{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.absHeadV409{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 6px;flex-wrap:wrap}
+.absHeadV409 label{display:flex;align-items:center;gap:6px;font-size:13px}
+.absListV409{display:flex;flex-direction:column;gap:5px}
+.absRowV409{display:grid;grid-template-columns:8px minmax(110px,1.2fr) minmax(90px,1fr) minmax(150px,1.4fr) minmax(0,1.5fr);gap:10px;align-items:center;text-align:left;border:1px solid #dfe6e2;border-radius:10px;background:#fff;padding:7px 10px;font:inherit;cursor:pointer}
+.absRowV409 i{width:8px;height:26px;border-radius:4px;background:var(--ac)}
+.absRowV409 span{font-size:13px}.absRowV409 small{color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.absRowV409.now{background:color-mix(in srgb,var(--ac) 9%,#fff)}.absRowV409.sel{outline:2px solid #173d31}
+@media(max-width:640px){.absRowV409{grid-template-columns:8px 1fr 1fr}.absRowV409 small{grid-column:2/-1}}
+.planBarPeopleV367 b.absentV409{background:#fff1d6!important;color:#8a5200!important;border-color:#e0a84a!important}
+.planLoadCellV362.absV409{background:#fff1d6;color:#8a5200;font-weight:800}
+.absLoadV409 .planLabelV362{cursor:pointer}
+
 /* V408: Projektkarten */
 .projectCard.pcV408{padding:0;overflow:visible;min-height:0;border-radius:16px;border:1px solid #dbe3df;justify-content:flex-start;transition:box-shadow .15s,transform .15s}
 .projectCard.pcV408:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.10);border-color:var(--pc)}
@@ -4981,7 +5020,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V408</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V410</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -5199,7 +5238,7 @@ body.colResizingV368,body.colResizingV368 *{cursor:col-resize!important;user-sel
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V408</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V410</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7931,7 +7970,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V408</b></p><div class="releaseNote"><b>Neu in V408</b><br>Blockiert mit Grund; Gruppen in der Projekt-Planung farbig; Projekt-Zuschnitt mit ZS-Positionen verknüpft (keine Doppelzählung in der Auslastung); neue Projektkarten. V407: «Beladen in Davos»: Karte antippen, um Status und Standort nachzutragen (abgeholt, beladen, in Beladung, zurück im Lager). V406: Pritschen-Gantt luftiger; Projekte in der Planungs-Übersicht farbig abgehoben; «Welche Pritsche darf ich nehmen?» nur noch in der Übersicht; neuer Block «Beladen in Davos». V405: Pritschen-Gantt: gesperrte Pritschen, Container und Geräte grau schraffiert mit 🔒; Reservationen zeigen ihren Zeitraum (von–bis) direkt im Balken. V404: Fahrzeuge/Geräte: Status «Frei / In Gebrauch» und Sperren wie bei den Containern; gesperrte oder benutzte Geräte sind im Transport nicht neu wählbar. V403: Transport löschen ändert keinen Status mehr – Pritschen und Container bleiben wie sie sind. V402: Transportlisten: LKW links, Anhänger rechts nebeneinander; ohne Anhänger-Ladung bzw. bei «LKW solo» kein Anhängerbild. V401: Transportplanung: LKW- und Anhängerbild zeigen nur die eigene Ladung; zusätzliche Container und Fahrzeuge/Geräte bei jedem Ladungsträger möglich (2 Container auf Pritsche oder direkt auf LKW, Container + Gerät, 2 Geräte). V400: Pritschen-Gantt im Projekt: auch Container und Fahrzeuge/Geräte anderer Projekte ausgeblendet – sichtbar sind nur eigene und freie. V399: Pritschen-Gantt: Reservationen mit der Maus verschieben bzw. am Rand verlängern (mit Konfliktmeldung); Belegung endet beim Reservationsende (rot, wenn länger belegt); im Projekt nur zugeordnete und freie Pritschen. V398: Pritschen-Gantt: zurück bis zum allerersten Eintrag ziehbar. V397: Pritschen-Gantt: mit gedrückter Maustaste hin und her ziehen, grösserer Zeitraum (4 Wochen zurück bis ca. 7 Monate voraus), heute markiert. V396: Pritschenverwaltung: Suchfeld für Projekte (Name, Nummer, PL – auch Teilwörter, z.B. «26160002» oder «baum»). V395: Transporte: LKW-/Anhängerbild wieder in der Übersicht (mit Pritschen-/Container-Schild, Zusatzladung darunter); Status-Auswahl und ⋮-Menü werden nicht mehr abgeschnitten. V394: Pritschen/Transporte: Übersicht nach Kalenderwoche mit lesbarem Datum (Datumsfehler behoben), Ladung kompakt als Schilder (LKW/Anhänger, Pritsche, Container, Geräte, Rungen) statt Fahrzeugbilder, Route ohne «Projekt → Projekt». V393: Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V410</b></p><div class="releaseNote"><b>Neu in V410</b><br>ZS-Positionen pro Zuschnitt-Schritt zuordnen (ganze monday-Gruppe oder einzelne Positionen); automatisch nur noch bei genau einem Zuschnitt-Schritt im Projekt; erledigte Schritte ohne Warnung. V409: Abwesenheiten (Ferien, Militär, Kurs, Krank …) beim Einsatzplan erfassen; Warnung an Arbeitsschritten mit abwesenden Personen; Zeile «Abwesend» in der Planung. V408: Blockiert mit Grund; Gruppen in der Projekt-Planung farbig; Projekt-Zuschnitt mit ZS-Positionen verknüpft (keine Doppelzählung in der Auslastung); neue Projektkarten. V407: «Beladen in Davos»: Karte antippen, um Status und Standort nachzutragen (abgeholt, beladen, in Beladung, zurück im Lager). V406: Pritschen-Gantt luftiger; Projekte in der Planungs-Übersicht farbig abgehoben; «Welche Pritsche darf ich nehmen?» nur noch in der Übersicht; neuer Block «Beladen in Davos». V405: Pritschen-Gantt: gesperrte Pritschen, Container und Geräte grau schraffiert mit 🔒; Reservationen zeigen ihren Zeitraum (von–bis) direkt im Balken. V404: Fahrzeuge/Geräte: Status «Frei / In Gebrauch» und Sperren wie bei den Containern; gesperrte oder benutzte Geräte sind im Transport nicht neu wählbar. V403: Transport löschen ändert keinen Status mehr – Pritschen und Container bleiben wie sie sind. V402: Transportlisten: LKW links, Anhänger rechts nebeneinander; ohne Anhänger-Ladung bzw. bei «LKW solo» kein Anhängerbild. V401: Transportplanung: LKW- und Anhängerbild zeigen nur die eigene Ladung; zusätzliche Container und Fahrzeuge/Geräte bei jedem Ladungsträger möglich (2 Container auf Pritsche oder direkt auf LKW, Container + Gerät, 2 Geräte). V400: Pritschen-Gantt im Projekt: auch Container und Fahrzeuge/Geräte anderer Projekte ausgeblendet – sichtbar sind nur eigene und freie. V399: Pritschen-Gantt: Reservationen mit der Maus verschieben bzw. am Rand verlängern (mit Konfliktmeldung); Belegung endet beim Reservationsende (rot, wenn länger belegt); im Projekt nur zugeordnete und freie Pritschen. V398: Pritschen-Gantt: zurück bis zum allerersten Eintrag ziehbar. V397: Pritschen-Gantt: mit gedrückter Maustaste hin und her ziehen, grösserer Zeitraum (4 Wochen zurück bis ca. 7 Monate voraus), heute markiert. V396: Pritschenverwaltung: Suchfeld für Projekte (Name, Nummer, PL – auch Teilwörter, z.B. «26160002» oder «baum»). V395: Transporte: LKW-/Anhängerbild wieder in der Übersicht (mit Pritschen-/Container-Schild, Zusatzladung darunter); Status-Auswahl und ⋮-Menü werden nicht mehr abgeschnitten. V394: Pritschen/Transporte: Übersicht nach Kalenderwoche mit lesbarem Datum (Datumsfehler behoben), Ladung kompakt als Schilder (LKW/Anhänger, Pritsche, Container, Geräte, Rungen) statt Fahrzeugbilder, Route ohne «Projekt → Projekt». V393: Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -11319,17 +11358,17 @@ async function checkCloudForUpdates(force=false){
 
 
 function entityCollections(){
- return ['areas','racks','packages','commissions','controls','users','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','planSchemasV377','sibChecklistsV385','planBoardV389'];
+ return ['areas','racks','packages','commissions','controls','users','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','planSchemasV377','sibChecklistsV385','planBoardV389','planAbsencesV409'];
 }
 function canWriteCloudEntity(type,action='save'){
  let role=currentRole();
  if(role==='Administrator')return true;
  if(role==='Lagerverantwortlicher'){
    if(type==='users')return false;
-   return ['areas','racks','packages','commissions','controls','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','__state','planSchemasV377','sibChecklistsV385','planBoardV389'].includes(type);
+   return ['areas','racks','packages','commissions','controls','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','__state','planSchemasV377','sibChecklistsV385','planBoardV389','planAbsencesV409'].includes(type);
  }
  if(role==='Mitarbeiter'){
-   if(action==='save')return ['packages','controls','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','sibChecklistsV385','planBoardV389'].includes(type);
+   if(action==='save')return ['packages','controls','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','sibChecklistsV385','planBoardV389','planAbsencesV409'].includes(type);
    if(action==='delete')return type==='packages' && !!st.settings?.allowMaterialDelete;
  }
  return false;
@@ -21917,14 +21956,27 @@ document.addEventListener('DOMContentLoaded',()=>{
  }
  function zsLinkedFor(p){return p&&p.id!==ZS_PID?(zsLinkedMap()[p.id]||[]):[]}
  function isZsStep(s){return /zuschnitt/i.test(String(s?.name||''))}
- function zsCovered(p,s){return p&&p.id!==ZS_PID&&isZsStep(s)&&zsLinkedFor(p).length>0}
+ /* V410: Zuordnung pro Arbeitsschritt. s.zsLinks={groups:[ZS-Hauptgruppen-IDs],steps:[ZS-Positions-IDs]} von Hand;
+    ohne Zuordnung automatisch nur, wenn das Projekt genau EINEN Zuschnitt-Schritt hat. */
+ function hasZsLinks(s){const z=s&&s.zsLinks;return !!(z&&((z.groups||[]).length||(z.steps||[]).length||z.none))}
+ function zsLinkedForStep(p,s){
+   if(!p||p.id===ZS_PID||!s)return [];
+   if(hasZsLinks(s)){const z=s.zsLinks;if(z.none)return [];const zp=projectById(ZS_PID);if(!zp)return [];
+     const G=new Set(z.groups||[]),S=new Set(z.steps||[]);
+     return plan(zp).steps.filter(x=>S.has(x.id)||G.has(zsTopGroup(zp,x)?.id||''))}
+   if(!isZsStep(s))return [];
+   const zsSteps=plan(p).steps.filter(x=>isZsStep(x)&&!hasZsLinks(x));
+   if(zsSteps.length!==1||plan(p).steps.filter(isZsStep).length!==1)return [];
+   return zsLinkedFor(p);
+ }
+ function zsCovered(p,s){return p&&p.id!==ZS_PID&&zsLinkedForStep(p,s).length>0}
  function zsSummary(p,s){
-   const L=zsLinkedFor(p);if(!L.length)return null;const zp=projectById(ZS_PID);
+   const L=zsLinkedForStep(p,s);if(!L.length)return null;const zp=projectById(ZS_PID);
    const done=L.filter(x=>x.status==='done').length,blocked=L.filter(x=>x.status==='blocked').length,open=L.filter(x=>x.status!=='done');
    const hours=open.reduce((n,x)=>n+(zp?zsHours(zp,x):0),0);
    const first=L.map(x=>x.start).sort()[0],last=L.map(x=>stepEnd(x)).sort().pop();
-   const late=open.filter(x=>stepEnd(x)>stepEnd(s));
-   return {L,done,blocked,hours,first,last,late};
+   const late=s.status==='done'?[]:open.filter(x=>stepEnd(x)>stepEnd(s));
+   return {L,done,blocked,hours,first,last,late,manual:hasZsLinks(s)};
  }
  window.zsLinkedForV408=zsLinkedFor;
  window.projectPlanStatsV408=function(p){
@@ -21954,16 +22006,17 @@ document.addEventListener('DOMContentLoaded',()=>{
  function peopleHtml(p,s){
    const ppl=(s.people||[]).filter(Boolean);if(!ppl.length)return '';
    const clash=new Set(peopleClashes(p,s).map(c=>c.name.toLowerCase()));
-   return `<span class="planBarPeopleV367">${ppl.map(n=>`<b class="${clash.has(String(n).trim().toLowerCase())?'clash':''}">${esc(n)}</b>`).join('')}</span>`;
+   const ab={};(()=>{try{stepAbsences(s).forEach(({name,a})=>{(ab[name.toLowerCase()]=ab[name.toLowerCase()]||[]).push(a)})}catch(_e){}})(); // V409
+   return `<span class="planBarPeopleV367">${ppl.map(n=>{const A=ab[String(n).trim().toLowerCase()];return `<b class="${clash.has(String(n).trim().toLowerCase())?'clash':''}${A?' absentV409':''}"${A?` title="${esc(String(n).trim()+' abwesend: '+A.map(a=>absR(a.reason)[0]+' '+absRange(a)).join(', '))}"`:''}>${esc(n)}${A?' 🏖 '+esc(absR(A[0].reason)[0]):''}</b>`}).join('')}</span>`;
  }
  function barHtml(p,s,idx,days,editable){
    const i0=days.indexOf(nextWork(s.start));if(i0<0)return '';
    const w=Math.max(1,s.days|0)*DW-4,pr=progress(p,s);
    const st=s.status||'open';
    const lateMs=st==='done'?[]:lateMilestonesFor(p,s);
-   return `<div class="planBarV362 st-${st}${lateMs.length?' lateV364':''}${s.machine?' hasMachV386':''}" data-step="${esc(s.id)}" data-project="${esc(p.id)}" style="left:${i0*DW+2}px;width:${w}px${s.machine?';--mach:'+machColor(s.machine):''}" title="${st==='blocked'&&s.blockNote?'⛔ Blockiert: '+esc(s.blockNote)+' · ':''}${esc(s.name)} · ${fmtD(s.start)} – ${fmtD(stepEnd(s))} · ${Math.max(1,s.days|0)} Arbeitstag(e)${crewOf(s)?' · '+crewOf(s)+' MA':''}${(s.people||[]).length?' · Personen: '+esc((s.people||[]).join(', ')):''}${lateMs.length?' · ⚠ zu spät für: '+lateMs.map(m=>msLabel(m)+' ('+fmtD(m.date)+')').join(', '):''}${(()=>{const c=peopleClashes(p,s);return c.length?' · ⚠ doppelt verplant: '+esc(c.map(x=>x.name+' ('+(x.project?x.project+': ':'')+x.step+')').join(', ')):''})()}">
+   return `<div class="planBarV362 st-${st}${lateMs.length?' lateV364':''}${s.machine?' hasMachV386':''}" data-step="${esc(s.id)}" data-project="${esc(p.id)}" style="left:${i0*DW+2}px;width:${w}px${s.machine?';--mach:'+machColor(s.machine):''}" title="${(()=>{try{const A=stepAbsences(s);return A.length?'🏖 Abwesend: '+esc(A.map(x=>x.name+' ('+absR(x.a.reason)[0]+' '+absRange(x.a)+')').join(', '))+' · ':''}catch(_e){return ''}})()}${st==='blocked'&&s.blockNote?'⛔ Blockiert: '+esc(s.blockNote)+' · ':''}${esc(s.name)} · ${fmtD(s.start)} – ${fmtD(stepEnd(s))} · ${Math.max(1,s.days|0)} Arbeitstag(e)${crewOf(s)?' · '+crewOf(s)+' MA':''}${(s.people||[]).length?' · Personen: '+esc((s.people||[]).join(', ')):''}${lateMs.length?' · ⚠ zu spät für: '+lateMs.map(m=>msLabel(m)+' ('+fmtD(m.date)+')').join(', '):''}${(()=>{const c=peopleClashes(p,s);return c.length?' · ⚠ doppelt verplant: '+esc(c.map(x=>x.name+' ('+(x.project?x.project+': ':'')+x.step+')').join(', ')):''})()}">
      ${pr!=null&&st!=='done'?`<div class="planBarFillV362" style="width:${pr}%"></div>`:''}
-     <span class="planBarStackV367"><span class="planBarTextV362">${lateMs.length?'⚠ ':''}${st==='done'?'✓ ':st==='blocked'?'⛔ ':''}${machPill(s.machine)}${esc(s.name)}${Number(s.qty)>0?' · '+fmtH(s.qty)+' Stk':''}${p.id===ZS_PID?' · '+fmtH(zsHours(p,s))+' h':''}${s.due?`<b class="planDueTxtV387${dueLate(s)?' late':''}"> · ${esc(dueTxt(s))}</b>`:''}${pr!=null&&st!=='done'?' · '+pr+' %':''}${s.timerStart?' ⏱':''}${st==='blocked'&&s.blockNote?`<b class="planBlockTxtV408"> · ${esc(s.blockNote)}</b>`:''}${(()=>{if(p.id===ZS_PID||!isZsStep(s))return '';const z=zsSummary(p,s);if(!z)return '';return `<b class="planZsSumV408${z.late.length?' late':''}" title="${esc(z.L.length+' ZS-Positionen · '+z.done+' erledigt · '+fmtH(z.hours)+' h offen · '+fmtD(z.first)+' – '+fmtD(z.last)+(z.late.length?' · ⚠ '+z.late.length+' enden nach diesem Zuschnitt':'')+' · zählt nicht in die Auslastung (die ZS-Positionen zählen)')}"> · ✂ ${z.L.length} ZS · ${z.done} erl.${z.blocked?' · ⛔ '+z.blocked:''} · ${fmtH(z.hours)} h${z.late.length?' · ⚠ '+z.late.length+' später':''}</b>`})()}</span>${peopleHtml(p,s)}</span>
+     <span class="planBarStackV367"><span class="planBarTextV362">${lateMs.length?'⚠ ':''}${st==='done'?'✓ ':st==='blocked'?'⛔ ':''}${machPill(s.machine)}${esc(s.name)}${Number(s.qty)>0?' · '+fmtH(s.qty)+' Stk':''}${p.id===ZS_PID?' · '+fmtH(zsHours(p,s))+' h':''}${s.due?`<b class="planDueTxtV387${dueLate(s)?' late':''}"> · ${esc(dueTxt(s))}</b>`:''}${pr!=null&&st!=='done'?' · '+pr+' %':''}${s.timerStart?' ⏱':''}${st==='blocked'&&s.blockNote?`<b class="planBlockTxtV408"> · ${esc(s.blockNote)}</b>`:''}${(()=>{if(p.id===ZS_PID||(!isZsStep(s)&&!hasZsLinks(s)))return '';const z=zsSummary(p,s);if(!z)return '';return `<b class="planZsSumV408${z.late.length?' late':''}" title="${esc(z.L.length+' ZS-Positionen · '+z.done+' erledigt · '+fmtH(z.hours)+' h offen · '+fmtD(z.first)+' – '+fmtD(z.last)+(z.late.length?' · ⚠ '+z.late.length+' enden nach diesem Zuschnitt':'')+' · zählt nicht in die Auslastung (die ZS-Positionen zählen)')}"> · ✂ ${z.L.length} ZS · ${z.done} erl.${z.blocked?' · ⛔ '+z.blocked:''} · ${fmtH(z.hours)} h${z.late.length?' · ⚠ '+z.late.length+' später':''}</b>`})()}</span>${peopleHtml(p,s)}</span>
      ${editable?'<i class="planResizeV362" title="Dauer ziehen"></i>':''}</div>`;
  }
  function rowLabel(p,s){
@@ -22138,7 +22191,7 @@ document.addEventListener('DOMContentLoaded',()=>{
        let o=cs.map(c=>loadRowHtml(days,k=>loadC(p,c.id,k),k=>capacityC(c,k),'Auslastung '+esc(c.name||'Kommission'),`<button type="button" class="pgStaffBtnV379" onclick="openPlanStaffingV379('${pid}','${esc(c.id)}')" title="Mitarbeiterplanung dieser Kommission öffnen">👥</button>`)).join('');
        if(used.has('')||plan(p).steps.some(s=>s.commissionId&&!commissions(p).some(c=>c.id===s.commissionId)))o+=loadRowHtml(days,k=>plan(p).steps.filter(s=>s.status!=='done'&&!commissions(p).some(c=>c.id===s.commissionId)&&s.start<=k&&stepEnd(s)>=k).reduce((n,s)=>n+crewOf(s),0),()=>null,'Ohne Kommission');
        if(cs.length>1)o+=loadRowHtml(days,k=>load(p,k),k=>capacity(p,k),'Auslastung gesamt');
-       return o||loadRowHtml(days,k=>load(p,k),k=>capacity(p,k),'Auslastung gesamt')})()}</section></div></div>`;
+       return o||loadRowHtml(days,k=>load(p,k),k=>capacity(p,k),'Auslastung gesamt')})()}${absRowHtml(days)}</section></div></div>`;
    // Meilenstein-Linien je Abschnitt aus der echten Höhe
    host.querySelectorAll('section.planFloorV363[data-group]').forEach(sec=>{
      const hostDiv=sec.querySelector('.planMsLinesHostV368');let idsMs=[];try{idsMs=JSON.parse(hostDiv.dataset.ms||'[]')}catch(_e){}
@@ -22239,6 +22292,36 @@ document.addEventListener('DOMContentLoaded',()=>{
    alert('Gruppe dupliziert: '+copies.length+' Gruppe(n), '+st.length+' Arbeitsschritt(e).');
  };
 
+
+ /* V410: ZS-Positionen einem Arbeitsschritt zuordnen (ganze monday-Gruppe oder einzelne Positionen) */
+ window.openZsAssignV410=function(pid,sid){
+   if(!canEdit())return;const p=projectById(pid),s=p&&stepById(p,sid),zp=projectById(ZS_PID);if(!s)return;
+   if(!zp||!plan(zp).steps.length){alert('Es sind noch keine Zuschnitte aus monday eingelesen.');return}
+   const z=s.zsLinks||{},G=new Set(z.groups||[]),S=new Set(z.steps||[]);
+   // wer hat welche Position schon?
+   const taken={};(projectStore.projects||[]).forEach(q=>{if(!q||q.archived||q.id===ZS_PID)return;plan(q).steps.forEach(t=>{if(t===s||!hasZsLinks(t))return;zsLinkedForStep(q,t).forEach(x=>{(taken[x.id]=taken[x.id]||[]).push((q.id===p.id?'':q.name+' · ')+t.name)})})});
+   const tops=groupsAll(zp).filter(g=>!g.parentId||!gById(zp,g.parentId));
+   const byTop=tops.map(g=>({g,items:plan(zp).steps.filter(x=>zsTopGroup(zp,x)?.id===g.id).sort((a,b)=>String(a.start).localeCompare(String(b.start))),pid:zsGroupProjectId(g)})).filter(x=>x.items.length);
+   const mine=byTop.filter(x=>x.pid===p.id),other=byTop.filter(x=>x.pid!==p.id);
+   const grpHtml=({g,items})=>{const open=G.has(g.id)||items.some(x=>S.has(x.id));const nDone=items.filter(x=>x.status==='done').length;
+     return `<details class="zaGrpV410" ${open?'open':''}><summary><label onclick="event.stopPropagation()"><input type="checkbox" data-zg="${esc(g.id)}" ${G.has(g.id)?'checked':''}> <b>${esc(g.name)}</b></label><small>${items.length} Positionen · ${nDone} erledigt · ganze Gruppe = auch künftige Positionen</small></summary>
+       <div class="zaItemsV410">${items.map(x=>`<label class="${taken[x.id]?'taken':''}"><input type="checkbox" data-zs="${esc(x.id)}" data-grp="${esc(g.id)}" ${S.has(x.id)||G.has(g.id)?'checked':''} ${G.has(g.id)?'disabled':''}><span>${x.extId&&!/^name:/.test(x.extId)?`<em>${esc(x.extId)}</em>`:''}${esc(x.name)}<small>${fmtD(x.start)} – ${fmtD(stepEnd(x))}${x.status==='done'?' · erledigt':''}${taken[x.id]?' · bereits bei «'+esc(taken[x.id].join('», «'))+'»':''}</small></span></label>`).join('')}</div></details>`};
+   let m=E('zsAssignModalV410');if(!m){m=document.createElement('div');m.id='zsAssignModalV410';m.className='modal';document.body.appendChild(m)}
+   m.innerHTML=`<div class="modalbox planDialogV362 zaBoxV410"><div class="manageHead"><div><h2 style="margin:0">ZS-Positionen zuordnen</h2><p class="muted" style="margin:4px 0 0">${esc(p.name||'')} · ${esc(s.name)} (${fmtD(s.start)} – ${fmtD(stepEnd(s))})</p></div><button class="btn secondary" type="button" onclick="closeM('zsAssignModalV410')">Schliessen</button></div>
+     <p class="muted">Ganze monday-Gruppe anhaken oder die Gruppe aufklappen und einzelne Positionen wählen. Sobald etwas zugeordnet ist, zählt dieser grobe Schritt nicht mehr in die Auslastung.</p>
+     <input type="search" class="zaSearchV410" placeholder="Suchen (Gruppe, ZS-Nummer, Name) …" oninput="const q=this.value.toLowerCase();this.parentElement.querySelectorAll('.zaGrpV410').forEach(d=>{const hit=!q||d.textContent.toLowerCase().includes(q);d.style.display=hit?'':'none';if(q&&hit)d.open=true})">
+     ${mine.length?`<h3 class="zaHV410">Gruppen von «${esc(p.name||'')}»</h3>${mine.map(grpHtml).join('')}`:''}
+     ${other.length?`<details class="zaOtherV410" ${mine.length?'':'open'}><summary><b>${mine.length?'Weitere Gruppen':'Alle Gruppen'}</b> (${other.length})</summary>${other.map(grpHtml).join('')}</details>`:''}
+     <div class="toolbar" style="justify-content:flex-end;margin-top:14px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn secondary" type="button" data-zanone="1">Keine zuordnen</button>${hasZsLinks(s)?'<button class="btn secondary" type="button" data-zaauto="1">Zuordnung entfernen</button>':''}<button class="btn" type="button" data-zasave="1">Speichern</button></div></div>`;
+   m.querySelectorAll('input[data-zg]').forEach(cb=>cb.addEventListener('change',()=>{m.querySelectorAll(`input[data-grp="${CSS.escape(cb.dataset.zg)}"]`).forEach(x=>{x.checked=cb.checked;x.disabled=cb.checked})}));
+   const store=val=>{const P=projectById(pid),T=P&&stepById(P,sid);if(!T)return;if(val==null)delete T.zsLinks;else T.zsLinks=val;T.updatedAt=new Date().toISOString();save(P);closeM('zsAssignModalV410');window.renderPlanVisibleV362()};
+   m.querySelector('[data-zasave]').onclick=()=>{const groups=[...m.querySelectorAll('input[data-zg]:checked')].map(x=>x.dataset.zg);const gs=new Set(groups);
+     const steps=[...m.querySelectorAll('input[data-zs]:checked')].filter(x=>!gs.has(x.dataset.grp)).map(x=>x.dataset.zs);
+     store(groups.length||steps.length?{groups,steps}:null)};
+   m.querySelector('[data-zanone]').onclick=()=>store({groups:[],steps:[],none:true});
+   const au=m.querySelector('[data-zaauto]');if(au)au.onclick=()=>store(null);
+   m.classList.add('open');
+ };
  window.openZsLinkV408=function(gid){
    if(!canEdit())return;const zp=projectById(ZS_PID);if(!zp)return;const g=gById(zp,gid);if(!g)return;
    const guess=zsGuessProject(g.name),projs=(projectStore.projects||[]).filter(x=>x&&!x.archived&&x.id!==ZS_PID).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'de-CH'));
@@ -22382,10 +22465,12 @@ document.addEventListener('DOMContentLoaded',()=>{
      <div class="pcxBlockV408" id="pcxBlockV408" ${st==='blocked'?'':'hidden'}><label>Grund der Blockade</label>${editable?`<textarea id="pcxBlockNoteV408" rows="2" maxlength="300" placeholder="z. B. Material fehlt, Plan nicht freigegeben …">${esc(s.blockNote||'')}</textarea><div class="pcxActsV374"><button type="button" data-blocksave="1">⛔ ${st==='blocked'?'Grund speichern':'Blockieren'}</button>${st==='blocked'?'':'<button type="button" data-blockcancel="1">Abbrechen</button>'}</div>`:`<div>${esc(s.blockNote||'–')}</div>`}${s.blockedAt?`<small class="muted">seit ${fmtD(String(s.blockedAt).slice(0,10))}${s.blockedBy?' · '+esc(s.blockedBy):''}</small>`:''}</div>
      ${p.id===ZS_PID?`<div class="pcxSecV374" title="${esc(zsPartsTxt(p,s))}">Zeit <b>${fmtH(zsHours(p,s))} h geplant</b><small>${esc(s.hoursManual?'von Hand gesetzt':zsPartsTxt(p,s))}</small>${Number(s.actualHours)>0?`<small>Ist bisher ${fmtH(s.actualHours)} h</small>`:''}${s.timerStart?`<small>⏱ läuft seit ${new Date(s.timerStart).toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'})}</small>`:''}</div>
      ${editable?`<div class="pcxActsV374">${s.timerStart?'<button type="button" data-zs="stop">⏹ Stopp</button>':'<button type="button" data-zs="start">▶ Start</button>'}<button type="button" data-zs="ist">Ist-Stunden …</button></div>`:''}`:''}
-     ${(()=>{if(p.id===ZS_PID||!isZsStep(s))return '';const z=zsSummary(p,s);if(!z)return '';const SL={open:'Geplant',progress:'In Arbeit',done:'Erledigt',blocked:'Blockiert'};
-       return `<div class="pcxSecV374">Zuschnitt-Positionen <b>${z.L.length}</b><small>${z.done} erledigt · ${fmtH(z.hours)} h offen · ${fmtD(z.first)} – ${fmtD(z.last)}${z.late.length?' · ⚠ '+z.late.length+' enden nach '+fmtD(stepEnd(s)):''}</small></div>
-       <div class="pcxZsV408">${z.L.slice().sort((a,b)=>String(a.start).localeCompare(String(b.start))).map(x=>`<button type="button" data-zsopen="1" class="${stepEnd(x)>stepEnd(s)&&x.status!=='done'?'late':''}"><span>${x.extId&&!/^name:/.test(x.extId)?`<em>${esc(x.extId)}</em>`:''}${esc(x.name)}</span><small>${fmtD(x.start)} – ${fmtD(stepEnd(x))} · ${SL[x.status||'open']||''}${x.status==='blocked'&&x.blockNote?' · '+esc(x.blockNote):''}</small></button>`).join('')}</div>
-       <small class="muted" style="display:block;margin:2px 0 4px">Dieser grobe Schritt zählt nicht in die Auslastung – die ZS-Positionen zählen.</small>`})()}
+     ${(()=>{if(p.id===ZS_PID||(!isZsStep(s)&&!hasZsLinks(s)))return '';const z=zsSummary(p,s);const SL={open:'Geplant',progress:'In Arbeit',done:'Erledigt',blocked:'Blockiert'};
+       const btn=editable?`<div class="pcxActsV374"><button type="button" data-zslink="1">✂ ZS-Positionen zuordnen …</button></div>`:'';
+       if(!z)return `<div class="pcxSecV374">Zuschnitt-Positionen <b>keine</b><small>${hasZsLinks(s)&&s.zsLinks.none?'bewusst keine zugeordnet':'noch nicht zugeordnet – zählt normal in die Auslastung'}</small></div>${btn}`;
+       return `<div class="pcxSecV374">Zuschnitt-Positionen <b>${z.L.length}</b><small>${z.manual?'von Hand zugeordnet':'automatisch (einziger Zuschnitt im Projekt)'} · ${z.done} erledigt · ${fmtH(z.hours)} h offen · ${fmtD(z.first)} – ${fmtD(z.last)}${z.late.length?' · ⚠ '+z.late.length+' enden nach '+fmtD(stepEnd(s)):''}</small></div>
+       <div class="pcxZsV408">${z.L.slice().sort((a,b)=>String(a.start).localeCompare(String(b.start))).map(x=>`<button type="button" data-zsopen="1" class="${s.status!=='done'&&stepEnd(x)>stepEnd(s)&&x.status!=='done'?'late':''}"><span>${x.extId&&!/^name:/.test(x.extId)?`<em>${esc(x.extId)}</em>`:''}${esc(x.name)}</span><small>${fmtD(x.start)} – ${fmtD(stepEnd(x))} · ${SL[x.status||'open']||''}${x.status==='blocked'&&x.blockNote?' · '+esc(x.blockNote):''}</small></button>`).join('')}</div>
+       <small class="muted" style="display:block;margin:2px 0 4px">Dieser grobe Schritt zählt nicht in die Auslastung – die ZS-Positionen zählen.</small>${btn}`})()}
      <div class="pcxSecV374">Abhängigkeiten</div>
      <div class="pcxDepsV378">${(()=>{const pre=(s.deps||[]).map(d=>stepById(p,d)).filter(Boolean),post=plan(p).steps.filter(x=>(x.deps||[]).includes(s.id));
        const item=(x,kind)=>`<span class="pcxDepV378" title="${esc(floorName(p,floorIdOf(p,x)))}">${kind==='pre'?'nach':'vor'} <b>${esc(x.name)}</b>${editable?`<button type="button" data-undep="${kind}:${esc(x.id)}" title="Abhängigkeit entfernen">✕</button>`:''}</span>`;
@@ -22414,6 +22499,7 @@ document.addEventListener('DOMContentLoaded',()=>{
      else if(b.dataset.zs==='stop')apply(S=>zsStopTimer(S));
      else if(b.dataset.zs==='ist'){const P0=projectById(pid0),S0=P0&&stepById(P0,sid0);if(!S0)return;const h=zsAskActual(P0,S0,true);if(h===false)return;apply(S=>{S.timerStart='';S.actualHours=h})}
      else if(b.dataset.zsopen){closeCtx();openProjectPlanV362(ZS_PID)}
+     else if(b.dataset.zslink){closeCtx();openZsAssignV410(pid0,sid0)}
      else if(b.dataset.act==='open'){closeCtx();openPlanStepV362(pid0,sid0)}
      else if(b.dataset.act==='dup'){closeCtx();duplicatePlanStepV368(pid0,sid0)}
      else if(b.dataset.act==='proj'){closeCtx();openProjectPlanV362(pid0)}
@@ -22503,7 +22589,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    });
    const cap=k=>{let any=false,sum=0;projects.forEach(p=>{const c=capacity(p,k);if(c!=null){any=true;sum+=c}});return any?sum:null};
    host.innerHTML=boardHtml()+`<div class="planToolsV362"><span class="muted">Alle aktiven Projekte mit Planung. Zum Bearbeiten ein Projekt antippen.</span>${canEdit()?`<button class="btn secondary" type="button" onclick="openZuschnittImportV384()">⤓ Zuschnitte aus monday (Excel)</button>`:''}<button class="btn secondary" type="button" onclick="scrollPlanTodayV362()">Heute</button><button class="btn secondary" type="button" onclick="openPlanPdfV369('overview')">⤓ PDF exportieren</button></div>${filterBar(projects)}
-   <div class="planScrollV362" id="planOvScrollV362"><div class="planInnerV362" style="width:${LABELW+days.length*DW}px">${headerHtml(days)}${todayCol(days)}${rows}${loadRowHtml(days,k=>projects.reduce((n,p)=>n+load(p,k),0),cap,'Auslastung gesamt')}</div></div>`;
+   <div class="planScrollV362" id="planOvScrollV362"><div class="planInnerV362" style="width:${LABELW+days.length*DW}px">${headerHtml(days)}${todayCol(days)}${rows}${loadRowHtml(days,k=>projects.reduce((n,p)=>n+load(p,k),0),cap,'Auslastung gesamt')}${absRowHtml(days)}</div></div>`;
    host.querySelectorAll('.planBarV362').forEach(b=>b.addEventListener('click',ev=>{const p=projectById(b.dataset.project),s=p&&stepById(p,b.dataset.step);if(s)openCtx(ev,p,s)}));
    bindFilter(host,renderOverview);fillBoard(host);
    bindColResize(host);
@@ -22969,12 +23055,13 @@ document.addEventListener('DOMContentLoaded',()=>{
  const fmtTs=t=>{try{const d=new Date(t);return d.toLocaleDateString('de-CH',{weekday:'short',day:'numeric',month:'numeric'})+' '+d.toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'})}catch(_e){return ''}};
  function boardHtml(){ // V391: kompakte Leiste – Vorschau klein, Antippen öffnet gross
    const ed=canEdit(),items=BOARD_SLOTS.map(id=>({id,b:boardGet(id)}));
-   if(!ed&&!items.some(x=>x.b))return '';
+   const absH=(()=>{try{return absBoardHtml()}catch(e){console.warn('Abwesenheiten',e);return ''}})();
+   if(!ed&&!items.some(x=>x.b)&&!absH)return '';
    return `<div class="planBoardV389"><b class="pbTitleV391">📋 Einsatzplan</b>${items.map(({id,b},i)=>`<div class="pbItemV391">
      ${b?`<button type="button" class="pbThumbV391" title="Gross anzeigen" onclick="viewPlanBoardV389('${id}')"><img alt="" data-board="${id}"></button><button type="button" class="pbTextV391" onclick="viewPlanBoardV389('${id}')"><b>${esc(b.title||('Einsatzplan '+(i+1)))}</b><small>${esc(fmtTs(b.updatedAt))}</small></button>`
        :`<span class="pbTextV391 empty"><b>Einsatzplan ${i+1}</b><small>noch kein Bild</small></span>`}
      ${ed?`<button type="button" class="pbBtnV391" title="${b?'Ersetzen':'Hochladen'} (Bild oder PDF)" onclick="uploadPlanBoardV389('${id}')">⤒</button>${b?`<button type="button" class="pbBtnV391" title="Titel ändern" onclick="renamePlanBoardV389('${id}')">✎</button>`:''}`:''}
-   </div>`).join('')}</div>`;
+   </div>`).join('')}${absH}</div>`;
  }
  const boardUrlCache={};
  async function boardSrc(b){
@@ -23048,6 +23135,73 @@ document.addEventListener('DOMContentLoaded',()=>{
    im.ondblclick=()=>{z=z===1?2:1;apply()};
    document.addEventListener('keydown',function esc_(e){if(e.key==='Escape'){m.classList.remove('open');m.innerHTML='';document.removeEventListener('keydown',esc_)}});
  };
+
+ /* ---------- V409: Abwesenheiten von Mitarbeitern (Ferien, Militär, Kurs, Krank …) ----------
+    Cloud-Objekte st.planAbsencesV409 (je Abwesenheit ein Eintrag, Löschen = «deleted»).
+    In der Planung: Person auf einem Schritt, die in dem Zeitraum abwesend ist → Warnung am Balken. */
+ const ABS_R={ferien:['Ferien','#2a7f7a'],militaer:['Militär','#5f6b3a'],kurs:['Kurs / Schule','#3d5a80'],krank:['Krank / Unfall','#b03a48'],komp:['Kompensation','#a8740b'],sonst:['Sonstiges','#6b7772']};
+ const absR=k=>ABS_R[k]||ABS_R.sonst;
+ function absAll(){if(!Array.isArray(st.planAbsencesV409))st.planAbsencesV409=[];return st.planAbsencesV409}
+ function absList(){return absAll().filter(a=>a&&a.id&&!a.deleted&&a.person&&a.from)}
+ const absKey=n=>String(n||'').trim().toLowerCase();
+ function absOf(name,from,to){const k=absKey(name);if(!k)return [];return absList().filter(a=>absKey(a.person)===k&&a.from<=to&&(a.to||a.from)>=from)}
+ function absOnDay(k){return absList().filter(a=>a.from<=k&&(a.to||a.from)>=k&&isWork(parse(k)))}
+ const absHalf=a=>a.half==='am'?' (Vormittag)':a.half==='pm'?' (Nachmittag)':'';
+ const absRange=a=>(a.to&&a.to!==a.from)?fmtD(a.from)+' – '+fmtD(a.to):fmtD(a.from)+absHalf(a);
+ function stepAbsences(s){if(s.status==='done')return [];const out=[];(s.people||[]).forEach(n=>absOf(n,s.start,stepEnd(s)).forEach(a=>out.push({name:String(n).trim(),a})));return out}
+ window.stepAbsencesV409=stepAbsences;
+ function absBoardHtml(){
+   const ed=canEdit(),t=todayKey(),d0=parse(t);const dow=(d0.getDay()+6)%7;const mo=new Date(d0);mo.setDate(d0.getDate()-dow);const fr=new Date(mo);fr.setDate(mo.getDate()+4);
+   const w0=key(mo),w1=key(fr);
+   const now=absList().filter(a=>a.from<=w1&&(a.to||a.from)>=w0).sort((a,b)=>a.from.localeCompare(b.from)||String(a.person).localeCompare(String(b.person)));
+   if(!ed&&!now.length)return '';
+   const short=a=>{const f=a.from<w0?w0:a.from,e=(a.to||a.from)>w1?w1:(a.to||a.from);const wd=k=>parse(k).toLocaleDateString('de-CH',{weekday:'short'}).replace('.','');return f===e?wd(f)+absHalf(a).replace(' (Vormittag)',' Vm').replace(' (Nachmittag)',' Nm'):wd(f)+'–'+wd(e)};
+   return `<div class="pbItemV391 absItemV409"><button type="button" class="pbTextV391" onclick="openAbsencesV409()" title="Abwesenheiten anzeigen und erfassen"><b>🏖 Abwesenheiten</b><small>${now.length?'diese Woche: '+now.length:'diese Woche: keine'}</small></button>
+     <div class="absChipsV409">${now.slice(0,8).map(a=>`<span class="absChipV409" style="--ac:${absR(a.reason)[1]}" title="${esc(a.person+' · '+absR(a.reason)[0]+' · '+absRange(a)+(a.note?' · '+a.note:''))}" onclick="openAbsencesV409('${esc(a.id)}')"><b>${esc(a.person)}</b> ${esc(absR(a.reason)[0])} · ${esc(short(a))}</span>`).join('')}${now.length>8?`<span class="absChipV409 more" onclick="openAbsencesV409()">+${now.length-8}</span>`:''}</div>
+     ${ed?`<button type="button" class="pbBtnV391" title="Abwesenheit erfassen" onclick="openAbsencesV409('','new')">+</button>`:''}</div>`;
+ }
+ function absPeople(){return [...new Set([...(projectStore.projects||[]).flatMap(x=>plan(x).steps.flatMap(y=>y.people||[])),...absList().map(a=>a.person)].map(x=>String(x).trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'de-CH'))}
+ window.openAbsencesV409=function(editId,mode){
+   const ed=canEdit();let m=E('absModalV409');if(!m){m=document.createElement('div');m.id='absModalV409';m.className='modal';document.body.appendChild(m)}
+   const t=todayKey(),showOld=!!window.__absOldV409;
+   const cur=editId?absList().find(a=>a.id===editId):null;
+   const list=absList().filter(a=>showOld||(a.to||a.from)>=t).sort((a,b)=>a.from.localeCompare(b.from)||String(a.person).localeCompare(String(b.person)));
+   const v=cur||{person:'',reason:'ferien',from:t,to:t,half:'',note:''};
+   m.innerHTML=`<div class="modalbox planDialogV362 absBoxV409"><div class="manageHead"><div><h2 style="margin:0">Abwesenheiten</h2><p class="muted" style="margin:4px 0 0">Ferien, Militär, Kurse, Krankheit … – eingeplante Personen werden in der Planung gewarnt.</p></div><button class="btn secondary" type="button" onclick="closeM('absModalV409')">Schliessen</button></div>
+    ${ed?`<form class="form planFormV362 absFormV409" onsubmit="event.preventDefault();saveAbsenceV409('${cur?esc(cur.id):''}')">
+      <label class="f">Person<input id="absPerson" required value="${esc(v.person)}" list="absPeopleList" autocomplete="off"><datalist id="absPeopleList">${absPeople().map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label>
+      <label class="f">Grund<select id="absReason">${Object.entries(ABS_R).map(([k,[n]])=>`<option value="${k}" ${k===v.reason?'selected':''}>${n}</option>`).join('')}</select></label>
+      <label class="f">Von<input id="absFrom" type="date" required value="${esc(v.from)}"></label>
+      <label class="f">Bis<input id="absTo" type="date" value="${esc(v.to||v.from)}"></label>
+      <label class="f">Dauer<select id="absHalf"><option value="">ganze Tage</option><option value="am" ${v.half==='am'?'selected':''}>nur Vormittag</option><option value="pm" ${v.half==='pm'?'selected':''}>nur Nachmittag</option></select></label>
+      <label class="f">Notiz<input id="absNote" value="${esc(v.note||'')}" maxlength="120" placeholder="optional"></label>
+      <div class="toolbar span2"><button class="btn" type="submit">${cur?'Änderung speichern':'+ Abwesenheit erfassen'}</button>${cur?`<button class="btn secondary" type="button" onclick="openAbsencesV409()">Neu statt ändern</button><button class="btn danger" type="button" onclick="deleteAbsenceV409('${esc(cur.id)}')">Löschen</button>`:''}</div>
+    </form>`:''}
+    <div class="absHeadV409"><b>${showOld?'Alle Abwesenheiten':'Aktuelle und kommende'} (${list.length})</b><label><input type="checkbox" ${showOld?'checked':''} onchange="window.__absOldV409=this.checked;openAbsencesV409()"> vergangene anzeigen</label></div>
+    <div class="absListV409">${list.map(a=>{const nowA=a.from<=t&&(a.to||a.from)>=t;return `<button type="button" class="absRowV409${nowA?' now':''}${cur&&cur.id===a.id?' sel':''}" style="--ac:${absR(a.reason)[1]}" ${ed?`onclick="openAbsencesV409('${esc(a.id)}')"`:''}><i></i><b>${esc(a.person)}</b><span>${esc(absR(a.reason)[0])}</span><span>${esc(absRange(a))}${(a.to&&a.to!==a.from)?esc(absHalf(a)):''}</span><small>${esc(a.note||'')}${nowA?' · heute abwesend':''}</small></button>`}).join('')||'<div class="muted" style="padding:8px">Keine Abwesenheiten erfasst.</div>'}</div></div>`;
+   m.classList.add('open');
+   if(mode==='new'||cur)setTimeout(()=>E('absPerson')?.focus(),30);
+   const f=E('absFrom'),to=E('absTo');if(f&&to)f.addEventListener('change',()=>{if(!to.value||to.value<f.value)to.value=f.value});
+ };
+ window.saveAbsenceV409=function(id){
+   if(!canEdit())return;const person=String(E('absPerson').value||'').trim(),from=E('absFrom').value,to=E('absTo').value||from;
+   if(!person||!from){alert('Bitte Person und Datum angeben.');return}
+   if(to<from){alert('«Bis» liegt vor «Von».');return}
+   const now=new Date().toISOString(),by=(typeof currentUserName==='function'?currentUserName():'')||'';
+   const data={person,reason:E('absReason').value||'sonst',from,to,half:E('absHalf').value||'',note:String(E('absNote').value||'').trim(),updatedAt:now,updatedBy:by};
+   const a=absAll();let x=id?a.find(y=>y.id===id):null;
+   if(x)Object.assign(x,data);else a.push(Object.assign({id:'abs_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),createdAt:now,createdBy:by},data));
+   persist();window.openAbsencesV409();window.renderPlanVisibleV362();
+ };
+ window.deleteAbsenceV409=function(id){
+   if(!canEdit())return;const x=absAll().find(y=>y.id===id);if(!x)return;
+   if(!confirm(`Abwesenheit von ${x.person} (${absR(x.reason)[0]}, ${absRange(x)}) löschen?`))return;
+   x.deleted=true;x.updatedAt=new Date().toISOString();persist();window.openAbsencesV409();window.renderPlanVisibleV362();
+ };
+ function absRowHtml(days){ // Zeile «Abwesend» unter der Auslastung
+   if(!absList().some(a=>a.from<=days[days.length-1]&&(a.to||a.from)>=days[0]))return '';
+   return `<div class="planRowV362 planLoadV362 absLoadV409"><div class="planLabelV362" style="width:${LABELW}px" onclick="openAbsencesV409()"><b>🏖 Abwesend</b><span>Personen pro Tag</span></div><div class="planTrackV362" style="width:${days.length*DW}px">${days.map(k=>{const L=absOnDay(k);return `<div class="planLoadCellV362${L.length?' absV409':''}" style="width:${DW}px" title="${esc(fmtD(k)+(L.length?': '+L.map(a=>a.person+' ('+absR(a.reason)[0]+absHalf(a)+')').join(', '):': niemand'))}">${L.length||''}</div>`}).join('')}</div></div>`;
+ }
  window.insertPlanTemplateV362=function(pid,floorId){
    if(!canEdit())return;const p=projectById(pid);if(!p)return;const pl=plan(p,true);pl.floors=Array.isArray(pl.floors)?pl.floors:[];
    let fid=String(floorId||'');
@@ -34364,7 +34518,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V408';
+   if(v)v.textContent='Aktuelle Version: V410';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
