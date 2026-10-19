@@ -9394,11 +9394,12 @@ function setProjectsHomeTab(tab='active'){
  if(projectsHomeActiveTab==='takt')window.renderTaktV433?.();
 }
 function setProjectDetailTab(tab='overview'){
- projectDetailActiveTab=['overview','plan'].includes(tab)?tab:'overview'; // V379: Kommissionen stehen in der Übersicht
+ projectDetailActiveTab=['overview','plan','takt'].includes(tab)?tab:'overview'; // V379: Kommissionen stehen in der Übersicht
  document.querySelectorAll('[data-project-detail-tab]').forEach(b=>b.classList.toggle('active',b.dataset.projectDetailTab===projectDetailActiveTab));
  document.querySelectorAll('.projectDetailTabPanel').forEach(p=>p.classList.toggle('active',p.dataset.projectDetailPanel===projectDetailActiveTab));
  E('projectDetail')?.classList.toggle('planWideV366',projectDetailActiveTab==='plan');
  if(projectDetailActiveTab==='plan')window.renderProjectPlanV362?.();
+ if(projectDetailActiveTab==='takt')window.renderTaktV433?.();
 }
 function setCommissionDetailTab(tab='overview'){
  commissionDetailActiveTab=['overview','production','analysis'].includes(tab)?tab:'overview';
@@ -9656,8 +9657,10 @@ function openProjectDetail(id){
   <div class="projectMainTabs projectDetailTabs" role="tablist" aria-label="Projektansicht">
    <button class="projectMainTab active" type="button" data-project-detail-tab="overview" onclick="setProjectDetailTab('overview')">Übersicht</button>
    <button class="projectMainTab" type="button" data-project-detail-tab="plan" onclick="setProjectDetailTab('plan')">Planung</button>
+   <button class="projectMainTab" type="button" data-project-detail-tab="takt" onclick="setProjectDetailTab('takt')">Taktplanung</button>
   </div>
   <div class="projectTabPanel projectDetailTabPanel" data-project-detail-panel="plan"><div id="projectPlanV362" class="planHostV362"></div></div>
+  <div class="projectTabPanel projectDetailTabPanel" data-project-detail-panel="takt"><div id="projectTaktV436"></div></div>
   <div class="projectTabPanel projectDetailTabPanel active" data-project-detail-panel="overview">
    <div class="projectSummaryCard"><h2>Projektangaben</h2>
     <p><b>Projektnummer:</b> ${esc(p.number||'–')}<br><b>PL:</b> ${esc(p.customer||'–')}<br><b>Start:</b> ${esc(p.startDate||'–')}<br><b>Erstellt von:</b> ${esc(p.createdByName||'Altprojekt')}</p>
@@ -23811,10 +23814,10 @@ document.addEventListener('DOMContentLoaded',()=>{
    const fcHours=fc&&t.end&&fc>t.end&&ma>0?Math.round(ma*hd*prodDays(t.start,fc).length):0;/* V436 */
    return {fcHours,days,wd:wd.length,off,n,el,hd,ma:r2(ma),hpe:r2(hpe),takt:r1(takt),taktX:takt,total:Math.round(total),istSum:r1(istSum),sollToday:Math.round(sollToday),rate:r1(rate),fc,diff:r1(istSum-Math.round(sollToday))};
  }
- window.openTaktV433=function(id){
+ window.openTaktV433=function(id,pidPre){
    if(!canEdit()){alert('Für die Produktionsplanung ist keine Bearbeitungs-Berechtigung freigeschaltet.');return}
    const cur=id?taktList().find(t=>t.id===id):null,t0=todayKey();
-   const v=cur||{name:'',projectId:'',start:nextWork(t0),end:addWork(nextWork(t0),19),elements:'',mode:'ma',hPerEl:'',ma:'',hDay:8.5};
+   const v=cur||{name:'',projectId:pidPre||'',start:nextWork(t0),end:addWork(nextWork(t0),19),elements:'',mode:'ma',hPerEl:'',ma:'',hDay:8.5};
    let m=E('taktModalV433');if(!m){m=document.createElement('div');m.id='taktModalV433';m.className='modal';document.body.appendChild(m)}
    const projs=(projectStore.projects||[]).filter(x=>x&&!x.archived&&x.id!==ZS_PID).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'de-CH'));
    m.innerHTML=`<div class="modalbox planDialogV362 taktBoxV433"><div class="manageHead"><div><h2 style="margin:0">${cur?'Taktplanung bearbeiten':'Neue Taktplanung Fassade'}</h2><p class="muted" style="margin:4px 0 0">Takt = Elemente pro Produktionstag (Mo–Fr ohne Betriebsferien/Feiertage)</p></div><button class="btn secondary" type="button" onclick="closeM('taktModalV433')">Schliessen</button></div>
@@ -23902,8 +23905,9 @@ document.addEventListener('DOMContentLoaded',()=>{
      ${lastI>=0&&lastI<n?`<line x1="${X(lastI)}" y1="${P}" x2="${X(lastI)}" y2="${H-P}" class="tdy"/>`:''}</svg>
      <div class="tkLegV433"><span><i class="s"></i>Soll (kumuliert)</span><span><i class="i"></i>Ist (kumuliert)</span></div>`;
  }
- window.renderTaktV433=function(openId){
-   const host=E('taktHostV433');if(!host)return;const L=taktList().slice().sort((a,b)=>String(a.start).localeCompare(String(b.start)));const ed=canEdit(),today=todayKey();
+ /* V437: gleiche Ansicht auch im Projekt (Reiter «Taktplanung»), dort nur die Planungen dieses Projekts */
+ function renderTaktHost(host,pid,openId){
+   if(!host)return;const L=taktList().filter(t=>!pid||t.projectId===pid).slice().sort((a,b)=>String(a.start).localeCompare(String(b.start)));const ed=canEdit(),today=todayKey();
    const open=openId!==undefined?openId:(window.__taktOpenV433||'');window.__taktOpenV433=open;
    let gantt='';
    if(L.length){
@@ -23944,8 +23948,12 @@ document.addEventListener('DOMContentLoaded',()=>{
       <table class="tkTabV433"><thead><tr><th>Tag</th><th>Soll</th><th>Soll kum.</th><th>Ist</th><th>Ist kum.</th><th>Differenz</th></tr></thead><tbody>${c.days.map(d=>{const iv=Number((det.ist||{})[d])||0;cum+=iv;sc+=c.taktX;const df=Math.round((cum-sc)*10)/10;const fut=d>today;
         return `<tr class="${d===today?'today':''}${fut?' fut':''}"><td>${fmtD(d)}</td><td>${c.takt}</td><td>${Math.round(sc*10)/10}</td><td>${ed?`<input type="text" inputmode="decimal" value="${iv||''}" onchange="setTaktIstV433('${esc(det.id)}','${d}',this.value)">`:iv||''}</td><td>${fut&&!iv?'':r2(cum)}</td><td class="${fut?'':df<0?'neg':'pos'}">${fut?'':(df>0?'+':'')+df}</td></tr>`}).join('')}</tbody></table></div>`;
    }
-   host.innerHTML=`<div class="tkToolsV433"><div><h2 style="margin:0">Taktplanung Fassade</h2><span class="muted">Zeile antippen für Soll/Ist und Ist-Erfassung</span></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn secondary" type="button" onclick="openTaktOffV434()">📅 Betriebsferien / Feiertage</button>${ed?'<button class="btn" type="button" onclick="openTaktV433()">+ Neue Taktplanung</button>':''}</div></div>
-     ${L.length?gantt:'<div class="planEmptyV362"><b>Noch keine Taktplanung.</b><br>Mit «+ Neue Taktplanung» starten.</div>'}${detail}`;
+   host.innerHTML=`<div class="tkToolsV433"><div><h2 style="margin:0">Taktplanung${pid?'':' Fassade'}</h2><span class="muted">Zeile antippen für Soll/Ist und Ist-Erfassung</span></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn secondary" type="button" onclick="openTaktOffV434()">📅 Betriebsferien / Feiertage</button>${ed?'<button class="btn" type="button" onclick="openTaktV433(\'\',\''+esc(pid||'')+'\')">+ Neue Taktplanung</button>':''}</div></div>
+     ${L.length?gantt:'<div class="planEmptyV362"><b>Noch keine Taktplanung'+(pid?' für dieses Projekt':'')+'.</b><br>Mit «+ Neue Taktplanung» starten.</div>'}${detail}`;
+ }
+ window.renderTaktV433=function(openId){
+   renderTaktHost(E('taktHostV433'),'',openId);
+   const ph=E('projectTaktV436');if(ph&&currentProjectId&&projectDetailActiveTab==='takt')renderTaktHost(ph,currentProjectId,openId);
  };
  window.insertPlanTemplateV362=function(pid,floorId){
    if(!canEdit())return;const p=projectById(pid);if(!p)return;const pl=plan(p,true);pl.floors=Array.isArray(pl.floors)?pl.floors:[];
