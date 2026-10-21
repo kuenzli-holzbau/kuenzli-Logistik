@@ -5386,6 +5386,72 @@ html body .platformWrap{max-width:none!important;padding-left:16px!important;pad
 .ixMatNoteInV461:focus{outline:none;background:#fff;border-color:#c9a64a;box-shadow:0 0 0 3px rgba(201,166,74,.18)}
 .ixMatNoteInV461::placeholder{color:#a7aea9;font-style:italic}
 .ixMatV459.done .ixMatNoteInV461{opacity:.7}
+/* V462 – 3D-Modell */
+#project3dV462{display:flex;flex-direction:column;gap:12px}
+.m3HeadV462{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;background:#fff;border:1px solid #dfe6e2;border-radius:14px;padding:14px 18px}
+.m3HeadV462 h2{margin:0 0 4px}
+.m3HeadRV462{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.m3HeadRV462 select{border:1px solid #c8d3cd;border-radius:10px;padding:8px 10px;font:inherit;max-width:420px}
+.m3HeadRV462 label.btn{cursor:pointer}
+.m3StatusV462:empty{display:none}
+.m3StatusV462{display:flex;align-items:center;gap:8px;background:#eef5f1;border:1px solid #cfe0d6;border-radius:10px;padding:9px 14px;color:#174f3b;font-weight:700}
+.m3SpinV462{width:14px;height:14px;border-radius:50%;border:2px solid #b9cec3;border-top-color:#174f3b;animation:m3spin .8s linear infinite}
+@keyframes m3spin{to{transform:rotate(360deg)}}
+.m3EmptyV462{background:#fff;border:1px dashed #b9cec3;border-radius:14px;padding:28px;text-align:center;color:#4b5852}
+.m3EmptyV462 p{max-width:640px;margin:8px auto 0}
+.m3WrapV462{background:#fff;border:1px solid #dfe6e2;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;height:calc(100vh - 310px);min-height:480px}
+.m3WrapV462.full{position:fixed;inset:0;z-index:9650;border-radius:0;height:auto;min-height:0}
+.m3BarV462{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;padding:8px 10px;border-bottom:1px solid #e3e9e6;background:#f7faf8}
+.m3BarV462 .grp{display:flex;gap:4px;align-items:center;padding-right:10px;border-right:1px solid #e1e8e4}
+.m3BarV462 .grp.end{margin-left:auto;border-right:0;padding-right:0}
+.m3BarV462 .grp>span{font-size:12px;font-weight:800;color:#5b6660;margin-right:2px}
+.m3BarV462 button{border:1px solid #d3ddd8;background:#fff;color:#29483a;border-radius:8px;padding:5px 9px;font-weight:700;font-size:12.5px;cursor:pointer;white-space:nowrap}
+.m3BarV462 button:hover{border-color:#9db8aa}
+.m3BarV462 button.on{background:#174f3b;color:#fff;border-color:#174f3b}
+.m3BarV462 select{border:1px solid #d3ddd8;border-radius:8px;padding:4px 6px;font:inherit;font-size:12.5px}
+.m3BarV462 input[type=range]{width:150px;accent-color:#174f3b}
+.m3BarV462 small{font-size:11.5px;color:#4b5852;font-weight:700;min-width:90px}
+#m3HideInfoV462 button{background:#fff4e5;border-color:#f0c98a;color:#9a5b08}
+.m3BodyV462{flex:1;display:grid;grid-template-columns:300px minmax(0,1fr);min-height:0}
+@media(max-width:900px){.m3BodyV462{grid-template-columns:1fr;grid-template-rows:200px minmax(0,1fr)}}
+.m3SideV462{border-right:1px solid #e3e9e6;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:8px;background:#fbfcfb}
+.m3SideV462>input{border:1px solid #d3ddd8;border-radius:9px;padding:7px 10px;font:inherit}
+.m3CountV462{font-size:12px;color:#66706a}
+.m3SecV462{border:1px solid #e3e9e6;border-radius:10px;background:#fff;padding:4px 6px 6px}
+.m3SecHV462{display:flex;justify-content:space-between;align-items:center;padding:4px 2px 6px;cursor:default;list-style:none}
+details.m3SecV462>summary{cursor:pointer}
+details.m3SecV462>summary::-webkit-details-marker{display:none}
+.m3SecHV462 b{font-size:13px;color:#174f3b}
+.m3SecHV462 span{display:flex;gap:3px}
+.m3SecHV462 button{border:0;background:#eef3f0;color:#29483a;font-size:11px;font-weight:800;border-radius:6px;padding:2px 7px;cursor:pointer}
+.m3GV462,.m3SV462{display:grid;grid-template-columns:18px minmax(0,1fr) auto 22px;align-items:center;gap:4px;font-size:13px;padding:2px 0;border-radius:6px}
+.m3SV462{grid-template-columns:minmax(0,1fr) auto 22px;padding-left:22px}
+.m3SV462.flat{padding-left:2px}
+.m3GV462:hover,.m3SV462:hover{background:#f1f6f3}
+.m3GV462 label,.m3SV462 label{display:flex;gap:6px;align-items:center;min-width:0;cursor:pointer}
+.m3GV462 label span{font-weight:800}
+.m3GV462 label span,.m3SV462 label span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.m3GV462 input,.m3SV462 input{accent-color:#174f3b;margin:0;flex:none}
+.m3GV462 small,.m3SV462 small{color:#8a938e;font-size:11px}
+.m3TogV462{border:0;background:transparent;color:#7b857f;cursor:pointer;padding:0;font-size:12px}
+.m3OnlyV462{border:0;background:transparent;color:#9aa69f;cursor:pointer;padding:0 2px;font-size:13px;border-radius:5px}
+.m3OnlyV462:hover{color:#174f3b;background:#e3ede8}
+.m3SubsV462{margin:0 0 4px}
+.m3StageV462{position:relative;min-height:0;overflow:hidden;background:#f3f5f4}
+.m3GlV462,.m3OvV462{position:absolute;inset:0;width:100%;height:100%;display:block}
+.m3GlV462{touch-action:none}
+.m3OvV462{pointer-events:none}
+.m3HintV462{position:absolute;left:10px;bottom:8px;font-size:11.5px;color:#5b6660;background:rgba(255,255,255,.85);border-radius:6px;padding:3px 8px;pointer-events:none;max-width:calc(100% - 20px)}
+.m3InfoV462{position:absolute;right:10px;top:10px;width:330px;max-height:calc(100% - 50px);overflow:auto;background:rgba(255,255,255,.97);border:1px solid #d6e0db;border-radius:12px;box-shadow:0 8px 24px rgba(20,40,30,.16);z-index:2}
+.m3InfoV462 header{display:flex;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid #e6ece9;background:#eef5f1;border-radius:12px 12px 0 0;position:sticky;top:0}
+.m3InfoV462 header b{display:block;font-size:15px}.m3InfoV462 header small{color:#66706a}
+.m3InfoV462 header button{border:0;background:transparent;cursor:pointer;font-size:15px;color:#66706a}
+.m3InfoV462 table{width:100%;border-collapse:collapse;font-size:12.5px;margin:4px 0}
+.m3InfoV462 th{text-align:left;color:#66706a;font-weight:600;padding:3px 12px;width:44%;vertical-align:top}
+.m3InfoV462 td{padding:3px 12px 3px 0;font-weight:700;overflow-wrap:anywhere}
+.m3InfoBtnV462{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px 12px}
+.m3InfoBtnV462 button{border:1px solid #d3ddd8;background:#fff;border-radius:8px;padding:5px 9px;font-weight:700;font-size:12px;cursor:pointer;color:#29483a}
+.m3ErrV462{padding:30px;color:#b3402f;font-weight:700}
 </style>
 </head>
 <body class="accessLocked">
@@ -5398,7 +5464,7 @@ html body .platformWrap{max-width:none!important;padding-left:16px!important;pad
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V461</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V462</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -5620,7 +5686,7 @@ html body .platformWrap{max-width:none!important;padding-left:16px!important;pad
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V461</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V462</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -8478,7 +8544,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V461</b></p><div class="releaseNote"><b>Neu in V461</b><br>Informationsaustausch: Bilder mit Ctrl+V direkt in Info, Antwort, ToDo, Material und Verbindungsmittel einfügen (Vorschau, wird beim Speichern angehängt); Bemerkung bei Material und Verbindungsmitteln direkt in der Zeile schreiben. V460: Informationsaustausch: Antworten auf Infos (klar als «↳ Antwort» markiert); neue Listen «Material bestellt» und «Verbindungsmittel bestellt» mit Menge, Lieferant, Lieferdatum und Bemerkung – abhaken = erhalten, «Nachbestellen» mit Menge erstellt direkt ein ToDo für den Projektleiter. V459: Projekt: neuer Reiter «Informationsaustausch» – Infos aus Besprechungen an Kommissionen zuweisen, ToDo Produktion und ToDo Projektleiter, Fotos mit Stift, Textmarker, Formen und Text bezeichnen. V458: Startseite «Bereich auswählen» wieder proportional und zentriert (Vollbreite nur in den Arbeitsbereichen). V457: Prognose-Basis wählbar (letzte N Tage oder alle) in Taktplanung und Kommissions-Prognose; Taktplanung: Anzeige der letzten N Tage; Checkliste «Gian DR» aus dem Artefakt übernommen. V456: Ganze Bildschirmbreite in allen Bereichen (Start, Lager, Produktion, Kleinaufträge, Logistik, Sonstiges, Verwaltung, Module). V455: Taktplanung-Tabelle: Seite springt nach einer Eingabe nicht mehr nach oben, Feld bleibt aktiv; Enter springt in die nächste Zeile. V454: Neues Modul «Produktionscheckliste» unter Sonstiges: Checklisten mit Gruppen, Arbeitsschritten, Kontrollpunkten, Bildern/PDFs zum Markieren und PDF A4 – gespeichert in der Cloud, eigene Berechtigung. V453: Berechtigungen übersichtlich in farbigen Bereichen, Zähler pro Bereich, (i) mit Beschreibung zu jeder Berechtigung. V452: Taktplanung ↔ Planung: Produktionsschritt mit Taktplanung verbinden – Zeitraum und MA synchron (letzte Änderung gilt), Takt-Stand am Balken. V451: Taktplanung: Hinweis mit Knopf «mit Kommission verknüpfen», wenn eine Taktplanung noch nicht verknüpft ist. V450: Taktplanung mit Kommission verknüpfen: Elemente, Soll-Stunden, produzierte Elemente, MA und Ist-Stunden aus dem Tagesfortschritt werden automatisch übernommen. V449: Taktplanung: Kennzahlen in 3 Zeilen – 1 Grundlage aus Kalkulation, 2 Ist-Zustand mit Prognose, 3 Massnahmen mit neuer Prognose. V448: Taktplanung: alle Diagramme nebeneinander in gleicher Grösse, Klick öffnet das Diagramm gross. V447: Taktplanung: Abacus-Abgleich – Zellen aus Excel einfügen (Ctrl+C / Ctrl+V) oder Datei wählen, pro Tag MA und Stunden mit der Tabelle vergleichen, Abweichungen prüfen oder übernehmen. V446: Taktplanung: «Massnahmen ab heute» – Endtermin, MA und h/Element simulieren, im Diagramm mit Soll, Ist und Prognose vergleichen, Massnahme speichern. V445: Taktplanung: Arbeitszeiterhöhung – Zeiträume mit anderen Stunden pro MA und Tag, werden in der Tabelle übernommen. V444: Taktplanung-Tabelle: Spalten Std./MA (pro Tag änderbar), Ist-Stunden und Ist-Stunden kumuliert. V443: Taktplanung: Kachel «Ist h pro Element» zeigt Ø gesamt und Ø letzte 5 Tage nebeneinander. V442: Produktionsart «DR» im Tagesfortschritt und in der Produktionsanalyse. V441: Taktplanung: Ist h/Element (aus MA × Std./Tag, MA pro Tag korrigierbar), Kachel und Diagramm «h pro Element», Stundenbudget und Prognose mit Ist-Stunden. V440: Versionsanzeige korrigiert. V439: Taktplanung in voller Bildschirmbreite. V438: Tagesleistung als Diagramm (Balken pro Tag, Ø 5 Tage, nötiges Tempo) und Kachel «Ist-Tempo» mit Trend; heute zählt erst mit Ist-Eintrag. V437: Reiter «Taktplanung» im Projekt. V436: Stundenbudget pro Kommission mit Warnung bei Überschreitung (alle Taktplanungen zusammen, inkl. Prognose). V435: Taktplanung: h pro Element oder Anzahl MA eingeben – das andere wird berechnet; Meldungen im Fenster statt Popup; Werte gerundet. V434: Taktplanung: Betriebsferien/Feiertage erfassen – Berechnung mit Produktionstagen (Bedarf MA, h pro Element, Soll, Prognose). V433: Neuer Reiter «Taktplanung Fassade»: Berechnung Bedarf MA bzw. h pro Element, Gantt mit Soll/Ist und Prognose, Ist-Erfassung pro Tag. V432: Anzahl MA im Arbeitsschritt frei mit Kommastellen eingeben (z. B. 0.33 oder 0,33). V431: Schnellmenü im Gantt: Inhalt bleibt im Feld (scrollbar, Knöpfe umbrechen). V430: Zuschnitte optisch abgehoben: eckige Balken mit Sägeschnitt und ✂, blau-graue Zeile. V429: Planung: Suchfeld bleibt beim Tippen aktiv (Ansicht wird ohne das Suchfeld neu aufgebaut). V428: Zuschnitt-Funktionen (Endtermin, Stunden, Start/Stopp + Ist-Stunden, Maschine + Stückzahl, Maschinen-Auslastung) auch in Projekten bei Schritten mit «Zuschnitt» oder «ZS» im Namen. V427: Planungs-PDF pro Person (eine Person oder je Person ein eigenes PDF). V426: Personen verwalten: umbenennen / zusammenführen und falsche Namen überall entfernen (Planung + Abwesenheiten). V425: Gantt im Vollbild (Knopf «⛶ Vollbild», Esc beendet). V424: Balken mit Unterbruch reicht bis zum echten Ende – die restlichen Tage stehen rechts vom Unterbruch; «Auf Gruppen verteilen» markiert die aktuelle Gruppe. V423: Unterbruch im Gantt mit der Maus verschieben bzw. am Rand verlängern/kürzen. V422: Arbeitsschritt auf mehrere Gruppen verteilen (normale Einträge, MA aufgeteilt, auch 0.25 MA); eigene Status (Name, Farbe, Grundverhalten); graue Spiegelung entfernt. Zuschnitt-Import: offene Positionen, die in der neuen Excel fehlen, werden angezeigt und können als erledigt markiert, gelöscht oder stehen gelassen werden. V418: Gantt: Mitarbeiter direkt im Menü des Arbeitsschritts zuweisen/entfernen (mit Hinweis abwesend / gleichzeitig eingeplant). V417: Mehrere Einträge pro Arbeitsschritt (Material/Lieferung, Notiz, Kontrolle) und Unterbrüche (verschieben das Ende, zählen nicht in die Auslastung); klare Wochenlinien in der Planung. V416: Planungs-PDF: Meilensteine bei ihrer Gruppe (Linien nur über diese Gruppe), Logo oben links. V415: Freigegebene Ist-Prognose auch in der Planungs-Übersicht (alle Projekte). V414: Ist-Prognose einer Kommission auf der Gantt-Seite (Riegel in der Kommission); PDF-Reihenfolge mit Logo oben links. V413: Offene Elemente: Löschen wirkt sofort; PDF der Produktionsreihenfolge (Reihenfolge, Element, Fläche je Gruppe, Gruppen nicht getrennt). V412: Projekte (Karten und Planungs-Übersicht) immer nach Startdatum sortiert. V411: Abwesenheiten farbig: kräftige Chips mit Namen, in der Planung eine Zeile pro Person mit farbigem Balken (Grund). V410: ZS-Positionen pro Zuschnitt-Schritt zuordnen (ganze monday-Gruppe oder einzelne Positionen); automatisch nur noch bei genau einem Zuschnitt-Schritt im Projekt; erledigte Schritte ohne Warnung. V409: Abwesenheiten (Ferien, Militär, Kurs, Krank …) beim Einsatzplan erfassen; Warnung an Arbeitsschritten mit abwesenden Personen; Zeile «Abwesend» in der Planung. V408: Blockiert mit Grund; Gruppen in der Projekt-Planung farbig; Projekt-Zuschnitt mit ZS-Positionen verknüpft (keine Doppelzählung in der Auslastung); neue Projektkarten. V407: «Beladen in Davos»: Karte antippen, um Status und Standort nachzutragen (abgeholt, beladen, in Beladung, zurück im Lager). V406: Pritschen-Gantt luftiger; Projekte in der Planungs-Übersicht farbig abgehoben; «Welche Pritsche darf ich nehmen?» nur noch in der Übersicht; neuer Block «Beladen in Davos». V405: Pritschen-Gantt: gesperrte Pritschen, Container und Geräte grau schraffiert mit 🔒; Reservationen zeigen ihren Zeitraum (von–bis) direkt im Balken. V404: Fahrzeuge/Geräte: Status «Frei / In Gebrauch» und Sperren wie bei den Containern; gesperrte oder benutzte Geräte sind im Transport nicht neu wählbar. V403: Transport löschen ändert keinen Status mehr – Pritschen und Container bleiben wie sie sind. V402: Transportlisten: LKW links, Anhänger rechts nebeneinander; ohne Anhänger-Ladung bzw. bei «LKW solo» kein Anhängerbild. V401: Transportplanung: LKW- und Anhängerbild zeigen nur die eigene Ladung; zusätzliche Container und Fahrzeuge/Geräte bei jedem Ladungsträger möglich (2 Container auf Pritsche oder direkt auf LKW, Container + Gerät, 2 Geräte). V400: Pritschen-Gantt im Projekt: auch Container und Fahrzeuge/Geräte anderer Projekte ausgeblendet – sichtbar sind nur eigene und freie. V399: Pritschen-Gantt: Reservationen mit der Maus verschieben bzw. am Rand verlängern (mit Konfliktmeldung); Belegung endet beim Reservationsende (rot, wenn länger belegt); im Projekt nur zugeordnete und freie Pritschen. V398: Pritschen-Gantt: zurück bis zum allerersten Eintrag ziehbar. V397: Pritschen-Gantt: mit gedrückter Maustaste hin und her ziehen, grösserer Zeitraum (4 Wochen zurück bis ca. 7 Monate voraus), heute markiert. V396: Pritschenverwaltung: Suchfeld für Projekte (Name, Nummer, PL – auch Teilwörter, z.B. «26160002» oder «baum»). V395: Transporte: LKW-/Anhängerbild wieder in der Übersicht (mit Pritschen-/Container-Schild, Zusatzladung darunter); Status-Auswahl und ⋮-Menü werden nicht mehr abgeschnitten. V394: Pritschen/Transporte: Übersicht nach Kalenderwoche mit lesbarem Datum (Datumsfehler behoben), Ladung kompakt als Schilder (LKW/Anhänger, Pritsche, Container, Geräte, Rungen) statt Fahrzeugbilder, Route ohne «Projekt → Projekt». V393: Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V462</b></p><div class="releaseNote"><b>Neu in V462</b><br>Projekt: neuer Reiter «3D-Modell» – IFC aus cadwork hochladen, drehen, nach Bauuntergruppen/Geschossen/Bauteilen filtern, Bauteil-Infos, Messen mit Einrasten auf Ecken und Kanten, Schnitt, Vollbild. V461: Informationsaustausch: Bilder mit Ctrl+V direkt in Info, Antwort, ToDo, Material und Verbindungsmittel einfügen (Vorschau, wird beim Speichern angehängt); Bemerkung bei Material und Verbindungsmitteln direkt in der Zeile schreiben. V460: Informationsaustausch: Antworten auf Infos (klar als «↳ Antwort» markiert); neue Listen «Material bestellt» und «Verbindungsmittel bestellt» mit Menge, Lieferant, Lieferdatum und Bemerkung – abhaken = erhalten, «Nachbestellen» mit Menge erstellt direkt ein ToDo für den Projektleiter. V459: Projekt: neuer Reiter «Informationsaustausch» – Infos aus Besprechungen an Kommissionen zuweisen, ToDo Produktion und ToDo Projektleiter, Fotos mit Stift, Textmarker, Formen und Text bezeichnen. V458: Startseite «Bereich auswählen» wieder proportional und zentriert (Vollbreite nur in den Arbeitsbereichen). V457: Prognose-Basis wählbar (letzte N Tage oder alle) in Taktplanung und Kommissions-Prognose; Taktplanung: Anzeige der letzten N Tage; Checkliste «Gian DR» aus dem Artefakt übernommen. V456: Ganze Bildschirmbreite in allen Bereichen (Start, Lager, Produktion, Kleinaufträge, Logistik, Sonstiges, Verwaltung, Module). V455: Taktplanung-Tabelle: Seite springt nach einer Eingabe nicht mehr nach oben, Feld bleibt aktiv; Enter springt in die nächste Zeile. V454: Neues Modul «Produktionscheckliste» unter Sonstiges: Checklisten mit Gruppen, Arbeitsschritten, Kontrollpunkten, Bildern/PDFs zum Markieren und PDF A4 – gespeichert in der Cloud, eigene Berechtigung. V453: Berechtigungen übersichtlich in farbigen Bereichen, Zähler pro Bereich, (i) mit Beschreibung zu jeder Berechtigung. V452: Taktplanung ↔ Planung: Produktionsschritt mit Taktplanung verbinden – Zeitraum und MA synchron (letzte Änderung gilt), Takt-Stand am Balken. V451: Taktplanung: Hinweis mit Knopf «mit Kommission verknüpfen», wenn eine Taktplanung noch nicht verknüpft ist. V450: Taktplanung mit Kommission verknüpfen: Elemente, Soll-Stunden, produzierte Elemente, MA und Ist-Stunden aus dem Tagesfortschritt werden automatisch übernommen. V449: Taktplanung: Kennzahlen in 3 Zeilen – 1 Grundlage aus Kalkulation, 2 Ist-Zustand mit Prognose, 3 Massnahmen mit neuer Prognose. V448: Taktplanung: alle Diagramme nebeneinander in gleicher Grösse, Klick öffnet das Diagramm gross. V447: Taktplanung: Abacus-Abgleich – Zellen aus Excel einfügen (Ctrl+C / Ctrl+V) oder Datei wählen, pro Tag MA und Stunden mit der Tabelle vergleichen, Abweichungen prüfen oder übernehmen. V446: Taktplanung: «Massnahmen ab heute» – Endtermin, MA und h/Element simulieren, im Diagramm mit Soll, Ist und Prognose vergleichen, Massnahme speichern. V445: Taktplanung: Arbeitszeiterhöhung – Zeiträume mit anderen Stunden pro MA und Tag, werden in der Tabelle übernommen. V444: Taktplanung-Tabelle: Spalten Std./MA (pro Tag änderbar), Ist-Stunden und Ist-Stunden kumuliert. V443: Taktplanung: Kachel «Ist h pro Element» zeigt Ø gesamt und Ø letzte 5 Tage nebeneinander. V442: Produktionsart «DR» im Tagesfortschritt und in der Produktionsanalyse. V441: Taktplanung: Ist h/Element (aus MA × Std./Tag, MA pro Tag korrigierbar), Kachel und Diagramm «h pro Element», Stundenbudget und Prognose mit Ist-Stunden. V440: Versionsanzeige korrigiert. V439: Taktplanung in voller Bildschirmbreite. V438: Tagesleistung als Diagramm (Balken pro Tag, Ø 5 Tage, nötiges Tempo) und Kachel «Ist-Tempo» mit Trend; heute zählt erst mit Ist-Eintrag. V437: Reiter «Taktplanung» im Projekt. V436: Stundenbudget pro Kommission mit Warnung bei Überschreitung (alle Taktplanungen zusammen, inkl. Prognose). V435: Taktplanung: h pro Element oder Anzahl MA eingeben – das andere wird berechnet; Meldungen im Fenster statt Popup; Werte gerundet. V434: Taktplanung: Betriebsferien/Feiertage erfassen – Berechnung mit Produktionstagen (Bedarf MA, h pro Element, Soll, Prognose). V433: Neuer Reiter «Taktplanung Fassade»: Berechnung Bedarf MA bzw. h pro Element, Gantt mit Soll/Ist und Prognose, Ist-Erfassung pro Tag. V432: Anzahl MA im Arbeitsschritt frei mit Kommastellen eingeben (z. B. 0.33 oder 0,33). V431: Schnellmenü im Gantt: Inhalt bleibt im Feld (scrollbar, Knöpfe umbrechen). V430: Zuschnitte optisch abgehoben: eckige Balken mit Sägeschnitt und ✂, blau-graue Zeile. V429: Planung: Suchfeld bleibt beim Tippen aktiv (Ansicht wird ohne das Suchfeld neu aufgebaut). V428: Zuschnitt-Funktionen (Endtermin, Stunden, Start/Stopp + Ist-Stunden, Maschine + Stückzahl, Maschinen-Auslastung) auch in Projekten bei Schritten mit «Zuschnitt» oder «ZS» im Namen. V427: Planungs-PDF pro Person (eine Person oder je Person ein eigenes PDF). V426: Personen verwalten: umbenennen / zusammenführen und falsche Namen überall entfernen (Planung + Abwesenheiten). V425: Gantt im Vollbild (Knopf «⛶ Vollbild», Esc beendet). V424: Balken mit Unterbruch reicht bis zum echten Ende – die restlichen Tage stehen rechts vom Unterbruch; «Auf Gruppen verteilen» markiert die aktuelle Gruppe. V423: Unterbruch im Gantt mit der Maus verschieben bzw. am Rand verlängern/kürzen. V422: Arbeitsschritt auf mehrere Gruppen verteilen (normale Einträge, MA aufgeteilt, auch 0.25 MA); eigene Status (Name, Farbe, Grundverhalten); graue Spiegelung entfernt. Zuschnitt-Import: offene Positionen, die in der neuen Excel fehlen, werden angezeigt und können als erledigt markiert, gelöscht oder stehen gelassen werden. V418: Gantt: Mitarbeiter direkt im Menü des Arbeitsschritts zuweisen/entfernen (mit Hinweis abwesend / gleichzeitig eingeplant). V417: Mehrere Einträge pro Arbeitsschritt (Material/Lieferung, Notiz, Kontrolle) und Unterbrüche (verschieben das Ende, zählen nicht in die Auslastung); klare Wochenlinien in der Planung. V416: Planungs-PDF: Meilensteine bei ihrer Gruppe (Linien nur über diese Gruppe), Logo oben links. V415: Freigegebene Ist-Prognose auch in der Planungs-Übersicht (alle Projekte). V414: Ist-Prognose einer Kommission auf der Gantt-Seite (Riegel in der Kommission); PDF-Reihenfolge mit Logo oben links. V413: Offene Elemente: Löschen wirkt sofort; PDF der Produktionsreihenfolge (Reihenfolge, Element, Fläche je Gruppe, Gruppen nicht getrennt). V412: Projekte (Karten und Planungs-Übersicht) immer nach Startdatum sortiert. V411: Abwesenheiten farbig: kräftige Chips mit Namen, in der Planung eine Zeile pro Person mit farbigem Balken (Grund). V410: ZS-Positionen pro Zuschnitt-Schritt zuordnen (ganze monday-Gruppe oder einzelne Positionen); automatisch nur noch bei genau einem Zuschnitt-Schritt im Projekt; erledigte Schritte ohne Warnung. V409: Abwesenheiten (Ferien, Militär, Kurs, Krank …) beim Einsatzplan erfassen; Warnung an Arbeitsschritten mit abwesenden Personen; Zeile «Abwesend» in der Planung. V408: Blockiert mit Grund; Gruppen in der Projekt-Planung farbig; Projekt-Zuschnitt mit ZS-Positionen verknüpft (keine Doppelzählung in der Auslastung); neue Projektkarten. V407: «Beladen in Davos»: Karte antippen, um Status und Standort nachzutragen (abgeholt, beladen, in Beladung, zurück im Lager). V406: Pritschen-Gantt luftiger; Projekte in der Planungs-Übersicht farbig abgehoben; «Welche Pritsche darf ich nehmen?» nur noch in der Übersicht; neuer Block «Beladen in Davos». V405: Pritschen-Gantt: gesperrte Pritschen, Container und Geräte grau schraffiert mit 🔒; Reservationen zeigen ihren Zeitraum (von–bis) direkt im Balken. V404: Fahrzeuge/Geräte: Status «Frei / In Gebrauch» und Sperren wie bei den Containern; gesperrte oder benutzte Geräte sind im Transport nicht neu wählbar. V403: Transport löschen ändert keinen Status mehr – Pritschen und Container bleiben wie sie sind. V402: Transportlisten: LKW links, Anhänger rechts nebeneinander; ohne Anhänger-Ladung bzw. bei «LKW solo» kein Anhängerbild. V401: Transportplanung: LKW- und Anhängerbild zeigen nur die eigene Ladung; zusätzliche Container und Fahrzeuge/Geräte bei jedem Ladungsträger möglich (2 Container auf Pritsche oder direkt auf LKW, Container + Gerät, 2 Geräte). V400: Pritschen-Gantt im Projekt: auch Container und Fahrzeuge/Geräte anderer Projekte ausgeblendet – sichtbar sind nur eigene und freie. V399: Pritschen-Gantt: Reservationen mit der Maus verschieben bzw. am Rand verlängern (mit Konfliktmeldung); Belegung endet beim Reservationsende (rot, wenn länger belegt); im Projekt nur zugeordnete und freie Pritschen. V398: Pritschen-Gantt: zurück bis zum allerersten Eintrag ziehbar. V397: Pritschen-Gantt: mit gedrückter Maustaste hin und her ziehen, grösserer Zeitraum (4 Wochen zurück bis ca. 7 Monate voraus), heute markiert. V396: Pritschenverwaltung: Suchfeld für Projekte (Name, Nummer, PL – auch Teilwörter, z.B. «26160002» oder «baum»). V395: Transporte: LKW-/Anhängerbild wieder in der Übersicht (mit Pritschen-/Container-Schild, Zusatzladung darunter); Status-Auswahl und ⋮-Menü werden nicht mehr abgeschnitten. V394: Pritschen/Transporte: Übersicht nach Kalenderwoche mit lesbarem Datum (Datumsfehler behoben), Ladung kompakt als Schilder (LKW/Anhänger, Pritsche, Container, Geräte, Rungen) statt Fahrzeugbilder, Route ohne «Projekt → Projekt». V393: Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -9703,14 +9769,598 @@ function setProjectsHomeTab(tab='active'){
  if(projectsHomeActiveTab==='takt')window.renderTaktV433?.();
 }
 function setProjectDetailTab(tab='overview'){
- projectDetailActiveTab=['overview','plan','takt','info'].includes(tab)?tab:'overview'; // V379: Kommissionen stehen in der Übersicht
+ projectDetailActiveTab=['overview','plan','takt','info','3d'].includes(tab)?tab:'overview'; // V379: Kommissionen stehen in der Übersicht
  document.querySelectorAll('[data-project-detail-tab]').forEach(b=>b.classList.toggle('active',b.dataset.projectDetailTab===projectDetailActiveTab));
  document.querySelectorAll('.projectDetailTabPanel').forEach(p=>p.classList.toggle('active',p.dataset.projectDetailPanel===projectDetailActiveTab));
  E('projectDetail')?.classList.toggle('planWideV366',projectDetailActiveTab!=='overview');
  if(projectDetailActiveTab==='plan')window.renderProjectPlanV362?.();
  if(projectDetailActiveTab==='takt')window.renderTaktV433?.();
  if(projectDetailActiveTab==='info')window.renderProjInfoV459?.();
+ if(projectDetailActiveTab==='3d')window.render3dV462?.();
 }
+/* V462: IFC-Leser (STEP / IFC2x3 / IFC4) – ohne externe Bibliotheken.
+   Liefert Dreiecke (Weltkoordinaten minus Ursprung, Meter), Kanten, Farben und Bauteil-Attribute. */
+const IFC3D_V462=(function(){
+ /* ---------- STEP-Datei indizieren ---------- */
+ function indexStep(text){
+   const map=new Map();let i=text.indexOf('DATA;');i=i<0?0:i+5;const n=text.length;
+   while(i<n){
+     const h=text.indexOf('#',i);if(h<0)break;
+     let j=h+1,id=0;while(j<n){const c=text.charCodeAt(j);if(c<48||c>57)break;id=id*10+c-48;j++}
+     while(j<n&&text.charCodeAt(j)!==61&&text.charCodeAt(j)!==59)j++;
+     if(text.charCodeAt(j)===59){i=j+1;continue}
+     j++;while(j<n&&text.charCodeAt(j)<=32)j++;
+     let k=j;while(k<n){const c=text.charCodeAt(k);if(c===40||c<=32)break;k++}
+     const type=text.slice(j,k);let a=text.indexOf('(',k);if(a<0)break;
+     let q=a,inS=false;while(q<n){const c=text.charCodeAt(q);if(c===39)inS=!inS;else if(c===59&&!inS)break;q++}
+     map.set(id,{t:type,s:a});i=q+1;
+   }
+   return map;
+ }
+ function dec(s){if(s.indexOf('\\')<0)return s;
+   s=s.replace(/\\X2\\([0-9A-F]+)\\X0\\/gi,(m,h)=>{let o='';for(let i=0;i+3<h.length;i+=4)o+=String.fromCharCode(parseInt(h.substr(i,4),16));return o});
+   s=s.replace(/\\X4\\([0-9A-F]+)\\X0\\/gi,(m,h)=>{let o='';for(let i=0;i+7<h.length;i+=8)o+=String.fromCodePoint(parseInt(h.substr(i,8),16));return o});
+   s=s.replace(/\\X\\([0-9A-F]{2})/gi,(m,h)=>String.fromCharCode(parseInt(h,16)));
+   s=s.replace(/\\S\\(.)/g,(m,c)=>String.fromCharCode(c.charCodeAt(0)+128));
+   return s.replace(/\\\\/g,'\\');}
+ function parseAt(text,pos){
+   let i=pos;
+   const ws=()=>{while(text.charCodeAt(i)<=32)i++};
+   function val(){
+     ws();const c=text.charCodeAt(i);
+     if(c===40){i++;const arr=[];ws();if(text.charCodeAt(i)===41){i++;return arr}
+       for(;;){arr.push(val());ws();const d=text.charCodeAt(i);if(d===44){i++;continue}if(d===41){i++;break}i++;break}return arr}
+     if(c===39){i++;let o='';for(;;){const e=text.indexOf("'",i);if(e<0){o+=text.slice(i);i=text.length;break}o+=text.slice(i,e);if(text.charCodeAt(e+1)===39){o+="'";i=e+2;continue}i=e+1;break}return dec(o)}
+     if(c===35){i++;let id=0;for(;;){const d=text.charCodeAt(i);if(d<48||d>57)break;id=id*10+d-48;i++}return {r:id}}
+     if(c===36||c===42){i++;return null}
+     if(c===46){const e=text.indexOf('.',i+1);const v=text.slice(i+1,e);i=e+1;return {e:v}}
+     if((c>=65&&c<=90)||(c>=97&&c<=122)){let k=i;while(text.charCodeAt(k)!==40)k++;const t=text.slice(i,k).toUpperCase();i=k+1;const v=val();ws();if(text.charCodeAt(i)===41)i++;return {t,v}}
+     let k=i;while(k<text.length){const d=text.charCodeAt(k);if((d>=48&&d<=57)||d===45||d===43||d===46||d===69||d===101)k++;else break}
+     const v=parseFloat(text.slice(i,k));i=k;return v;
+   }
+   return val();
+ }
+ /* ---------- Mathematik ---------- */
+ const I4=()=>{const m=new Float64Array(16);m[0]=m[5]=m[10]=m[15]=1;return m};
+ function mul(a,b){const o=new Float64Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++){o[c*4+r]=a[r]*b[c*4]+a[4+r]*b[c*4+1]+a[8+r]*b[c*4+2]+a[12+r]*b[c*4+3]}return o}
+ const tp=(m,x,y,z)=>[m[0]*x+m[4]*y+m[8]*z+m[12],m[1]*x+m[5]*y+m[9]*z+m[13],m[2]*x+m[6]*y+m[10]*z+m[14]];
+ const tv=(m,x,y,z)=>[m[0]*x+m[4]*y+m[8]*z,m[1]*x+m[5]*y+m[9]*z,m[2]*x+m[6]*y+m[10]*z];
+ const norm=v=>{const l=Math.hypot(v[0],v[1],v[2])||1;return [v[0]/l,v[1]/l,v[2]/l]};
+ const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+ const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+ function frame(o,z,x){z=norm(z);x=x||(Math.abs(z[0])<.9?[1,0,0]:[0,1,0]);const d=dot(x,z);x=norm([x[0]-d*z[0],x[1]-d*z[1],x[2]-d*z[2]]);const y=cross(z,x);
+   const m=I4();m[0]=x[0];m[1]=x[1];m[2]=x[2];m[4]=y[0];m[5]=y[1];m[6]=y[2];m[8]=z[0];m[9]=z[1];m[10]=z[2];m[12]=o[0];m[13]=o[1];m[14]=o[2];return m}
+
+ /* ---------- Polygon-Triangulierung mit Löchern (Ohrenschneiden) ---------- */
+ const area2=(P,ix)=>{let a=0;for(let i=0,j=ix.length-1;i<ix.length;j=i++)a+=(P[ix[j]][0]-P[ix[i]][0])*(P[ix[j]][1]+P[ix[i]][1]);return a};
+ function segX(a,b,c,d){const o=(p,q,r)=>(q[0]-p[0])*(r[1]-p[1])-(q[1]-p[1])*(r[0]-p[0]);const d1=o(c,d,a),d2=o(c,d,b),d3=o(a,b,c),d4=o(a,b,d);return ((d1>0&&d2<0)||(d1<0&&d2>0))&&((d3>0&&d4<0)||(d3<0&&d4>0))}
+ function triangulate(P,outer,holes){ // P: [[x,y]], outer/holes: Indexlisten -> Dreiecks-Indizes
+   let poly=outer.slice();if(area2(P,poly)<0)poly.reverse();
+   if(holes&&holes.length){
+     const hs=holes.map(h=>{h=h.slice();if(area2(P,h)>0)h.reverse();let mi=0;for(let i=1;i<h.length;i++)if(P[h[i]][0]>P[h[mi]][0])mi=i;return {h,mi,mx:P[h[mi]][0]}}).sort((a,b)=>b.mx-a.mx);
+     const allEdges=()=>{const e=[];for(let i=0;i<poly.length;i++)e.push([poly[i],poly[(i+1)%poly.length]]);hs.forEach(o=>{for(let i=0;i<o.h.length;i++)e.push([o.h[i],o.h[(i+1)%o.h.length]])});return e};
+     for(const o of hs){const H=P[o.h[o.mi]];const E=allEdges();
+       const cand=poly.map((v,i)=>({i,d:(P[v][0]-H[0])**2+(P[v][1]-H[1])**2})).sort((a,b)=>a.d-b.d);
+       let pick=cand[0]?cand[0].i:0;
+       for(const c of cand){const V=P[poly[c.i]];if(!E.some(([u,w])=>u!==poly[c.i]&&w!==poly[c.i]&&u!==o.h[o.mi]&&w!==o.h[o.mi]&&segX(H,V,P[u],P[w]))){pick=c.i;break}}
+       const ring=[];for(let k=0;k<=o.h.length;k++)ring.push(o.h[(o.mi+k)%o.h.length]);
+       poly=poly.slice(0,pick+1).concat(ring,[poly[pick]],poly.slice(pick+1));
+     }
+   }
+   const out=[];let V=poly.slice();
+   const cr=(a,b,c)=>(P[b][0]-P[a][0])*(P[c][1]-P[a][1])-(P[b][1]-P[a][1])*(P[c][0]-P[a][0]);
+   if(!(holes&&holes.length)){let convex=true;for(let i=0;i<V.length;i++)if(cr(V[(i+V.length-1)%V.length],V[i],V[(i+1)%V.length])<-1e-12){convex=false;break}
+     if(convex){for(let i=1;i+1<V.length;i++)out.push(V[0],V[i],V[i+1]);return out}}
+   const inT=(p,a,b,c)=>{const s1=(b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0]),s2=(c[0]-b[0])*(p[1]-b[1])-(c[1]-b[1])*(p[0]-b[0]),s3=(a[0]-c[0])*(p[1]-c[1])-(a[1]-c[1])*(p[0]-c[0]);return s1>1e-12&&s2>1e-12&&s3>1e-12};
+   let guard=0;
+   while(V.length>3&&guard++<10000){
+     let cut=false;
+     for(let i=0;i<V.length;i++){const a=V[(i+V.length-1)%V.length],b=V[i],c=V[(i+1)%V.length];
+       if(cr(a,b,c)<=1e-12)continue;let ok=true;const A=P[a],B=P[b],C=P[c];
+       for(const v of V){if(v===a||v===b||v===c)continue;const p=P[v];if((p[0]===A[0]&&p[1]===A[1])||(p[0]===B[0]&&p[1]===B[1])||(p[0]===C[0]&&p[1]===C[1]))continue;if(inT(p,A,B,C)){ok=false;break}}
+       if(ok){out.push(a,b,c);V.splice(i,1);cut=true;break}}
+     if(!cut){for(let i=1;i+1<V.length;i++)out.push(V[0],V[i],V[i+1]);V=[];break}
+   }
+   if(V.length===3)out.push(V[0],V[1],V[2]);
+   return out;
+ }
+
+ /* ---------- Modell aufbauen ---------- */
+ const PRODUCT=new Set(('IFCBEAM IFCCOLUMN IFCMEMBER IFCPLATE IFCWALL IFCWALLSTANDARDCASE IFCWALLELEMENTEDCASE IFCSLAB IFCSLABSTANDARDCASE IFCSLABELEMENTEDCASE IFCROOF IFCCOVERING IFCBUILDINGELEMENTPROXY IFCBUILDINGELEMENTPART '+
+   'IFCMECHANICALFASTENER IFCFASTENER IFCDISCRETEACCESSORY IFCELEMENTASSEMBLY IFCFLOWSEGMENT IFCFLOWFITTING IFCFLOWTERMINAL IFCDOOR IFCDOORSTANDARDCASE IFCWINDOW IFCWINDOWSTANDARDCASE IFCSTAIR IFCSTAIRFLIGHT '+
+   'IFCRAILING IFCRAMP IFCRAMPFLIGHT IFCFOOTING IFCPILE IFCCURTAINWALL IFCCHIMNEY IFCSHADINGDEVICE IFCFURNISHINGELEMENT IFCFURNITURE IFCPIPESEGMENT IFCPIPEFITTING IFCDUCTSEGMENT IFCDUCTFITTING IFCCABLESEGMENT '+
+   'IFCCABLECARRIERSEGMENT IFCREINFORCINGBAR IFCREINFORCINGMESH IFCTENDON IFCGEOGRAPHICELEMENT IFCTRANSPORTELEMENT IFCDISTRIBUTIONELEMENT IFCENERGYCONVERSIONDEVICE IFCFLOWCONTROLLER IFCFLOWMOVINGDEVICE '+
+   'IFCFLOWSTORAGEDEVICE IFCFLOWTREATMENTDEVICE IFCELEMENTCOMPONENT IFCCIVILELEMENT IFCSURFACEFEATURE IFCPROXY').split(' '));
+ const VM_TYPES=new Set(['IFCMECHANICALFASTENER','IFCFASTENER','IFCDISCRETEACCESSORY']);
+ const TYPE_DE={IFCBEAM:'Balken',IFCCOLUMN:'Stütze',IFCMEMBER:'Stab',IFCPLATE:'Platte',IFCWALL:'Wand',IFCWALLSTANDARDCASE:'Wand',IFCSLAB:'Decke',IFCROOF:'Dach',IFCCOVERING:'Bekleidung',IFCBUILDINGELEMENTPROXY:'Bauteil',IFCBUILDINGELEMENTPART:'Bauteil',IFCMECHANICALFASTENER:'Verbindungsmittel',IFCFASTENER:'Verbindungsmittel',IFCDISCRETEACCESSORY:'Zubehör',IFCELEMENTASSEMBLY:'Baugruppe',IFCFLOWSEGMENT:'Leitung',IFCDOOR:'Türe',IFCWINDOW:'Fenster',IFCSTAIR:'Treppe',IFCRAILING:'Geländer'};
+ function groupOf(sub){if(!sub)return '';const m=String(sub).match(/^(.*?)[\s\-_.]*\d+[a-zA-Z]?$/);let g=(m&&m[1])?m[1]:sub;g=g.replace(/[\s\-_.]+$/,'');return g||sub}
+
+ async function parse(text,onProgress){
+   const tick=async(p,msg)=>{if(onProgress)onProgress(p,msg);await new Promise(r=>setTimeout(r,0))};
+   await tick(.02,'Datei wird gelesen …');
+   const idx=indexStep(text);
+   if(!idx.size)throw new Error('Das ist keine gültige IFC-Datei.');
+   const schema=(text.slice(0,4000).match(/FILE_SCHEMA\s*\(\s*\(\s*'([^']+)'/i)||[])[1]||'';
+   const cache=new Map();
+   const get=(id,nc)=>{if(id==null)return null;if(typeof id==='object')id=id.r;const c=cache.get(id);if(c)return c;const e=idx.get(id);if(!e)return null;const o={id,t:e.t,a:parseAt(text,e.s)};if(!nc)cache.set(id,o);return o};
+   const byType=new Map();for(const [id,e] of idx){let l=byType.get(e.t);if(!l)byType.set(e.t,l=[]);l.push(id)}
+   const ofType=t=>byType.get(t)||[];
+   const R=x=>x&&typeof x==='object'&&'r' in x?x.r:null;
+   const S=x=>x==null?'':typeof x==='object'?(x.t?S(x.v):x.e!=null?x.e:''):String(x);
+   /* Einheit */
+   let scale=1;for(const id of ofType('IFCSIUNIT')){const a=get(id).a;if(a[1]&&a[1].e==='LENGTHUNIT'){const p=a[2]&&a[2].e;scale=p==='MILLI'?.001:p==='CENTI'?.01:p==='DECI'?.1:p==='KILO'?1000:1}}
+   for(const id of ofType('IFCCONVERSIONBASEDUNIT')){const a=get(id).a;if(a[1]&&a[1].e==='LENGTHUNIT'){const nm=S(a[2]).toUpperCase();if(nm.includes('INCH'))scale=.0254;else if(nm.includes('FOOT'))scale=.3048}}
+   const pt=id=>{const a=get(id).a[0];return [(a[0]||0)*scale,(a[1]||0)*scale,(a[2]||0)*scale]};
+   const dirv=id=>{const a=get(id).a[0];return [a[0]||0,a[1]||0,a[2]||0]};
+   function ax3(id){const e=get(id);if(!e)return I4();const a=e.a;if(e.t==='IFCAXIS2PLACEMENT2D'){const o=pt(a[0]);const x=a[1]?dirv(a[1]):[1,0,0];return frame([o[0],o[1],0],[0,0,1],[x[0],x[1],0])}
+     return frame(pt(a[0]),a[1]?dirv(a[1]):[0,0,1],a[2]?dirv(a[2]):null)}
+   const plc=new Map();
+   function placement(id){if(id==null)return I4();if(plc.has(id))return plc.get(id);const e=get(id);let m=I4();
+     if(e&&e.t==='IFCLOCALPLACEMENT'){const loc=e.a[1]?ax3(e.a[1]):I4();m=e.a[0]?mul(placement(R(e.a[0])),loc):loc}plc.set(id,m);return m}
+   function cto(id){const e=get(id);const a=e.a;const x=a[0]?norm(dirv(a[0])):[1,0,0];let y=a[1]?norm(dirv(a[1])):null;const o=a[2]?pt(a[2]):[0,0,0];const s=a[3]==null?1:a[3];
+     let z=e.t.includes('3D')&&a[4]?norm(dirv(a[4])):cross(x,y||[0,1,0]);if(!y)y=cross(z,x);
+     const s2=e.t.includes('NONUNIFORM')?(a[5]==null?s:a[5]):s,s3=e.t.includes('NONUNIFORM')?(a[6]==null?s:a[6]):s;
+     const m=I4();m[0]=x[0]*s;m[1]=x[1]*s;m[2]=x[2]*s;m[4]=y[0]*s2;m[5]=y[1]*s2;m[6]=y[2]*s2;m[8]=z[0]*s3;m[9]=z[1]*s3;m[10]=z[2]*s3;m[12]=o[0];m[13]=o[1];m[14]=o[2];return m}
+   /* Relationen */
+   await tick(.08,'Beziehungen …');
+   const container=new Map(),parent=new Map(),psets=new Map(),matOf=new Map();
+   const push=(m,k,v)=>{let l=m.get(k);if(!l)m.set(k,l=[]);l.push(v)};
+   for(const id of ofType('IFCRELCONTAINEDINSPATIALSTRUCTURE')){const a=get(id).a;(a[4]||[]).forEach(x=>container.set(R(x),R(a[5])))}
+   for(const t of ['IFCRELAGGREGATES','IFCRELNESTS'])for(const id of ofType(t)){const a=get(id).a;(a[5]||[]).forEach(x=>parent.set(R(x),R(a[4])))}
+   for(const id of ofType('IFCRELDEFINESBYPROPERTIES')){const a=get(id).a;const d=R(a[5]);(a[4]||[]).forEach(x=>push(psets,R(x),d))}
+   for(const id of ofType('IFCRELASSOCIATESMATERIAL')){const a=get(id).a;(a[4]||[]).forEach(x=>matOf.set(R(x),R(a[5])))}
+   /* Farben */
+   const colOfStyle=new Map(),itemCol=new Map();
+   function styleColor(id,d){if(id==null||d>6)return null;if(colOfStyle.has(id))return colOfStyle.get(id);const e=get(id);let c=null;
+     if(!e)return null;
+     if(e.t==='IFCSURFACESTYLE'){for(const s of e.a[2]||[]){c=styleColor(R(s),d+1);if(c)break}}
+     else if(e.t==='IFCPRESENTATIONSTYLEASSIGNMENT'){for(const s of e.a[0]||[]){c=styleColor(R(s),d+1);if(c)break}}
+     else if(e.t==='IFCSURFACESTYLERENDERING'||e.t==='IFCSURFACESTYLESHADING'){const ce=get(e.a[0]);if(ce&&ce.t==='IFCCOLOURRGB'){const tr=Number(e.a[1])||0;c=[ce.a[1],ce.a[2],ce.a[3],1-Math.min(.9,tr)]}}
+     colOfStyle.set(id,c);return c}
+   for(const id of ofType('IFCSTYLEDITEM')){const a=get(id).a;let c=null;for(const s of a[1]||[]){c=styleColor(R(s),0);if(c)break}if(c&&a[0])itemCol.set(R(a[0]),c)}
+   /* Material- & Eigenschaftsnamen */
+   function matName(id,d){if(id==null||d>5)return '';const e=get(id);if(!e)return '';const a=e.a;
+     switch(e.t){case 'IFCMATERIAL':return S(a[0]);case 'IFCMATERIALLIST':return (a[0]||[]).map(x=>matName(R(x),d+1)).filter(Boolean).join(', ');
+       case 'IFCMATERIALLAYERSETUSAGE':return matName(R(a[0]),d+1);case 'IFCMATERIALLAYERSET':return (a[0]||[]).map(x=>matName(R(x),d+1)).filter(Boolean).join(', ');
+       case 'IFCMATERIALLAYER':return matName(R(a[0]),d+1);case 'IFCMATERIALPROFILESETUSAGE':return matName(R(a[0]),d+1);case 'IFCMATERIALPROFILESET':return (a[2]||[]).map(x=>matName(R(x),d+1)).filter(Boolean).join(', ');
+       case 'IFCMATERIALPROFILE':return matName(R(a[2]),d+1);case 'IFCMATERIALCONSTITUENTSET':return (a[2]||[]).map(x=>matName(R(x),d+1)).filter(Boolean).join(', ');case 'IFCMATERIALCONSTITUENT':return matName(R(a[2]),d+1);default:return ''}}
+   const fmtVal=v=>{if(v==null)return '';if(typeof v==='object'&&v.t){const x=v.v;if(typeof x==='number'){if(/LENGTH/.test(v.t))return String(Math.round(x*scale*1000*10)/10)+' mm';return String(Math.round(x*1000)/1000)}if(x&&x.e)return x.e==='T'?'ja':x.e==='F'?'nein':x.e;return S(x)}return S(v)};
+   function propsOf(id){const out={};for(const pid of psets.get(id)||[]){const e=get(pid);if(!e)continue;
+       if(e.t==='IFCPROPERTYSET'){const o=out[S(e.a[2])||'Eigenschaften']={};for(const r of e.a[4]||[]){const p=get(r);if(!p)continue;if(p.t==='IFCPROPERTYSINGLEVALUE'){const v=fmtVal(p.a[2]);if(v!=='')o[S(p.a[0])]=v}else if(p.t==='IFCPROPERTYENUMERATEDVALUE'){o[S(p.a[0])]=(p.a[2]||[]).map(fmtVal).join(', ')}}}
+       else if(e.t==='IFCELEMENTQUANTITY'){const o=out[S(e.a[2])||'Mengen']={};for(const r of e.a[5]||[]){const q=get(r);if(!q)continue;const v=q.a[3];if(typeof v==='number'){const t=q.t;o[S(q.a[0])]=t==='IFCQUANTITYLENGTH'?Math.round(v*scale*1000)+' mm':t==='IFCQUANTITYAREA'?(Math.round(v*1000)/1000)+' m²':t==='IFCQUANTITYVOLUME'?(Math.round(v*10000)/10000)+' m³':String(Math.round(v*1000)/1000)}}}}
+     return out}
+   const findProp=(pr,names)=>{for(const ps of Object.values(pr))for(const [k,v] of Object.entries(ps)){if(names.includes(k.toLowerCase().trim()))return v}return ''};
+   /* Geometrie */
+   const tris=[];const cols=[];const edges=[];// pro Element gesammelt
+   let T,C,Ed,curCol;const skipped={};
+   function addTri(a,b,c){T.push(a[0],a[1],a[2],b[0],b[1],b[2],c[0],c[1],c[2]);C.push(curCol)}
+   let noEdge=false;function addEdge(a,b){if(noEdge)return;Ed.push(a[0],a[1],a[2],b[0],b[1],b[2])}
+   function polygon3(loops,withEdges){ // loops: [[ [x,y,z]… ] outer, …holes] in Weltkoordinaten
+     const o=loops[0];if(!o||o.length<3)return;
+     let nx=0,ny=0,nz=0;for(let i=0;i<o.length;i++){const p=o[i],q=o[(i+1)%o.length];nx+=(p[1]-q[1])*(p[2]+q[2]);ny+=(p[2]-q[2])*(p[0]+q[0]);nz+=(p[0]-q[0])*(p[1]+q[1])}
+     const ax=Math.abs(nx),ay=Math.abs(ny),az=Math.abs(nz);
+     if(withEdges)loops.forEach(l=>{for(let i=0;i<l.length;i++)addEdge(l[i],l[(i+1)%l.length])});
+     if(loops.length===1&&o.length===3){addTri(o[0],o[1],o[2]);return}
+     if(loops.length===1&&o.length===4){addTri(o[0],o[1],o[2]);addTri(o[0],o[2],o[3]);
+       // konkave Vierecke korrekt teilen
+       const d=(p,q)=>[q[0]-p[0],q[1]-p[1],q[2]-p[2]];const n=[nx,ny,nz];const c1=dot(cross(d(o[0],o[1]),d(o[0],o[2])),n),c2=dot(cross(d(o[0],o[2]),d(o[0],o[3])),n);
+       if(c1<0||c2<0){T.length-=18;C.length-=2;addTri(o[1],o[2],o[3]);addTri(o[1],o[3],o[0])}return}
+     const P=[],loopsIx=[];
+     const to2=ax>=ay&&ax>=az?(p=>[p[1],p[2]]):ay>=az?(p=>[p[2],p[0]]):(p=>[p[0],p[1]]);
+     const flip=(ax>=ay&&ax>=az?nx:ay>=az?ny:nz)<0;
+     const all3=[];loops.forEach(l=>{const ix=[];l.forEach(p=>{const q=to2(p);P.push(flip?[q[1],q[0]]:q);all3.push(p);ix.push(P.length-1)});loopsIx.push(ix)});
+     const t=triangulate(P,loopsIx[0],loopsIx.slice(1));
+     // Orientierung an Polygon-Normale anpassen
+     for(let i=0;i+2<t.length;i+=3)addTri(all3[t[i]],all3[t[i+1]],all3[t[i+2]]);
+   }
+   function pointList(id,M){const e=get(id,true);const L=e.a[0]||[];const out=new Array(L.length);for(let i=0;i<L.length;i++){const p=L[i];out[i]=tp(M,(p[0]||0)*scale,(p[1]||0)*scale,(p[2]||0)*scale)}return out}
+   function curvePts2(id,d){const e=get(id);if(!e||d>4)return [];const a=e.a;
+     if(e.t==='IFCPOLYLINE')return (a[0]||[]).map(r=>{const p=get(r).a[0];return [(p[0]||0)*scale,(p[1]||0)*scale,(p[2]||0)*scale]});
+     if(e.t==='IFCINDEXEDPOLYCURVE'){const pl=get(a[0]);const L=(pl.a[0]||[]).map(p=>[(p[0]||0)*scale,(p[1]||0)*scale,(p[2]||0)*scale]);if(!a[1])return L;const out=[];
+       (a[1]||[]).forEach(sg=>{const ix=(sg.v||[]);if(/ARC/.test(sg.t)&&ix.length===3){const A=L[ix[0]-1],B=L[ix[1]-1],Cc=L[ix[2]-1];arc3(A,B,Cc).forEach(p=>out.push(p))}else ix.forEach(k=>out.push(L[k-1]))});return out.filter((p,i)=>i===0||p!==out[i-1])}
+     if(e.t==='IFCCOMPOSITECURVE'){let out=[];(a[0]||[]).forEach(s=>{const se=get(s);const pts=curvePts2(R(se.a[2]),d+1);out=out.concat(se.a[1]&&se.a[1].e==='F'?pts.reverse():pts)});return out}
+     if(e.t==='IFCTRIMMEDCURVE')return curvePts2(R(a[0]),d+1);
+     if(e.t==='IFCCIRCLE'){const r=(a[1]||0)*scale,M=ax3(R(a[0]));const out=[];for(let i=0;i<24;i++){const t=i/24*Math.PI*2;out.push(tp(M,Math.cos(t)*r,Math.sin(t)*r,0))}return out}
+     return []}
+   function arc3(A,B,Cc){const ax=A[0],ay=A[1],bx=B[0],by=B[1],cx=Cc[0],cy=Cc[1];const d=2*(ax*(by-cy)+bx*(cy-ay)+cx*(ay-by));if(Math.abs(d)<1e-12)return [A,B,Cc];
+     const ux=((ax*ax+ay*ay)*(by-cy)+(bx*bx+by*by)*(cy-ay)+(cx*cx+cy*cy)*(ay-by))/d,uy=((ax*ax+ay*ay)*(cx-bx)+(bx*bx+by*by)*(ax-cx)+(cx*cx+cy*cy)*(bx-ax))/d;
+     const r=Math.hypot(ax-ux,ay-uy);let a0=Math.atan2(ay-uy,ax-ux),a1=Math.atan2(by-uy,bx-ux),a2=Math.atan2(cy-uy,cx-ux);
+     const norm2=x=>{while(x<0)x+=2*Math.PI;while(x>=2*Math.PI)x-=2*Math.PI;return x};let s1=norm2(a1-a0),s2=norm2(a2-a0);const ccw=s1<s2;const sweep=ccw?s2:-(2*Math.PI-s2);
+     const n=Math.max(2,Math.ceil(Math.abs(sweep)/(Math.PI/12)));const out=[];for(let i=0;i<=n;i++){const t=a0+sweep*i/n;out.push([ux+Math.cos(t)*r,uy+Math.sin(t)*r,0])}return out}
+   function profile(id){ // -> {loops:[[ [x,y]… ]…]} in Profilkoordinaten
+     const e=get(id);if(!e)return null;const a=e.a;let loops=null;
+     const pos=x=>x?ax3(R(x)):I4();
+     const T2=(M,L)=>L.map(p=>{const q=tp(M,p[0],p[1],0);return [q[0],q[1]]});
+     switch(e.t){
+       case 'IFCRECTANGLEPROFILEDEF':{const x=(a[3]||0)*scale/2,y=(a[4]||0)*scale/2;loops=[T2(pos(a[2]),[[-x,-y],[x,-y],[x,y],[-x,y]])];break}
+       case 'IFCRECTANGLEHOLLOWPROFILEDEF':{const x=(a[3]||0)*scale/2,y=(a[4]||0)*scale/2,w=(a[5]||0)*scale;const M=pos(a[2]);loops=[T2(M,[[-x,-y],[x,-y],[x,y],[-x,y]]),T2(M,[[-x+w,-y+w],[-x+w,y-w],[x-w,y-w],[x-w,-y+w]])];break}
+       case 'IFCCIRCLEPROFILEDEF':{const r=(a[3]||0)*scale,n=r<.03?8:r<.2?16:28;const L=[];for(let i=0;i<n;i++){const t=i/n*Math.PI*2;L.push([Math.cos(t)*r,Math.sin(t)*r])}loops=[T2(pos(a[2]),L)];break}
+       case 'IFCCIRCLEHOLLOWPROFILEDEF':{const r=(a[3]||0)*scale,w=(a[4]||0)*scale,n=16;const L=[],H=[];for(let i=0;i<n;i++){const t=i/n*Math.PI*2;L.push([Math.cos(t)*r,Math.sin(t)*r]);H.push([Math.cos(-t)*(r-w),Math.sin(-t)*(r-w)])}const M=pos(a[2]);loops=[T2(M,L),T2(M,H)];break}
+       case 'IFCARBITRARYCLOSEDPROFILEDEF':loops=[curvePts2(R(a[2]),0).map(p=>[p[0],p[1]])];break;
+       case 'IFCARBITRARYPROFILEDEFWITHVOIDS':loops=[curvePts2(R(a[2]),0).map(p=>[p[0],p[1]]),...(a[3]||[]).map(c=>curvePts2(R(c),0).map(p=>[p[0],p[1]]))];break;
+       case 'IFCISHAPEPROFILEDEF':{const b=(a[3]||0)*scale/2,h=(a[4]||0)*scale/2,tw=(a[5]||0)*scale/2,tf=(a[6]||0)*scale;loops=[T2(pos(a[2]),[[-b,-h],[b,-h],[b,-h+tf],[tw,-h+tf],[tw,h-tf],[b,h-tf],[b,h],[-b,h],[-b,h-tf],[-tw,h-tf],[-tw,-h+tf],[-b,-h+tf]])];break}
+       case 'IFCLSHAPEPROFILEDEF':{const d=(a[3]||0)*scale,w=(a[4]==null?a[3]:a[4])*scale,t=(a[5]||0)*scale;loops=[T2(pos(a[2]),[[-w/2,-d/2],[w/2,-d/2],[w/2,-d/2+t],[-w/2+t,-d/2+t],[-w/2+t,d/2],[-w/2,d/2]])];break}
+       case 'IFCDERIVEDPROFILEDEF':{const p=profile(R(a[2]));if(!p)return null;const M=cto(R(a[3]));loops=p.loops.map(L=>T2(M,L));break}
+       case 'IFCCOMPOSITEPROFILEDEF':{loops=[];(a[2]||[]).forEach(x=>{const p=profile(R(x));if(p)loops.push(...p.loops)});return {loops,multi:true}}
+       default:skipped[e.t]=(skipped[e.t]||0)+1;return null}
+     return {loops};
+   }
+   function extrude(M,prof,dir,depth,withEdges){
+     if(!prof)return;const groups=prof.multi?prof.loops.map(l=>[l]):[prof.loops];
+     const dv=[dir[0]*depth,dir[1]*depth,dir[2]*depth];
+     for(const lp of groups){const B=lp.map(L=>L.map(p=>tp(M,p[0],p[1],0)));const Tt=lp.map(L=>L.map(p=>tp(M,p[0]+dv[0],p[1]+dv[1],dv[2])));
+       polygon3(B.map(L=>L.slice().reverse()),withEdges);polygon3(Tt,withEdges);
+       for(let k=0;k<B.length;k++){const b=B[k],t=Tt[k];for(let i=0;i<b.length;i++){const j=(i+1)%b.length;addTri(b[i],b[j],t[j]);addTri(b[i],t[j],t[i])}}
+     }
+   }
+   function tube(M,pts,r){if(pts.length<2||!(r>0))return;const n=r<.02?6:10;
+     for(let s=0;s+1<pts.length;s++){const A=tp(M,...pts[s]),B=tp(M,...pts[s+1]);const d=norm([B[0]-A[0],B[1]-A[1],B[2]-A[2]]);const u=norm(cross(d,Math.abs(d[2])<.9?[0,0,1]:[1,0,0]));const v=cross(d,u);
+       const ring=P=>{const o=[];for(let i=0;i<n;i++){const t=i/n*Math.PI*2,c=Math.cos(t)*r,si=Math.sin(t)*r;o.push([P[0]+u[0]*c+v[0]*si,P[1]+u[1]*c+v[1]*si,P[2]+u[2]*c+v[2]*si])}return o};
+       const ra=ring(A),rb=ring(B);for(let i=0;i<n;i++){const j=(i+1)%n;addTri(ra[i],ra[j],rb[j]);addTri(ra[i],rb[j],rb[i])}
+       if(s===0)polygon3([ra.slice().reverse()],false);if(s+2===pts.length)polygon3([rb],false)}}
+   function faces(M,faceIds){for(const f of faceIds){const fe=get(f,true);if(!fe)continue;const loops=[];let outer=null;
+       for(const b of fe.a[0]||[]){const be=get(b,true);if(!be)continue;const pl=get(be.a[0],true);if(!pl||pl.t!=='IFCPOLYLOOP')continue;let L=(pl.a[0]||[]).map(r=>{const p=get(r).a[0];return tp(M,(p[0]||0)*scale,(p[1]||0)*scale,(p[2]||0)*scale)});
+         if(be.a[1]&&be.a[1].e==='F')L.reverse();if(be.t==='IFCFACEOUTERBOUND')outer=L;else loops.push(L)}
+       if(!outer&&loops.length)outer=loops.shift();if(outer)polygon3([outer,...loops],true)}}
+   function item(id,M,d){
+     const e=get(id);if(!e||d>6)return;const a=e.a;const prev=curCol;const ic=itemCol.get(id);if(ic)curCol=ic;
+     switch(e.t){
+       case 'IFCPOLYGONALFACESET':{const P=pointList(R(a[0]),M);const pn=a[3];const ix=k=>P[(pn?pn[k-1]:k)-1];
+         for(const fr of a[2]||[]){const f=get(fr,true);if(!f)continue;const outer=(f.a[0]||[]).map(ix).filter(Boolean);const loops=[outer];if(f.t==='IFCINDEXEDPOLYGONALFACEWITHVOIDS')(f.a[1]||[]).forEach(h=>loops.push(h.map(ix).filter(Boolean)));polygon3(loops,true)}break}
+       case 'IFCTRIANGULATEDFACESET':case 'IFCTRIANGULATEDIRREGULARNETWORK':{const P=pointList(R(a[0]),M);const pn=a[4];const ix=k=>P[(pn?pn[k-1]:k)-1];const E=new Map();
+         const tl=a[3]||[];const nrm=[];
+         tl.forEach((t,fi)=>{const A=ix(t[0]),B=ix(t[1]),Cc=ix(t[2]);if(!A||!B||!Cc)return;addTri(A,B,Cc);const n=norm(cross([B[0]-A[0],B[1]-A[1],B[2]-A[2]],[Cc[0]-A[0],Cc[1]-A[1],Cc[2]-A[2]]));nrm[fi]=n;
+           [[t[0],t[1]],[t[1],t[2]],[t[2],t[0]]].forEach(([u,w])=>{const k=u<w?u+'_'+w:w+'_'+u;const o=E.get(k);if(o)o.push(fi);else E.set(k,[fi])})});
+         for(const [k,fs] of E){if(fs.length===2&&dot(nrm[fs[0]]||[0,0,1],nrm[fs[1]]||[0,0,1])>.94)continue;const [u,w]=k.split('_').map(Number);addEdge(ix(u),ix(w))}break}
+       case 'IFCEXTRUDEDAREASOLID':case 'IFCEXTRUDEDAREASOLIDTAPERED':{const Mi=mul(M,a[1]?ax3(R(a[1])):I4());const dir=norm(dirv(R(a[2])));const pr=profile(R(a[0]));const big=pr&&pr.loops[0]&&pr.loops[0].length<=8;extrude(Mi,pr,dir,(a[3]||0)*scale,true);break}
+       case 'IFCSWEPTDISKSOLID':case 'IFCSWEPTDISKSOLIDPOLYGONAL':{tube(M,curvePts2(R(a[0]),0),(a[1]||0)*scale);break}
+       case 'IFCFACETEDBREP':case 'IFCFACETEDBREPWITHVOIDS':{const sh=get(a[0]);if(sh)faces(M,(sh.a[0]||[]).map(R));break}
+       case 'IFCSHELLBASEDSURFACEMODEL':for(const s of a[0]||[]){const sh=get(s);if(sh)faces(M,(sh.a[0]||[]).map(R))}break;
+       case 'IFCFACEBASEDSURFACEMODEL':for(const s of a[0]||[]){const sh=get(s);if(sh)faces(M,(sh.a[0]||[]).map(R))}break;
+       case 'IFCBOOLEANCLIPPINGRESULT':case 'IFCBOOLEANRESULT':item(R(a[1]),M,d+1);break;
+       case 'IFCMAPPEDITEM':{const src=get(a[0]);if(!src)break;const Mm=mul(M,mul(cto(R(a[1])),ax3(R(src.a[0]))));const rep=get(src.a[1]);if(rep)(rep.a[3]||[]).forEach(x=>item(R(x),Mm,d+1));break}
+       case 'IFCSHAPEREPRESENTATION':(a[3]||[]).forEach(x=>item(R(x),M,d+1));break;
+       default:if(!/CURVE|POLYLINE|LINE|POINT|ANNOTATION|TEXT|BOUNDINGBOX|GEOMETRICSET|GEOMETRICCURVESET/.test(e.t))skipped[e.t]=(skipped[e.t]||0)+1;
+     }
+     curCol=prev;
+   }
+   /* Elemente */
+   const ids=[];for(const t of byType.keys())if(PRODUCT.has(t)||(/^IFC/.test(t)&&/(ELEMENT|SEGMENT|FITTING|TERMINAL)$/.test(t)&&!/^IFCREL|OPENING|VIRTUAL|SPATIAL|TYPE$/.test(t)))ids.push(...byType.get(t));
+   const els=[];const storeyName=id=>{let x=id,g=0;while(x!=null&&g++<20){const s=container.get(x);if(s!=null){const se=get(s);return se?{n:S(se.a[2])||se.t,el:se.t==='IFCBUILDINGSTOREY'?Number(se.a[9])||0:0}:null}x=parent.get(x)}return null};
+   const asmName=id=>{let x=parent.get(id),g=0;while(x!=null&&g++<20){const e=get(x);if(e&&e.t==='IFCELEMENTASSEMBLY')return S(e.a[2]);x=parent.get(x)}return ''};
+   const DEFCOL=t=>VM_TYPES.has(t)?[.42,.45,.48,1]:t==='IFCFLOWSEGMENT'?[.3,.55,.8,1]:t==='IFCWINDOW'?[.6,.8,.9,.5]:[.85,.73,.55,1];
+   const total=ids.length;let done=0;
+   for(const id of ids){
+     const e=get(id);const a=e.a;if(!a||!a[6])continue;const shape=get(a[6]);if(!shape||shape.t!=='IFCPRODUCTDEFINITIONSHAPE')continue;
+     const reps=(shape.a[2]||[]).map(get).filter(Boolean);let use=reps.filter(r=>/^(Body|Facetation)$/i.test(S(r.a[1])));if(!use.length)use=reps.filter(r=>!/^(Axis|Box|FootPrint|Annotation|Profile|Reference|CoG|Clearance)$/i.test(S(r.a[1])));
+     if(!use.length)continue;
+     T=[];C=[];Ed=[];noEdge=VM_TYPES.has(e.t);curCol=DEFCOL(e.t);const M=placement(R(a[5]));
+     for(const r of use)(r.a[3]||[]).forEach(x=>item(R(x),M,0));
+     if(T.length){const pr=propsOf(id);const sub=findProp(pr,['sub group','bauuntergruppe','untergruppe','subgroup']);const grp=findProp(pr,['group','baugruppe'])||groupOf(sub);const st=storeyName(id);
+       const mats=matOf.get(id)!=null?matName(matOf.get(id),0):(parent.get(id)!=null&&matOf.get(parent.get(id))!=null?matName(matOf.get(parent.get(id)),0):'');
+       els.push({id,guid:S(a[0]),type:e.t,typeDe:TYPE_DE[e.t]||e.t.replace(/^IFC/,'').toLowerCase(),name:S(a[2])||TYPE_DE[e.t]||e.t,sub,grp,storey:st?st.n:'',storeyEl:st?st.el:0,asm:asmName(id),mat:mats,props:pr,vm:VM_TYPES.has(e.t),
+         prod:findProp(pr,['no. production list','produktionsliste','production number','prod. nr','produktionsnummer']),T,C,Ed,ax:[M[0],M[1],M[2],M[4],M[5],M[6],M[8],M[9],M[10]]})}
+     if(++done%400===0)await tick(.1+.8*done/total,'Bauteile '+done+' / '+total);
+   }
+   await tick(.92,'Puffer …');
+   /* Ursprung & Sortierung */
+   let mn=[Infinity,Infinity,Infinity],mx=[-Infinity,-Infinity,-Infinity];
+   for(const el of els){const t=el.T;for(let i=0;i<t.length;i+=3){for(let k=0;k<3;k++){const v=t[i+k];if(v<mn[k])mn[k]=v;if(v>mx[k])mx[k]=v}}}
+   const origin=[Math.round((mn[0]+mx[0])/2),Math.round((mn[1]+mx[1])/2),Math.round(mn[2])];
+   const coll=new Intl.Collator('de-CH',{numeric:true});const cmp=(a,b)=>coll.compare(String(a||''),String(b||''));
+   els.sort((a,b)=>cmp(a.grp,b.grp)||cmp(a.sub,b.sub)||cmp(a.storey,b.storey)||cmp(a.type,b.type)||cmp(a.name,b.name));
+   let nv=0,ne=0;els.forEach(el=>{nv+=el.T.length/3;ne+=el.Ed.length/3});
+   const pos=new Float32Array(nv*3),col=new Uint8Array(nv*4),epos=new Float32Array(ne*3);let vo=0,eo=0;
+   for(const el of els){el.v0=vo/3;el.vn=el.T.length/3;el.e0=eo/3;el.en=el.Ed.length/3;const b=[Infinity,Infinity,Infinity,-Infinity,-Infinity,-Infinity];
+     for(let i=0;i<el.T.length;i+=3){for(let k=0;k<3;k++){const v=el.T[i+k]-origin[k];pos[vo+k]=v;if(v<b[k])b[k]=v;if(v>b[k+3])b[k+3]=v}vo+=3}
+     for(let t=0;t<el.C.length;t++){const c=el.C[t];for(let q=0;q<3;q++){const o=(el.v0+t*3+q)*4;col[o]=Math.round(c[0]*255);col[o+1]=Math.round(c[1]*255);col[o+2]=Math.round(c[2]*255);col[o+3]=Math.round((c[3]==null?1:c[3])*255)}}
+     for(let i=0;i<el.Ed.length;i+=3){epos[eo]=el.Ed[i]-origin[0];epos[eo+1]=el.Ed[i+1]-origin[1];epos[eo+2]=el.Ed[i+2]-origin[2];eo+=3}
+     el.bb=b;el.base=el.C[0]||[.8,.8,.8,1];delete el.T;delete el.C;delete el.Ed}
+   const bb=[mn[0]-origin[0],mn[1]-origin[1],mn[2]-origin[2],mx[0]-origin[0],mx[1]-origin[1],mx[2]-origin[2]];
+   const projE=get((byType.get('IFCPROJECT')||[])[0]);
+   await tick(1,'fertig');
+   return {schema,project:projE?S(projE.a[2]):'',app:(text.slice(0,3000).match(/FILE_NAME\s*\([^;]*?'([^']*cadwork[^']*)'/i)||[])[1]||'',origin,bb,pos,col,epos,els,skipped,nTri:nv/3};
+ }
+ return {parse,groupOf};
+})();
+if(typeof module!=='undefined')module.exports=IFC3D_V462;
+
+/* V462: 3D-Modell pro Projekt (IFC aus cadwork) – eigener WebGL-Betrachter, keine externen Bibliotheken.
+   Cloud: st.models3dV462 (Metadaten je Modell), Datei gzip-komprimiert in 4-MB-Teilen im Supabase-Storage. */
+(function(){
+ const PART=4*1024*1024;
+ const fmtMM=v=>Math.round(v*1000).toLocaleString('de-CH');
+ /* ===================== WebGL-Betrachter ===================== */
+ function createViewer(stage,cb){
+   const cv=document.createElement('canvas');cv.className='m3GlV462';const ov=document.createElement('canvas');ov.className='m3OvV462';
+   stage.appendChild(cv);stage.appendChild(ov);
+   const gl=cv.getContext('webgl2',{antialias:true,preserveDrawingBuffer:false});
+   if(!gl){stage.innerHTML='<div class="m3ErrV462">Dieser Browser unterstützt kein WebGL2 – 3D-Ansicht nicht möglich.</div>';return null}
+   const ox=ov.getContext('2d');
+   const sh=(t,src)=>{const s=gl.createShader(t);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s};
+   const prog=(vs,fs)=>{const p=gl.createProgram();gl.attachShader(p,sh(gl.VERTEX_SHADER,vs));gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p));return p};
+   const PT=prog(`#version 300 es
+in vec3 p;in vec4 c;uniform mat4 mvp;out vec3 vp;out vec4 vc;void main(){vp=p;vc=c;gl_Position=mvp*vec4(p,1.0);}`,`#version 300 es
+precision highp float;in vec3 vp;in vec4 vc;uniform vec4 clip;uniform int clipOn;uniform vec4 over;uniform float alpha;uniform vec3 eye;out vec4 o;
+void main(){if(clipOn==1&&dot(vp,clip.xyz)>clip.w)discard;vec3 n=normalize(cross(dFdx(vp),dFdy(vp)));vec3 v=normalize(eye-vp);if(dot(n,v)<0.0)n=-n;
+vec3 L1=normalize(vec3(0.35,-0.55,0.8));vec3 L2=normalize(vec3(-0.6,0.45,0.25));float d=0.40+0.42*max(dot(n,L1),0.0)+0.16*max(dot(n,L2),0.0)+0.14*max(dot(n,v),0.0);
+o=vec4(mix(vc.rgb,over.rgb,over.a)*d,alpha);}`);
+   const PL=prog(`#version 300 es
+in vec3 p;uniform mat4 mvp;out vec3 vp;void main(){vp=p;gl_Position=mvp*vec4(p,1.0);}`,`#version 300 es
+precision highp float;in vec3 vp;uniform vec4 clip;uniform int clipOn;uniform vec4 col;out vec4 o;void main(){if(clipOn==1&&dot(vp,clip.xyz)>clip.w)discard;o=col;}`);
+   const U=(p,n)=>gl.getUniformLocation(p,n);
+   const uT={mvp:U(PT,'mvp'),clip:U(PT,'clip'),clipOn:U(PT,'clipOn'),over:U(PT,'over'),alpha:U(PT,'alpha'),eye:U(PT,'eye')},uL={mvp:U(PL,'mvp'),clip:U(PL,'clip'),clipOn:U(PL,'clipOn'),col:U(PL,'col')};
+   const vaoT=gl.createVertexArray(),vaoL=gl.createVertexArray();let bufs=[];
+   const V={m:null,vis:null,R:[],G:[],E:[],sel:-1,cam:{t:[0,0,0],d:30,yaw:-1.0,pitch:.5,fov:45*Math.PI/180},clip:{axis:'',val:0,flip:false},
+     ghost:false,measure:false,meas:[],pend:null,hover:null,dirty:true,mvp:null,eye:[0,0,0],W:1,H:1};
+   function load(m){bufs.forEach(b=>gl.deleteBuffer(b));bufs=[];V.m=m;V.sel=-1;V.meas=[];V.pend=null;
+     const bp=gl.createBuffer(),bc=gl.createBuffer(),be=gl.createBuffer();bufs=[bp,bc,be];
+     gl.bindVertexArray(vaoT);gl.bindBuffer(gl.ARRAY_BUFFER,bp);gl.bufferData(gl.ARRAY_BUFFER,m.pos,gl.STATIC_DRAW);const lp=gl.getAttribLocation(PT,'p');gl.enableVertexAttribArray(lp);gl.vertexAttribPointer(lp,3,gl.FLOAT,false,0,0);
+     gl.bindBuffer(gl.ARRAY_BUFFER,bc);gl.bufferData(gl.ARRAY_BUFFER,m.col,gl.STATIC_DRAW);const lc=gl.getAttribLocation(PT,'c');gl.enableVertexAttribArray(lc);gl.vertexAttribPointer(lc,4,gl.UNSIGNED_BYTE,true,0,0);
+     gl.bindVertexArray(vaoL);gl.bindBuffer(gl.ARRAY_BUFFER,be);gl.bufferData(gl.ARRAY_BUFFER,m.epos,gl.STATIC_DRAW);const ll=gl.getAttribLocation(PL,'p');gl.enableVertexAttribArray(ll);gl.vertexAttribPointer(ll,3,gl.FLOAT,false,0,0);
+     gl.bindVertexArray(null);V.vis=new Uint8Array(m.els.length).fill(1);setVis(V.vis);view('iso',true);}
+   function setVis(vis){V.vis=vis;const els=V.m.els;const R=[],G=[],E=[];let r=null,g=null,e=null;
+     for(let i=0;i<els.length;i++){const el=els[i];if(vis[i]){if(r&&r[0]+r[1]===el.v0)r[1]+=el.vn;else R.push(r=[el.v0,el.vn]);if(el.en){if(e&&e[0]+e[1]===el.e0)e[1]+=el.en;else E.push(e=[el.e0,el.en])}}
+       else{if(g&&g[0]+g[1]===el.v0)g[1]+=el.vn;else G.push(g=[el.v0,el.vn])}}
+     V.R=R;V.G=G;V.E=E;if(V.sel>=0&&!vis[V.sel])V.sel=-1;req()}
+   /* Kamera */
+   function camBasis(){const c=V.cam,cp=Math.cos(c.pitch);const f=[-cp*Math.cos(c.yaw),-cp*Math.sin(c.yaw),-Math.sin(c.pitch)];const eye=[c.t[0]-f[0]*c.d,c.t[1]-f[1]*c.d,c.t[2]-f[2]*c.d];
+     let r=[f[1],-f[0],0];const rl=Math.hypot(r[0],r[1])||1;r=[r[0]/rl,r[1]/rl,0];if(Math.abs(c.pitch)>1.5){r=[Math.sin(c.yaw),-Math.cos(c.yaw),0]}
+     const u=[r[1]*f[2]-r[2]*f[1],r[2]*f[0]-r[0]*f[2],r[0]*f[1]-r[1]*f[0]];return {f,r,u,eye}}
+   function matrices(){const {f,r,u,eye}=camBasis();const W=V.W,H=V.H,c=V.cam;const n=Math.max(.01,c.d*.002),fa=c.d*4+(V.m?Math.hypot(V.m.bb[3]-V.m.bb[0],V.m.bb[4]-V.m.bb[1],V.m.bb[5]-V.m.bb[2])*2:100);
+     const t=1/Math.tan(c.fov/2),a=W/H;const P=[t/a,0,0,0,0,t,0,0,0,0,(fa+n)/(n-fa),-1,0,0,2*fa*n/(n-fa),0];
+     const Vm=[r[0],u[0],-f[0],0,r[1],u[1],-f[1],0,r[2],u[2],-f[2],0,-(r[0]*eye[0]+r[1]*eye[1]+r[2]*eye[2]),-(u[0]*eye[0]+u[1]*eye[1]+u[2]*eye[2]),(f[0]*eye[0]+f[1]*eye[1]+f[2]*eye[2]),1];
+     const M=new Float32Array(16);for(let i=0;i<4;i++)for(let j=0;j<4;j++){let s=0;for(let k=0;k<4;k++)s+=P[k*4+j]*Vm[i*4+k];M[i*4+j]=s}V.mvp=M;V.eye=eye;V.basis={f,r,u,eye}}
+   function proj(p){const M=V.mvp;const x=M[0]*p[0]+M[4]*p[1]+M[8]*p[2]+M[12],y=M[1]*p[0]+M[5]*p[1]+M[9]*p[2]+M[13],w=M[3]*p[0]+M[7]*p[1]+M[11]*p[2]+M[15];if(w<=1e-6)return null;return [(x/w*.5+.5)*V.W/dpr(),(1-(y/w*.5+.5))*V.H/dpr()]}
+   const dpr=()=>Math.min(2,window.devicePixelRatio||1);
+   function ray(x,y){const {f,r,u,eye}=V.basis;const W=V.W/dpr(),H=V.H/dpr();const t=Math.tan(V.cam.fov/2);const nx=(x/W*2-1)*t*W/H,ny=(1-y/H*2)*t;const d=[f[0]+r[0]*nx+u[0]*ny,f[1]+r[1]*nx+u[1]*ny,f[2]+r[2]*nx+u[2]*ny];const l=Math.hypot(...d);return {o:eye,d:[d[0]/l,d[1]/l,d[2]/l]}}
+   function clipVec(){const c=V.clip;if(!c.axis)return null;const n=c.axis==='x'?[1,0,0]:c.axis==='y'?[0,1,0]:[0,0,1];return c.flip?[-n[0],-n[1],-n[2],-c.val]:[n[0],n[1],n[2],c.val]}
+   const clipped=p=>{const c=clipVec();return c&&(p[0]*c[0]+p[1]*c[1]+p[2]*c[2]>c[3])};
+   /* Zeichnen */
+   let raf=0;function req(){V.dirty=true;if(!raf)raf=requestAnimationFrame(draw)}
+   function resize(){const w=Math.max(10,stage.clientWidth),h=Math.max(10,stage.clientHeight),d=dpr();const W=Math.round(w*d),H=Math.round(h*d);if(cv.width!==W||cv.height!==H){cv.width=ov.width=W;cv.height=ov.height=H}V.W=W;V.H=H}
+   function draw(){raf=0;if(!V.m)return;resize();matrices();gl.viewport(0,0,V.W,V.H);gl.clearColor(.955,.962,.958,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+     gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);const cl=clipVec();
+     gl.useProgram(PT);gl.bindVertexArray(vaoT);gl.uniformMatrix4fv(uT.mvp,false,V.mvp);gl.uniform3fv(uT.eye,V.eye);gl.uniform1i(uT.clipOn,cl?1:0);gl.uniform4fv(uT.clip,cl||[0,0,1,0]);
+     gl.disable(gl.BLEND);gl.depthMask(true);gl.enable(gl.POLYGON_OFFSET_FILL);gl.polygonOffset(1,1);gl.uniform4f(uT.over,0,0,0,0);gl.uniform1f(uT.alpha,1);
+     for(const r of V.R)gl.drawArrays(gl.TRIANGLES,r[0],r[1]);
+     if(V.sel>=0){const el=V.m.els[V.sel];gl.uniform4f(uT.over,.05,.5,.95,.55);gl.drawArrays(gl.TRIANGLES,el.v0,el.vn)}
+     gl.disable(gl.POLYGON_OFFSET_FILL);
+     gl.useProgram(PL);gl.bindVertexArray(vaoL);gl.uniformMatrix4fv(uL.mvp,false,V.mvp);gl.uniform1i(uL.clipOn,cl?1:0);gl.uniform4fv(uL.clip,cl||[0,0,1,0]);
+     gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.uniform4f(uL.col,.16,.19,.17,.55);for(const e of V.E)gl.drawArrays(gl.LINES,e[0],e[1]);
+     if(V.sel>=0){const el=V.m.els[V.sel];if(el.en){gl.uniform4f(uL.col,.02,.3,.75,1);gl.drawArrays(gl.LINES,el.e0,el.en)}}
+     if(V.ghost&&V.G.length){gl.useProgram(PT);gl.bindVertexArray(vaoT);gl.depthMask(false);gl.uniform4f(uT.over,.62,.66,.64,.75);gl.uniform1f(uT.alpha,.09);for(const g of V.G)gl.drawArrays(gl.TRIANGLES,g[0],g[1]);gl.depthMask(true)}
+     gl.bindVertexArray(null);overlay();}
+   function overlay(){const d=dpr();ox.setTransform(d,0,0,d,0,0);ox.clearRect(0,0,V.W,V.H);
+     const label=(x,y,t,sub)=>{ox.font='700 13px system-ui,Segoe UI,sans-serif';const w=Math.max(ox.measureText(t).width,sub?(ox.font='600 10.5px system-ui,sans-serif',ox.measureText(sub).width):0)+14;ox.font='700 13px system-ui,Segoe UI,sans-serif';
+       ox.fillStyle='rgba(23,79,59,.94)';const h=sub?34:22;ox.beginPath();ox.roundRect?ox.roundRect(x-w/2,y-h/2,w,h,6):ox.rect(x-w/2,y-h/2,w,h);ox.fill();ox.fillStyle='#fff';ox.textAlign='center';ox.textBaseline='middle';ox.fillText(t,x,sub?y-7:y);
+       if(sub){ox.font='600 10.5px system-ui,sans-serif';ox.fillStyle='#d6eee3';ox.fillText(sub,x,y+8)}};
+     const mark=(p,kind)=>{const s=proj(p);if(!s)return;ox.lineWidth=2;ox.strokeStyle='#fff';ox.fillStyle=kind==='v'?'#e02424':kind==='e'?'#f59e0b':'#1d4ed8';
+       ox.beginPath();if(kind==='v')ox.rect(s[0]-5,s[1]-5,10,10);else if(kind==='e'){ox.moveTo(s[0],s[1]-6);ox.lineTo(s[0]+6,s[1]+5);ox.lineTo(s[0]-6,s[1]+5);ox.closePath()}else ox.arc(s[0],s[1],5,0,7);ox.fill();ox.stroke()};
+     for(const m of V.meas){const a=proj(m.a.p),b=proj(m.b.p);if(!a||!b)continue;ox.strokeStyle='#e02424';ox.lineWidth=2.5;ox.setLineDash([]);ox.beginPath();ox.moveTo(a[0],a[1]);ox.lineTo(b[0],b[1]);ox.stroke();mark(m.a.p,m.a.k);mark(m.b.p,m.b.k);
+       const dx=m.b.p[0]-m.a.p[0],dy=m.b.p[1]-m.a.p[1],dz=m.b.p[2]-m.a.p[2];label((a[0]+b[0])/2,(a[1]+b[1])/2,fmtMM(Math.hypot(dx,dy,dz))+' mm','ΔX '+fmtMM(Math.abs(dx))+' · ΔY '+fmtMM(Math.abs(dy))+' · ΔZ '+fmtMM(Math.abs(dz)))}
+     if(V.pend){mark(V.pend.p,V.pend.k);if(V.hover){const a=proj(V.pend.p),b=proj(V.hover.p);if(a&&b){ox.strokeStyle='rgba(224,36,36,.7)';ox.setLineDash([6,4]);ox.lineWidth=2;ox.beginPath();ox.moveTo(a[0],a[1]);ox.lineTo(b[0],b[1]);ox.stroke();ox.setLineDash([]);
+         const dx=V.hover.p[0]-V.pend.p[0],dy=V.hover.p[1]-V.pend.p[1],dz=V.hover.p[2]-V.pend.p[2];label((a[0]+b[0])/2,(a[1]+b[1])/2,fmtMM(Math.hypot(dx,dy,dz))+' mm')}}}
+     if(V.measure&&V.hover)mark(V.hover.p,V.hover.k);}
+   /* Auswahl per Strahl */
+   function pick(x,y){if(!V.m)return null;const {o,d}=ray(x,y);const els=V.m.els,P=V.m.pos;const inv=[1/d[0],1/d[1],1/d[2]];const cand=[];
+     for(let i=0;i<els.length;i++){if(!V.vis[i])continue;const b=els[i].bb;let t0=-Infinity,t1=Infinity;for(let k=0;k<3;k++){let a=(b[k]-o[k])*inv[k],c=(b[k+3]-o[k])*inv[k];if(a>c){const s=a;a=c;c=s}if(a>t0)t0=a;if(c<t1)t1=c}if(t1>=Math.max(t0,0))cand.push([Math.max(t0,0),i])}
+     cand.sort((a,b)=>a[0]-b[0]);let best=Infinity,bi=-1;
+     for(const [tm,i] of cand){if(tm>best)break;const el=els[i];for(let v=el.v0;v<el.v0+el.vn;v+=3){const a=v*3,b2=a+3,c=a+6;
+         const e1x=P[b2]-P[a],e1y=P[b2+1]-P[a+1],e1z=P[b2+2]-P[a+2],e2x=P[c]-P[a],e2y=P[c+1]-P[a+1],e2z=P[c+2]-P[a+2];
+         const px=d[1]*e2z-d[2]*e2y,py=d[2]*e2x-d[0]*e2z,pz=d[0]*e2y-d[1]*e2x;const det=e1x*px+e1y*py+e1z*pz;if(Math.abs(det)<1e-12)continue;const id=1/det;
+         const sx=o[0]-P[a],sy=o[1]-P[a+1],sz=o[2]-P[a+2];const u=(sx*px+sy*py+sz*pz)*id;if(u<0||u>1)continue;const qx=sy*e1z-sz*e1y,qy=sz*e1x-sx*e1z,qz=sx*e1y-sy*e1x;const w=(d[0]*qx+d[1]*qy+d[2]*qz)*id;if(w<0||u+w>1)continue;
+         const t=(e2x*qx+e2y*qy+e2z*qz)*id;if(t>1e-4&&t<best){const hp=[o[0]+d[0]*t,o[1]+d[1]*t,o[2]+d[2]*t];if(clipped(hp))continue;best=t;bi=i}}}
+     if(bi<0)return null;return {i:bi,p:[o[0]+d[0]*best,o[1]+d[1]*best,o[2]+d[2]*best]}}
+   function snap(x,y){const h=pick(x,y);if(!h)return null;const el=V.m.els[h.i],P=V.m.pos,E=V.m.epos;let bd=13,bp=null;
+     for(let v=el.v0;v<el.v0+el.vn;v++){const p=[P[v*3],P[v*3+1],P[v*3+2]];if(clipped(p))continue;const s=proj(p);if(!s)continue;const dd=Math.hypot(s[0]-x,s[1]-y);if(dd<bd){bd=dd;bp=p}}
+     if(bp)return {p:bp,k:'v',i:h.i};
+     let be=9,ep=null;for(let v=el.e0;v<el.e0+el.en;v+=2){const A=[E[v*3],E[v*3+1],E[v*3+2]],B=[E[v*3+3],E[v*3+4],E[v*3+5]];const sa=proj(A),sb=proj(B);if(!sa||!sb)continue;
+       const vx=sb[0]-sa[0],vy=sb[1]-sa[1],L2=vx*vx+vy*vy;if(L2<1)continue;let t=((x-sa[0])*vx+(y-sa[1])*vy)/L2;t=Math.max(0,Math.min(1,t));const dd=Math.hypot(sa[0]+vx*t-x,sa[1]+vy*t-y);
+       if(dd<be){be=dd;ep=[A[0]+(B[0]-A[0])*t,A[1]+(B[1]-A[1])*t,A[2]+(B[2]-A[2])*t]}}
+     if(ep&&!clipped(ep))return {p:ep,k:'e',i:h.i};return {p:h.p,k:'s',i:h.i}}
+   /* Ansichten */
+   function visBox(only){const els=V.m.els;const b=[Infinity,Infinity,Infinity,-Infinity,-Infinity,-Infinity];let n=0;
+     const add=el=>{for(let k=0;k<3;k++){if(el.bb[k]<b[k])b[k]=el.bb[k];if(el.bb[k+3]>b[k+3])b[k+3]=el.bb[k+3]}n++};
+     if(only!=null)add(els[only]);else for(let i=0;i<els.length;i++)if(V.vis[i])add(els[i]);return n?b:V.m.bb}
+   function fit(only){const els=V.m.els;const idx=only!=null?[only]:[];if(only==null)for(let i=0;i<els.length;i++)if(V.vis[i])idx.push(i);if(!idx.length)return;
+     const b=visBox(only);const c=V.cam;resize();const {f,r,u}=camBasis();const th=Math.tan(c.fov/2),asp=(V.W||1)/(V.H||1);
+     // Mitte = Mitte der projizierten Ausdehnung (rechts/oben), danach Abstand so, dass alle Bauteil-Ecken ins Bild passen
+     let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;const C=[(b[0]+b[3])/2,(b[1]+b[4])/2,(b[2]+b[5])/2];
+     const corners=[];for(const i of idx){const e=els[i].bb;for(let k=0;k<8;k++){const p=[k&1?e[3]:e[0],k&2?e[4]:e[1],k&4?e[5]:e[2]];corners.push(p);const q=[p[0]-C[0],p[1]-C[1],p[2]-C[2]];const x=q[0]*r[0]+q[1]*r[1]+q[2]*r[2],y=q[0]*u[0]+q[1]*u[1]+q[2]*u[2];if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y}}
+     const cx=(x0+x1)/2,cy=(y0+y1)/2;c.t=[C[0]+r[0]*cx+u[0]*cy,C[1]+r[1]*cx+u[1]*cy,C[2]+r[2]*cx+u[2]*cy];
+     let d=.3;for(const p of corners){const q=[p[0]-c.t[0],p[1]-c.t[1],p[2]-c.t[2]];const x=Math.abs(q[0]*r[0]+q[1]*r[1]+q[2]*r[2]),y=Math.abs(q[0]*u[0]+q[1]*u[1]+q[2]*u[2]),z=q[0]*f[0]+q[1]*f[1]+q[2]*f[2];d=Math.max(d,x/(th*asp)-z,y/th-z)}
+     c.d=d*1.05;req()}
+   const VIEWS={iso:[-.8,.55],top:[-Math.PI/2,1.5699],front:[-Math.PI/2,0],back:[Math.PI/2,0],left:[Math.PI,0],right:[0,0]};
+   function view(k,doFit){const v=VIEWS[k]||VIEWS.iso;V.cam.yaw=v[0];V.cam.pitch=v[1];if(doFit!==false)fit();else req()}
+   /* Eingabe */
+   const ptr=new Map();let mode='',down=null,lastHover=0;
+   cv.addEventListener('contextmenu',e=>e.preventDefault());
+   cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptr.set(e.pointerId,[e.offsetX,e.offsetY]);
+     if(ptr.size===1){mode=(e.button===2||e.button===1||e.shiftKey)?'pan':'rot';down={x:e.offsetX,y:e.offsetY,t:Date.now(),b:e.button}}else{mode='pinch';down=null}});
+   cv.addEventListener('pointermove',e=>{const prev=ptr.get(e.pointerId);
+     if(!prev){if(V.measure&&Date.now()-lastHover>40){lastHover=Date.now();V.hover=snap(e.offsetX,e.offsetY);req()}return}
+     const cur=[e.offsetX,e.offsetY];const c=V.cam;
+     if(mode==='pinch'&&ptr.size>=2){const pts=[...ptr.values()];const c0=[(pts[0][0]+pts[1][0])/2,(pts[0][1]+pts[1][1])/2],s0=Math.hypot(pts[0][0]-pts[1][0],pts[0][1]-pts[1][1]);ptr.set(e.pointerId,cur);const p2=[...ptr.values()];
+       const c1=[(p2[0][0]+p2[1][0])/2,(p2[0][1]+p2[1][1])/2],s1=Math.hypot(p2[0][0]-p2[1][0],p2[0][1]-p2[1][1]);if(s1>0)c.d*=s0/s1;pan(c1[0]-c0[0],c1[1]-c0[1]);req();return}
+     ptr.set(e.pointerId,cur);const dx=cur[0]-prev[0],dy=cur[1]-prev[1];
+     if(mode==='rot'){c.yaw-=dx*.0065;c.pitch=Math.max(-1.5699,Math.min(1.5699,c.pitch+dy*.0065))}else if(mode==='pan')pan(dx,dy);req()});
+   function pan(dx,dy){const {r,u}=V.basis||camBasis();const k=V.cam.d*Math.tan(V.cam.fov/2)*2/(V.H/dpr());V.cam.t=[V.cam.t[0]-r[0]*dx*k+u[0]*dy*k,V.cam.t[1]-r[1]*dx*k+u[1]*dy*k,V.cam.t[2]-r[2]*dx*k+u[2]*dy*k]}
+   const up=e=>{const was=ptr.has(e.pointerId);ptr.delete(e.pointerId);if(!was)return;if(down&&ptr.size===0){const mv=Math.hypot(e.offsetX-down.x,e.offsetY-down.y);if(mv<5&&Date.now()-down.t<600&&down.b!==2)click(e.offsetX,e.offsetY)}if(!ptr.size){mode='';down=null}};
+   cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+   cv.addEventListener('pointerleave',()=>{if(V.measure&&V.hover){V.hover=null;req()}});
+   cv.addEventListener('wheel',e=>{e.preventDefault();const c=V.cam;const k=Math.exp(Math.max(-60,Math.min(60,e.deltaY))*.0016);
+     const {o,d}=ray(e.offsetX,e.offsetY);const {f}=V.basis;const den=d[0]*f[0]+d[1]*f[1]+d[2]*f[2];if(den>1e-6){const t=c.d/den;const P=[o[0]+d[0]*t,o[1]+d[1]*t,o[2]+d[2]*t];c.t=[P[0]+(c.t[0]-P[0])*k,P[1]+(c.t[1]-P[1])*k,P[2]+(c.t[2]-P[2])*k]}
+     c.d*=k;req()},{passive:false});
+   cv.addEventListener('dblclick',e=>{const h=pick(e.offsetX,e.offsetY);if(!h)return;const c=V.cam;const {eye}=V.basis;c.t=h.p;c.d=Math.max(.2,Math.hypot(eye[0]-h.p[0],eye[1]-h.p[1],eye[2]-h.p[2]));
+     const f=[(h.p[0]-eye[0])/c.d,(h.p[1]-eye[1])/c.d,(h.p[2]-eye[2])/c.d];c.pitch=Math.asin(Math.max(-1,Math.min(1,-f[2])));c.yaw=Math.atan2(-f[1],-f[0]);req()});
+   function click(x,y){if(V.measure){const s=snap(x,y);if(!s)return;if(!V.pend)V.pend=s;else{V.meas.push({a:V.pend,b:s});V.pend=null;cb.measured&&cb.measured(V.meas)}req();return}
+     const h=pick(x,y);V.sel=h?h.i:-1;req();cb.select&&cb.select(V.sel)}
+   new ResizeObserver(()=>req()).observe(stage);
+   function dispose(){try{gl.getExtension('WEBGL_lose_context')?.loseContext()}catch(_e){}}
+   return {load,setVis,view,fit,req,dispose,
+     select(i){V.sel=i;req()},get sel(){return V.sel},
+     set ghost(v){V.ghost=!!v;req()},
+     setMeasure(on){V.measure=!!on;V.pend=null;V.hover=null;cv.style.cursor=on?'crosshair':'';req()},
+     clearMeas(){V.meas=[];V.pend=null;req()},get nMeas(){return V.meas.length},
+     cancel(){if(V.pend){V.pend=null;req();return true}return false},
+     setClip(axis,val,flip){V.clip={axis,val,flip:!!flip};req()},
+     get V(){return V},pick,snap,proj:p=>{matrices();return proj(p)}};
+ }
+
+ /* ===================== Cloud & Projekt-Reiter ===================== */
+ const S={pid:null,cur:null,models:new Map(),viewer:null,busy:'',off:{sub:new Set(),st:new Set(),name:new Set()},hide:new Set(),vm:false,q:'',openG:new Set(),ghost:false,measure:false,clip:{axis:'',val:0,flip:false},sel:-1};
+ function all(){if(!Array.isArray(st.models3dV462))st.models3dV462=[];return st.models3dV462}
+ const list=pid=>all().filter(r=>r&&r.id&&!r.deleted&&r.projectId===pid).sort((a,b)=>String(b.uploadedAt||'').localeCompare(String(a.uploadedAt||'')));
+ const me=()=>{try{return currentUserName()}catch(_e){return ''}};
+ function canUp(){try{if(currentRole()==='Administrator')return true;return !!currentPermissions().productionPlanEdit}catch(_e){return false}}
+ const uid=()=>'m3'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+ const blobCache=new Map();
+ function partPath(){const wh=cleanUsername(cloudCfg?.warehouseId||'hauptlager')||'hauptlager';const rnd=(crypto&&crypto.randomUUID)?crypto.randomUUID():('f'+Date.now()+Math.random().toString(36).slice(2));return `${wh}/models_${new Date().getFullYear()}/${rnd}.bin`}
+ async function putPart(blob){await ensureFreshSession();const path=partPath();
+   const r=await fetch(storageObjectUrl(path),{method:'POST',headers:{'apikey':cloudCfg.anonKey,'Authorization':'Bearer '+authAccessToken(),'Content-Type':'application/octet-stream','x-upsert':'false'},body:blob});
+   if(!r.ok){const t=await r.text().catch(()=>'');throw new Error('Upload fehlgeschlagen ('+r.status+'): '+(t||'').slice(0,200))}blobCache.set(path,blob);return path}
+ async function delPart(path){try{await ensureFreshSession();await fetch(storageObjectUrl(path),{method:'DELETE',headers:{'apikey':cloudCfg.anonKey,'Authorization':'Bearer '+authAccessToken()}})}catch(_e){}}
+ async function getPart(path){if(blobCache.has(path))return blobCache.get(path);const u=await getSignedPhotoUrl(path);if(!u)throw new Error('Modell-Datei nicht erreichbar.');const r=await fetch(u);if(!r.ok)throw new Error('Modell-Datei konnte nicht geladen werden ('+r.status+').');const b=await r.blob();blobCache.set(path,b);return b}
+ async function gzip(text){return await new Response(new Blob([text]).stream().pipeThrough(new CompressionStream('gzip'))).blob()}
+ async function gunzip(blob){return await new Response(blob.stream().pipeThrough(new DecompressionStream('gzip'))).text()}
+ function status(t,p){S.busy=t||'';const el=E('m3StatusV462');if(el){el.innerHTML=t?`<span class="m3SpinV462"></span>${esc(t)}${p!=null?` <b>${Math.round(p*100)}%</b>`:''}`:''}}
+
+ async function upload(file){
+   if(!file)return;if(!/\.ifc$/i.test(file.name)){alert('Bitte eine IFC-Datei (.ifc) wählen.');return}
+   status('Datei wird gelesen …',0);let text;try{text=await file.text()}catch(e){status('');alert('Datei konnte nicht gelesen werden.');return}
+   let model;try{model=await IFC3D_V462.parse(text,(p,m)=>status('Modell wird aufbereitet: '+m,p*.6))}catch(e){status('');alert('IFC konnte nicht gelesen werden: '+(e.message||e));return}
+   if(!model.els.length){status('');alert('In dieser IFC-Datei wurden keine Bauteile mit Geometrie gefunden.');return}
+   const rec={id:uid(),projectId:S.pid,name:file.name.replace(/\.ifc$/i,''),file:file.name,size:file.size,uploadedAt:new Date().toISOString(),uploadedBy:me(),nEl:model.els.length,nSub:new Set(model.els.map(e=>e.sub).filter(Boolean)).size,parts:[]};
+   S.models.set(rec.id,model);
+   if(!photoStorageReady()){status('');rec.local=true;S.localRec=rec;S.cur=rec.id;render();alert('Keine Cloud-Verbindung: Das Modell wird nur angezeigt und nicht gespeichert.');return}
+   const paths=[];
+   try{status('Wird komprimiert …',.65);const gz=await gzip(text);rec.gz=gz.size;const n=Math.ceil(gz.size/PART);
+     for(let i=0;i<n;i++){status(`Wird hochgeladen (Teil ${i+1}/${n}) …`,.7+.3*i/n);paths.push(await putPart(gz.slice(i*PART,Math.min(gz.size,(i+1)*PART))))}
+     rec.parts=paths;all().push(rec);persist();S.cur=rec.id;status('');render()}
+   catch(e){status('');paths.forEach(delPart);S.localRec=Object.assign(rec,{local:true});S.cur=rec.id;render();alert((e.message||String(e))+'\n\nDas Modell wird jetzt nur angezeigt, aber nicht gespeichert.')}
+ }
+ async function ensureModel(rec){
+   if(S.models.has(rec.id))return S.models.get(rec.id);
+   status('Modell wird geladen …',0);const blobs=[];for(let i=0;i<rec.parts.length;i++){status(`Modell wird geladen (Teil ${i+1}/${rec.parts.length}) …`,.35*i/rec.parts.length);blobs.push(await getPart(rec.parts[i]))}
+   status('Wird entpackt …',.38);const text=await gunzip(new Blob(blobs));
+   const m=await IFC3D_V462.parse(text,(p,msg)=>status('Modell wird aufbereitet: '+msg,.4+p*.6));S.models.set(rec.id,m);status('');return m}
+
+ /* ---------- Filter ---------- */
+ const NOSUB='(ohne Bauuntergruppe)',NOST='(ohne Geschoss)';
+ const subK=el=>el.sub||NOSUB,grpK=el=>el.sub?(el.grp||el.sub):NOSUB,stK=el=>el.storey||NOST;
+ function computeVis(m){const q=S.q.trim().toLowerCase();const v=new Uint8Array(m.els.length);
+   m.els.forEach((el,i)=>{let s=!S.off.sub.has(subK(el))&&!S.off.st.has(stK(el))&&!S.off.name.has(el.name)&&(S.vm||!el.vm)&&!S.hide.has(el.id);
+     if(s&&q)s=[el.name,el.sub,el.grp,el.prod,el.asm,el.mat,el.storey].some(x=>x&&String(x).toLowerCase().includes(q));v[i]=s?1:0});return v}
+ function applyVis(){const m=S.cur&&S.models.get(S.cur);if(!m||!S.viewer)return;const v=computeVis(m);S.viewer.setVis(v);if(S.sel>=0&&!v[S.sel]){S.sel=-1;infoCard()}const n=v.reduce((a,b)=>a+b,0);const c=E('m3CountV462');if(c)c.textContent=n.toLocaleString('de-CH')+' von '+m.els.length.toLocaleString('de-CH')+' Bauteilen sichtbar';syncChecks()}
+ function tree(m){
+   const G=new Map();m.els.forEach(el=>{if(el.vm&&!S.vm)return;const g=grpK(el),s=subK(el);if(!G.has(g))G.set(g,new Map());const sm=G.get(g);sm.set(s,(sm.get(s)||0)+1)});
+   const coll=new Intl.Collator('de-CH',{numeric:true});const gk=[...G.keys()].sort((a,b)=>a===NOSUB?1:b===NOSUB?-1:coll.compare(a,b));
+   const ST=new Map();m.els.forEach(el=>{if(el.vm&&!S.vm)return;ST.set(stK(el),(ST.get(stK(el))||0)+1)});
+   const NM=new Map();m.els.forEach(el=>{if(el.vm&&!S.vm)return;NM.set(el.name,(NM.get(el.name)||0)+1)});
+   const a=x=>esc(x).replace(/"/g,'&quot;');
+   return `<div class="m3SecV462"><div class="m3SecHV462"><b>Bauuntergruppen</b><span><button type="button" onclick="m3V462.all('sub',true)">Alle</button><button type="button" onclick="m3V462.all('sub',false)">Keine</button></span></div>
+     ${gk.map(g=>{const sm=G.get(g);const sk=[...sm.keys()].sort((x,y)=>coll.compare(x,y));const n=[...sm.values()].reduce((x,y)=>x+y,0);const open=S.openG.has(g)||S.q;const single=sk.length===1&&sk[0]===g;
+       return `<div class="m3GV462"><button type="button" class="m3TogV462" ${single?'style="visibility:hidden"':''} onclick="m3V462.togG(this.dataset.g)" data-g="${a(g)}">${open?'▾':'▸'}</button><label><input type="checkbox" data-cg="${a(g)}" onchange="m3V462.setG(this.dataset.cg,this.checked)"><span>${esc(g)}</span></label><small>${n}</small><button type="button" class="m3OnlyV462" title="Nur diese Gruppe zeigen" data-g="${a(g)}" onclick="m3V462.onlyG(this.dataset.g)">◎</button></div>
+       ${open&&!single?`<div class="m3SubsV462">${sk.map(s=>`<div class="m3SV462"><label><input type="checkbox" data-cs="${a(s)}" onchange="m3V462.setS(this.dataset.cs,this.checked)"><span>${esc(s)}</span></label><small>${sm.get(s)}</small><button type="button" class="m3OnlyV462" title="Nur diese Bauuntergruppe zeigen" data-s="${a(s)}" onclick="m3V462.onlyS(this.dataset.s)">◎</button></div>`).join('')}</div>`:''}`}).join('')}</div>
+    <div class="m3SecV462"><div class="m3SecHV462"><b>Geschosse</b><span><button type="button" onclick="m3V462.all('st',true)">Alle</button><button type="button" onclick="m3V462.all('st',false)">Keine</button></span></div>
+     ${[...ST.keys()].sort((x,y)=>coll.compare(x,y)).map(s=>`<div class="m3SV462 flat"><label><input type="checkbox" data-cst="${a(s)}" onchange="m3V462.setSt(this.dataset.cst,this.checked)"><span>${esc(s)}</span></label><small>${ST.get(s)}</small><button type="button" class="m3OnlyV462" title="Nur dieses Geschoss" data-st="${a(s)}" onclick="m3V462.onlySt(this.dataset.st)">◎</button></div>`).join('')}</div>
+    <details class="m3SecV462" ${S.openNames?'open':''} ontoggle="m3V462.openNames(this.open)"><summary class="m3SecHV462"><b>Bauteile (Name)</b><span><button type="button" onclick="event.preventDefault();m3V462.all('name',true)">Alle</button><button type="button" onclick="event.preventDefault();m3V462.all('name',false)">Keine</button></span></summary>
+     ${[...NM.entries()].sort((x,y)=>y[1]-x[1]||coll.compare(x[0],y[0])).map(([s,n])=>`<div class="m3SV462 flat"><label><input type="checkbox" data-cn="${a(s)}" onchange="m3V462.setN(this.dataset.cn,this.checked)"><span>${esc(s)}</span></label><small>${n}</small></div>`).join('')}</details>`;
+ }
+ function syncChecks(){const host=E('m3SideListV462');const m=S.cur&&S.models.get(S.cur);if(!host||!m)return;
+   const subsOf=new Map();m.els.forEach(el=>{const g=grpK(el);if(!subsOf.has(g))subsOf.set(g,new Set());subsOf.get(g).add(subK(el))});
+   host.querySelectorAll('[data-cg]').forEach(c=>{const ss=[...(subsOf.get(c.dataset.cg)||[])];const off=ss.filter(s=>S.off.sub.has(s)).length;c.checked=off<ss.length;c.indeterminate=off>0&&off<ss.length});
+   host.querySelectorAll('[data-cs]').forEach(c=>c.checked=!S.off.sub.has(c.dataset.cs));host.querySelectorAll('[data-cst]').forEach(c=>c.checked=!S.off.st.has(c.dataset.cst));host.querySelectorAll('[data-cn]').forEach(c=>c.checked=!S.off.name.has(c.dataset.cn))}
+ function infoCard(){const box=E('m3InfoV462');if(!box)return;const m=S.cur&&S.models.get(S.cur);if(!m||S.sel<0){box.hidden=true;box.innerHTML='';return}
+   const el=m.els[S.sel];const P=m.pos;const ax=[[el.ax[0],el.ax[1],el.ax[2]],[el.ax[3],el.ax[4],el.ax[5]],[el.ax[6],el.ax[7],el.ax[8]]];const mn=[Infinity,Infinity,Infinity],mx=[-Infinity,-Infinity,-Infinity];
+   for(let v=el.v0;v<el.v0+el.vn;v++){const x=P[v*3],y=P[v*3+1],z=P[v*3+2];for(let k=0;k<3;k++){const d=x*ax[k][0]+y*ax[k][1]+z*ax[k][2];if(d<mn[k])mn[k]=d;if(d>mx[k])mx[k]=d}}
+   const dims=[0,1,2].map(k=>mx[k]-mn[k]).sort((a,b)=>b-a);
+   const row=(k,v)=>v?`<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`:'';
+   const skip=new Set(['Sub group']);
+   box.hidden=false;box.innerHTML=`<header><div><b>${esc(el.name)}</b><small>${esc(el.typeDe)}</small></div><button type="button" title="Schliessen" onclick="m3V462.desel()">✕</button></header>
+    <table>${row('Bauuntergruppe',el.sub)}${row('Gruppe',el.sub?el.grp:'')}${row('Geschoss',el.storey)}${row('Vormontage',el.asm)}${row('Material',el.mat)}${row('Abmessungen',dims.map(d=>fmtMM(d)).join(' × ')+' mm')}
+    ${Object.entries(el.props||{}).map(([ps,o])=>Object.entries(o).filter(([k])=>!skip.has(k)).map(([k,v])=>row(k,v)).join('')).join('')}</table>
+    <div class="m3InfoBtnV462"><button type="button" onclick="m3V462.hideSel()">Ausblenden</button>${el.sub?`<button type="button" data-s="${esc(el.sub)}" onclick="m3V462.onlyS(this.dataset.s)">Nur ${esc(el.sub)}</button>`:''}<button type="button" onclick="m3V462.fitSel()">Heranzoomen</button></div>`}
+ function updBar(){const b=E('m3BarV462');if(!b)return;b.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('on',(x.dataset.t==='measure'&&S.measure)||(x.dataset.t==='ghost'&&S.ghost)||(x.dataset.t==='vm'&&S.vm)));
+   const hi=E('m3HideInfoV462');if(hi)hi.innerHTML=S.hide.size?`<button type="button" onclick="m3V462.unhide()">${S.hide.size} ausgeblendet – wieder zeigen</button>`:'';
+   const mc=E('m3MeasClrV462');if(mc)mc.hidden=!(S.viewer&&S.viewer.nMeas);
+   const hint=E('m3HintV462');if(hint)hint.textContent=S.measure?'Messen: 1. Punkt und 2. Punkt antippen · rastet auf Ecken ■ und Kanten ▲ ein · Esc = abbrechen':'Linke Maus / 1 Finger: drehen · Rechte Maus, Shift oder 2 Finger: verschieben · Rad / Zwei-Finger-Zoom · Doppelklick: Drehpunkt · Klick: Bauteil-Info'}
+ function clipUI(){const m=S.cur&&S.models.get(S.cur);const r=E('m3ClipRV462');if(!m||!r)return;const c=S.clip;const k=c.axis==='x'?0:c.axis==='y'?1:2;r.disabled=!c.axis;
+   r.min=m.bb[k];r.max=m.bb[k+3];r.step=(m.bb[k+3]-m.bb[k])/500;if(c.axis&&(c.val<m.bb[k]||c.val>m.bb[k+3]))c.val=(m.bb[k]+m.bb[k+3])/2;r.value=c.val;
+   const l=E('m3ClipLV462');if(l)l.textContent=c.axis?(c.axis==='z'?'Höhe ':c.axis.toUpperCase()+' ')+'+'+((c.val-m.bb[k])).toFixed(2).replace('.',',')+' m':''}
+
+ function render(){
+   const host=E('project3dV462');if(!host||!S.pid)return;
+   const recs=list(S.pid);if(S.localRec&&S.localRec.projectId===S.pid&&!recs.some(r=>r.id===S.localRec.id))recs.unshift(S.localRec);
+   if(S.cur&&!recs.some(r=>r.id===S.cur))S.cur=null;if(!S.cur&&recs[0])S.cur=recs[0].id;
+   const rec=recs.find(r=>r.id===S.cur);
+   host.innerHTML=`<div class="m3HeadV462"><div><h2>3D-Modell</h2><span class="muted">IFC-Export aus cadwork · drehen, nach Bauuntergruppen filtern, Bauteile anklicken und messen</span></div>
+     <div class="m3HeadRV462">${recs.length?`<select id="m3SelV462" data-search-ready="1" onchange="m3V462.pick(this.value)">${recs.map(r=>`<option value="${r.id}" ${r.id===S.cur?'selected':''}>${esc(r.name)}${r.local?' (nicht gespeichert)':''} · ${new Date(r.uploadedAt).toLocaleDateString('de-CH')}</option>`).join('')}</select>`:''}
+      ${canUp()?`<label class="btn ${recs.length?'secondary':''}">＋ IFC hochladen<input type="file" accept=".ifc,.IFC" hidden onchange="m3V462.upload(this.files[0]);this.value=''"></label>`:''}
+      ${rec&&canUp()?`<button type="button" class="btn secondary" title="Modell löschen" onclick="m3V462.del('${rec.id}')">Löschen</button>`:''}</div></div>
+    <div id="m3StatusV462" class="m3StatusV462"></div>
+    ${rec?`<div class="m3WrapV462" id="m3WrapV462">
+      <div class="m3BarV462" id="m3BarV462">
+       <div class="grp"><button type="button" onclick="m3V462.view('iso')">Iso</button><button type="button" onclick="m3V462.view('top')">Oben</button><button type="button" onclick="m3V462.view('front')">Vorne</button><button type="button" onclick="m3V462.view('back')">Hinten</button><button type="button" onclick="m3V462.view('left')">Links</button><button type="button" onclick="m3V462.view('right')">Rechts</button><button type="button" onclick="m3V462.fit()" title="Sichtbares einpassen">⤢ Einpassen</button></div>
+       <div class="grp"><button type="button" data-t="measure" onclick="m3V462.measure()">📏 Messen</button><button type="button" id="m3MeasClrV462" hidden onclick="m3V462.clearMeas()">Messungen löschen</button></div>
+       <div class="grp"><span>Schnitt</span><select id="m3ClipAV462" data-search-ready="1" onchange="m3V462.clip(this.value)"><option value="">aus</option><option value="z" ${S.clip.axis==='z'?'selected':''}>Höhe</option><option value="x" ${S.clip.axis==='x'?'selected':''}>X</option><option value="y" ${S.clip.axis==='y'?'selected':''}>Y</option></select><input type="range" id="m3ClipRV462" oninput="m3V462.clipVal(this.value)"><button type="button" title="Seite wechseln" onclick="m3V462.clipFlip()">⇅</button><small id="m3ClipLV462"></small></div>
+       <div class="grp"><button type="button" data-t="vm" onclick="m3V462.vm()">Verbindungsmittel</button><button type="button" data-t="ghost" onclick="m3V462.ghost()">Ausgeblendetes transparent</button><span id="m3HideInfoV462"></span></div>
+       <div class="grp end"><button type="button" onclick="m3V462.full()" title="Vollbild">⛶ Vollbild</button></div></div>
+      <div class="m3BodyV462"><aside class="m3SideV462"><input type="search" id="m3QV462" placeholder="Suchen: Name, Bauuntergruppe, Pos.-Nr. …" value="${esc(S.q)}" oninput="m3V462.search(this.value)"><div id="m3CountV462" class="m3CountV462"></div><div id="m3SideListV462"></div></aside>
+       <div class="m3StageV462" id="m3StageV462"><div class="m3InfoV462" id="m3InfoV462" hidden></div><div class="m3HintV462" id="m3HintV462"></div></div></div></div>`
+     :`<div class="m3EmptyV462"><b>Noch kein 3D-Modell für dieses Projekt.</b><p>In cadwork das Projekt als <b>IFC</b> exportieren (mit den Attributen Baugruppe/Bauuntergruppe) und hier hochladen. Die Datei wird komprimiert in der Cloud gespeichert und steht allen mit Zugriff auf das Projekt zur Verfügung.</p>${canUp()?'':'<p class="muted">Hochladen dürfen Administratoren und Personen mit dem Recht «Produktionsplanung bearbeiten».</p>'}</div>`}`;
+   if(S.busy)status(S.busy);
+   if(rec)show(rec);
+ }
+ async function show(rec){
+   const stage=E('m3StageV462');if(!stage)return;
+   let m;try{m=await ensureModel(rec)}catch(e){status('');stage.innerHTML=`<div class="m3ErrV462">${esc(e.message||String(e))}</div>`;return}
+   if(S.cur!==rec.id||!E('m3StageV462'))return;
+   const st2=E('m3StageV462');if(S.viewer)S.viewer.dispose();S.viewer=createViewer(st2,{select:i=>{S.sel=i;infoCard()},measured:()=>updBar()});if(!S.viewer)return;
+   if(S.shownId!==rec.id){S.shownId=rec.id;S.off={sub:new Set(),st:new Set(),name:new Set()};S.hide=new Set();S.q='';S.sel=-1;S.clip={axis:'',val:0,flip:false};const q=E('m3QV462');if(q)q.value=''}
+   S.viewer.load(m);S.viewer.ghost=S.ghost;S.viewer.setMeasure(S.measure);if(S.clip.axis)S.viewer.setClip(S.clip.axis,S.clip.val,S.clip.flip);
+   E('m3SideListV462').innerHTML=tree(m);applyVis();if(S.sel>=0)S.viewer.select(S.sel);infoCard();updBar();clipUI();
+   setTimeout(()=>S.viewer&&S.viewer.fit(),30);
+ }
+ const vw=()=>S.viewer;
+ const A={
+  upload, pick(id){S.cur=id;S.viewer=null;render()},
+  async del(id){const r=all().find(x=>x.id===id)||(S.localRec&&S.localRec.id===id?S.localRec:null);if(!r||!canUp())return;if(!confirm('3D-Modell «'+r.name+'» löschen?'))return;
+    if(r.local){S.localRec=null}else{r.deleted=true;r.updatedAt=new Date().toISOString();persist();(r.parts||[]).forEach(delPart)}S.models.delete(id);S.cur=null;S.viewer=null;render()},
+  view(k){vw()&&vw().view(k)},fit(){vw()&&vw().fit()},
+  measure(){S.measure=!S.measure;vw()&&vw().setMeasure(S.measure);if(S.measure){S.sel=-1;vw()&&vw().select(-1);infoCard()}updBar()},
+  clearMeas(){vw()&&vw().clearMeas();updBar()},
+  clip(a){S.clip.axis=a;clipUI();vw()&&vw().setClip(S.clip.axis,S.clip.val,S.clip.flip)},
+  clipVal(v){S.clip.val=+v;clipUI();vw()&&vw().setClip(S.clip.axis,S.clip.val,S.clip.flip)},
+  clipFlip(){S.clip.flip=!S.clip.flip;vw()&&vw().setClip(S.clip.axis,S.clip.val,S.clip.flip)},
+  vm(){S.vm=!S.vm;const m=S.models.get(S.cur);if(m)E('m3SideListV462').innerHTML=tree(m);applyVis();updBar()},
+  ghost(){S.ghost=!S.ghost;if(vw())vw().ghost=S.ghost;updBar()},
+  full(){const w=E('m3WrapV462');if(!w)return;w.classList.toggle('full');document.body.style.overflow=w.classList.contains('full')?'hidden':'';vw()&&vw().req()},
+  search(v){S.q=v;clearTimeout(S.qt);S.qt=setTimeout(()=>{const m=S.models.get(S.cur);if(m)E('m3SideListV462').innerHTML=tree(m);applyVis()},180)},
+  togG(g){if(S.openG.has(g))S.openG.delete(g);else S.openG.add(g);const m=S.models.get(S.cur);E('m3SideListV462').innerHTML=tree(m);syncChecks()},
+  openNames(o){S.openNames=o},
+  subsOfG(g){const m=S.models.get(S.cur);const s=new Set();m.els.forEach(el=>{if(grpK(el)===g)s.add(subK(el))});return s},
+  setG(g,on){A.subsOfG(g).forEach(s=>on?S.off.sub.delete(s):S.off.sub.add(s));applyVis()},
+  setS(s,on){on?S.off.sub.delete(s):S.off.sub.add(s);applyVis()},
+  setSt(s,on){on?S.off.st.delete(s):S.off.st.add(s);applyVis()},
+  setN(s,on){on?S.off.name.delete(s):S.off.name.add(s);applyVis()},
+  all(kind,on){const m=S.models.get(S.cur);if(!m)return;const set=S.off[kind];set.clear();if(!on)m.els.forEach(el=>set.add(kind==='sub'?subK(el):kind==='st'?stK(el):el.name));applyVis()},
+  onlyG(g){const m=S.models.get(S.cur);const keep=A.subsOfG(g);S.off.sub=new Set(m.els.map(subK).filter(s=>!keep.has(s)));applyVis();vw()&&vw().fit()},
+  onlyS(s){const m=S.models.get(S.cur);S.off.sub=new Set(m.els.map(subK).filter(x=>x!==s));applyVis();vw()&&vw().fit()},
+  onlySt(s){const m=S.models.get(S.cur);S.off.st=new Set(m.els.map(stK).filter(x=>x!==s));applyVis();vw()&&vw().fit()},
+  desel(){S.sel=-1;vw()&&vw().select(-1);infoCard()},
+  hideSel(){const m=S.models.get(S.cur);if(!m||S.sel<0)return;S.hide.add(m.els[S.sel].id);S.sel=-1;vw()&&vw().select(-1);infoCard();applyVis();updBar()},
+  unhide(){S.hide.clear();applyVis();updBar()},
+  fitSel(){if(S.sel>=0&&vw())vw().fit(S.sel)}
+ };
+ window.m3V462=A;
+ document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;const w=E('m3WrapV462');if(!w||w.offsetParent===null&&!w.classList.contains('full'))return;
+   if(S.viewer&&S.viewer.cancel()){return}if(w.classList.contains('full')){A.full();return}if(S.measure){A.measure()}});
+ window.render3dV462=function(){const pid=(typeof currentProjectId!=='undefined'&&currentProjectId)||null;if(pid!==S.pid){S.pid=pid;S.cur=null;S.viewer=null;S.shownId=null}render()};
+ window.__m3V462=S;
+})();
+
 /* V459: Informationsaustausch pro Projekt
    Cloud-Objekte st.projInfoV459 (je Info / ToDo ein Eintrag, Löschen = «deleted», letzte Änderung gewinnt pro Eintrag).
    kind:'info'  -> allgemeine Info aus Besprechungen, coms:['__all'|Kommissions-ID…]
@@ -10292,7 +10942,9 @@ function openProjectDetail(id){
    <button class="projectMainTab" type="button" data-project-detail-tab="plan" onclick="setProjectDetailTab('plan')">Planung</button>
    <button class="projectMainTab" type="button" data-project-detail-tab="takt" onclick="setProjectDetailTab('takt')">Taktplanung</button>
    <button class="projectMainTab" type="button" data-project-detail-tab="info" onclick="setProjectDetailTab('info')">Informationsaustausch</button>
+   <button class="projectMainTab" type="button" data-project-detail-tab="3d" onclick="setProjectDetailTab('3d')">3D-Modell</button>
   </div>
+  <div class="projectTabPanel projectDetailTabPanel" data-project-detail-panel="3d"><div id="project3dV462"></div></div>
   <div class="projectTabPanel projectDetailTabPanel" data-project-detail-panel="info"><div id="projectInfoV459"></div></div>
   <div class="projectTabPanel projectDetailTabPanel" data-project-detail-panel="plan"><div id="projectPlanV362" class="planHostV362"></div></div>
   <div class="projectTabPanel projectDetailTabPanel" data-project-detail-panel="takt"><div id="projectTaktV436"></div></div>
@@ -12278,17 +12930,17 @@ async function checkCloudForUpdates(force=false){
 
 
 function entityCollections(){
- return ['areas','racks','packages','commissions','controls','users','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','planSchemasV377','sibChecklistsV385','planBoardV389','planAbsencesV409','planStatusesV422','taktPlansV433','taktOffV434','taktBudgetsV436','modDocsV454','projInfoV459'];
+ return ['areas','racks','packages','commissions','controls','users','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','planSchemasV377','sibChecklistsV385','planBoardV389','planAbsencesV409','planStatusesV422','taktPlansV433','taktOffV434','taktBudgetsV436','modDocsV454','projInfoV459','models3dV462'];
 }
 function canWriteCloudEntity(type,action='save'){
  let role=currentRole();
  if(role==='Administrator')return true;
  if(role==='Lagerverantwortlicher'){
    if(type==='users')return false;
-   return ['areas','racks','packages','commissions','controls','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','__state','planSchemasV377','sibChecklistsV385','planBoardV389','planAbsencesV409','planStatusesV422','taktPlansV433','taktOffV434','taktBudgetsV436','modDocsV454','projInfoV459'].includes(type);
+   return ['areas','racks','packages','commissions','controls','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','__state','planSchemasV377','sibChecklistsV385','planBoardV389','planAbsencesV409','planStatusesV422','taktPlansV433','taktOffV434','taktBudgetsV436','modDocsV454','projInfoV459','models3dV462'].includes(type);
  }
  if(role==='Mitarbeiter'){
-   if(action==='save')return ['packages','controls','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','sibChecklistsV385','planBoardV389','planAbsencesV409','planStatusesV422','taktPlansV433','taktOffV434','taktBudgetsV436','modDocsV454','projInfoV459'].includes(type);
+   if(action==='save')return ['packages','controls','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','sibChecklistsV385','planBoardV389','planAbsencesV409','planStatusesV422','taktPlansV433','taktOffV434','taktBudgetsV436','modDocsV454','projInfoV459','models3dV462'].includes(type);
    if(action==='delete')return type==='packages' && !!st.settings?.allowMaterialDelete;
  }
  return false;
@@ -36185,7 +36837,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V461';
+   if(v)v.textContent='Aktuelle Version: V462';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
