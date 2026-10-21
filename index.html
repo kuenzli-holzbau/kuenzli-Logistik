@@ -5256,7 +5256,93 @@ html body .projectCards,html body .projectDetailBody,html body .projectDetailTab
 html body .commissionDetailTabs,html body .productionAnalysisOverview,html body .productionAnalysisDetailBox,
 html body .manageHub,html body .globalSettingsContent{max-width:none!important}
 html body .platformWrap{max-width:none!important;padding-left:16px!important;padding-right:16px!important}
-html body #moduleHome .moduleHomeInner{max-width:none!important;width:calc(100% - 32px)!important}
+/* V459 – Informationsaustausch */
+.ixTabCntV459{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;margin-left:4px;border-radius:99px;background:#c2410c;color:#fff;font-size:12px;font-weight:800}
+.projectMainTab.active .ixTabCntV459{background:#fff;color:#174f3b}
+#projectInfoV459{display:flex;flex-direction:column;gap:14px}
+.ixHeadV459{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;background:#fff;border:1px solid #dfe6e2;border-radius:14px;padding:16px 18px}
+.ixHeadV459 h2{margin:0 0 4px}
+.ixViewV459{display:flex;border:1px solid #c8d3cd;border-radius:999px;overflow:hidden}
+.ixViewV459 button{border:0;background:#fff;color:#29483a;font-weight:800;padding:8px 14px;cursor:pointer}
+.ixViewV459 button.on{background:#174f3b;color:#fff}
+.ixGridV459{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(340px,1fr);gap:16px;align-items:start}
+@media(max-width:1100px){.ixGridV459{grid-template-columns:1fr}}
+.ixMainV459,.ixSideV459{display:flex;flex-direction:column;gap:14px;min-width:0}
+.ixFormV459{display:flex;flex-direction:column;gap:10px;padding:14px 16px;border:1px dashed #d9b75c;border-radius:14px;background:#fffbef}
+.ixFormHV459{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.ixFormHV459 b{font-size:16px}.ixFormHV459 span{color:#6b746f;font-size:13px}
+.ixFormV459 textarea{width:100%;min-height:74px;resize:vertical;box-sizing:border-box;border:1px solid #d6ddd9;border-radius:10px;padding:10px 12px;font:inherit;background:#fff}
+.ixRowV459{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.ixRowV459.end{justify-content:flex-end;align-items:center}
+.ixRowV459 label{display:flex;flex-direction:column;gap:3px;font-size:12px;font-weight:700;color:#5b6660}
+.ixRowV459 input,.ixRowV459 select{border:1px solid #d6ddd9;border-radius:9px;padding:7px 9px;font:inherit;background:#fff;min-width:0}
+#ixMeetV459{min-width:220px}
+.ixFileBtnV459{cursor:pointer}
+.ixAssignV459{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.ixAssignV459>span{font-size:13px;color:#5b6660;font-weight:700;margin-right:2px}
+.ixAbtnV459{display:inline-flex;align-items:center;gap:6px;border:1px solid color-mix(in srgb,var(--c) 45%,#d6ddd9);background:#fff;color:var(--c);border-radius:999px;padding:3px 11px 3px 3px;font-weight:800;font-size:13px;cursor:pointer}
+.ixAbtnV459 b{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:50%;background:color-mix(in srgb,var(--c) 15%,#fff);font-size:11px}
+.ixAbtnV459.on{background:var(--c);color:#fff;border-color:var(--c)}.ixAbtnV459.on b{background:#fff;color:var(--c)}
+.ixCardsV459{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,430px),1fr));gap:14px;align-items:start}
+.ixCardV459{border:1px solid color-mix(in srgb,var(--c) 30%,#dfe6e2);border-left:6px solid var(--c);border-radius:12px;background:color-mix(in srgb,var(--c) 4%,#fff);overflow:hidden}
+.ixCardV459>header{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;background:color-mix(in srgb,var(--c) 10%,#fff)}
+.ixCardV459>header>div{flex:1;min-width:0}.ixCardV459>header b{display:block;font-size:17px}.ixCardV459>header small{color:#66706a}
+.ixNrV459{display:inline-grid;place-items:center;min-width:30px;height:30px;border-radius:50%;background:var(--c);color:#fff;font-weight:900}
+.ixChevV459{color:#7b857f}
+.ixTlListV459{list-style:none;margin:12px 14px 14px 26px;padding:0 0 0 14px;border-left:2px solid color-mix(in srgb,var(--c) 45%,transparent);display:flex;flex-direction:column;gap:12px}
+.ixTlV459{position:relative;display:grid;grid-template-columns:118px minmax(0,1fr) auto;gap:10px;align-items:start}
+.ixTlV459::before{content:"";position:absolute;left:-21px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--c);border:2px solid #fff}
+.ixTlDV459{display:flex;flex-direction:column;gap:3px;font-size:12px}.ixTlDV459 b{font-variant-numeric:tabular-nums}
+.ixMeetV459{display:inline-block;align-self:flex-start;background:#fff3c4;border:1px solid #e8cf6b;color:#6b5200;border-radius:6px;padding:1px 6px;font-weight:700;font-size:11px}
+.ixTxtV459{white-space:pre-wrap;overflow-wrap:anywhere}
+.ixAlsoV459{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-top:5px;font-size:12px;color:#66706a}
+.ixChipV459{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:800;color:var(--c);background:color-mix(in srgb,var(--c) 12%,#fff);border-radius:999px;padding:1px 8px 1px 2px}
+.ixChipV459 b{display:inline-grid;place-items:center;min-width:16px;height:16px;border-radius:50%;background:var(--c);color:#fff;font-size:10px}
+.ixMetaV459{font-size:11px;color:#8a938e;margin-top:4px}
+.ixActV459{display:flex;gap:2px}.ixActV459.inl{display:inline-flex;margin-left:auto}
+.ixActV459 button{border:0;background:transparent;color:#7b857f;cursor:pointer;font-size:14px;padding:3px 6px;border-radius:6px}.ixActV459 button:hover{background:#eef3f0;color:#174f3b}
+.ixEmptyV459{margin:12px 16px;color:#7b857f;font-style:italic;font-size:13px}
+.ixThumbsV459{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;align-items:center}
+.ixThumbV459{position:relative;width:84px;height:84px}
+.ixThumbV459>button:first-child{width:100%;height:100%;padding:0;border:1px solid #d6ddd9;border-radius:8px;overflow:hidden;background:#eef1ef;cursor:zoom-in;position:relative}
+.ixThumbV459 img{width:100%;height:100%;object-fit:cover;display:block}
+.ixThumbV459>button:first-child i{position:absolute;right:3px;bottom:3px;background:#174f3b;color:#fff;font-style:normal;font-size:11px;border-radius:5px;padding:0 4px}
+.ixThumbV459 .del{position:absolute;top:3px;right:3px;border:0;border-radius:99px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;padding:2px 5px;cursor:pointer}
+.ixAddPhV459{font-size:12px;font-weight:700;color:#174f3b;cursor:pointer;border:1px dashed #b9cec3;border-radius:8px;padding:6px 9px}
+.ixMeetListV459{display:flex;flex-direction:column;gap:12px}
+.ixMeetBoxV459{background:#fff;border:1px solid #dfe6e2;border-radius:12px;overflow:hidden}
+.ixMeetBoxV459>header{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;background:#fff8dc;border-bottom:1px solid #f0e2a6}.ixMeetBoxV459>header span{color:#6b746f;font-size:13px}
+.ixMeetBoxV459 ol{margin:10px 14px 12px 34px;padding:0;display:flex;flex-direction:column;gap:10px}
+.ixMeetBoxV459 li>.ixActV459{float:right}
+.ixTodoV459{background:#fff;border:1px solid #dfe6e2;border-top:5px solid var(--t);border-radius:12px;overflow:hidden;--t:#2d7d46}
+.ixTodoV459.pl{--t:#1f6f8b}
+.ixTodoV459>header{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:color-mix(in srgb,var(--t) 9%,#fff)}
+.ixTodoV459>header b{font-size:17px;color:var(--t)}.ixTodoV459>header small{display:block;color:#66706a}
+.ixCntV459{display:inline-grid;place-items:center;min-width:28px;height:28px;border-radius:99px;background:var(--t);color:#fff;font-weight:900}
+.ixTdFormV459{display:flex;flex-direction:column;gap:6px;padding:10px 14px;border-bottom:1px solid #eef1ef}
+.ixTdFormV459>input{border:1px solid #d6ddd9;border-radius:9px;padding:8px 10px;font:inherit}
+.ixTdFormV459 .ixRowV459 select{flex:1}
+.ixTodoV459 ul{list-style:none;margin:0;padding:4px 14px 10px}
+.ixTdV459{padding:9px 0;border-bottom:1px solid #f0f3f1}.ixTdV459:last-child{border-bottom:0}
+.ixChkV459{display:flex;gap:9px;align-items:flex-start;cursor:pointer}.ixChkV459 input{width:18px;height:18px;margin-top:1px;accent-color:var(--t);flex:none}
+.ixTdV459.done .ixTxtV459{text-decoration:line-through;color:#8a938e}
+.ixTdMetaV459{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0 0 27px;font-size:12px}
+.ixTdV459 .ixThumbsV459{margin-left:27px}
+.ixDueV459{font-weight:800;border-radius:6px;padding:1px 6px;background:#eef1ef;color:#3b4a42}
+.ixDueV459.warn{background:#fbf0d9;color:#9a6110}.ixDueV459.crit{background:#f8e1dc;color:#b3402f}
+.ixDoneV459{padding:0 14px 10px}.ixDoneV459 summary{cursor:pointer;color:#66706a;font-weight:700;padding:6px 0}.ixDoneV459 ul{padding:0}
+#ixEdV459{display:none;position:fixed;inset:0;z-index:9700;background:#1b211e;flex-direction:column}
+#ixEdV459.open{display:flex}
+.ixEdBarV459{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 12px;background:#fff;border-bottom:1px solid #dfe6e2}
+.ixEdBarV459 .grp{display:flex;gap:4px;align-items:center;padding-right:8px;border-right:1px solid #e5ebe8}
+.ixEdBarV459 .grp.end{margin-left:auto;border-right:0;gap:8px}
+.ixEdBarV459 [data-tool],.ixEdBarV459 [data-size],.ixEdBarV459 [data-act="undo"],.ixEdBarV459 [data-act="clear"]{display:flex;flex-direction:column;align-items:center;gap:1px;border:1px solid #d6ddd9;background:#fff;border-radius:8px;padding:4px 8px;font-size:11px;font-weight:700;color:#29483a;cursor:pointer;min-width:44px}
+.ixEdBarV459 [data-tool] span{font-size:17px;line-height:1}
+.ixEdBarV459 button.on{background:#174f3b;color:#fff;border-color:#174f3b}
+.ixEdBarV459 .sw{width:30px;height:30px;border-radius:50%;border:2px solid #d6ddd9;background:var(--sw);cursor:pointer;padding:0}
+.ixEdBarV459 .sw.on{outline:3px solid #174f3b;outline-offset:1px}
+.ixEdBarV459 [data-size]{justify-content:center;height:36px}.ixEdBarV459 [data-size] i{display:block;width:22px;background:currentColor;border-radius:3px}
+.ixEdStageV459{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:12px}
+.ixEdStageV459 canvas{background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.4);touch-action:none;cursor:crosshair}
+.ixEdTextV459{position:absolute;min-width:220px;font:700 18px system-ui,sans-serif;padding:6px 8px;border:2px solid #174f3b;border-radius:6px;background:rgba(255,255,255,.95)}
 </style>
 </head>
 <body class="accessLocked">
@@ -5269,7 +5355,7 @@ html body #moduleHome .moduleHomeInner{max-width:none!important;width:calc(100% 
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V457</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V459</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -5491,7 +5577,7 @@ html body #moduleHome .moduleHomeInner{max-width:none!important;width:calc(100% 
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V457</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V459</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -8349,7 +8435,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V457</b></p><div class="releaseNote"><b>Neu in V457</b><br>Prognose-Basis wählbar (letzte N Tage oder alle) in Taktplanung und Kommissions-Prognose; Taktplanung: Anzeige der letzten N Tage; Checkliste «Gian DR» aus dem Artefakt übernommen. V456: Ganze Bildschirmbreite in allen Bereichen (Start, Lager, Produktion, Kleinaufträge, Logistik, Sonstiges, Verwaltung, Module). V455: Taktplanung-Tabelle: Seite springt nach einer Eingabe nicht mehr nach oben, Feld bleibt aktiv; Enter springt in die nächste Zeile. V454: Neues Modul «Produktionscheckliste» unter Sonstiges: Checklisten mit Gruppen, Arbeitsschritten, Kontrollpunkten, Bildern/PDFs zum Markieren und PDF A4 – gespeichert in der Cloud, eigene Berechtigung. V453: Berechtigungen übersichtlich in farbigen Bereichen, Zähler pro Bereich, (i) mit Beschreibung zu jeder Berechtigung. V452: Taktplanung ↔ Planung: Produktionsschritt mit Taktplanung verbinden – Zeitraum und MA synchron (letzte Änderung gilt), Takt-Stand am Balken. V451: Taktplanung: Hinweis mit Knopf «mit Kommission verknüpfen», wenn eine Taktplanung noch nicht verknüpft ist. V450: Taktplanung mit Kommission verknüpfen: Elemente, Soll-Stunden, produzierte Elemente, MA und Ist-Stunden aus dem Tagesfortschritt werden automatisch übernommen. V449: Taktplanung: Kennzahlen in 3 Zeilen – 1 Grundlage aus Kalkulation, 2 Ist-Zustand mit Prognose, 3 Massnahmen mit neuer Prognose. V448: Taktplanung: alle Diagramme nebeneinander in gleicher Grösse, Klick öffnet das Diagramm gross. V447: Taktplanung: Abacus-Abgleich – Zellen aus Excel einfügen (Ctrl+C / Ctrl+V) oder Datei wählen, pro Tag MA und Stunden mit der Tabelle vergleichen, Abweichungen prüfen oder übernehmen. V446: Taktplanung: «Massnahmen ab heute» – Endtermin, MA und h/Element simulieren, im Diagramm mit Soll, Ist und Prognose vergleichen, Massnahme speichern. V445: Taktplanung: Arbeitszeiterhöhung – Zeiträume mit anderen Stunden pro MA und Tag, werden in der Tabelle übernommen. V444: Taktplanung-Tabelle: Spalten Std./MA (pro Tag änderbar), Ist-Stunden und Ist-Stunden kumuliert. V443: Taktplanung: Kachel «Ist h pro Element» zeigt Ø gesamt und Ø letzte 5 Tage nebeneinander. V442: Produktionsart «DR» im Tagesfortschritt und in der Produktionsanalyse. V441: Taktplanung: Ist h/Element (aus MA × Std./Tag, MA pro Tag korrigierbar), Kachel und Diagramm «h pro Element», Stundenbudget und Prognose mit Ist-Stunden. V440: Versionsanzeige korrigiert. V439: Taktplanung in voller Bildschirmbreite. V438: Tagesleistung als Diagramm (Balken pro Tag, Ø 5 Tage, nötiges Tempo) und Kachel «Ist-Tempo» mit Trend; heute zählt erst mit Ist-Eintrag. V437: Reiter «Taktplanung» im Projekt. V436: Stundenbudget pro Kommission mit Warnung bei Überschreitung (alle Taktplanungen zusammen, inkl. Prognose). V435: Taktplanung: h pro Element oder Anzahl MA eingeben – das andere wird berechnet; Meldungen im Fenster statt Popup; Werte gerundet. V434: Taktplanung: Betriebsferien/Feiertage erfassen – Berechnung mit Produktionstagen (Bedarf MA, h pro Element, Soll, Prognose). V433: Neuer Reiter «Taktplanung Fassade»: Berechnung Bedarf MA bzw. h pro Element, Gantt mit Soll/Ist und Prognose, Ist-Erfassung pro Tag. V432: Anzahl MA im Arbeitsschritt frei mit Kommastellen eingeben (z. B. 0.33 oder 0,33). V431: Schnellmenü im Gantt: Inhalt bleibt im Feld (scrollbar, Knöpfe umbrechen). V430: Zuschnitte optisch abgehoben: eckige Balken mit Sägeschnitt und ✂, blau-graue Zeile. V429: Planung: Suchfeld bleibt beim Tippen aktiv (Ansicht wird ohne das Suchfeld neu aufgebaut). V428: Zuschnitt-Funktionen (Endtermin, Stunden, Start/Stopp + Ist-Stunden, Maschine + Stückzahl, Maschinen-Auslastung) auch in Projekten bei Schritten mit «Zuschnitt» oder «ZS» im Namen. V427: Planungs-PDF pro Person (eine Person oder je Person ein eigenes PDF). V426: Personen verwalten: umbenennen / zusammenführen und falsche Namen überall entfernen (Planung + Abwesenheiten). V425: Gantt im Vollbild (Knopf «⛶ Vollbild», Esc beendet). V424: Balken mit Unterbruch reicht bis zum echten Ende – die restlichen Tage stehen rechts vom Unterbruch; «Auf Gruppen verteilen» markiert die aktuelle Gruppe. V423: Unterbruch im Gantt mit der Maus verschieben bzw. am Rand verlängern/kürzen. V422: Arbeitsschritt auf mehrere Gruppen verteilen (normale Einträge, MA aufgeteilt, auch 0.25 MA); eigene Status (Name, Farbe, Grundverhalten); graue Spiegelung entfernt. Zuschnitt-Import: offene Positionen, die in der neuen Excel fehlen, werden angezeigt und können als erledigt markiert, gelöscht oder stehen gelassen werden. V418: Gantt: Mitarbeiter direkt im Menü des Arbeitsschritts zuweisen/entfernen (mit Hinweis abwesend / gleichzeitig eingeplant). V417: Mehrere Einträge pro Arbeitsschritt (Material/Lieferung, Notiz, Kontrolle) und Unterbrüche (verschieben das Ende, zählen nicht in die Auslastung); klare Wochenlinien in der Planung. V416: Planungs-PDF: Meilensteine bei ihrer Gruppe (Linien nur über diese Gruppe), Logo oben links. V415: Freigegebene Ist-Prognose auch in der Planungs-Übersicht (alle Projekte). V414: Ist-Prognose einer Kommission auf der Gantt-Seite (Riegel in der Kommission); PDF-Reihenfolge mit Logo oben links. V413: Offene Elemente: Löschen wirkt sofort; PDF der Produktionsreihenfolge (Reihenfolge, Element, Fläche je Gruppe, Gruppen nicht getrennt). V412: Projekte (Karten und Planungs-Übersicht) immer nach Startdatum sortiert. V411: Abwesenheiten farbig: kräftige Chips mit Namen, in der Planung eine Zeile pro Person mit farbigem Balken (Grund). V410: ZS-Positionen pro Zuschnitt-Schritt zuordnen (ganze monday-Gruppe oder einzelne Positionen); automatisch nur noch bei genau einem Zuschnitt-Schritt im Projekt; erledigte Schritte ohne Warnung. V409: Abwesenheiten (Ferien, Militär, Kurs, Krank …) beim Einsatzplan erfassen; Warnung an Arbeitsschritten mit abwesenden Personen; Zeile «Abwesend» in der Planung. V408: Blockiert mit Grund; Gruppen in der Projekt-Planung farbig; Projekt-Zuschnitt mit ZS-Positionen verknüpft (keine Doppelzählung in der Auslastung); neue Projektkarten. V407: «Beladen in Davos»: Karte antippen, um Status und Standort nachzutragen (abgeholt, beladen, in Beladung, zurück im Lager). V406: Pritschen-Gantt luftiger; Projekte in der Planungs-Übersicht farbig abgehoben; «Welche Pritsche darf ich nehmen?» nur noch in der Übersicht; neuer Block «Beladen in Davos». V405: Pritschen-Gantt: gesperrte Pritschen, Container und Geräte grau schraffiert mit 🔒; Reservationen zeigen ihren Zeitraum (von–bis) direkt im Balken. V404: Fahrzeuge/Geräte: Status «Frei / In Gebrauch» und Sperren wie bei den Containern; gesperrte oder benutzte Geräte sind im Transport nicht neu wählbar. V403: Transport löschen ändert keinen Status mehr – Pritschen und Container bleiben wie sie sind. V402: Transportlisten: LKW links, Anhänger rechts nebeneinander; ohne Anhänger-Ladung bzw. bei «LKW solo» kein Anhängerbild. V401: Transportplanung: LKW- und Anhängerbild zeigen nur die eigene Ladung; zusätzliche Container und Fahrzeuge/Geräte bei jedem Ladungsträger möglich (2 Container auf Pritsche oder direkt auf LKW, Container + Gerät, 2 Geräte). V400: Pritschen-Gantt im Projekt: auch Container und Fahrzeuge/Geräte anderer Projekte ausgeblendet – sichtbar sind nur eigene und freie. V399: Pritschen-Gantt: Reservationen mit der Maus verschieben bzw. am Rand verlängern (mit Konfliktmeldung); Belegung endet beim Reservationsende (rot, wenn länger belegt); im Projekt nur zugeordnete und freie Pritschen. V398: Pritschen-Gantt: zurück bis zum allerersten Eintrag ziehbar. V397: Pritschen-Gantt: mit gedrückter Maustaste hin und her ziehen, grösserer Zeitraum (4 Wochen zurück bis ca. 7 Monate voraus), heute markiert. V396: Pritschenverwaltung: Suchfeld für Projekte (Name, Nummer, PL – auch Teilwörter, z.B. «26160002» oder «baum»). V395: Transporte: LKW-/Anhängerbild wieder in der Übersicht (mit Pritschen-/Container-Schild, Zusatzladung darunter); Status-Auswahl und ⋮-Menü werden nicht mehr abgeschnitten. V394: Pritschen/Transporte: Übersicht nach Kalenderwoche mit lesbarem Datum (Datumsfehler behoben), Ladung kompakt als Schilder (LKW/Anhänger, Pritsche, Container, Geräte, Rungen) statt Fahrzeugbilder, Route ohne «Projekt → Projekt». V393: Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V459</b></p><div class="releaseNote"><b>Neu in V459</b><br>Projekt: neuer Reiter «Informationsaustausch» – Infos aus Besprechungen an Kommissionen zuweisen, ToDo Produktion und ToDo Projektleiter, Fotos mit Stift, Textmarker, Formen und Text bezeichnen. V458: Startseite «Bereich auswählen» wieder proportional und zentriert (Vollbreite nur in den Arbeitsbereichen). V457: Prognose-Basis wählbar (letzte N Tage oder alle) in Taktplanung und Kommissions-Prognose; Taktplanung: Anzeige der letzten N Tage; Checkliste «Gian DR» aus dem Artefakt übernommen. V456: Ganze Bildschirmbreite in allen Bereichen (Start, Lager, Produktion, Kleinaufträge, Logistik, Sonstiges, Verwaltung, Module). V455: Taktplanung-Tabelle: Seite springt nach einer Eingabe nicht mehr nach oben, Feld bleibt aktiv; Enter springt in die nächste Zeile. V454: Neues Modul «Produktionscheckliste» unter Sonstiges: Checklisten mit Gruppen, Arbeitsschritten, Kontrollpunkten, Bildern/PDFs zum Markieren und PDF A4 – gespeichert in der Cloud, eigene Berechtigung. V453: Berechtigungen übersichtlich in farbigen Bereichen, Zähler pro Bereich, (i) mit Beschreibung zu jeder Berechtigung. V452: Taktplanung ↔ Planung: Produktionsschritt mit Taktplanung verbinden – Zeitraum und MA synchron (letzte Änderung gilt), Takt-Stand am Balken. V451: Taktplanung: Hinweis mit Knopf «mit Kommission verknüpfen», wenn eine Taktplanung noch nicht verknüpft ist. V450: Taktplanung mit Kommission verknüpfen: Elemente, Soll-Stunden, produzierte Elemente, MA und Ist-Stunden aus dem Tagesfortschritt werden automatisch übernommen. V449: Taktplanung: Kennzahlen in 3 Zeilen – 1 Grundlage aus Kalkulation, 2 Ist-Zustand mit Prognose, 3 Massnahmen mit neuer Prognose. V448: Taktplanung: alle Diagramme nebeneinander in gleicher Grösse, Klick öffnet das Diagramm gross. V447: Taktplanung: Abacus-Abgleich – Zellen aus Excel einfügen (Ctrl+C / Ctrl+V) oder Datei wählen, pro Tag MA und Stunden mit der Tabelle vergleichen, Abweichungen prüfen oder übernehmen. V446: Taktplanung: «Massnahmen ab heute» – Endtermin, MA und h/Element simulieren, im Diagramm mit Soll, Ist und Prognose vergleichen, Massnahme speichern. V445: Taktplanung: Arbeitszeiterhöhung – Zeiträume mit anderen Stunden pro MA und Tag, werden in der Tabelle übernommen. V444: Taktplanung-Tabelle: Spalten Std./MA (pro Tag änderbar), Ist-Stunden und Ist-Stunden kumuliert. V443: Taktplanung: Kachel «Ist h pro Element» zeigt Ø gesamt und Ø letzte 5 Tage nebeneinander. V442: Produktionsart «DR» im Tagesfortschritt und in der Produktionsanalyse. V441: Taktplanung: Ist h/Element (aus MA × Std./Tag, MA pro Tag korrigierbar), Kachel und Diagramm «h pro Element», Stundenbudget und Prognose mit Ist-Stunden. V440: Versionsanzeige korrigiert. V439: Taktplanung in voller Bildschirmbreite. V438: Tagesleistung als Diagramm (Balken pro Tag, Ø 5 Tage, nötiges Tempo) und Kachel «Ist-Tempo» mit Trend; heute zählt erst mit Ist-Eintrag. V437: Reiter «Taktplanung» im Projekt. V436: Stundenbudget pro Kommission mit Warnung bei Überschreitung (alle Taktplanungen zusammen, inkl. Prognose). V435: Taktplanung: h pro Element oder Anzahl MA eingeben – das andere wird berechnet; Meldungen im Fenster statt Popup; Werte gerundet. V434: Taktplanung: Betriebsferien/Feiertage erfassen – Berechnung mit Produktionstagen (Bedarf MA, h pro Element, Soll, Prognose). V433: Neuer Reiter «Taktplanung Fassade»: Berechnung Bedarf MA bzw. h pro Element, Gantt mit Soll/Ist und Prognose, Ist-Erfassung pro Tag. V432: Anzahl MA im Arbeitsschritt frei mit Kommastellen eingeben (z. B. 0.33 oder 0,33). V431: Schnellmenü im Gantt: Inhalt bleibt im Feld (scrollbar, Knöpfe umbrechen). V430: Zuschnitte optisch abgehoben: eckige Balken mit Sägeschnitt und ✂, blau-graue Zeile. V429: Planung: Suchfeld bleibt beim Tippen aktiv (Ansicht wird ohne das Suchfeld neu aufgebaut). V428: Zuschnitt-Funktionen (Endtermin, Stunden, Start/Stopp + Ist-Stunden, Maschine + Stückzahl, Maschinen-Auslastung) auch in Projekten bei Schritten mit «Zuschnitt» oder «ZS» im Namen. V427: Planungs-PDF pro Person (eine Person oder je Person ein eigenes PDF). V426: Personen verwalten: umbenennen / zusammenführen und falsche Namen überall entfernen (Planung + Abwesenheiten). V425: Gantt im Vollbild (Knopf «⛶ Vollbild», Esc beendet). V424: Balken mit Unterbruch reicht bis zum echten Ende – die restlichen Tage stehen rechts vom Unterbruch; «Auf Gruppen verteilen» markiert die aktuelle Gruppe. V423: Unterbruch im Gantt mit der Maus verschieben bzw. am Rand verlängern/kürzen. V422: Arbeitsschritt auf mehrere Gruppen verteilen (normale Einträge, MA aufgeteilt, auch 0.25 MA); eigene Status (Name, Farbe, Grundverhalten); graue Spiegelung entfernt. Zuschnitt-Import: offene Positionen, die in der neuen Excel fehlen, werden angezeigt und können als erledigt markiert, gelöscht oder stehen gelassen werden. V418: Gantt: Mitarbeiter direkt im Menü des Arbeitsschritts zuweisen/entfernen (mit Hinweis abwesend / gleichzeitig eingeplant). V417: Mehrere Einträge pro Arbeitsschritt (Material/Lieferung, Notiz, Kontrolle) und Unterbrüche (verschieben das Ende, zählen nicht in die Auslastung); klare Wochenlinien in der Planung. V416: Planungs-PDF: Meilensteine bei ihrer Gruppe (Linien nur über diese Gruppe), Logo oben links. V415: Freigegebene Ist-Prognose auch in der Planungs-Übersicht (alle Projekte). V414: Ist-Prognose einer Kommission auf der Gantt-Seite (Riegel in der Kommission); PDF-Reihenfolge mit Logo oben links. V413: Offene Elemente: Löschen wirkt sofort; PDF der Produktionsreihenfolge (Reihenfolge, Element, Fläche je Gruppe, Gruppen nicht getrennt). V412: Projekte (Karten und Planungs-Übersicht) immer nach Startdatum sortiert. V411: Abwesenheiten farbig: kräftige Chips mit Namen, in der Planung eine Zeile pro Person mit farbigem Balken (Grund). V410: ZS-Positionen pro Zuschnitt-Schritt zuordnen (ganze monday-Gruppe oder einzelne Positionen); automatisch nur noch bei genau einem Zuschnitt-Schritt im Projekt; erledigte Schritte ohne Warnung. V409: Abwesenheiten (Ferien, Militär, Kurs, Krank …) beim Einsatzplan erfassen; Warnung an Arbeitsschritten mit abwesenden Personen; Zeile «Abwesend» in der Planung. V408: Blockiert mit Grund; Gruppen in der Projekt-Planung farbig; Projekt-Zuschnitt mit ZS-Positionen verknüpft (keine Doppelzählung in der Auslastung); neue Projektkarten. V407: «Beladen in Davos»: Karte antippen, um Status und Standort nachzutragen (abgeholt, beladen, in Beladung, zurück im Lager). V406: Pritschen-Gantt luftiger; Projekte in der Planungs-Übersicht farbig abgehoben; «Welche Pritsche darf ich nehmen?» nur noch in der Übersicht; neuer Block «Beladen in Davos». V405: Pritschen-Gantt: gesperrte Pritschen, Container und Geräte grau schraffiert mit 🔒; Reservationen zeigen ihren Zeitraum (von–bis) direkt im Balken. V404: Fahrzeuge/Geräte: Status «Frei / In Gebrauch» und Sperren wie bei den Containern; gesperrte oder benutzte Geräte sind im Transport nicht neu wählbar. V403: Transport löschen ändert keinen Status mehr – Pritschen und Container bleiben wie sie sind. V402: Transportlisten: LKW links, Anhänger rechts nebeneinander; ohne Anhänger-Ladung bzw. bei «LKW solo» kein Anhängerbild. V401: Transportplanung: LKW- und Anhängerbild zeigen nur die eigene Ladung; zusätzliche Container und Fahrzeuge/Geräte bei jedem Ladungsträger möglich (2 Container auf Pritsche oder direkt auf LKW, Container + Gerät, 2 Geräte). V400: Pritschen-Gantt im Projekt: auch Container und Fahrzeuge/Geräte anderer Projekte ausgeblendet – sichtbar sind nur eigene und freie. V399: Pritschen-Gantt: Reservationen mit der Maus verschieben bzw. am Rand verlängern (mit Konfliktmeldung); Belegung endet beim Reservationsende (rot, wenn länger belegt); im Projekt nur zugeordnete und freie Pritschen. V398: Pritschen-Gantt: zurück bis zum allerersten Eintrag ziehbar. V397: Pritschen-Gantt: mit gedrückter Maustaste hin und her ziehen, grösserer Zeitraum (4 Wochen zurück bis ca. 7 Monate voraus), heute markiert. V396: Pritschenverwaltung: Suchfeld für Projekte (Name, Nummer, PL – auch Teilwörter, z.B. «26160002» oder «baum»). V395: Transporte: LKW-/Anhängerbild wieder in der Übersicht (mit Pritschen-/Container-Schild, Zusatzladung darunter); Status-Auswahl und ⋮-Menü werden nicht mehr abgeschnitten. V394: Pritschen/Transporte: Übersicht nach Kalenderwoche mit lesbarem Datum (Datumsfehler behoben), Ladung kompakt als Schilder (LKW/Anhänger, Pritsche, Container, Geräte, Rungen) statt Fahrzeugbilder, Route ohne «Projekt → Projekt». V393: Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -9574,13 +9660,251 @@ function setProjectsHomeTab(tab='active'){
  if(projectsHomeActiveTab==='takt')window.renderTaktV433?.();
 }
 function setProjectDetailTab(tab='overview'){
- projectDetailActiveTab=['overview','plan','takt'].includes(tab)?tab:'overview'; // V379: Kommissionen stehen in der Übersicht
+ projectDetailActiveTab=['overview','plan','takt','info'].includes(tab)?tab:'overview'; // V379: Kommissionen stehen in der Übersicht
  document.querySelectorAll('[data-project-detail-tab]').forEach(b=>b.classList.toggle('active',b.dataset.projectDetailTab===projectDetailActiveTab));
  document.querySelectorAll('.projectDetailTabPanel').forEach(p=>p.classList.toggle('active',p.dataset.projectDetailPanel===projectDetailActiveTab));
- E('projectDetail')?.classList.toggle('planWideV366',projectDetailActiveTab==='plan'||projectDetailActiveTab==='takt');
+ E('projectDetail')?.classList.toggle('planWideV366',projectDetailActiveTab!=='overview');
  if(projectDetailActiveTab==='plan')window.renderProjectPlanV362?.();
  if(projectDetailActiveTab==='takt')window.renderTaktV433?.();
+ if(projectDetailActiveTab==='info')window.renderProjInfoV459?.();
 }
+/* V459: Informationsaustausch pro Projekt
+   Cloud-Objekte st.projInfoV459 (je Info / ToDo ein Eintrag, Löschen = «deleted», letzte Änderung gewinnt pro Eintrag).
+   kind:'info'  -> allgemeine Info aus Besprechungen, coms:['__all'|Kommissions-ID…]
+   kind:'todo'  -> list:'prod' (Produktion) | 'pl' (Projektleiter)
+   Fotos: Original im Supabase-Storage, Zeichnungen als Vektoren (shapes) + gerenderte Kopie (ann). */
+(function(){
+ const COL=['#1f6f8b','#b5562b','#6a4c93','#2d7d46','#a8740b','#b03a48','#3d5a80','#7a5c3e','#2a7f7a','#8a4f7d'];
+ const ALL='__all';
+ const S={pid:null,view:'com',open:{},draft:{},edit:null,tdEdit:{},sig:'',timer:null};
+ const now=()=>new Date().toISOString();
+ const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+ const uid=p=>(p||'ix')+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+ const fmt=k=>{if(!k)return'';const d=new Date(k+'T12:00:00');if(isNaN(d))return k;return d.toLocaleDateString('de-CH',{weekday:'short',day:'2-digit',month:'2-digit',year:'2-digit'})};
+ const dDiff=k=>Math.round((new Date(k+'T12:00:00')-new Date(today()+'T12:00:00'))/864e5);
+ function all(){if(!Array.isArray(st.projInfoV459))st.projInfoV459=[];return st.projInfoV459}
+ const live=pid=>all().filter(r=>r&&r.id&&!r.deleted&&r.projectId===pid);
+ const me=()=>{try{return currentUserName()}catch(_e){return ''}};
+ const isAdm=()=>{try{return currentRole()==='Administrator'}catch(_e){return false}};
+ function canWrite(){try{return !!S.pid&&(typeof hasProjectAccess!=='function'||hasProjectAccess(S.pid))}catch(_e){return false}}
+ function canDel(r){if(!canWrite())return false;if(isAdm())return true;try{if(currentPermissions().productionPlanEdit)return true}catch(_e){}return !r.createdBy||r.createdBy===me()}
+ const proj=()=>projectById(S.pid);
+ const coms=()=>(proj()?.planningCommissions||[]).filter(c=>c&&c.id);
+ const comColor=id=>{if(id===ALL)return '#4b5d55';const i=coms().findIndex(c=>c.id===id);return COL[(i<0?0:i)%COL.length]};
+ const comName=id=>id===ALL?'Allgemein':((coms().find(c=>c.id===id)||{}).name||'Kommission');
+ const comNr=id=>id===ALL?'A':String(coms().findIndex(c=>c.id===id)+1);
+ function rec(id){return all().find(r=>r&&r.id===id)}
+ function touch(r){r.updatedAt=now();r.updatedBy=me()}
+ function save(){persist();S.sig=sig();render()}
+ function sig(){let s='';for(const r of all())if(r&&r.projectId===S.pid)s+=r.id+(r.updatedAt||'')+(r.deleted?'x':'');return s.length+':'+[...s].reduce((h,c)=>(h*31+c.charCodeAt(0))|0,0)}
+ const openTodos=pid=>live(pid).filter(r=>r.kind==='todo'&&!r.done).length;
+ window.projInfoOpenCountV459=openTodos;
+
+ /* ---------- Fotos: Storage ---------- */
+ const objUrl={};
+ function newPath(){const wh=cleanUsername(cloudCfg?.warehouseId||'hauptlager')||'hauptlager';const rnd=(crypto&&crypto.randomUUID)?crypto.randomUUID():('f'+Date.now()+Math.random().toString(36).slice(2));return `${wh}/projinfo_${new Date().getFullYear()}/${rnd}.jpg`}
+ async function upload(blob){
+   if(!photoStorageReady())throw new Error('Fotos können nur mit aktiver Cloud-Anmeldung gespeichert werden.');
+   await ensureFreshSession();const path=newPath();
+   const r=await fetch(storageObjectUrl(path),{method:'POST',headers:{'apikey':cloudCfg.anonKey,'Authorization':'Bearer '+authAccessToken(),'Content-Type':'image/jpeg','x-upsert':'false'},body:blob});
+   if(!r.ok){const t=await r.text().catch(()=>'');throw new Error('Foto-Upload fehlgeschlagen: '+(t||r.status))}
+   try{objUrl[path]=URL.createObjectURL(blob)}catch(_e){}return path}
+ async function delFile(path){if(!path)return;try{await ensureFreshSession();await fetch(storageObjectUrl(path),{method:'DELETE',headers:{'apikey':cloudCfg.anonKey,'Authorization':'Bearer '+authAccessToken()}})}catch(_e){}}
+ async function urlOf(path){if(!path)return '';if(objUrl[path])return objUrl[path];try{return await getSignedPhotoUrl(path)}catch(_e){return ''}}
+ function toJpeg(file){return new Promise(async(res,rej)=>{try{const f=await compressImageFile(file,1800,.82);const u=URL.createObjectURL(f);const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0);URL.revokeObjectURL(u);c.toBlob(b=>b?res({blob:b,w:c.width,h:c.height}):rej(new Error('Bild konnte nicht gelesen werden')),'image/jpeg',.85)};im.onerror=()=>rej(new Error('Bild konnte nicht gelesen werden'));im.src=u}catch(e){rej(e)}})}
+ async function addPhotos(r,files){
+   if(!files||!files.length)return;const st0=E('ixBusyV459');if(st0)st0.textContent='Fotos werden hochgeladen …';
+   r.photos=r.photos||[];let n=0;
+   for(const f of files){if(!/^image\//.test(f.type||''))continue;try{const j=await toJpeg(f);const path=await upload(j.blob);r.photos.push({id:uid('ph'),path,w:j.w,h:j.h,shapes:[],ann:''});n++}catch(e){alert(e.message||String(e));break}}
+   if(n){touch(r);save()}else if(st0)st0.textContent='';
+ }
+ function hydrate(root){(root||document).querySelectorAll('img[data-ixp]').forEach(async im=>{const p=im.dataset.ixp;if(im.dataset.ixDone===p)return;im.dataset.ixDone=p;const u=await urlOf(p);if(u&&im.dataset.ixp===p)im.src=u})}
+ const shown=ph=>ph.ann||ph.path;
+ function thumbs(r,edit){
+   const ph=r.photos||[];if(!ph.length&&!edit)return '';
+   return `<div class="ixThumbsV459">${ph.map(p=>`<div class="ixThumbV459"><button type="button" title="Foto öffnen und bezeichnen" onclick="projInfoV459.photo('${r.id}','${p.id}')"><img alt="Foto" data-ixp="${esc(shown(p))}">${(p.shapes||[]).length?'<i>✎</i>':''}</button>${edit&&canDel(r)?`<button type="button" class="del" title="Foto entfernen" onclick="projInfoV459.delPhoto('${r.id}','${p.id}')">✕</button>`:''}</div>`).join('')}
+   ${edit&&canWrite()?`<label class="ixAddPhV459" title="Foto hinzufügen">＋ Foto<input type="file" accept="image/*" multiple hidden onchange="projInfoV459.addPhotoTo('${r.id}',this)"></label>`:''}</div>`;
+ }
+
+ /* ---------- Darstellung ---------- */
+ function infoItem(r,cid){
+   const others=(r.coms||[]).filter(x=>x!==cid);
+   return `<li class="ixTlV459"><div class="ixTlDV459"><b>${esc(fmt(r.date))}</b>${r.meeting?`<span class="ixMeetV459">${esc(r.meeting)}</span>`:''}</div>
+     <div class="ixTlTV459"><div class="ixTxtV459">${esc(r.text||'')}</div>
+      ${others.length?`<div class="ixAlsoV459">auch bei ${others.map(x=>`<span class="ixChipV459" style="--c:${comColor(x)}"><b>${esc(comNr(x))}</b>${esc(comName(x))}</span>`).join('')}</div>`:''}
+      ${thumbs(r,true)}
+      <div class="ixMetaV459">${esc(r.createdBy||'')}${r.updatedBy&&r.updatedBy!==r.createdBy?' · geändert '+esc(r.updatedBy):''}</div></div>
+     <div class="ixActV459">${canWrite()?`<button type="button" title="Bearbeiten" onclick="projInfoV459.editInfo('${r.id}')">✎</button>`:''}${canDel(r)?`<button type="button" title="Löschen" onclick="projInfoV459.del('${r.id}')">✕</button>`:''}</div></li>`;
+ }
+ const byDate=(a,b)=>String(b.date||'').localeCompare(String(a.date||''))||String(b.createdAt||'').localeCompare(String(a.createdAt||''));
+ function infoCards(infos){
+   const list=[{id:ALL},...coms()];
+   return `<div class="ixCardsV459">${list.map(c=>{const its=infos.filter(r=>(r.coms&&r.coms.length?r.coms:[ALL]).includes(c.id)).sort(byDate);const op=S.open[c.id]!==false;
+     return `<article class="ixCardV459 ${op?'':'closed'}" style="--c:${comColor(c.id)}"><header onclick="projInfoV459.tog('${c.id}')"><span class="ixNrV459">${esc(comNr(c.id))}</span><div><b>${esc(comName(c.id))}</b><small>${c.id===ALL?'gilt für das ganze Projekt':'Kommission'} · ${its.length} Info${its.length===1?'':'s'}</small></div><span class="ixChevV459">${op?'▾':'▸'}</span></header>
+     ${op?(its.length?`<ol class="ixTlListV459">${its.map(r=>infoItem(r,c.id)).join('')}</ol>`:`<p class="ixEmptyV459">Noch keine Infos.</p>`):''}</article>`}).join('')}</div>`;
+ }
+ function meetingView(infos){
+   const g=new Map();infos.slice().sort(byDate).forEach(r=>{const k=(r.meeting||'Ohne Besprechung')+'|'+(r.date||'');if(!g.has(k))g.set(k,[]);g.get(k).push(r)});
+   if(!g.size)return `<p class="ixEmptyV459">Noch keine Infos erfasst.</p>`;
+   return `<div class="ixMeetListV459">${[...g.entries()].map(([k,rs])=>{const [m,d]=k.split('|');return `<section class="ixMeetBoxV459"><header><b>${esc(m)}</b><span>${esc(fmt(d))} · ${rs.length} Punkt${rs.length===1?'':'e'}</span></header><ol>${rs.map(r=>`<li><div class="ixTxtV459">${esc(r.text||'')}</div><div class="ixAlsoV459">${(r.coms&&r.coms.length?r.coms:[ALL]).map(x=>`<span class="ixChipV459" style="--c:${comColor(x)}"><b>${esc(comNr(x))}</b>${esc(comName(x))}</span>`).join('')}</div>${thumbs(r,false)}<div class="ixActV459 inl">${canWrite()?`<button type="button" onclick="projInfoV459.editInfo('${r.id}')">✎</button>`:''}${canDel(r)?`<button type="button" onclick="projInfoV459.del('${r.id}')">✕</button>`:''}</div></li>`).join('')}</ol></section>`}).join('')}</div>`;
+ }
+ function infoForm(infos){
+   const e=S.edit?rec(S.edit):null;const d=S.draft.info||(e?{text:e.text,date:e.date,meeting:e.meeting,coms:(e.coms||[]).slice()}:null)||{text:'',date:today(),meeting:'',coms:[ALL]};S.draft.info=d;
+   const meets=[...new Set(infos.map(r=>r.meeting).filter(Boolean))];if(!d.meeting&&!e)d.meeting=meets[0]||(infos.length?'':'1. Besprechung');
+   const sel=d.coms||[];
+   return `<form class="ixFormV459" onsubmit="event.preventDefault();projInfoV459.saveInfo()">
+    <div class="ixFormHV459"><b>${e?'Info bearbeiten':'Neue Info erfassen'}</b><span>Was wurde besprochen oder definiert?</span></div>
+    <textarea id="ixTextV459" rows="3" placeholder="z. B. Fenster werden bauseits geliefert, Montage durch uns ab KW 46" oninput="projInfoV459.dr('text',this.value)">${esc(d.text||'')}</textarea>
+    <div class="ixRowV459">
+     <label>Datum<input type="date" id="ixDateV459" value="${esc(d.date||'')}" onchange="projInfoV459.dr('date',this.value)"></label>
+     <label>Besprechung<input id="ixMeetV459" list="ixMeetsV459" value="${esc(d.meeting||'')}" placeholder="z. B. 1. Besprechung" oninput="projInfoV459.dr('meeting',this.value)"><datalist id="ixMeetsV459">${['1. Besprechung','Startsitzung','Bauherrensitzung','Werkstattbesprechung',...meets].filter((x,i,a)=>a.indexOf(x)===i).map(m=>`<option value="${esc(m)}">`).join('')}</datalist></label>
+    </div>
+    <div class="ixAssignV459"><span>Gilt für:</span>${[{id:ALL},...coms()].map(c=>`<button type="button" class="ixAbtnV459 ${sel.includes(c.id)?'on':''}" style="--c:${comColor(c.id)}" onclick="projInfoV459.togCom('${c.id}')"><b>${esc(comNr(c.id))}</b>${esc(comName(c.id))}</button>`).join('')}</div>
+    <div class="ixRowV459 end"><span id="ixBusyV459" class="muted"></span>${e?`<button type="button" class="btn secondary" onclick="projInfoV459.cancel()">Abbrechen</button>`:`<label class="btn secondary ixFileBtnV459">＋ Fotos<input type="file" accept="image/*" multiple hidden id="ixNewPhV459" onchange="projInfoV459.pendPh(this)"></label><span class="muted" id="ixPendV459">${S.pend&&S.pend.length?S.pend.length+' Foto(s) bereit':''}</span>`}<button class="btn" type="submit">${e?'Änderung speichern':'Info speichern'}</button></div>
+   </form>`;
+ }
+ function todoBox(list){
+   const items=live(S.pid).filter(r=>r.kind==='todo'&&r.list===list);
+   const open=items.filter(r=>!r.done).sort((a,b)=>(a.due||'9999').localeCompare(b.due||'9999')||String(a.createdAt||'').localeCompare(String(b.createdAt||'')));
+   const done=items.filter(r=>r.done).sort((a,b)=>String(b.doneAt||'').localeCompare(String(a.doneAt||'')));
+   const pl=proj()?.customer;const title=list==='prod'?'ToDo Produktion':'ToDo Projektleiter';
+   const d=S.draft['td_'+list]||(S.draft['td_'+list]={text:'',due:'',com:''});
+   const ed=S.tdEdit[list]?rec(S.tdEdit[list]):null;
+   const row=r=>{const dd=r.due?dDiff(r.due):null;const cls=r.done?'':dd==null?'':dd<0?'crit':dd<=2?'warn':'';
+     return `<li class="ixTdV459 ${r.done?'done':''}"><label class="ixChkV459"><input type="checkbox" ${r.done?'checked':''} ${canWrite()?'':'disabled'} onchange="projInfoV459.done('${r.id}',this.checked)"><span class="ixTxtV459">${esc(r.text||'')}</span></label>
+      <div class="ixTdMetaV459">${r.due?`<span class="ixDueV459 ${cls}">${r.done?'':dd<0?'überfällig · ':dd===0?'heute · ':''}${esc(fmt(r.due))}</span>`:''}${r.com?`<span class="ixChipV459" style="--c:${comColor(r.com)}"><b>${esc(comNr(r.com))}</b>${esc(comName(r.com))}</span>`:''}<span class="muted">${esc(r.createdBy||'')}${r.done&&r.doneBy?' · erledigt '+esc(r.doneBy):''}</span>
+      <span class="ixActV459 inl">${canWrite()&&!r.done?`<button type="button" title="Bearbeiten" onclick="projInfoV459.editTodo('${list}','${r.id}')">✎</button>`:''}${canDel(r)?`<button type="button" title="Löschen" onclick="projInfoV459.del('${r.id}')">✕</button>`:''}</span></div>
+      ${thumbs(r,!r.done)}</li>`};
+   return `<section class="ixTodoV459 ${list}"><header><div><b>${title}</b>${list==='pl'&&pl?`<small>${esc(pl)}</small>`:''}</div><span class="ixCntV459">${open.length}</span></header>
+    ${canWrite()?`<form class="ixTdFormV459" onsubmit="event.preventDefault();projInfoV459.saveTodo('${list}')">
+     <input id="ixTdT_${list}" placeholder="${ed?'ToDo ändern':'Neues ToDo …'}" value="${esc(ed?(S.draft['tde_'+list]??ed.text):d.text)}" oninput="projInfoV459.drTd('${list}','text',this.value)">
+     <div class="ixRowV459"><input type="date" id="ixTdD_${list}" title="Termin" value="${esc(ed?(ed.due||''):d.due)}" onchange="projInfoV459.drTd('${list}','due',this.value)">
+      <select id="ixTdC_${list}" data-search-ready="1" onchange="projInfoV459.drTd('${list}','com',this.value)"><option value="">ohne Kommission</option>${coms().map(c=>`<option value="${c.id}" ${(ed?ed.com:d.com)===c.id?'selected':''}>${esc(comName(c.id))}</option>`).join('')}</select>
+      ${ed?`<button type="button" class="btn secondary" onclick="projInfoV459.cancelTd('${list}')">Abbrechen</button>`:''}<button class="btn" type="submit">${ed?'Speichern':'＋'}</button></div></form>`:''}
+    ${open.length?`<ul>${open.map(row).join('')}</ul>`:`<p class="ixEmptyV459">Keine offenen ToDos.</p>`}
+    ${done.length?`<details class="ixDoneV459"><summary>Erledigt (${done.length})</summary><ul>${done.map(row).join('')}</ul></details>`:''}
+   </section>`;
+ }
+ function render(){
+   const host=E('projectInfoV459');if(!host||!S.pid)return;
+   const ae=document.activeElement;const keep=ae&&host.contains(ae)&&ae.id?{id:ae.id,s:ae.selectionStart,e:ae.selectionEnd}:null;
+   const infos=live(S.pid).filter(r=>r.kind==='info');
+   host.innerHTML=`<div class="ixHeadV459"><div><h2>Informationsaustausch</h2><span class="muted">Abmachungen aus der ersten und den weiteren Besprechungen, zugewiesen an Kommissionen – dazu die offenen Punkte für Produktion und Projektleiter.</span></div>
+     <div class="ixViewV459"><button type="button" class="${S.view==='com'?'on':''}" onclick="projInfoV459.view('com')">Nach Kommission</button><button type="button" class="${S.view==='meet'?'on':''}" onclick="projInfoV459.view('meet')">Nach Besprechung</button></div></div>
+    <div class="ixGridV459"><div class="ixMainV459">${canWrite()?infoForm(infos):''}${S.view==='meet'?meetingView(infos):infoCards(infos)}</div>
+     <div class="ixSideV459">${todoBox('prod')}${todoBox('pl')}</div></div>`;
+   hydrate(host);badge();
+   if(keep){const el=E(keep.id);if(el){el.focus({preventScroll:true});try{if(keep.s!=null)el.setSelectionRange(keep.s,keep.e)}catch(_e){}}}
+ }
+ function badge(){const b=document.querySelector('[data-project-detail-tab="info"]');if(!b||!S.pid)return;const n=openTodos(S.pid);b.innerHTML='Informationsaustausch'+(n?` <span class="ixTabCntV459">${n}</span>`:'')}
+
+ /* ---------- Aktionen ---------- */
+ const A={
+  view(v){S.view=v;render()},
+  tog(id){S.open[id]=S.open[id]===false;render()},
+  dr(k,v){(S.draft.info=S.draft.info||{})[k]=v},
+  togCom(id){const d=S.draft.info=S.draft.info||{coms:[]};let c=(d.coms||[]).slice();if(c.includes(id))c=c.filter(x=>x!==id);else{c.push(id);}if(id!==ALL&&c.length>1)c=c.filter(x=>x!==ALL);if(id===ALL&&c.includes(ALL))c=[ALL];d.coms=c;render()},
+  pendPh(inp){S.pend=[...(inp.files||[])];const s=E('ixPendV459');if(s)s.textContent=S.pend.length?S.pend.length+' Foto(s) bereit':''},
+  async saveInfo(){
+    if(!canWrite())return;const d=S.draft.info||{};const text=String(d.text||'').trim();
+    if(!text&&!(S.pend&&S.pend.length)){alert('Bitte zuerst den Text der Info eingeben.');return}
+    let r=S.edit?rec(S.edit):null;
+    if(!r){r={id:uid('ixi'),projectId:S.pid,kind:'info',photos:[],createdAt:now(),createdBy:me()};all().push(r)}
+    r.text=text;r.date=d.date||today();r.meeting=String(d.meeting||'').trim();r.coms=(d.coms&&d.coms.length)?d.coms.slice():[ALL];touch(r);
+    const pend=S.pend||[];S.pend=null;const keepMeet=r.meeting,keepDate=r.date;S.edit=null;S.draft.info={text:'',date:keepDate,meeting:keepMeet,coms:r.coms.slice()};
+    save();if(pend.length)await addPhotos(r,pend)},
+  editInfo(id){const r=rec(id);if(!r)return;S.edit=id;S.draft.info={text:r.text,date:r.date,meeting:r.meeting,coms:(r.coms||[ALL]).slice()};S.view==='meet'&&(S.view='com');render();const t=E('ixTextV459');if(t){t.scrollIntoView({block:'center'});t.focus()}},
+  cancel(){S.edit=null;S.draft.info=null;render()},
+  async del(id){const r=rec(id);if(!r||!canDel(r))return;if(!confirm(r.kind==='todo'?'ToDo löschen?':'Info löschen?'))return;const ph=r.photos||[];r.deleted=true;touch(r);save();ph.forEach(p=>{delFile(p.path);delFile(p.ann)})},
+  drTd(list,k,v){const ed=S.tdEdit[list];if(ed){const r=rec(ed);if(k==='text')S.draft['tde_'+list]=v;else if(r){/* direkt bei Speichern */S.draft['tde_'+list+'_'+k]=v}}else{(S.draft['td_'+list]=S.draft['td_'+list]||{})[k]=v}},
+  saveTodo(list){
+    if(!canWrite())return;const ed=S.tdEdit[list];
+    if(ed){const r=rec(ed);if(r){const t=S.draft['tde_'+list];if(t!=null&&String(t).trim())r.text=String(t).trim();const du=S.draft['tde_'+list+'_due'];if(du!=null)r.due=du;const cm=S.draft['tde_'+list+'_com'];if(cm!=null)r.com=cm;touch(r)}
+      S.tdEdit[list]=null;['','_due','_com'].forEach(s=>delete S.draft['tde_'+list+s]);save();return}
+    const d=S.draft['td_'+list]||{};const text=String(d.text||'').trim();if(!text){E('ixTdT_'+list)?.focus();return}
+    all().push({id:uid('ixt'),projectId:S.pid,kind:'todo',list,text,due:d.due||'',com:d.com||'',done:false,photos:[],createdAt:now(),createdBy:me(),updatedAt:now(),updatedBy:me()});
+    S.draft['td_'+list]={text:'',due:'',com:''};save();setTimeout(()=>E('ixTdT_'+list)?.focus(),0)},
+  editTodo(list,id){S.tdEdit[list]=id;['','_due','_com'].forEach(s=>delete S.draft['tde_'+list+s]);render();E('ixTdT_'+list)?.focus()},
+  cancelTd(list){S.tdEdit[list]=null;render()},
+  done(id,v){const r=rec(id);if(!r||!canWrite())return;r.done=!!v;r.doneAt=v?now():'';r.doneBy=v?me():'';touch(r);save()},
+  async addPhotoTo(id,inp){const r=rec(id);if(!r||!canWrite())return;await addPhotos(r,[...(inp.files||[])])},
+  async delPhoto(id,phid){const r=rec(id);if(!r||!canDel(r))return;const p=(r.photos||[]).find(x=>x.id===phid);if(!p||!confirm('Foto entfernen?'))return;r.photos=r.photos.filter(x=>x!==p);touch(r);save();delFile(p.path);delFile(p.ann)},
+  photo(id,phid){const r=rec(id);const p=r&&(r.photos||[]).find(x=>x.id===phid);if(p)openEditor(r,p)}
+ };
+ window.projInfoV459=A;
+
+ /* ---------- Foto-Editor: Stift, Textmarker, Formen, Text ---------- */
+ const TOOLS=[['pen','✎','Stift'],['mark','▮','Textmarker'],['line','╱','Linie'],['arrow','➚','Pfeil'],['rect','▭','Rechteck'],['ell','◯','Kreis'],['text','T','Text']];
+ const COLORS=['#e02424','#f2c40f','#16a34a','#1d4ed8','#111111','#ffffff'];
+ function openEditor(r,p){
+   const ro=!canWrite();
+   const ed={r,p,shapes:JSON.parse(JSON.stringify(p.shapes||[])),tool:'pen',color:COLORS[0],size:2,cur:null,img:null,dirty:false};
+   let ov=E('ixEdV459');if(!ov){ov=document.createElement('div');ov.id='ixEdV459';document.body.appendChild(ov)}
+   ov.innerHTML=`<div class="ixEdBarV459">${ro?'<b>Foto</b>':`<div class="grp">${TOOLS.map(([k,i,t])=>`<button type="button" data-tool="${k}" title="${t}"><span>${i}</span>${t}</button>`).join('')}</div>
+     <div class="grp">${COLORS.map(c=>`<button type="button" data-col="${c}" class="sw" style="--sw:${c}" title="Farbe"></button>`).join('')}</div>
+     <div class="grp">${[1,2,3].map(s=>`<button type="button" data-size="${s}" title="Strichstärke"><i style="height:${s*3}px"></i></button>`).join('')}</div>
+     <div class="grp"><button type="button" data-act="undo" title="Rückgängig">↶ Zurück</button><button type="button" data-act="clear" title="Alle Zeichnungen entfernen">Alles weg</button></div>`}
+     <div class="grp end"><span class="muted" id="ixEdMsgV459"></span>${ro?'':`<button type="button" class="btn" data-act="save">Speichern</button>`}<button type="button" class="btn secondary" data-act="close">${ro?'Schliessen':'Abbrechen'}</button></div></div>
+    <div class="ixEdStageV459"><canvas></canvas><input class="ixEdTextV459" hidden placeholder="Text eingeben, Enter"></div>`;
+   ov.classList.add('open');document.body.style.overflow='hidden';
+   const cv=ov.querySelector('canvas'),cx=cv.getContext('2d'),ti=ov.querySelector('.ixEdTextV459'),stage=ov.querySelector('.ixEdStageV459');
+   const msg=t=>{const m=E('ixEdMsgV459');if(m)m.textContent=t||''};
+   const unit=()=>Math.max(cv.width,cv.height)/900;
+   function sync(){ov.querySelectorAll('[data-tool]').forEach(b=>b.classList.toggle('on',b.dataset.tool===ed.tool));ov.querySelectorAll('[data-col]').forEach(b=>b.classList.toggle('on',b.dataset.col===ed.color));ov.querySelectorAll('[data-size]').forEach(b=>b.classList.toggle('on',+b.dataset.size===ed.size))}
+   function arrowHead(a,b,w){const ang=Math.atan2(b[1]-a[1],b[0]-a[0]),L=Math.max(14,w*4.5);cx.beginPath();cx.moveTo(b[0],b[1]);cx.lineTo(b[0]-L*Math.cos(ang-0.45),b[1]-L*Math.sin(ang-0.45));cx.lineTo(b[0]-L*Math.cos(ang+0.45),b[1]-L*Math.sin(ang+0.45));cx.closePath();cx.fill()}
+   function drawShape(s){
+     const u=unit(),w=(s.t==='mark'?9:2.2)*s.w*u;cx.save();cx.strokeStyle=s.c;cx.fillStyle=s.c;cx.lineWidth=w;cx.lineCap='round';cx.lineJoin='round';
+     if(s.t==='mark'){cx.globalAlpha=.38;cx.lineCap='butt';cx.globalCompositeOperation='multiply'}
+     if(s.t==='pen'||s.t==='mark'){const pts=s.pts||[];if(pts.length){cx.beginPath();cx.moveTo(pts[0][0],pts[0][1]);if(pts.length===1)cx.lineTo(pts[0][0]+.1,pts[0][1]);for(let i=1;i<pts.length;i++)cx.lineTo(pts[i][0],pts[i][1]);cx.stroke()}}
+     else if(s.t==='line'||s.t==='arrow'){cx.beginPath();cx.moveTo(s.a[0],s.a[1]);cx.lineTo(s.b[0],s.b[1]);cx.stroke();if(s.t==='arrow')arrowHead(s.a,s.b,w)}
+     else if(s.t==='rect'){cx.strokeRect(Math.min(s.a[0],s.b[0]),Math.min(s.a[1],s.b[1]),Math.abs(s.b[0]-s.a[0]),Math.abs(s.b[1]-s.a[1]))}
+     else if(s.t==='ell'){cx.beginPath();cx.ellipse((s.a[0]+s.b[0])/2,(s.a[1]+s.b[1])/2,Math.abs(s.b[0]-s.a[0])/2,Math.abs(s.b[1]-s.a[1])/2,0,0,Math.PI*2);cx.stroke()}
+     else if(s.t==='text'){const fs=Math.round(13*s.w*u+10*u);cx.font=`700 ${fs}px system-ui,-apple-system,Segoe UI,sans-serif`;cx.textBaseline='top';cx.lineWidth=Math.max(2,fs/7);cx.strokeStyle=(s.c==='#ffffff'||s.c==='#f2c40f')?'rgba(0,0,0,.75)':'rgba(255,255,255,.9)';String(s.s||'').split('\n').forEach((ln,i)=>{cx.strokeText(ln,s.p[0],s.p[1]+i*fs*1.15);cx.fillText(ln,s.p[0],s.p[1]+i*fs*1.15)})}
+     cx.restore()}
+   function draw(){cx.clearRect(0,0,cv.width,cv.height);if(ed.img)cx.drawImage(ed.img,0,0,cv.width,cv.height);else{cx.fillStyle='#eee';cx.fillRect(0,0,cv.width,cv.height)}ed.shapes.forEach(drawShape);if(ed.cur)drawShape(ed.cur)}
+   function fit(){const bw=stage.clientWidth-24,bh=stage.clientHeight-24;const k=Math.min(bw/cv.width,bh/cv.height,1.6);cv.style.width=Math.round(cv.width*k)+'px';cv.style.height=Math.round(cv.height*k)+'px'}
+   cv.width=p.w||1200;cv.height=p.h||900;fit();draw();msg('Foto wird geladen …');
+   urlOf(p.path).then(u=>{if(!u){msg('Foto konnte nicht geladen werden.');return}const im=new Image();if(!/^blob:|^data:/.test(u))im.crossOrigin='anonymous';im.onload=()=>{ed.img=im;cv.width=im.naturalWidth;cv.height=im.naturalHeight;fit();draw();msg(ro?'':'Zeichnen direkt auf dem Foto')};im.onerror=()=>msg('Foto konnte nicht geladen werden.');im.src=u});
+   const pos=e=>{const b=cv.getBoundingClientRect();return [Math.round((e.clientX-b.left)/b.width*cv.width),Math.round((e.clientY-b.top)/b.height*cv.height)]};
+   function commitText(){const v=ti.value.trim();if(v&&ti._p){ed.shapes.push({t:'text',c:ed.color,w:ed.size,p:ti._p,s:v});ed.dirty=true}ti.hidden=true;ti.value='';ti._p=null;draw()}
+   if(!ro){
+    cv.addEventListener('pointerdown',e=>{if(!ed.img)return;e.preventDefault();const q=pos(e);
+      if(ed.tool==='text'){if(!ti.hidden)commitText();const b=cv.getBoundingClientRect(),sb=stage.getBoundingClientRect();ti._p=q;ti.hidden=false;ti.style.left=(e.clientX-sb.left)+'px';ti.style.top=(e.clientY-sb.top)+'px';ti.style.color=ed.color==='#ffffff'?'#111':ed.color;ti.focus();setTimeout(()=>ti.focus(),0);return}
+      cv.setPointerCapture?.(e.pointerId);ed.cur=(ed.tool==='pen'||ed.tool==='mark')?{t:ed.tool,c:ed.color,w:ed.size,pts:[q]}:{t:ed.tool,c:ed.color,w:ed.size,a:q,b:q};draw()});
+    cv.addEventListener('pointermove',e=>{if(!ed.cur)return;e.preventDefault();const q=pos(e);if(ed.cur.pts)ed.cur.pts.push(q);else ed.cur.b=q;draw()});
+    const up=()=>{if(!ed.cur)return;const s=ed.cur;ed.cur=null;const big=s.pts?s.pts.length>0:(Math.abs(s.a[0]-s.b[0])+Math.abs(s.a[1]-s.b[1])>4);if(big){ed.shapes.push(s);ed.dirty=true}draw()};
+    cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+    ti.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();commitText()}if(e.key==='Escape'){ti.hidden=true;ti.value=''}});
+    ti.addEventListener('blur',()=>setTimeout(()=>{if(!ti.hidden)commitText()},120));
+   }
+   const close=()=>{ov.classList.remove('open');ov.innerHTML='';document.body.style.overflow='';window.removeEventListener('resize',fit)};
+   window.addEventListener('resize',fit);
+   ov.querySelector('.ixEdBarV459').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
+     if(b.dataset.tool){if(!ti.hidden)commitText();ed.tool=b.dataset.tool;if(ed.tool==='mark'&&ed.color==='#e02424')ed.color=COLORS[1];sync()}
+     else if(b.dataset.col){ed.color=b.dataset.col;sync()}
+     else if(b.dataset.size){ed.size=+b.dataset.size;sync()}
+     else if(b.dataset.act==='undo'){ed.shapes.pop();ed.dirty=true;draw()}
+     else if(b.dataset.act==='clear'){if(ed.shapes.length&&confirm('Alle Zeichnungen auf diesem Foto entfernen?')){ed.shapes=[];ed.dirty=true;draw()}}
+     else if(b.dataset.act==='close'){if(ed.dirty&&!confirm('Änderungen am Foto verwerfen?'))return;close()}
+     else if(b.dataset.act==='save'){if(!ti.hidden)commitText();if(!ed.dirty){close();return}if(!ed.img){msg('Foto ist noch nicht geladen.');return}
+       b.disabled=true;msg('Wird gespeichert …');
+       try{let path='';if(ed.shapes.length){const blob=await new Promise((res,rej)=>{try{cv.toBlob(x=>x?res(x):rej(new Error('Bild konnte nicht erzeugt werden')),'image/jpeg',.86)}catch(er){rej(er)}});path=await upload(blob)}
+         const r=rec(ed.r.id),ph=r&&(r.photos||[]).find(x=>x.id===ed.p.id);if(!ph)throw new Error('Eintrag nicht mehr vorhanden');
+         const old=ph.ann;ph.shapes=ed.shapes;ph.ann=path;touch(r);close();save();if(old&&old!==path)delFile(old)}
+       catch(er){b.disabled=false;msg(er.message||String(er))}}
+   });
+   sync();
+ }
+
+ /* ---------- Einbindung Projektansicht ---------- */
+ window.renderProjInfoV459=function(){S.pid=(typeof currentProjectId!=='undefined'&&currentProjectId)||null;
+   if(S.pid!==S.lastPid){S.lastPid=S.pid;S.draft={};S.edit=null;S.tdEdit={};S.pend=null}
+   S.sig=sig();render();
+   if(!S.timer)S.timer=setInterval(()=>{const host=E('projectInfoV459');const vis=host&&host.offsetParent!==null;if(!vis||!S.pid){badge();return}
+     const g=sig();if(g===S.sig)return;const ae=document.activeElement;if(ae&&host.contains(ae)&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)&&ae.value)return;if(E('ixEdV459')?.classList.contains('open'))return;S.sig=g;render()},2000)};
+ window.projInfoBadgeV459=function(){S.pid=(typeof currentProjectId!=='undefined'&&currentProjectId)||S.pid;badge()};
+})();
+
 function setCommissionDetailTab(tab='overview'){
  commissionDetailActiveTab=['overview','production','analysis'].includes(tab)?tab:'overview';
  document.querySelectorAll('[data-commission-detail-tab]').forEach(b=>b.classList.toggle('active',b.dataset.commissionDetailTab===commissionDetailActiveTab));
@@ -9838,7 +10162,9 @@ function openProjectDetail(id){
    <button class="projectMainTab active" type="button" data-project-detail-tab="overview" onclick="setProjectDetailTab('overview')">Übersicht</button>
    <button class="projectMainTab" type="button" data-project-detail-tab="plan" onclick="setProjectDetailTab('plan')">Planung</button>
    <button class="projectMainTab" type="button" data-project-detail-tab="takt" onclick="setProjectDetailTab('takt')">Taktplanung</button>
+   <button class="projectMainTab" type="button" data-project-detail-tab="info" onclick="setProjectDetailTab('info')">Informationsaustausch</button>
   </div>
+  <div class="projectTabPanel projectDetailTabPanel" data-project-detail-panel="info"><div id="projectInfoV459"></div></div>
   <div class="projectTabPanel projectDetailTabPanel" data-project-detail-panel="plan"><div id="projectPlanV362" class="planHostV362"></div></div>
   <div class="projectTabPanel projectDetailTabPanel" data-project-detail-panel="takt"><div id="projectTaktV436"></div></div>
   <div class="projectTabPanel projectDetailTabPanel active" data-project-detail-panel="overview">
@@ -9850,6 +10176,7 @@ function openProjectDetail(id){
    ${planInfo}
   </div>`;
  setProjectDetailTab(projectDetailActiveTab);
+ window.projInfoBadgeV459?.();
 }
 function openCommissionArea(commissionId){
  let p=projectById(currentProjectId);if(!p)return;
@@ -11822,17 +12149,17 @@ async function checkCloudForUpdates(force=false){
 
 
 function entityCollections(){
- return ['areas','racks','packages','commissions','controls','users','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','planSchemasV377','sibChecklistsV385','planBoardV389','planAbsencesV409','planStatusesV422','taktPlansV433','taktOffV434','taktBudgetsV436','modDocsV454'];
+ return ['areas','racks','packages','commissions','controls','users','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','planSchemasV377','sibChecklistsV385','planBoardV389','planAbsencesV409','planStatusesV422','taktPlansV433','taktOffV434','taktBudgetsV436','modDocsV454','projInfoV459'];
 }
 function canWriteCloudEntity(type,action='save'){
  let role=currentRole();
  if(role==='Administrator')return true;
  if(role==='Lagerverantwortlicher'){
    if(type==='users')return false;
-   return ['areas','racks','packages','commissions','controls','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','__state','planSchemasV377','sibChecklistsV385','planBoardV389','planAbsencesV409','planStatusesV422','taktPlansV433','taktOffV434','taktBudgetsV436','modDocsV454'].includes(type);
+   return ['areas','racks','packages','commissions','controls','internalMaterials','internalTransfers','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','__state','planSchemasV377','sibChecklistsV385','planBoardV389','planAbsencesV409','planStatusesV422','taktPlansV433','taktOffV434','taktBudgetsV436','modDocsV454','projInfoV459'].includes(type);
  }
  if(role==='Mitarbeiter'){
-   if(action==='save')return ['packages','controls','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','sibChecklistsV385','planBoardV389','planAbsencesV409','planStatusesV422','taktPlansV433','taktOffV434','taktBudgetsV436','modDocsV454'].includes(type);
+   if(action==='save')return ['packages','controls','standardStock','materialCatalog','materialPinsV552','productionPackagesV321','productionControlsV322','productionTextFieldsV324','projects','smallOrders','platforms','toolsContainers','sibChecklistsV385','planBoardV389','planAbsencesV409','planStatusesV422','taktPlansV433','taktOffV434','taktBudgetsV436','modDocsV454','projInfoV459'].includes(type);
    if(action==='delete')return type==='packages' && !!st.settings?.allowMaterialDelete;
  }
  return false;
@@ -35729,7 +36056,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V457';
+   if(v)v.textContent='Aktuelle Version: V459';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
