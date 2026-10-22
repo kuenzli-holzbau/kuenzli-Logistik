@@ -5489,6 +5489,15 @@ details.m3SecV462>summary::-webkit-details-marker{display:none}
 .hcV468.bad{background:#fdecea;border-color:#f3c3bd;color:#8e2a1c}
 .hcV468.ok{background:#e9f4ec;border-color:#c5e1cd;color:#1d5c3a}
 .bigV448+.tkLegV433,.tkZoomBoxV448 .hInfoV468 .hcV468{font-size:14px}
+.cloudErrV471{margin-top:10px;padding:10px 12px;border-radius:10px;background:#fdecea;border:1px solid #f3c3bd;color:#7a2a1f;font-size:14px;line-height:1.4}
+.peSecV471{border:1px solid #dfe6e1;border-radius:12px;padding:12px 14px;margin-top:12px;background:#fbfcfb}
+.peSecV471 h3{margin:0 0 8px;font-size:15px}
+.peGridV471{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.peKV{background:#fff;border:1px solid #e6ece8;border-radius:9px;padding:7px 10px}
+.peKV span{display:block;font-size:12px;color:#5f6f66}
+.peKV b{font-size:15px}
+#prodElEditModalV471{z-index:9500}
+.cloudErrV471 details{margin-top:6px;font-size:12px;color:#8a4a40}.cloudErrV471 code{display:block;white-space:pre-wrap;word-break:break-word;margin-top:4px}
 </style>
 </head>
 <body class="accessLocked">
@@ -5501,7 +5510,7 @@ details.m3SecV462>summary::-webkit-details-marker{display:none}
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V470</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V471</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -5723,7 +5732,7 @@ details.m3SecV462>summary::-webkit-details-marker{display:none}
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V470</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V471</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -7004,7 +7013,7 @@ document.addEventListener('DOMContentLoaded',function(){var dl=document.createEl
 <div class="modal" id="productionProgressModal"><div class="box" style="max-width:1540px">
  <div class="mh"><div><h2>Tagesfortschritt Produktion</h2><div id="prodProgressProject" class="muted"></div></div><div class="toolbar" style="margin-left:auto;margin-right:10px"><button class="btn" type="button" onclick="saveDailyProduction()">Tagesstand speichern</button></div><button class="x" onclick="closeM('productionProgressModal')">✕</button></div>
  <div class="form">
-  <label class="f">Datum<input id="ppDate" type="date"></label>
+  <label class="f">Datum<input id="ppDate" type="date" onchange="ppDateChangedV471()"></label>
   <label class="f">Anzahl Mitarbeiter<input id="ppEmployeeCount" type="number" min="0" step="1" inputmode="numeric" oninput="updateProductionActualHours()" placeholder="z. B. 4"></label>
   <label class="f">Stunden pro Mitarbeiter<input id="ppHoursPerEmployee" type="number" min="0" step="0.25" inputmode="decimal" oninput="updateProductionActualHours()" placeholder="z. B. 8"></label>
   <label class="f">Ist-Stunden heute [Personenstunden]<input id="ppActualHours" type="number" min="0" step="0.25" inputmode="decimal" readonly tabindex="-1" style="background:#f3f6f4;font-weight:900" title="Wird automatisch aus Anzahl Mitarbeiter × Stunden pro Mitarbeiter berechnet"><button type="button" class="btn secondary" style="margin-top:6px;width:100%" onclick="applyActualHoursProportionallyV548()">Stunden proportional auf Elemente verteilen</button></label>
@@ -8581,7 +8590,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V470</b></p><div class="releaseNote"><b>Neu in V470</b><br>Taktplanung Massnahmen: Feld «gilt ab» (auch rückwirkend speichern) und Verlauf – «↶ Vorherige Massnahme» stellt eine überschriebene oder entfernte Massnahme wieder her. V469: Cloud-Abgleich schont die Datenbank (Supabase-CPU-Warnung): kein Voll-Abgleich mehr jede Minute und bei jedem Fensterwechsel – nur noch bei echten Änderungen (kleiner Check alle 8 s) plus Sicherheits-Abgleich alle 10 min; Rechte-Prüfung und Bestätigungen lesen nur noch die betroffene Zeile statt der ganzen Tabelle; Pakete pro Abgleich nur noch einmal gelesen. Im Test: Datenmenge im Ruhezustand von 78 MB auf praktisch 0 je 2 Minuten. V468: Stunden-Diagramm besser lesbar: Budget, Prognose und Massnahme als Zeile über dem Diagramm statt Text in den Linien; Diagramme halb so gross (4 in einer Reihe). V467: Taktplanung: zweites Diagramm «Stundenbudget» neben «Endtermin» – Ist-Stunden, Soll aus Kalkulation, Prognose, Massnahme und Budget-Linie mit Datum, wann das Budget aufgebraucht wäre. V466: Planung: Jede Taktplanung erscheint automatisch als Arbeitsschritt in der Gantt-Gruppe «Überwachung» und bleibt synchron (ersetzt «Mit Planungsschritt verbinden»); Zeile 4 in der Taktplanung entfernt, die orange Linie der Massnahme bleibt im Diagramm ab ihrem Datum stehen. V465: Planung: Gruppen-Reihenfolge per Ziehen oder ▲▼ ändern («⇅ Reihenfolge»), neue Gruppen dazwischen einfügen («＋ neue Gruppe hier», im Menü ⋯ «Neue Gruppe darüber/darunter»). V464: Taktplanung: neue Zeile 4 «Überwachung» – die gespeicherte Massnahme bleibt ab ihrem Datum als orange Plan-Linie stehen, mit Vergleich Ist ↔ Massnahme (Rückstand, Tempo, h/El., MA, Prognose Ende). V463: 3D-Modell: Modelle pro Kommission hochladen (neues Modell ersetzt das alte derselben Kommission), Ansicht «Alle Kommissionen zusammen» mit Kommissions-Filter, verständliche Meldung, wenn der Cloud-Speicher den Dateityp nicht erlaubt. V462: Projekt: neuer Reiter «3D-Modell» – IFC aus cadwork hochladen, drehen, nach Bauuntergruppen/Geschossen/Bauteilen filtern, Bauteil-Infos, Messen mit Einrasten auf Ecken und Kanten, Schnitt, Vollbild. V461: Informationsaustausch: Bilder mit Ctrl+V direkt in Info, Antwort, ToDo, Material und Verbindungsmittel einfügen (Vorschau, wird beim Speichern angehängt); Bemerkung bei Material und Verbindungsmitteln direkt in der Zeile schreiben. V460: Informationsaustausch: Antworten auf Infos (klar als «↳ Antwort» markiert); neue Listen «Material bestellt» und «Verbindungsmittel bestellt» mit Menge, Lieferant, Lieferdatum und Bemerkung – abhaken = erhalten, «Nachbestellen» mit Menge erstellt direkt ein ToDo für den Projektleiter. V459: Projekt: neuer Reiter «Informationsaustausch» – Infos aus Besprechungen an Kommissionen zuweisen, ToDo Produktion und ToDo Projektleiter, Fotos mit Stift, Textmarker, Formen und Text bezeichnen. V458: Startseite «Bereich auswählen» wieder proportional und zentriert (Vollbreite nur in den Arbeitsbereichen). V457: Prognose-Basis wählbar (letzte N Tage oder alle) in Taktplanung und Kommissions-Prognose; Taktplanung: Anzeige der letzten N Tage; Checkliste «Gian DR» aus dem Artefakt übernommen. V456: Ganze Bildschirmbreite in allen Bereichen (Start, Lager, Produktion, Kleinaufträge, Logistik, Sonstiges, Verwaltung, Module). V455: Taktplanung-Tabelle: Seite springt nach einer Eingabe nicht mehr nach oben, Feld bleibt aktiv; Enter springt in die nächste Zeile. V454: Neues Modul «Produktionscheckliste» unter Sonstiges: Checklisten mit Gruppen, Arbeitsschritten, Kontrollpunkten, Bildern/PDFs zum Markieren und PDF A4 – gespeichert in der Cloud, eigene Berechtigung. V453: Berechtigungen übersichtlich in farbigen Bereichen, Zähler pro Bereich, (i) mit Beschreibung zu jeder Berechtigung. V452: Taktplanung ↔ Planung: Produktionsschritt mit Taktplanung verbinden – Zeitraum und MA synchron (letzte Änderung gilt), Takt-Stand am Balken. V451: Taktplanung: Hinweis mit Knopf «mit Kommission verknüpfen», wenn eine Taktplanung noch nicht verknüpft ist. V450: Taktplanung mit Kommission verknüpfen: Elemente, Soll-Stunden, produzierte Elemente, MA und Ist-Stunden aus dem Tagesfortschritt werden automatisch übernommen. V449: Taktplanung: Kennzahlen in 3 Zeilen – 1 Grundlage aus Kalkulation, 2 Ist-Zustand mit Prognose, 3 Massnahmen mit neuer Prognose. V448: Taktplanung: alle Diagramme nebeneinander in gleicher Grösse, Klick öffnet das Diagramm gross. V447: Taktplanung: Abacus-Abgleich – Zellen aus Excel einfügen (Ctrl+C / Ctrl+V) oder Datei wählen, pro Tag MA und Stunden mit der Tabelle vergleichen, Abweichungen prüfen oder übernehmen. V446: Taktplanung: «Massnahmen ab heute» – Endtermin, MA und h/Element simulieren, im Diagramm mit Soll, Ist und Prognose vergleichen, Massnahme speichern. V445: Taktplanung: Arbeitszeiterhöhung – Zeiträume mit anderen Stunden pro MA und Tag, werden in der Tabelle übernommen. V444: Taktplanung-Tabelle: Spalten Std./MA (pro Tag änderbar), Ist-Stunden und Ist-Stunden kumuliert. V443: Taktplanung: Kachel «Ist h pro Element» zeigt Ø gesamt und Ø letzte 5 Tage nebeneinander. V442: Produktionsart «DR» im Tagesfortschritt und in der Produktionsanalyse. V441: Taktplanung: Ist h/Element (aus MA × Std./Tag, MA pro Tag korrigierbar), Kachel und Diagramm «h pro Element», Stundenbudget und Prognose mit Ist-Stunden. V440: Versionsanzeige korrigiert. V439: Taktplanung in voller Bildschirmbreite. V438: Tagesleistung als Diagramm (Balken pro Tag, Ø 5 Tage, nötiges Tempo) und Kachel «Ist-Tempo» mit Trend; heute zählt erst mit Ist-Eintrag. V437: Reiter «Taktplanung» im Projekt. V436: Stundenbudget pro Kommission mit Warnung bei Überschreitung (alle Taktplanungen zusammen, inkl. Prognose). V435: Taktplanung: h pro Element oder Anzahl MA eingeben – das andere wird berechnet; Meldungen im Fenster statt Popup; Werte gerundet. V434: Taktplanung: Betriebsferien/Feiertage erfassen – Berechnung mit Produktionstagen (Bedarf MA, h pro Element, Soll, Prognose). V433: Neuer Reiter «Taktplanung Fassade»: Berechnung Bedarf MA bzw. h pro Element, Gantt mit Soll/Ist und Prognose, Ist-Erfassung pro Tag. V432: Anzahl MA im Arbeitsschritt frei mit Kommastellen eingeben (z. B. 0.33 oder 0,33). V431: Schnellmenü im Gantt: Inhalt bleibt im Feld (scrollbar, Knöpfe umbrechen). V430: Zuschnitte optisch abgehoben: eckige Balken mit Sägeschnitt und ✂, blau-graue Zeile. V429: Planung: Suchfeld bleibt beim Tippen aktiv (Ansicht wird ohne das Suchfeld neu aufgebaut). V428: Zuschnitt-Funktionen (Endtermin, Stunden, Start/Stopp + Ist-Stunden, Maschine + Stückzahl, Maschinen-Auslastung) auch in Projekten bei Schritten mit «Zuschnitt» oder «ZS» im Namen. V427: Planungs-PDF pro Person (eine Person oder je Person ein eigenes PDF). V426: Personen verwalten: umbenennen / zusammenführen und falsche Namen überall entfernen (Planung + Abwesenheiten). V425: Gantt im Vollbild (Knopf «⛶ Vollbild», Esc beendet). V424: Balken mit Unterbruch reicht bis zum echten Ende – die restlichen Tage stehen rechts vom Unterbruch; «Auf Gruppen verteilen» markiert die aktuelle Gruppe. V423: Unterbruch im Gantt mit der Maus verschieben bzw. am Rand verlängern/kürzen. V422: Arbeitsschritt auf mehrere Gruppen verteilen (normale Einträge, MA aufgeteilt, auch 0.25 MA); eigene Status (Name, Farbe, Grundverhalten); graue Spiegelung entfernt. Zuschnitt-Import: offene Positionen, die in der neuen Excel fehlen, werden angezeigt und können als erledigt markiert, gelöscht oder stehen gelassen werden. V418: Gantt: Mitarbeiter direkt im Menü des Arbeitsschritts zuweisen/entfernen (mit Hinweis abwesend / gleichzeitig eingeplant). V417: Mehrere Einträge pro Arbeitsschritt (Material/Lieferung, Notiz, Kontrolle) und Unterbrüche (verschieben das Ende, zählen nicht in die Auslastung); klare Wochenlinien in der Planung. V416: Planungs-PDF: Meilensteine bei ihrer Gruppe (Linien nur über diese Gruppe), Logo oben links. V415: Freigegebene Ist-Prognose auch in der Planungs-Übersicht (alle Projekte). V414: Ist-Prognose einer Kommission auf der Gantt-Seite (Riegel in der Kommission); PDF-Reihenfolge mit Logo oben links. V413: Offene Elemente: Löschen wirkt sofort; PDF der Produktionsreihenfolge (Reihenfolge, Element, Fläche je Gruppe, Gruppen nicht getrennt). V412: Projekte (Karten und Planungs-Übersicht) immer nach Startdatum sortiert. V411: Abwesenheiten farbig: kräftige Chips mit Namen, in der Planung eine Zeile pro Person mit farbigem Balken (Grund). V410: ZS-Positionen pro Zuschnitt-Schritt zuordnen (ganze monday-Gruppe oder einzelne Positionen); automatisch nur noch bei genau einem Zuschnitt-Schritt im Projekt; erledigte Schritte ohne Warnung. V409: Abwesenheiten (Ferien, Militär, Kurs, Krank …) beim Einsatzplan erfassen; Warnung an Arbeitsschritten mit abwesenden Personen; Zeile «Abwesend» in der Planung. V408: Blockiert mit Grund; Gruppen in der Projekt-Planung farbig; Projekt-Zuschnitt mit ZS-Positionen verknüpft (keine Doppelzählung in der Auslastung); neue Projektkarten. V407: «Beladen in Davos»: Karte antippen, um Status und Standort nachzutragen (abgeholt, beladen, in Beladung, zurück im Lager). V406: Pritschen-Gantt luftiger; Projekte in der Planungs-Übersicht farbig abgehoben; «Welche Pritsche darf ich nehmen?» nur noch in der Übersicht; neuer Block «Beladen in Davos». V405: Pritschen-Gantt: gesperrte Pritschen, Container und Geräte grau schraffiert mit 🔒; Reservationen zeigen ihren Zeitraum (von–bis) direkt im Balken. V404: Fahrzeuge/Geräte: Status «Frei / In Gebrauch» und Sperren wie bei den Containern; gesperrte oder benutzte Geräte sind im Transport nicht neu wählbar. V403: Transport löschen ändert keinen Status mehr – Pritschen und Container bleiben wie sie sind. V402: Transportlisten: LKW links, Anhänger rechts nebeneinander; ohne Anhänger-Ladung bzw. bei «LKW solo» kein Anhängerbild. V401: Transportplanung: LKW- und Anhängerbild zeigen nur die eigene Ladung; zusätzliche Container und Fahrzeuge/Geräte bei jedem Ladungsträger möglich (2 Container auf Pritsche oder direkt auf LKW, Container + Gerät, 2 Geräte). V400: Pritschen-Gantt im Projekt: auch Container und Fahrzeuge/Geräte anderer Projekte ausgeblendet – sichtbar sind nur eigene und freie. V399: Pritschen-Gantt: Reservationen mit der Maus verschieben bzw. am Rand verlängern (mit Konfliktmeldung); Belegung endet beim Reservationsende (rot, wenn länger belegt); im Projekt nur zugeordnete und freie Pritschen. V398: Pritschen-Gantt: zurück bis zum allerersten Eintrag ziehbar. V397: Pritschen-Gantt: mit gedrückter Maustaste hin und her ziehen, grösserer Zeitraum (4 Wochen zurück bis ca. 7 Monate voraus), heute markiert. V396: Pritschenverwaltung: Suchfeld für Projekte (Name, Nummer, PL – auch Teilwörter, z.B. «26160002» oder «baum»). V395: Transporte: LKW-/Anhängerbild wieder in der Übersicht (mit Pritschen-/Container-Schild, Zusatzladung darunter); Status-Auswahl und ⋮-Menü werden nicht mehr abgeschnitten. V394: Pritschen/Transporte: Übersicht nach Kalenderwoche mit lesbarem Datum (Datumsfehler behoben), Ladung kompakt als Schilder (LKW/Anhänger, Pritsche, Container, Geräte, Rungen) statt Fahrzeugbilder, Route ohne «Projekt → Projekt». V393: Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V471</b></p><div class="releaseNote"><b>Neu in V471</b><br>Anmeldung: Ist die Cloud nicht erreichbar oder eingeschränkt, zeigt die App den echten Grund statt «Noch keine Lagerfreigabe». Änderungs-Check gedrosselt: alle 20 s bei Benutzung, jede Minute im Leerlauf (weniger Supabase-Anfragen). Kommission: «Bearbeiten» im Produktionsverlauf öffnet ein Fenster mit allen Daten des Elements (Datum, Ist-Stunden, Produktionsart, Status, Soll/Ist-Vergleich, Tageserfassung); nach dem Speichern bleibt der gewählte Reiter offen (auch beim Cloud-Abgleich). Tagesfortschritt: angeklickte Elemente übernehmen das Datum von oben, ein geändertes Datum oben gilt für alle Elemente. V470: Taktplanung Massnahmen: Feld «gilt ab» (auch rückwirkend speichern) und Verlauf – «↶ Vorherige Massnahme» stellt eine überschriebene oder entfernte Massnahme wieder her. V469: Cloud-Abgleich schont die Datenbank (Supabase-CPU-Warnung): kein Voll-Abgleich mehr jede Minute und bei jedem Fensterwechsel – nur noch bei echten Änderungen (kleiner Check alle 8 s) plus Sicherheits-Abgleich alle 10 min; Rechte-Prüfung und Bestätigungen lesen nur noch die betroffene Zeile statt der ganzen Tabelle; Pakete pro Abgleich nur noch einmal gelesen. Im Test: Datenmenge im Ruhezustand von 78 MB auf praktisch 0 je 2 Minuten. V468: Stunden-Diagramm besser lesbar: Budget, Prognose und Massnahme als Zeile über dem Diagramm statt Text in den Linien; Diagramme halb so gross (4 in einer Reihe). V467: Taktplanung: zweites Diagramm «Stundenbudget» neben «Endtermin» – Ist-Stunden, Soll aus Kalkulation, Prognose, Massnahme und Budget-Linie mit Datum, wann das Budget aufgebraucht wäre. V466: Planung: Jede Taktplanung erscheint automatisch als Arbeitsschritt in der Gantt-Gruppe «Überwachung» und bleibt synchron (ersetzt «Mit Planungsschritt verbinden»); Zeile 4 in der Taktplanung entfernt, die orange Linie der Massnahme bleibt im Diagramm ab ihrem Datum stehen. V465: Planung: Gruppen-Reihenfolge per Ziehen oder ▲▼ ändern («⇅ Reihenfolge»), neue Gruppen dazwischen einfügen («＋ neue Gruppe hier», im Menü ⋯ «Neue Gruppe darüber/darunter»). V464: Taktplanung: neue Zeile 4 «Überwachung» – die gespeicherte Massnahme bleibt ab ihrem Datum als orange Plan-Linie stehen, mit Vergleich Ist ↔ Massnahme (Rückstand, Tempo, h/El., MA, Prognose Ende). V463: 3D-Modell: Modelle pro Kommission hochladen (neues Modell ersetzt das alte derselben Kommission), Ansicht «Alle Kommissionen zusammen» mit Kommissions-Filter, verständliche Meldung, wenn der Cloud-Speicher den Dateityp nicht erlaubt. V462: Projekt: neuer Reiter «3D-Modell» – IFC aus cadwork hochladen, drehen, nach Bauuntergruppen/Geschossen/Bauteilen filtern, Bauteil-Infos, Messen mit Einrasten auf Ecken und Kanten, Schnitt, Vollbild. V461: Informationsaustausch: Bilder mit Ctrl+V direkt in Info, Antwort, ToDo, Material und Verbindungsmittel einfügen (Vorschau, wird beim Speichern angehängt); Bemerkung bei Material und Verbindungsmitteln direkt in der Zeile schreiben. V460: Informationsaustausch: Antworten auf Infos (klar als «↳ Antwort» markiert); neue Listen «Material bestellt» und «Verbindungsmittel bestellt» mit Menge, Lieferant, Lieferdatum und Bemerkung – abhaken = erhalten, «Nachbestellen» mit Menge erstellt direkt ein ToDo für den Projektleiter. V459: Projekt: neuer Reiter «Informationsaustausch» – Infos aus Besprechungen an Kommissionen zuweisen, ToDo Produktion und ToDo Projektleiter, Fotos mit Stift, Textmarker, Formen und Text bezeichnen. V458: Startseite «Bereich auswählen» wieder proportional und zentriert (Vollbreite nur in den Arbeitsbereichen). V457: Prognose-Basis wählbar (letzte N Tage oder alle) in Taktplanung und Kommissions-Prognose; Taktplanung: Anzeige der letzten N Tage; Checkliste «Gian DR» aus dem Artefakt übernommen. V456: Ganze Bildschirmbreite in allen Bereichen (Start, Lager, Produktion, Kleinaufträge, Logistik, Sonstiges, Verwaltung, Module). V455: Taktplanung-Tabelle: Seite springt nach einer Eingabe nicht mehr nach oben, Feld bleibt aktiv; Enter springt in die nächste Zeile. V454: Neues Modul «Produktionscheckliste» unter Sonstiges: Checklisten mit Gruppen, Arbeitsschritten, Kontrollpunkten, Bildern/PDFs zum Markieren und PDF A4 – gespeichert in der Cloud, eigene Berechtigung. V453: Berechtigungen übersichtlich in farbigen Bereichen, Zähler pro Bereich, (i) mit Beschreibung zu jeder Berechtigung. V452: Taktplanung ↔ Planung: Produktionsschritt mit Taktplanung verbinden – Zeitraum und MA synchron (letzte Änderung gilt), Takt-Stand am Balken. V451: Taktplanung: Hinweis mit Knopf «mit Kommission verknüpfen», wenn eine Taktplanung noch nicht verknüpft ist. V450: Taktplanung mit Kommission verknüpfen: Elemente, Soll-Stunden, produzierte Elemente, MA und Ist-Stunden aus dem Tagesfortschritt werden automatisch übernommen. V449: Taktplanung: Kennzahlen in 3 Zeilen – 1 Grundlage aus Kalkulation, 2 Ist-Zustand mit Prognose, 3 Massnahmen mit neuer Prognose. V448: Taktplanung: alle Diagramme nebeneinander in gleicher Grösse, Klick öffnet das Diagramm gross. V447: Taktplanung: Abacus-Abgleich – Zellen aus Excel einfügen (Ctrl+C / Ctrl+V) oder Datei wählen, pro Tag MA und Stunden mit der Tabelle vergleichen, Abweichungen prüfen oder übernehmen. V446: Taktplanung: «Massnahmen ab heute» – Endtermin, MA und h/Element simulieren, im Diagramm mit Soll, Ist und Prognose vergleichen, Massnahme speichern. V445: Taktplanung: Arbeitszeiterhöhung – Zeiträume mit anderen Stunden pro MA und Tag, werden in der Tabelle übernommen. V444: Taktplanung-Tabelle: Spalten Std./MA (pro Tag änderbar), Ist-Stunden und Ist-Stunden kumuliert. V443: Taktplanung: Kachel «Ist h pro Element» zeigt Ø gesamt und Ø letzte 5 Tage nebeneinander. V442: Produktionsart «DR» im Tagesfortschritt und in der Produktionsanalyse. V441: Taktplanung: Ist h/Element (aus MA × Std./Tag, MA pro Tag korrigierbar), Kachel und Diagramm «h pro Element», Stundenbudget und Prognose mit Ist-Stunden. V440: Versionsanzeige korrigiert. V439: Taktplanung in voller Bildschirmbreite. V438: Tagesleistung als Diagramm (Balken pro Tag, Ø 5 Tage, nötiges Tempo) und Kachel «Ist-Tempo» mit Trend; heute zählt erst mit Ist-Eintrag. V437: Reiter «Taktplanung» im Projekt. V436: Stundenbudget pro Kommission mit Warnung bei Überschreitung (alle Taktplanungen zusammen, inkl. Prognose). V435: Taktplanung: h pro Element oder Anzahl MA eingeben – das andere wird berechnet; Meldungen im Fenster statt Popup; Werte gerundet. V434: Taktplanung: Betriebsferien/Feiertage erfassen – Berechnung mit Produktionstagen (Bedarf MA, h pro Element, Soll, Prognose). V433: Neuer Reiter «Taktplanung Fassade»: Berechnung Bedarf MA bzw. h pro Element, Gantt mit Soll/Ist und Prognose, Ist-Erfassung pro Tag. V432: Anzahl MA im Arbeitsschritt frei mit Kommastellen eingeben (z. B. 0.33 oder 0,33). V431: Schnellmenü im Gantt: Inhalt bleibt im Feld (scrollbar, Knöpfe umbrechen). V430: Zuschnitte optisch abgehoben: eckige Balken mit Sägeschnitt und ✂, blau-graue Zeile. V429: Planung: Suchfeld bleibt beim Tippen aktiv (Ansicht wird ohne das Suchfeld neu aufgebaut). V428: Zuschnitt-Funktionen (Endtermin, Stunden, Start/Stopp + Ist-Stunden, Maschine + Stückzahl, Maschinen-Auslastung) auch in Projekten bei Schritten mit «Zuschnitt» oder «ZS» im Namen. V427: Planungs-PDF pro Person (eine Person oder je Person ein eigenes PDF). V426: Personen verwalten: umbenennen / zusammenführen und falsche Namen überall entfernen (Planung + Abwesenheiten). V425: Gantt im Vollbild (Knopf «⛶ Vollbild», Esc beendet). V424: Balken mit Unterbruch reicht bis zum echten Ende – die restlichen Tage stehen rechts vom Unterbruch; «Auf Gruppen verteilen» markiert die aktuelle Gruppe. V423: Unterbruch im Gantt mit der Maus verschieben bzw. am Rand verlängern/kürzen. V422: Arbeitsschritt auf mehrere Gruppen verteilen (normale Einträge, MA aufgeteilt, auch 0.25 MA); eigene Status (Name, Farbe, Grundverhalten); graue Spiegelung entfernt. Zuschnitt-Import: offene Positionen, die in der neuen Excel fehlen, werden angezeigt und können als erledigt markiert, gelöscht oder stehen gelassen werden. V418: Gantt: Mitarbeiter direkt im Menü des Arbeitsschritts zuweisen/entfernen (mit Hinweis abwesend / gleichzeitig eingeplant). V417: Mehrere Einträge pro Arbeitsschritt (Material/Lieferung, Notiz, Kontrolle) und Unterbrüche (verschieben das Ende, zählen nicht in die Auslastung); klare Wochenlinien in der Planung. V416: Planungs-PDF: Meilensteine bei ihrer Gruppe (Linien nur über diese Gruppe), Logo oben links. V415: Freigegebene Ist-Prognose auch in der Planungs-Übersicht (alle Projekte). V414: Ist-Prognose einer Kommission auf der Gantt-Seite (Riegel in der Kommission); PDF-Reihenfolge mit Logo oben links. V413: Offene Elemente: Löschen wirkt sofort; PDF der Produktionsreihenfolge (Reihenfolge, Element, Fläche je Gruppe, Gruppen nicht getrennt). V412: Projekte (Karten und Planungs-Übersicht) immer nach Startdatum sortiert. V411: Abwesenheiten farbig: kräftige Chips mit Namen, in der Planung eine Zeile pro Person mit farbigem Balken (Grund). V410: ZS-Positionen pro Zuschnitt-Schritt zuordnen (ganze monday-Gruppe oder einzelne Positionen); automatisch nur noch bei genau einem Zuschnitt-Schritt im Projekt; erledigte Schritte ohne Warnung. V409: Abwesenheiten (Ferien, Militär, Kurs, Krank …) beim Einsatzplan erfassen; Warnung an Arbeitsschritten mit abwesenden Personen; Zeile «Abwesend» in der Planung. V408: Blockiert mit Grund; Gruppen in der Projekt-Planung farbig; Projekt-Zuschnitt mit ZS-Positionen verknüpft (keine Doppelzählung in der Auslastung); neue Projektkarten. V407: «Beladen in Davos»: Karte antippen, um Status und Standort nachzutragen (abgeholt, beladen, in Beladung, zurück im Lager). V406: Pritschen-Gantt luftiger; Projekte in der Planungs-Übersicht farbig abgehoben; «Welche Pritsche darf ich nehmen?» nur noch in der Übersicht; neuer Block «Beladen in Davos». V405: Pritschen-Gantt: gesperrte Pritschen, Container und Geräte grau schraffiert mit 🔒; Reservationen zeigen ihren Zeitraum (von–bis) direkt im Balken. V404: Fahrzeuge/Geräte: Status «Frei / In Gebrauch» und Sperren wie bei den Containern; gesperrte oder benutzte Geräte sind im Transport nicht neu wählbar. V403: Transport löschen ändert keinen Status mehr – Pritschen und Container bleiben wie sie sind. V402: Transportlisten: LKW links, Anhänger rechts nebeneinander; ohne Anhänger-Ladung bzw. bei «LKW solo» kein Anhängerbild. V401: Transportplanung: LKW- und Anhängerbild zeigen nur die eigene Ladung; zusätzliche Container und Fahrzeuge/Geräte bei jedem Ladungsträger möglich (2 Container auf Pritsche oder direkt auf LKW, Container + Gerät, 2 Geräte). V400: Pritschen-Gantt im Projekt: auch Container und Fahrzeuge/Geräte anderer Projekte ausgeblendet – sichtbar sind nur eigene und freie. V399: Pritschen-Gantt: Reservationen mit der Maus verschieben bzw. am Rand verlängern (mit Konfliktmeldung); Belegung endet beim Reservationsende (rot, wenn länger belegt); im Projekt nur zugeordnete und freie Pritschen. V398: Pritschen-Gantt: zurück bis zum allerersten Eintrag ziehbar. V397: Pritschen-Gantt: mit gedrückter Maustaste hin und her ziehen, grösserer Zeitraum (4 Wochen zurück bis ca. 7 Monate voraus), heute markiert. V396: Pritschenverwaltung: Suchfeld für Projekte (Name, Nummer, PL – auch Teilwörter, z.B. «26160002» oder «baum»). V395: Transporte: LKW-/Anhängerbild wieder in der Übersicht (mit Pritschen-/Container-Schild, Zusatzladung darunter); Status-Auswahl und ⋮-Menü werden nicht mehr abgeschnitten. V394: Pritschen/Transporte: Übersicht nach Kalenderwoche mit lesbarem Datum (Datumsfehler behoben), Ladung kompakt als Schilder (LKW/Anhänger, Pritsche, Container, Geräte, Rungen) statt Fahrzeugbilder, Route ohne «Projekt → Projekt». V393: Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -9797,6 +9806,7 @@ function toggleCommissionProductionAnalysis(){openCommissionAnalysisView()}
 let projectsHomeActiveTab='active';
 let projectDetailActiveTab='overview';
 let commissionDetailActiveTab='overview';
+let shownCommissionV471='';
 function setProjectsHomeTab(tab='active'){
  projectsHomeActiveTab=['active','plan','takt','analysis','archive'].includes(tab)?tab:'active';
  document.querySelectorAll('[data-project-home-tab]').forEach(b=>b.classList.toggle('active',b.dataset.projectHomeTab===projectsHomeActiveTab));
@@ -11028,6 +11038,9 @@ function openProjectDetail(id){
 }
 function openCommissionArea(commissionId){
  let p=projectById(currentProjectId);if(!p)return;
+ /* V471: Wird dieselbe, bereits offene Kommission neu aufgebaut (Speichern, Cloud-Abgleich), bleiben Reiter und Scrollposition */
+ const keepV471=!!(E('projectDetail')?.classList.contains('open')&&currentProjectView==='commission'&&shownCommissionV471===currentProjectId+'|'+commissionId);
+ const scrV471=keepV471?{x:window.scrollX,y:window.scrollY,h:E('projectDetail')?.scrollTop||0,inner:[...document.querySelectorAll('#projectDetailBody .projectPlanScroll')].map(x=>x.scrollTop)}:null;
  ensureElementCounts(p);
  ensureProjectCommissions(p);
  let c=p.planningCommissions.find(x=>x.id===commissionId);if(!c)return;
@@ -11042,7 +11055,7 @@ function openCommissionArea(commissionId){
  let prog=projectProductionStats(p,c.id);
  let body='';
  if(plan&&els.length){
-   commissionDetailActiveTab='overview';
+   if(!keepV471)commissionDetailActiveTab='overview';
    body=`
     <div class="projectMainTabs commissionDetailTabs" role="tablist" aria-label="Kommissionsansicht">
       <button class="projectMainTab active" type="button" data-commission-detail-tab="overview" onclick="setCommissionDetailTab('overview')">Übersicht</button>
@@ -11083,8 +11096,10 @@ function openCommissionArea(commissionId){
  }
  E('projectDetailBody').innerHTML=body;
  if(plan&&els.length)setCommissionDetailTab(commissionDetailActiveTab);
+ shownCommissionV471=currentProjectId+'|'+commissionId;
+ if(scrV471)requestAnimationFrame(()=>{window.scrollTo(scrV471.x,scrV471.y);const host=E('projectDetail');if(host)host.scrollTop=scrV471.h;document.querySelectorAll('#projectDetailBody .projectPlanScroll').forEach((x,i)=>{if(scrV471.inner[i]!=null)x.scrollTop=scrV471.inner[i]})});
 }
-function backToProjects(){currentProjectId='';currentProjectView='project';E('projectDetail').classList.remove('open');E('projectsHome').classList.add('open');renderProjectCards();if(projectsHomeActiveTab==='takt')window.renderTaktV433?.()}
+function backToProjects(){shownCommissionV471='';currentProjectId='';currentProjectView='project';E('projectDetail').classList.remove('open');E('projectsHome').classList.add('open');renderProjectCards();if(projectsHomeActiveTab==='takt')window.renderTaktV433?.()}
 function editCurrentProject(){if(currentProjectId)openProjectEditor(currentProjectId)}
 
 
@@ -12217,67 +12232,117 @@ function editProductionStartDay(dayDate){
  saveProjects();
  openCommissionArea(cid);
 }
+/* V471: Abgeschlossenes Element in einem Fenster mit allen Daten bearbeiten (statt Abfrage-Popups) */
+let prodElEditV471=null;
 function editCompletedProductionElement(elementId,dayDate){
  let p=projectById(currentProjectId);if(!p)return;
  let c=activeProjectCommission(p),cid=c?.id||'';
  let el=commissionElements(p,cid).find(x=>x.id===elementId);
+ let day=(p.dailyProduction||[]).find(d=>d.date===dayDate);
+ let entry=(day?.entries||[]).find(e=>e.elementId===elementId);
+ if(!el||!day||!entry)return;
+ prodElEditV471={elementId,dayDate,cid};
+ let m=E('prodElEditModalV471');
+ if(!m){m=document.createElement('div');m.className='modal';m.id='prodElEditModalV471';document.body.appendChild(m)}
+ const soll=Number(el.targetHours)||((Number(el.area)||0)*(Number(el.factor)||0));
+ const area=Number(entry.area||el.area||0);
+ const type=String(day.productionTypeByCommission?.[cid]||productionTypeForElement(p,c,el)||'');
+ const batch=(day.progressBatchesV547||[]).find(b=>b&&b.commissionId===cid&&(b.elementIds||[]).includes(elementId));
+ const allEls=commissionElements(p,cid);
+ const mates=batch?(batch.elementIds||[]).filter(id=>id!==elementId).map(id=>allEls.find(x=>x.id===id)).filter(Boolean):[];
+ const dayHours=Number(day.actualHoursByCommission?.[cid]||0);
+ const row=(k,v)=>`<div class="peKV"><span>${k}</span><b>${v}</b></div>`;
+ const types=['AW','IW','DA','DE','DR','Fassade'];
+ m.innerHTML=`<div class="box" style="max-width:860px">
+  <div class="mh"><div><h2>Element bearbeiten</h2><div class="muted">${el.sequence?esc(el.sequence)+' · ':''}${esc(el.name||'Element')} · ${esc(c?.name||'Kommission')}</div></div><div class="toolbar" style="margin-left:auto;margin-right:10px"><button class="btn" type="button" onclick="saveCompletedProductionElementV471()">Speichern</button></div><button class="x" type="button" onclick="closeM('prodElEditModalV471')">✕</button></div>
+  <div class="peSecV471"><h3>Element</h3><div class="peGridV471">
+   ${row('Nr.',el.sequence!=null&&el.sequence!==''?esc(el.sequence):'–')}
+   ${row('Element',esc(el.name||'–'))}
+   ${row('Gruppe',esc(el.groupTitle||'–'))}
+   ${row('Anzahl',fmtNum(el.count||1))}
+   ${row('m² pro Stk',el.unitArea?fmtNum(el.unitArea)+' m²':'–')}
+   ${row('Fläche total',fmtNum(area)+' m²')}
+   ${row('Soll-Faktor',el.factor?fmtNum(el.factor,3)+' h/m²':'–')}
+   ${row('Soll-Stunden',fmtNum(soll)+' h')}
+  </div></div>
+  <div class="peSecV471"><h3>Produktion</h3><div class="form">
+   <label class="f">Produktionsdatum<input id="peDateV471" type="date" value="${esc(dayDate)}"></label>
+   <label class="f">Ist-Stunden für dieses Element<input id="peHoursV471" type="number" min="0" step="0.01" inputmode="decimal" value="${Math.round(Number(entry.allocatedActualHours||0)*100)/100}" oninput="peCalcV471()"></label>
+   <label class="f">Produktionsart<select id="peTypeV471">${types.map(t=>`<option${t===type?' selected':''}>${t}</option>`).join('')}</select></label>
+   <label class="f">Status<select id="peStatusV471"><option value="done">Produziert</option><option value="open">Wieder offen (aus dem Verlauf entfernen)</option></select></label>
+  </div>
+  <div class="peGridV471" id="peCalcV471" data-area="${area}" data-soll="${soll}"></div></div>
+  <div class="peSecV471"><h3>Tageserfassung ${esc(localDateLabel(dayDate)||dayDate)}</h3><div class="peGridV471">
+   ${batch?row('Mitarbeiter',batch.employeeCount?fmtNum(batch.employeeCount)+' MA × '+fmtNum(batch.hoursPerEmployee)+' h':'–')+row('Ist-Stunden Erfassung',fmtNum(batch.actualHours)+' h'):''}
+   ${row('Ist-Stunden Tag (Kommission)',fmtNum(dayHours)+' h')}
+   ${row('Bemerkung',esc((batch?.note||day.note||'').trim()||'–'))}
+  </div>
+  ${mates.length?`<div class="muted" style="margin-top:8px">Mit diesem Element zusammen erfasst: ${mates.map(x=>esc(x.name||'Element')).join(', ')}</div>`:''}
+  ${batch?`<div class="toolbar" style="margin-top:10px"><button class="btn secondary small" type="button" onclick="peEditBatchV471('${batch.id}')">Ganze Tageserfassung bearbeiten (MA, Stunden, Verteilung)</button></div>`:''}
+  </div>
+  <div class="toolbar" style="justify-content:flex-end;margin-top:14px"><button class="btn secondary" type="button" onclick="closeM('prodElEditModalV471')">Abbrechen</button><button class="btn" type="button" onclick="saveCompletedProductionElementV471()">Speichern</button></div>
+ </div>`;
+ peCalcV471();
+ m.classList.add('open');
+}
+function peCalcV471(){
+ const box=E('peCalcV471');if(!box)return;
+ const area=Number(box.dataset.area||0),soll=Number(box.dataset.soll||0);
+ const hrs=Math.max(0,Number(String(E('peHoursV471')?.value||'0').replace(',','.'))||0);
+ const diff=hrs-soll,pct=soll>0?diff/soll*100:0;
+ const cls=diff>0.005?'ppStatusSlow':diff<-0.005?'ppStatusFast':'';
+ box.innerHTML=`<div class="peKV"><span>Ist h/m²</span><b>${area>0?fmtNum(hrs/area,3)+' h/m²':'–'}</b></div><div class="peKV"><span>Abweichung zum Soll</span><b class="${cls}">${diff>0?'+':''}${fmtNum(diff)} h${soll>0?` (${diff>0?'+':''}${fmtNum(pct,1)} %)`:''}</b></div>`;
+}
+function peEditBatchV471(batchId){
+ closeM('prodElEditModalV471');
+ openProductionProgress();
+ editProductionProgressEntryV547(batchId);
+}
+function saveCompletedProductionElementV471(){
+ const st=prodElEditV471;if(!st)return;
+ const {elementId,dayDate,cid}=st;
+ let p=projectById(currentProjectId);if(!p)return;
  let oldDay=(p.dailyProduction||[]).find(d=>d.date===dayDate);
  let entry=(oldDay?.entries||[]).find(e=>e.elementId===elementId);
- if(!el||!oldDay||!entry)return;
-
- let newDate=prompt(`Produktionsdatum für „${el.name||'Element'}“ (JJJJ-MM-TT):`,dayDate);
- if(newDate===null)return;
- newDate=String(newDate).trim();
- if(!/^\d{4}-\d{2}-\d{2}$/.test(newDate)){alert('Bitte Datum im Format JJJJ-MM-TT eingeben.');return}
-
- let hoursText=prompt('Dem Element zugeteilte Ist-Stunden:',String(Number(entry.allocatedActualHours||0)));
- if(hoursText===null)return;
- let newHours=Number(String(hoursText).replace(',','.'));
+ if(!oldDay||!entry){closeM('prodElEditModalV471');return}
+ let newDate=String(E('peDateV471')?.value||'').trim();
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(newDate)){alert('Bitte ein gültiges Produktionsdatum wählen.');return}
+ let newHours=Number(String(E('peHoursV471')?.value||'').replace(',','.'));
  if(!Number.isFinite(newHours)||newHours<0){alert('Bitte gültige Ist-Stunden eingeben.');return}
-
- let currentType=String(oldDay.productionTypeByCommission?.[cid]||productionTypeForElement(p,c,el)||'');
- let newType=prompt('Produktionsart (AW, IW, DA, DE, DR oder Fassade):',currentType);
- if(newType===null)return;
- newType=String(newType).trim();
- if(!['AW','IW','DA','DE','DR','Fassade'].includes(newType)){alert('Bitte AW, IW, DA, DE, DR oder Fassade eingeben.');return}
-
- let action=prompt('Status: „produziert“ lassen oder „offen“ eingeben, um das Element wieder zu öffnen:','produziert');
- if(action===null)return;
- action=String(action).trim().toLowerCase();
-
- if(action==='offen'){
+ let newType=String(E('peTypeV471')?.value||'');
+ let action=E('peStatusV471')?.value||'done';
+ if(action==='open'){
+   if(!confirm('Element wieder auf «offen» setzen? Es erscheint dann wieder bei den offenen Elementen.'))return;
    oldDay.entries=(oldDay.entries||[]).filter(e=>e.elementId!==elementId);
+   (oldDay.progressBatchesV547||[]).forEach(b=>{if(b&&b.commissionId===cid&&Array.isArray(b.elementIds))b.elementIds=b.elementIds.filter(id=>id!==elementId)});
  }else{
    entry.allocatedActualHours=newHours;
    entry.productionDate=newDate;
    oldDay.productionTypeByCommission=oldDay.productionTypeByCommission||{};
    if(newDate===dayDate)oldDay.productionTypeByCommission[cid]=newType;
-   if(newDate!==dayDate){
+   else{
      oldDay.entries=(oldDay.entries||[]).filter(e=>e.elementId!==elementId);
      let target=(p.dailyProduction||[]).find(d=>d.date===newDate);
-     if(!target){
-       target={date:newDate,actualHours:0,note:'',entries:[],actualHoursByCommission:{},productionTypeByCommission:{},updatedAt:new Date().toISOString()};
-       p.dailyProduction.push(target);
-     }
-     target.entries=Array.isArray(target.entries)?target.entries:[];
-     target.entries=target.entries.filter(e=>e.elementId!==elementId);
+     if(!target){target={date:newDate,actualHours:0,note:'',entries:[],actualHoursByCommission:{},productionTypeByCommission:{},updatedAt:new Date().toISOString()};p.dailyProduction.push(target)}
+     target.entries=(Array.isArray(target.entries)?target.entries:[]).filter(e=>e.elementId!==elementId);
      target.entries.push(entry);
      target.productionTypeByCommission=target.productionTypeByCommission||{};
      target.productionTypeByCommission[cid]=newType;
      target.updatedAt=new Date().toISOString();
    }
+   oldDay.updatedAt=new Date().toISOString();
  }
-
- // Remove completely empty day shells only when they contain neither entries nor recorded hours.
  p.dailyProduction=(p.dailyProduction||[]).filter(d=>{
    let hasEntries=(d.entries||[]).length>0;
    let hasHours=Object.values(d.actualHoursByCommission||{}).some(v=>Number(v)>0);
-   return hasEntries||hasHours||String(d.note||'').trim();
+   return hasEntries||hasHours||String(d.note||'').trim()||(d.progressBatchesV547||[]).length;
  });
  p.dailyProduction.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
  p.updatedAt=new Date().toISOString();
  saveProjects();
- openCommissionArea(cid);
+ prodElEditV471=null;
+ closeM('prodElEditModalV471');
+ refreshCommissionKeepTabV413(cid);
 }
 function productionGroupsTableHtml(p){
  let cid=activeProjectCommission(p)?.id||'';
@@ -12453,6 +12518,7 @@ function editProductionProgressEntryV547(batchId){
  E('ppActualHours').value=b.actualHours??'';
  E('ppProductionType').value=b.productionType||'';
  E('ppNote').value=b.note||'';
+ ppDatePrevV471=E('ppDate').value;
  let els=commissionElements(p,cid),set=new Set(b.elementIds||[]);
  productionDraft=els.map(x=>{
    let oldEntry=(day.entries||[]).find(e=>e.elementId===x.id);
@@ -12479,6 +12545,7 @@ function openProductionProgress(){
  E('ppActualHours').value='';
  E('ppProductionType').value='';
  E('ppNote').value='';
+ ppDatePrevV471=E('ppDate').value;
  productionDraft=els.filter(x=>!productionElementIsDoneV460(p,x.id)).map(x=>({
    elementId:x.id,
    produced:false,
@@ -12502,10 +12569,18 @@ function updateProductionActualHours(){
 function setProductionDraftProduced(i,checked){
  let d=productionDraft[i];if(!d)return;
  d.produced=!!checked;
- if(d.produced)d.productionDate=d.productionDate||E('ppDate')?.value||new Date().toISOString().slice(0,10);
+ if(d.produced)d.productionDate=E('ppDate')?.value||d.productionDate||new Date().toISOString().slice(0,10); /* V471: Datum oben übernehmen */
  else d.allocatedActualHours=0;
  calculateDailyProduction();
  renderProductionDraftRows();
+}
+/* V471: Datum oben geändert → alle Elemente, die noch das alte Datum (oder keins) tragen, übernehmen das neue */
+let ppDatePrevV471='';
+function ppDateChangedV471(){
+ const nd=E('ppDate')?.value||'';if(!nd||!Array.isArray(productionDraft))return;
+ const prev=ppDatePrevV471;ppDatePrevV471=nd;
+ let ch=false;productionDraft.forEach(d=>{if(d&&!d.wasProduced&&(!d.productionDate||d.productionDate===prev||!d.produced)){if(d.productionDate!==nd){d.productionDate=nd;ch=true}}});
+ if(ch){try{calculateDailyProduction()}catch(_e){}renderProductionDraftRows()}
 }
 function setProductionDraftDate(i,value){
  if(!productionDraft[i])return;
@@ -12841,12 +12916,21 @@ function applyAccessGate(){
    if(!activeMainModule)showModuleHome();
  }
 }
+function cloudErrTextV471(e){ /* V471: echter Grund statt «Noch keine Lagerfreigabe» */
+ const m=String(e&&e.msg||''),s=Number(e&&e.status||0);
+ if(/restrict|exceed|quota|violation/i.test(m)||s===402)return 'Supabase hat das Cloud-Projekt eingeschränkt (Gratis-Kontingent überschritten, z. B. Datenübertragung). Im Supabase-Dashboard unter «Usage» bzw. im Hinweis-Banner prüfen.';
+ if(/paused|inactive/i.test(m))return 'Das Supabase-Projekt ist pausiert. Im Supabase-Dashboard «Restore project» wählen.';
+ if(s===0||s>=500||/fetch|network|timeout|PGRST003/i.test(m))return 'Der Cloud-Server antwortet im Moment nicht (überlastet oder nicht erreichbar). In ein paar Minuten «Berechtigung aktualisieren» tippen.';
+ if(s===401||s===403)return 'Die Anmeldung wurde vom Cloud-Server abgelehnt ('+s+'). Abmelden und neu anmelden.';
+ return 'Cloud-Fehler '+(s||'')+': '+m.slice(0,160);
+}
 function renderAuthUI(){
  let signed=!!authSession,so=E('authSignedOut'),si=E('authSignedIn'),id=E('authIdentity'),hb=E('authHeaderBtn'),ms=E('authManageState');
  if(so)so.style.display=signed?'none':'grid';if(si)si.style.display=signed?'grid':'none';
- let role=cloudMember?.role||'Noch keine Lagerfreigabe',name=cloudMember?.name||authUsername()||'';
+ const ierr=!cloudMember&&window.identityErrV471?window.identityErrV471:null;
+ let role=cloudMember?.role||(ierr?'Cloud nicht erreichbar':'Noch keine Lagerfreigabe'),name=cloudMember?.name||authUsername()||'';
  let uname=authUsername()||cloudMember?.username||'';
- if(id)id.innerHTML=`<b>${esc(name)}</b><div class="muted">Benutzer: ${esc(uname||'–')}</div><div style="margin-top:6px"><span class="statusbadge ${roleClass(role)}">${esc(role)}</span></div>`;
+ if(id)id.innerHTML=`<b>${esc(name)}</b><div class="muted">Benutzer: ${esc(uname||'–')}</div><div style="margin-top:6px"><span class="statusbadge ${ierr?'bad':roleClass(role)}">${esc(role)}</span></div>${ierr?`<div class="cloudErrV471">${esc(cloudErrTextV471(ierr))}<details><summary>Technische Meldung</summary><code>${esc(String(ierr.status||'')+' '+String(ierr.msg||'').slice(0,400))}</code></details></div>`:''}`;
  if(hb)hb.textContent=signed?(cloudMember?.name||uname||'Konto'):'Anmelden';
  if(ms)ms.innerHTML=signed?`Angemeldet als <b>${esc(name)}</b> · Benutzer: <b>${esc(uname||'–')}</b> · Rolle: <b>${esc(role)}</b>`:'Noch nicht angemeldet.';
  let cub=E('cloudUsersBox');if(cub)cub.style.display=(signed&&role==='Administrator')?'':'none';
@@ -33239,6 +33323,7 @@ async function refreshCloudIdentity(attemptClaim=true){
  if(!await ensureFreshSession()){
    /* V357: Sitzung noch vorhanden = nur vorübergehend nicht erreichbar → gecachte Lagerfreigabe weiterverwenden. */
    if(authSession){const c=cachedCloudMemberV210();if(c){cloudMember=c.member;renderAuthUI();renderUserHeader();return true}}
+   window.identityErrV471={status:0,msg:'Anmeldung beim Cloud-Server momentan nicht möglich (Sitzung konnte nicht erneuert werden).'};cloudMember=null;renderAuthUI();renderUserHeader();
    return false;
  }
  try{
@@ -33246,6 +33331,7 @@ async function refreshCloudIdentity(attemptClaim=true){
    let r=await fetch(url,{headers:cloudHeaders()});
    let txt=await r.text();
    if(!r.ok){let e=new Error(txt||('HTTP '+r.status));e.status=r.status;throw e}
+   window.identityErrV471=null;
    let rows=[];try{rows=txt?JSON.parse(txt):[]}catch(_){rows=[]}
    cloudMember=rows[0]||null;
    if(!cloudMember&&attemptClaim){
@@ -33265,6 +33351,7 @@ async function refreshCloudIdentity(attemptClaim=true){
      renderAuthUI();renderUserHeader();
      return true;
    }
+   window.identityErrV471={status:Number(e.status||0),msg:String(e.message||e)};
    cloudMember=null;renderAuthUI();renderUserHeader();
    noteCloudFailureV210(e.status,String(e.message||e));
    setSyncStatus('err','Cloud-Berechtigung momentan nicht prüfbar');
@@ -37056,7 +37143,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V470';
+   if(v)v.textContent='Aktuelle Version: V471';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -39649,7 +39736,10 @@ ${safeTypeLines}
      if(Array.isArray(rows)&&rows.length){if(Date.now()-lastV317<15000){clearTimeout(againTimerV364);againTimerV364=setTimeout(()=>syncV317(false),15000-(Date.now()-lastV317))}else await syncV317(true)}
    }catch(_e){}finally{pollFlightV359=false}
  }
- setInterval(changePollV359,8000);
+ /* V471: Änderungs-Check gedrosselt – alle 20 s bei Benutzung, jede Minute nach 5 min ohne Eingabe (weniger Supabase-Anfragen/Logs) */
+ let lastInputV471=Date.now(),lastPollV471=0;
+ ['pointerdown','keydown','touchstart','wheel'].forEach(ev=>window.addEventListener(ev,()=>{lastInputV471=Date.now()},{passive:true,capture:true}));
+ setInterval(()=>{const iv=Date.now()-lastInputV471>300000?60000:20000;if(Date.now()-lastPollV471<iv)return;lastPollV471=Date.now();changePollV359()},5000);
  window.changePollV359=changePollV359;
  window.cloudSyncNowV357=async()=>{const r=await syncV317(true);return r};
 
