@@ -5501,7 +5501,7 @@ details.m3SecV462>summary::-webkit-details-marker{display:none}
    <span id="moduleHomeRoleV96" class="statusbadge"></span>
   </div>
   <h1>Bereich auswählen</h1>
-  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V468</div>
+  <div id="currentBuildV234" aria-label="Aktuelle App-Version" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 10px;padding:7px 12px;border:1px solid #9fb8a5;border-radius:999px;background:#eef7ef;font-weight:850;font-size:15px;letter-spacing:.01em">Aktuelle Version: V470</div>
   <p>Wähle den gewünschten Bereich.</p>
   <div class="moduleHomeDashboard">
    <div class="moduleTiles moduleTilesVisual">
@@ -5723,7 +5723,7 @@ details.m3SecV462>summary::-webkit-details-marker{display:none}
  <div class="globalSettingsGrid">
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'users')"><b>Benutzer & Rechte</b><span>Benutzer, Rollen und Berechtigungen verwalten.</span><i>↓</i></button>
   <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'cloud')"><b>Cloud & Synchronisation</b><span>Anmeldung, Cloud-Verbindung und Synchronisation verwalten.</span><i>↓</i></button>
-  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V468</span><i>↓</i></button>
+  <button class="globalSettingsCard" type="button" onclick="selectGlobalSettingsCard(this,'version')"><b>App & Version</b><span class="appVersionTextV355">Aktuelle Version: V470</span><i>↓</i></button>
  </div>
  <div id="globalSettingsContent" class="globalSettingsContent"></div>
 </div>
@@ -8581,7 +8581,7 @@ function toggleGlobalSettingsSection(section){
    content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.remove());
    let panel=document.createElement('div');
    panel.className='globalSettingsVersionPanel globalSettingsInlineCard';
-   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V468</b></p><div class="releaseNote"><b>Neu in V468</b><br>Stunden-Diagramm besser lesbar: Budget, Prognose und Massnahme als Zeile über dem Diagramm statt Text in den Linien; Diagramme halb so gross (4 in einer Reihe). V467: Taktplanung: zweites Diagramm «Stundenbudget» neben «Endtermin» – Ist-Stunden, Soll aus Kalkulation, Prognose, Massnahme und Budget-Linie mit Datum, wann das Budget aufgebraucht wäre. V466: Planung: Jede Taktplanung erscheint automatisch als Arbeitsschritt in der Gantt-Gruppe «Überwachung» und bleibt synchron (ersetzt «Mit Planungsschritt verbinden»); Zeile 4 in der Taktplanung entfernt, die orange Linie der Massnahme bleibt im Diagramm ab ihrem Datum stehen. V465: Planung: Gruppen-Reihenfolge per Ziehen oder ▲▼ ändern («⇅ Reihenfolge»), neue Gruppen dazwischen einfügen («＋ neue Gruppe hier», im Menü ⋯ «Neue Gruppe darüber/darunter»). V464: Taktplanung: neue Zeile 4 «Überwachung» – die gespeicherte Massnahme bleibt ab ihrem Datum als orange Plan-Linie stehen, mit Vergleich Ist ↔ Massnahme (Rückstand, Tempo, h/El., MA, Prognose Ende). V463: 3D-Modell: Modelle pro Kommission hochladen (neues Modell ersetzt das alte derselben Kommission), Ansicht «Alle Kommissionen zusammen» mit Kommissions-Filter, verständliche Meldung, wenn der Cloud-Speicher den Dateityp nicht erlaubt. V462: Projekt: neuer Reiter «3D-Modell» – IFC aus cadwork hochladen, drehen, nach Bauuntergruppen/Geschossen/Bauteilen filtern, Bauteil-Infos, Messen mit Einrasten auf Ecken und Kanten, Schnitt, Vollbild. V461: Informationsaustausch: Bilder mit Ctrl+V direkt in Info, Antwort, ToDo, Material und Verbindungsmittel einfügen (Vorschau, wird beim Speichern angehängt); Bemerkung bei Material und Verbindungsmitteln direkt in der Zeile schreiben. V460: Informationsaustausch: Antworten auf Infos (klar als «↳ Antwort» markiert); neue Listen «Material bestellt» und «Verbindungsmittel bestellt» mit Menge, Lieferant, Lieferdatum und Bemerkung – abhaken = erhalten, «Nachbestellen» mit Menge erstellt direkt ein ToDo für den Projektleiter. V459: Projekt: neuer Reiter «Informationsaustausch» – Infos aus Besprechungen an Kommissionen zuweisen, ToDo Produktion und ToDo Projektleiter, Fotos mit Stift, Textmarker, Formen und Text bezeichnen. V458: Startseite «Bereich auswählen» wieder proportional und zentriert (Vollbreite nur in den Arbeitsbereichen). V457: Prognose-Basis wählbar (letzte N Tage oder alle) in Taktplanung und Kommissions-Prognose; Taktplanung: Anzeige der letzten N Tage; Checkliste «Gian DR» aus dem Artefakt übernommen. V456: Ganze Bildschirmbreite in allen Bereichen (Start, Lager, Produktion, Kleinaufträge, Logistik, Sonstiges, Verwaltung, Module). V455: Taktplanung-Tabelle: Seite springt nach einer Eingabe nicht mehr nach oben, Feld bleibt aktiv; Enter springt in die nächste Zeile. V454: Neues Modul «Produktionscheckliste» unter Sonstiges: Checklisten mit Gruppen, Arbeitsschritten, Kontrollpunkten, Bildern/PDFs zum Markieren und PDF A4 – gespeichert in der Cloud, eigene Berechtigung. V453: Berechtigungen übersichtlich in farbigen Bereichen, Zähler pro Bereich, (i) mit Beschreibung zu jeder Berechtigung. V452: Taktplanung ↔ Planung: Produktionsschritt mit Taktplanung verbinden – Zeitraum und MA synchron (letzte Änderung gilt), Takt-Stand am Balken. V451: Taktplanung: Hinweis mit Knopf «mit Kommission verknüpfen», wenn eine Taktplanung noch nicht verknüpft ist. V450: Taktplanung mit Kommission verknüpfen: Elemente, Soll-Stunden, produzierte Elemente, MA und Ist-Stunden aus dem Tagesfortschritt werden automatisch übernommen. V449: Taktplanung: Kennzahlen in 3 Zeilen – 1 Grundlage aus Kalkulation, 2 Ist-Zustand mit Prognose, 3 Massnahmen mit neuer Prognose. V448: Taktplanung: alle Diagramme nebeneinander in gleicher Grösse, Klick öffnet das Diagramm gross. V447: Taktplanung: Abacus-Abgleich – Zellen aus Excel einfügen (Ctrl+C / Ctrl+V) oder Datei wählen, pro Tag MA und Stunden mit der Tabelle vergleichen, Abweichungen prüfen oder übernehmen. V446: Taktplanung: «Massnahmen ab heute» – Endtermin, MA und h/Element simulieren, im Diagramm mit Soll, Ist und Prognose vergleichen, Massnahme speichern. V445: Taktplanung: Arbeitszeiterhöhung – Zeiträume mit anderen Stunden pro MA und Tag, werden in der Tabelle übernommen. V444: Taktplanung-Tabelle: Spalten Std./MA (pro Tag änderbar), Ist-Stunden und Ist-Stunden kumuliert. V443: Taktplanung: Kachel «Ist h pro Element» zeigt Ø gesamt und Ø letzte 5 Tage nebeneinander. V442: Produktionsart «DR» im Tagesfortschritt und in der Produktionsanalyse. V441: Taktplanung: Ist h/Element (aus MA × Std./Tag, MA pro Tag korrigierbar), Kachel und Diagramm «h pro Element», Stundenbudget und Prognose mit Ist-Stunden. V440: Versionsanzeige korrigiert. V439: Taktplanung in voller Bildschirmbreite. V438: Tagesleistung als Diagramm (Balken pro Tag, Ø 5 Tage, nötiges Tempo) und Kachel «Ist-Tempo» mit Trend; heute zählt erst mit Ist-Eintrag. V437: Reiter «Taktplanung» im Projekt. V436: Stundenbudget pro Kommission mit Warnung bei Überschreitung (alle Taktplanungen zusammen, inkl. Prognose). V435: Taktplanung: h pro Element oder Anzahl MA eingeben – das andere wird berechnet; Meldungen im Fenster statt Popup; Werte gerundet. V434: Taktplanung: Betriebsferien/Feiertage erfassen – Berechnung mit Produktionstagen (Bedarf MA, h pro Element, Soll, Prognose). V433: Neuer Reiter «Taktplanung Fassade»: Berechnung Bedarf MA bzw. h pro Element, Gantt mit Soll/Ist und Prognose, Ist-Erfassung pro Tag. V432: Anzahl MA im Arbeitsschritt frei mit Kommastellen eingeben (z. B. 0.33 oder 0,33). V431: Schnellmenü im Gantt: Inhalt bleibt im Feld (scrollbar, Knöpfe umbrechen). V430: Zuschnitte optisch abgehoben: eckige Balken mit Sägeschnitt und ✂, blau-graue Zeile. V429: Planung: Suchfeld bleibt beim Tippen aktiv (Ansicht wird ohne das Suchfeld neu aufgebaut). V428: Zuschnitt-Funktionen (Endtermin, Stunden, Start/Stopp + Ist-Stunden, Maschine + Stückzahl, Maschinen-Auslastung) auch in Projekten bei Schritten mit «Zuschnitt» oder «ZS» im Namen. V427: Planungs-PDF pro Person (eine Person oder je Person ein eigenes PDF). V426: Personen verwalten: umbenennen / zusammenführen und falsche Namen überall entfernen (Planung + Abwesenheiten). V425: Gantt im Vollbild (Knopf «⛶ Vollbild», Esc beendet). V424: Balken mit Unterbruch reicht bis zum echten Ende – die restlichen Tage stehen rechts vom Unterbruch; «Auf Gruppen verteilen» markiert die aktuelle Gruppe. V423: Unterbruch im Gantt mit der Maus verschieben bzw. am Rand verlängern/kürzen. V422: Arbeitsschritt auf mehrere Gruppen verteilen (normale Einträge, MA aufgeteilt, auch 0.25 MA); eigene Status (Name, Farbe, Grundverhalten); graue Spiegelung entfernt. Zuschnitt-Import: offene Positionen, die in der neuen Excel fehlen, werden angezeigt und können als erledigt markiert, gelöscht oder stehen gelassen werden. V418: Gantt: Mitarbeiter direkt im Menü des Arbeitsschritts zuweisen/entfernen (mit Hinweis abwesend / gleichzeitig eingeplant). V417: Mehrere Einträge pro Arbeitsschritt (Material/Lieferung, Notiz, Kontrolle) und Unterbrüche (verschieben das Ende, zählen nicht in die Auslastung); klare Wochenlinien in der Planung. V416: Planungs-PDF: Meilensteine bei ihrer Gruppe (Linien nur über diese Gruppe), Logo oben links. V415: Freigegebene Ist-Prognose auch in der Planungs-Übersicht (alle Projekte). V414: Ist-Prognose einer Kommission auf der Gantt-Seite (Riegel in der Kommission); PDF-Reihenfolge mit Logo oben links. V413: Offene Elemente: Löschen wirkt sofort; PDF der Produktionsreihenfolge (Reihenfolge, Element, Fläche je Gruppe, Gruppen nicht getrennt). V412: Projekte (Karten und Planungs-Übersicht) immer nach Startdatum sortiert. V411: Abwesenheiten farbig: kräftige Chips mit Namen, in der Planung eine Zeile pro Person mit farbigem Balken (Grund). V410: ZS-Positionen pro Zuschnitt-Schritt zuordnen (ganze monday-Gruppe oder einzelne Positionen); automatisch nur noch bei genau einem Zuschnitt-Schritt im Projekt; erledigte Schritte ohne Warnung. V409: Abwesenheiten (Ferien, Militär, Kurs, Krank …) beim Einsatzplan erfassen; Warnung an Arbeitsschritten mit abwesenden Personen; Zeile «Abwesend» in der Planung. V408: Blockiert mit Grund; Gruppen in der Projekt-Planung farbig; Projekt-Zuschnitt mit ZS-Positionen verknüpft (keine Doppelzählung in der Auslastung); neue Projektkarten. V407: «Beladen in Davos»: Karte antippen, um Status und Standort nachzutragen (abgeholt, beladen, in Beladung, zurück im Lager). V406: Pritschen-Gantt luftiger; Projekte in der Planungs-Übersicht farbig abgehoben; «Welche Pritsche darf ich nehmen?» nur noch in der Übersicht; neuer Block «Beladen in Davos». V405: Pritschen-Gantt: gesperrte Pritschen, Container und Geräte grau schraffiert mit 🔒; Reservationen zeigen ihren Zeitraum (von–bis) direkt im Balken. V404: Fahrzeuge/Geräte: Status «Frei / In Gebrauch» und Sperren wie bei den Containern; gesperrte oder benutzte Geräte sind im Transport nicht neu wählbar. V403: Transport löschen ändert keinen Status mehr – Pritschen und Container bleiben wie sie sind. V402: Transportlisten: LKW links, Anhänger rechts nebeneinander; ohne Anhänger-Ladung bzw. bei «LKW solo» kein Anhängerbild. V401: Transportplanung: LKW- und Anhängerbild zeigen nur die eigene Ladung; zusätzliche Container und Fahrzeuge/Geräte bei jedem Ladungsträger möglich (2 Container auf Pritsche oder direkt auf LKW, Container + Gerät, 2 Geräte). V400: Pritschen-Gantt im Projekt: auch Container und Fahrzeuge/Geräte anderer Projekte ausgeblendet – sichtbar sind nur eigene und freie. V399: Pritschen-Gantt: Reservationen mit der Maus verschieben bzw. am Rand verlängern (mit Konfliktmeldung); Belegung endet beim Reservationsende (rot, wenn länger belegt); im Projekt nur zugeordnete und freie Pritschen. V398: Pritschen-Gantt: zurück bis zum allerersten Eintrag ziehbar. V397: Pritschen-Gantt: mit gedrückter Maustaste hin und her ziehen, grösserer Zeitraum (4 Wochen zurück bis ca. 7 Monate voraus), heute markiert. V396: Pritschenverwaltung: Suchfeld für Projekte (Name, Nummer, PL – auch Teilwörter, z.B. «26160002» oder «baum»). V395: Transporte: LKW-/Anhängerbild wieder in der Übersicht (mit Pritschen-/Container-Schild, Zusatzladung darunter); Status-Auswahl und ⋮-Menü werden nicht mehr abgeschnitten. V394: Pritschen/Transporte: Übersicht nach Kalenderwoche mit lesbarem Datum (Datumsfehler behoben), Ladung kompakt als Schilder (LKW/Anhänger, Pritsche, Container, Geräte, Rungen) statt Fahrzeugbilder, Route ohne «Projekt → Projekt». V393: Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
+   panel.innerHTML='<h3 style="margin-top:0">App & Version</h3><p><b class="appVersionTextV355">Aktuelle Version: V470</b></p><div class="releaseNote"><b>Neu in V470</b><br>Taktplanung Massnahmen: Feld «gilt ab» (auch rückwirkend speichern) und Verlauf – «↶ Vorherige Massnahme» stellt eine überschriebene oder entfernte Massnahme wieder her. V469: Cloud-Abgleich schont die Datenbank (Supabase-CPU-Warnung): kein Voll-Abgleich mehr jede Minute und bei jedem Fensterwechsel – nur noch bei echten Änderungen (kleiner Check alle 8 s) plus Sicherheits-Abgleich alle 10 min; Rechte-Prüfung und Bestätigungen lesen nur noch die betroffene Zeile statt der ganzen Tabelle; Pakete pro Abgleich nur noch einmal gelesen. Im Test: Datenmenge im Ruhezustand von 78 MB auf praktisch 0 je 2 Minuten. V468: Stunden-Diagramm besser lesbar: Budget, Prognose und Massnahme als Zeile über dem Diagramm statt Text in den Linien; Diagramme halb so gross (4 in einer Reihe). V467: Taktplanung: zweites Diagramm «Stundenbudget» neben «Endtermin» – Ist-Stunden, Soll aus Kalkulation, Prognose, Massnahme und Budget-Linie mit Datum, wann das Budget aufgebraucht wäre. V466: Planung: Jede Taktplanung erscheint automatisch als Arbeitsschritt in der Gantt-Gruppe «Überwachung» und bleibt synchron (ersetzt «Mit Planungsschritt verbinden»); Zeile 4 in der Taktplanung entfernt, die orange Linie der Massnahme bleibt im Diagramm ab ihrem Datum stehen. V465: Planung: Gruppen-Reihenfolge per Ziehen oder ▲▼ ändern («⇅ Reihenfolge»), neue Gruppen dazwischen einfügen («＋ neue Gruppe hier», im Menü ⋯ «Neue Gruppe darüber/darunter»). V464: Taktplanung: neue Zeile 4 «Überwachung» – die gespeicherte Massnahme bleibt ab ihrem Datum als orange Plan-Linie stehen, mit Vergleich Ist ↔ Massnahme (Rückstand, Tempo, h/El., MA, Prognose Ende). V463: 3D-Modell: Modelle pro Kommission hochladen (neues Modell ersetzt das alte derselben Kommission), Ansicht «Alle Kommissionen zusammen» mit Kommissions-Filter, verständliche Meldung, wenn der Cloud-Speicher den Dateityp nicht erlaubt. V462: Projekt: neuer Reiter «3D-Modell» – IFC aus cadwork hochladen, drehen, nach Bauuntergruppen/Geschossen/Bauteilen filtern, Bauteil-Infos, Messen mit Einrasten auf Ecken und Kanten, Schnitt, Vollbild. V461: Informationsaustausch: Bilder mit Ctrl+V direkt in Info, Antwort, ToDo, Material und Verbindungsmittel einfügen (Vorschau, wird beim Speichern angehängt); Bemerkung bei Material und Verbindungsmitteln direkt in der Zeile schreiben. V460: Informationsaustausch: Antworten auf Infos (klar als «↳ Antwort» markiert); neue Listen «Material bestellt» und «Verbindungsmittel bestellt» mit Menge, Lieferant, Lieferdatum und Bemerkung – abhaken = erhalten, «Nachbestellen» mit Menge erstellt direkt ein ToDo für den Projektleiter. V459: Projekt: neuer Reiter «Informationsaustausch» – Infos aus Besprechungen an Kommissionen zuweisen, ToDo Produktion und ToDo Projektleiter, Fotos mit Stift, Textmarker, Formen und Text bezeichnen. V458: Startseite «Bereich auswählen» wieder proportional und zentriert (Vollbreite nur in den Arbeitsbereichen). V457: Prognose-Basis wählbar (letzte N Tage oder alle) in Taktplanung und Kommissions-Prognose; Taktplanung: Anzeige der letzten N Tage; Checkliste «Gian DR» aus dem Artefakt übernommen. V456: Ganze Bildschirmbreite in allen Bereichen (Start, Lager, Produktion, Kleinaufträge, Logistik, Sonstiges, Verwaltung, Module). V455: Taktplanung-Tabelle: Seite springt nach einer Eingabe nicht mehr nach oben, Feld bleibt aktiv; Enter springt in die nächste Zeile. V454: Neues Modul «Produktionscheckliste» unter Sonstiges: Checklisten mit Gruppen, Arbeitsschritten, Kontrollpunkten, Bildern/PDFs zum Markieren und PDF A4 – gespeichert in der Cloud, eigene Berechtigung. V453: Berechtigungen übersichtlich in farbigen Bereichen, Zähler pro Bereich, (i) mit Beschreibung zu jeder Berechtigung. V452: Taktplanung ↔ Planung: Produktionsschritt mit Taktplanung verbinden – Zeitraum und MA synchron (letzte Änderung gilt), Takt-Stand am Balken. V451: Taktplanung: Hinweis mit Knopf «mit Kommission verknüpfen», wenn eine Taktplanung noch nicht verknüpft ist. V450: Taktplanung mit Kommission verknüpfen: Elemente, Soll-Stunden, produzierte Elemente, MA und Ist-Stunden aus dem Tagesfortschritt werden automatisch übernommen. V449: Taktplanung: Kennzahlen in 3 Zeilen – 1 Grundlage aus Kalkulation, 2 Ist-Zustand mit Prognose, 3 Massnahmen mit neuer Prognose. V448: Taktplanung: alle Diagramme nebeneinander in gleicher Grösse, Klick öffnet das Diagramm gross. V447: Taktplanung: Abacus-Abgleich – Zellen aus Excel einfügen (Ctrl+C / Ctrl+V) oder Datei wählen, pro Tag MA und Stunden mit der Tabelle vergleichen, Abweichungen prüfen oder übernehmen. V446: Taktplanung: «Massnahmen ab heute» – Endtermin, MA und h/Element simulieren, im Diagramm mit Soll, Ist und Prognose vergleichen, Massnahme speichern. V445: Taktplanung: Arbeitszeiterhöhung – Zeiträume mit anderen Stunden pro MA und Tag, werden in der Tabelle übernommen. V444: Taktplanung-Tabelle: Spalten Std./MA (pro Tag änderbar), Ist-Stunden und Ist-Stunden kumuliert. V443: Taktplanung: Kachel «Ist h pro Element» zeigt Ø gesamt und Ø letzte 5 Tage nebeneinander. V442: Produktionsart «DR» im Tagesfortschritt und in der Produktionsanalyse. V441: Taktplanung: Ist h/Element (aus MA × Std./Tag, MA pro Tag korrigierbar), Kachel und Diagramm «h pro Element», Stundenbudget und Prognose mit Ist-Stunden. V440: Versionsanzeige korrigiert. V439: Taktplanung in voller Bildschirmbreite. V438: Tagesleistung als Diagramm (Balken pro Tag, Ø 5 Tage, nötiges Tempo) und Kachel «Ist-Tempo» mit Trend; heute zählt erst mit Ist-Eintrag. V437: Reiter «Taktplanung» im Projekt. V436: Stundenbudget pro Kommission mit Warnung bei Überschreitung (alle Taktplanungen zusammen, inkl. Prognose). V435: Taktplanung: h pro Element oder Anzahl MA eingeben – das andere wird berechnet; Meldungen im Fenster statt Popup; Werte gerundet. V434: Taktplanung: Betriebsferien/Feiertage erfassen – Berechnung mit Produktionstagen (Bedarf MA, h pro Element, Soll, Prognose). V433: Neuer Reiter «Taktplanung Fassade»: Berechnung Bedarf MA bzw. h pro Element, Gantt mit Soll/Ist und Prognose, Ist-Erfassung pro Tag. V432: Anzahl MA im Arbeitsschritt frei mit Kommastellen eingeben (z. B. 0.33 oder 0,33). V431: Schnellmenü im Gantt: Inhalt bleibt im Feld (scrollbar, Knöpfe umbrechen). V430: Zuschnitte optisch abgehoben: eckige Balken mit Sägeschnitt und ✂, blau-graue Zeile. V429: Planung: Suchfeld bleibt beim Tippen aktiv (Ansicht wird ohne das Suchfeld neu aufgebaut). V428: Zuschnitt-Funktionen (Endtermin, Stunden, Start/Stopp + Ist-Stunden, Maschine + Stückzahl, Maschinen-Auslastung) auch in Projekten bei Schritten mit «Zuschnitt» oder «ZS» im Namen. V427: Planungs-PDF pro Person (eine Person oder je Person ein eigenes PDF). V426: Personen verwalten: umbenennen / zusammenführen und falsche Namen überall entfernen (Planung + Abwesenheiten). V425: Gantt im Vollbild (Knopf «⛶ Vollbild», Esc beendet). V424: Balken mit Unterbruch reicht bis zum echten Ende – die restlichen Tage stehen rechts vom Unterbruch; «Auf Gruppen verteilen» markiert die aktuelle Gruppe. V423: Unterbruch im Gantt mit der Maus verschieben bzw. am Rand verlängern/kürzen. V422: Arbeitsschritt auf mehrere Gruppen verteilen (normale Einträge, MA aufgeteilt, auch 0.25 MA); eigene Status (Name, Farbe, Grundverhalten); graue Spiegelung entfernt. Zuschnitt-Import: offene Positionen, die in der neuen Excel fehlen, werden angezeigt und können als erledigt markiert, gelöscht oder stehen gelassen werden. V418: Gantt: Mitarbeiter direkt im Menü des Arbeitsschritts zuweisen/entfernen (mit Hinweis abwesend / gleichzeitig eingeplant). V417: Mehrere Einträge pro Arbeitsschritt (Material/Lieferung, Notiz, Kontrolle) und Unterbrüche (verschieben das Ende, zählen nicht in die Auslastung); klare Wochenlinien in der Planung. V416: Planungs-PDF: Meilensteine bei ihrer Gruppe (Linien nur über diese Gruppe), Logo oben links. V415: Freigegebene Ist-Prognose auch in der Planungs-Übersicht (alle Projekte). V414: Ist-Prognose einer Kommission auf der Gantt-Seite (Riegel in der Kommission); PDF-Reihenfolge mit Logo oben links. V413: Offene Elemente: Löschen wirkt sofort; PDF der Produktionsreihenfolge (Reihenfolge, Element, Fläche je Gruppe, Gruppen nicht getrennt). V412: Projekte (Karten und Planungs-Übersicht) immer nach Startdatum sortiert. V411: Abwesenheiten farbig: kräftige Chips mit Namen, in der Planung eine Zeile pro Person mit farbigem Balken (Grund). V410: ZS-Positionen pro Zuschnitt-Schritt zuordnen (ganze monday-Gruppe oder einzelne Positionen); automatisch nur noch bei genau einem Zuschnitt-Schritt im Projekt; erledigte Schritte ohne Warnung. V409: Abwesenheiten (Ferien, Militär, Kurs, Krank …) beim Einsatzplan erfassen; Warnung an Arbeitsschritten mit abwesenden Personen; Zeile «Abwesend» in der Planung. V408: Blockiert mit Grund; Gruppen in der Projekt-Planung farbig; Projekt-Zuschnitt mit ZS-Positionen verknüpft (keine Doppelzählung in der Auslastung); neue Projektkarten. V407: «Beladen in Davos»: Karte antippen, um Status und Standort nachzutragen (abgeholt, beladen, in Beladung, zurück im Lager). V406: Pritschen-Gantt luftiger; Projekte in der Planungs-Übersicht farbig abgehoben; «Welche Pritsche darf ich nehmen?» nur noch in der Übersicht; neuer Block «Beladen in Davos». V405: Pritschen-Gantt: gesperrte Pritschen, Container und Geräte grau schraffiert mit 🔒; Reservationen zeigen ihren Zeitraum (von–bis) direkt im Balken. V404: Fahrzeuge/Geräte: Status «Frei / In Gebrauch» und Sperren wie bei den Containern; gesperrte oder benutzte Geräte sind im Transport nicht neu wählbar. V403: Transport löschen ändert keinen Status mehr – Pritschen und Container bleiben wie sie sind. V402: Transportlisten: LKW links, Anhänger rechts nebeneinander; ohne Anhänger-Ladung bzw. bei «LKW solo» kein Anhängerbild. V401: Transportplanung: LKW- und Anhängerbild zeigen nur die eigene Ladung; zusätzliche Container und Fahrzeuge/Geräte bei jedem Ladungsträger möglich (2 Container auf Pritsche oder direkt auf LKW, Container + Gerät, 2 Geräte). V400: Pritschen-Gantt im Projekt: auch Container und Fahrzeuge/Geräte anderer Projekte ausgeblendet – sichtbar sind nur eigene und freie. V399: Pritschen-Gantt: Reservationen mit der Maus verschieben bzw. am Rand verlängern (mit Konfliktmeldung); Belegung endet beim Reservationsende (rot, wenn länger belegt); im Projekt nur zugeordnete und freie Pritschen. V398: Pritschen-Gantt: zurück bis zum allerersten Eintrag ziehbar. V397: Pritschen-Gantt: mit gedrückter Maustaste hin und her ziehen, grösserer Zeitraum (4 Wochen zurück bis ca. 7 Monate voraus), heute markiert. V396: Pritschenverwaltung: Suchfeld für Projekte (Name, Nummer, PL – auch Teilwörter, z.B. «26160002» oder «baum»). V395: Transporte: LKW-/Anhängerbild wieder in der Übersicht (mit Pritschen-/Container-Schild, Zusatzladung darunter); Status-Auswahl und ⋮-Menü werden nicht mehr abgeschnitten. V394: Pritschen/Transporte: Übersicht nach Kalenderwoche mit lesbarem Datum (Datumsfehler behoben), Ladung kompakt als Schilder (LKW/Anhänger, Pritsche, Container, Geräte, Rungen) statt Fahrzeugbilder, Route ohne «Projekt → Projekt». V393: Technik: Startmeldung «inventorySelectedV466 is not defined» behoben; fehlendes console.info in manchen Browsern bricht keine Funktion mehr ab. V392: Zuschnitte: höhere Zeilen und die monday-Nummer (ZS-xxxx) direkt vor jedem Balken. V391: Einsatzplan als schmale Leiste (kleine Vorschau, Antippen öffnet gross). V390: Einsatzplan: Bilder werden nur im Cloud-Dateispeicher abgelegt (volle Auflösung) – kein «Speicher voll» mehr; lokale Sicherungen kürzen sich bei vollem Gerätespeicher selbst. V389: Planung: Einsatzplan – zwei Bilder oder PDFs oben in der Planung (Projekt und Übersicht), wöchentlich ersetzbar, Antippen öffnet gross mit Zoom. V388: Zuschnitte: Dauer aufgeteilt in Vorbereitung + Maschinenzeit + Paketierung (Anz. Pakete × 20 Min., in «⚙ Richtwerte» anpassbar); Aufschlüsselung im Bearbeiten-Fenster und Schnellmenü. V387: Planung: Endtermin jedes Zuschnitts direkt in seiner Zeile (🏁-Markierung, rot wenn zu spät) und als Datum auf dem Balken. V386: Planung: Suche und Filter (Gruppe, Person, Maschine) in Projekt und Übersicht; Maschine farbig hervorgehoben (Farbe je Maschine in «⚙ Richtwerte» wählbar), Anzahl Teile auf dem Balken. V385: Zuschnitte in Stunden planen: Richtwerte je Maschine (Rüsten + Minuten pro Teil), Ist-Stunden mit Start/Stopp, Auslastung je Maschine; die App schlägt aus den Ist-Stunden bessere Richtwerte vor. «Werkzeug &amp; Geräte» heisst neu «Sonstiges» – mit neuem Bereich «Sicherheit»: Baustellenchecklisten (PDF) hochladen, Bewertungen und Massnahmen werden automatisch ausgelesen und ausgewertet. V384: Planung: Zuschnitte aus monday.com per Excel-Export übernehmen (Gruppen, Status, Person, Maschine, Endtermin) – erneutes Einlesen aktualisiert, eigene Planung bleibt. V383: Cloud: gleichzeitige Änderungen auf zwei Geräten werden automatisch zusammengeführt – keine Konflikte mehr zum Lösen (verworfene Fassungen werden lokal archiviert). V382: Umbuchen: neue Element-ID wird schon vor dem Speichern und danach gross angezeigt; Option «Umgebuchte Menge ist gleich aufgebraucht». V381: Material: «Heute kontrolliert» reagiert sofort, Kontrollspalten bleiben rechts sichtbar. Tablet: kein ungewolltes Hineinzoomen mehr, Karte mit zwei Fingern zoombar. V380: Planung: Auslastung pro Kommission bleibt unten immer sichtbar; eingetragene Personen zählen als Mannschaft; Mitarbeiterplanung nur noch je Kommission (👥 in der Auslastungszeile). V379: Planung: Gruppen (z.B. Transporte) einer Kommission zuordnen – Schritte übernehmen sie automatisch; Auslastung pro Kommission mit deren Mitarbeiterplanung (👥 direkt öffnen). Projekt-Übersicht zeigt die Kommissionen direkt. V378: Planung: Klick auf einen Balken öffnet das Schnellmenü; Abhängigkeiten direkt in der Tabelle verbinden («🔗 Vorgänger/Nachfolger wählen» → anderen Balken anklicken) und mit ✕ entfernen; Vorgänger-Liste im Dialog kompakt mit Suche. V377: Planung: Schemas – eine fertig geplante Gruppe (z.B. Transport) als Schema speichern und in jedem Projekt mit einem Startdatum einfügen; Untergruppen bis 8 Ebenen. V376: Planung: Arbeitsschritte einer übergeordneten Gruppe (z.B. «Kiste beladen» im Transport) erscheinen in allen Untergruppen als senkrechtes Band (auch im PDF). V375: Planung: Fortschritt/Status per Rechtsklick wird zuverlässig gespeichert, auch wenn inzwischen ein Cloud-Abgleich lief. V374: Planung: Rechtsklick auf einen Arbeitsschritt → Fortschritt (0–100 %) und Status direkt ändern; Fortschritt auch im Bearbeiten-Dialog. V373: Planung: beliebig weit in Vergangenheit und Zukunft – am Rand werden automatisch weitere 3 Monate geladen (Start: 12 Wochen zurück). V372: Planung: Namen und Personen kurzer Arbeitsschritte stehen vollständig neben dem Balken (auch im PDF). V371: Planung: «⋯»-Menüs der Hauptgruppen werden nicht mehr von der nächsten Gruppe verdeckt. V370: Planung: «⋯»-Menüs von Untergruppen immer vollständig sichtbar, mehr Zeit links/rechts zum Navigieren, Ziehen mit der Maus zuverlässiger. V369: Planung als PDF exportieren – mit frei wählbarem Zeitraum (Von/Bis oder Schnellwahl), für ein Projekt oder die Übersicht. V368: Produktionsplanung mit frei verschachtelbaren Gruppen (bis 3 Ebenen, auf-/zuklappbar), Duplizieren von Schritten und Gruppen, Spaltenbreite per Ziehen. V367: Abhängigkeiten als klare Pfeile (Hervorhebung beim Überfahren), Personen direkt auf den Balken, Warnung bei doppelt verplanten Personen. V366: Planung bildschirmfüllend, mit der Maus ziehen zum Navigieren, Meilensteine am selben Tag untereinander. V365: Weniger Schein-Konflikte bei Projekten, Konflikte gesammelt lösbar, Status auch auf der Startseite antippbar. V364: Meilensteine in der Produktionsplanung mit Warnung, wenn ein Termin nicht eingehalten wird. V363: Produktionsplanung mit eigener Tabelle pro Geschoss (Name oben links). V362: Produktionsplanung: Arbeitsschritte über Arbeitstage mit Abhängigkeiten, Mannschaft, Auslastung und Fortschritt – pro Projekt und als Gesamtübersicht. V361: Filter-Chips alphabetisch. V360: Einheitlicher Name «Künzli Logistik», Strich-Icons, Filter-Chips und fixe Kopfzeile in der Materialliste, Handlungs-Kennzahlen, ruhigere Schrift, Handy-Leiste mit «Mehr», Klartext-Status. V359: Änderungen erscheinen nach wenigen Sekunden auf anderen Geräten, Umbenennen sofort sichtbar, Konflikte blockieren den Abgleich nicht mehr und lassen sich per Tipp auf den Cloud-Status lösen. V358: Administrator hat immer alle Rechte (auch neu eingeführte), Kurzmeldungen statt Hinweisfenster, einheitliche Modulköpfe, Materialliste auf dem Handy als Karten. V357: Ein einziger Cloud-Abgleich für alle Daten, stabile Anmeldung (kein Abmelden mehr bei Funklöchern / Token-Ablauf), 347 als Mindestgrenze überall einheitlich. V356: Bilder komprimiert. V355: Verwaltung zentral, vereinfachte Navigation, aufgeräumte Materialliste, bessere Handy-Ansicht.</div>';
    content.appendChild(panel);
  }
  content.querySelectorAll('.globalSettingsVersionPanel').forEach(x=>x.style.display=section==='version'?'block':'none');
@@ -13109,9 +13109,17 @@ function saveSyncConflicts(v){localStorage.setItem(SYNC_CONFLICT_KEY,JSON.string
 function entityBase(){return String(cloudCfg.url||'').replace(/\/+$/,'')+'/rest/v1/warehouse_entities'}
 function rpcBase(name){return String(cloudCfg.url||'').replace(/\/+$/,'')+'/rest/v1/rpc/'+name}
 function cloudKey(type,id){return type+'|'+id}
-async function fetchRemoteEntities(){
+/* V469: genau einen Eintrag lesen (statt der ganzen Tabelle) */
+async function fetchEntityRowV469(type,id){
  if(!await ensureFreshSession())throw new Error('Cloud-Sitzung abgelaufen.');
- let url=entityBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&select=entity_type,entity_id,data,version,updated_at,updated_by';
+ const url=entityBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&entity_type=eq.'+encodeURIComponent(type)+'&entity_id=eq.'+encodeURIComponent(id)+'&select=entity_type,entity_id,data,version,updated_at,updated_by&limit=1';
+ const r=await fetch(url,{headers:cloudHeaders()});if(!r.ok)throw new Error((await r.text())||('HTTP '+r.status));
+ const rows=await r.json(),out={};(rows||[]).forEach(x=>out[cloudKey(x.entity_type,x.entity_id)]={type:x.entity_type,id:x.entity_id,data:x.data,version:Number(x.version||0),updated_at:x.updated_at,updated_by:x.updated_by});return out;
+}
+async function fetchKeyV469(key){const s=String(key||''),i=s.indexOf('|');if(i<0)return undefined;return (await fetchEntityRowV469(s.slice(0,i),s.slice(i+1)))[s]}
+async function fetchRemoteEntities(skipTypes){
+ if(!await ensureFreshSession())throw new Error('Cloud-Sitzung abgelaufen.');
+ let url=entityBase()+'?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+(Array.isArray(skipTypes)&&skipTypes.length?'&entity_type=not.in.('+skipTypes.map(encodeURIComponent).join(',')+')':'')+'&select=entity_type,entity_id,data,version,updated_at,updated_by';
  let r=await fetch(url,{headers:cloudHeaders()});
  if(!r.ok)throw new Error((await r.text())||('HTTP '+r.status));
  let rows=await r.json(),out={};
@@ -13437,7 +13445,7 @@ async function pushEntitySyncCoreV216(manual=false){
        if(l)await rpcEntitySave(type,id,l.data,r?.version||b?.version||0,false);else if(r)await rpcEntityDelete(type,id,r.version||b?.version||0,false);changed++; if(manual)syncDiagLogV216('7 CLOUD WRITE OK',type+'|'+id);
      }catch(e){
        if(!e.syncConflict)throw e;
-       let freshOne=(await fetchRemoteEntities())[k];
+       let freshOne=(await fetchKeyV469(k));
        conflicts.push({type,id,local:l?.data||null,remote:freshOne?.data||e.remote||null,remoteVersion:freshOne?.version||e.remoteVersion||0,remoteBy:freshOne?.updated_by||'anderem Gerät',deletedLocal:!l,deletedRemote:!freshOne});
      }
    }
@@ -20585,7 +20593,7 @@ async function saveMaterialPinV552(e){
    if(r&&baseHash!==null&&remoteHash!==baseHash&&remoteHash!==localHash)throw new Error('Pin wurde in der Cloud parallel geändert. Speichern gestoppt.');
    if(r&&remoteHash===localHash){const nb=loadSyncBase();nb[key]={version:Number(r.version||0),hash:localHash};saveSyncBase(nb);setSyncStatus('ok','V296 Pin synchron · Cloud bereits identisch');return}
    await rpcEntitySave('materialPinsV552',String(p.id),JSON.parse(JSON.stringify(p)),Number(r?.version||0),false);
-   const fresh=(await fetchRemoteEntities())[key];
+   const fresh=(await fetchKeyV469(key));
    if(!fresh||stableJson(fresh.data)!==localHash)throw new Error('Cloud-Verifikation des Pins fehlgeschlagen.');
    const nb=loadSyncBase();nb[key]={version:Number(fresh.version||0),hash:localHash};saveSyncBase(nb);
    setSyncStatus('ok','V296 Pin Cloud-verifiziert');
@@ -20603,7 +20611,7 @@ async function deleteMaterialPinV552(){
         const rh=stableJson(r.data),bh=b?.hash??null;
         if(bh!==null&&rh!==bh)throw new Error('Pin wurde in der Cloud parallel geändert. Löschung gestoppt.');
         await rpcEntityDelete('materialPinsV552',String(id),Number(r.version||b?.version||0),false);
-        if((await fetchRemoteEntities())[k])throw new Error('Cloud hat die Pin-Löschung nicht bestätigt.');
+        if((await fetchKeyV469(k)))throw new Error('Cloud hat die Pin-Löschung nicht bestätigt.');
       }
       const nb=loadSyncBase();delete nb[k];saveSyncBase(nb);
     }
@@ -25667,10 +25675,17 @@ document.addEventListener('DOMContentLoaded',()=>{
  window.taktSimV446=function(id,act){
    const t=taktList().find(x=>x.id===id);if(!t)return;const c=taktCalc(t);const box=E('tkSimV446');if(!box)return;
    const num=k=>{const v=parseFloat(String(E(k)?.value||'').replace(',','.'));return isFinite(v)?v:0};
-   if(act==='reset'){if(!canEdit())return;delete t.measure;t.updatedAt=new Date().toISOString();taktPushStepV452(t);persist();window.renderTaktV433(id);return}
+   /* V470: Verlauf der Massnahmen – vor Überschreiben/Entfernen sichern, «Vorherige wiederherstellen» */
+   const histPush=m=>{if(m&&m.date){t.measureHist=[Object.assign({},m,{replacedAt:new Date().toISOString()}),...(Array.isArray(t.measureHist)?t.measureHist:[])].slice(0,10)}};
+   if(act==='undo'){if(!canEdit())return;const hs=Array.isArray(t.measureHist)?t.measureHist.slice():[];const prev=hs.shift();if(!prev)return;
+     if(!confirm('Vorherige Massnahme wiederherstellen?\n\nvom '+fmtD(prev.date)+': '+prev.ma+' MA · '+prev.hpe+' h/El. · Ende '+fmtD(prev.end)+(t.measure?'\n\nDie aktuelle Massnahme vom '+fmtD(t.measure.date)+' bleibt im Verlauf.':'')))return;
+     if(t.measure&&t.measure.date)hs.unshift(Object.assign({},t.measure,{replacedAt:new Date().toISOString()}));const r=Object.assign({},prev);delete r.replacedAt;t.measure=r;t.measureHist=hs.slice(0,10);
+     t.updatedAt=new Date().toISOString();taktPushStepV452(t);persist();window.renderTaktV433(id);return}
+   if(act==='reset'){if(!canEdit())return;histPush(t.measure);delete t.measure;t.updatedAt=new Date().toISOString();taktPushStepV452(t);persist();window.renderTaktV433(id);return}
    const o={end:E('tsEnd').value||t.end,ma:num('tsMa'),hpe:num('tsHpe')};
    if(act==='save'){if(!canEdit())return;if(!(o.ma>0&&o.hpe>0)){E('tsResV446').insertAdjacentHTML('afterbegin','<div class="tkErrV435">Bitte MA und h/Element angeben.</div>');return}
-     t.measure={date:todayKey(),s0:taktSimRun(t,c,o).s0,end:o.end,ma:o.ma,hpe:o.hpe,savedAt:new Date().toISOString()};t.updatedAt=new Date().toISOString();taktPushStepV452(t);persist();window.renderTaktV433(id);return}
+     const tdy=todayKey();let from=(E('tsFrom')&&E('tsFrom').value)||tdy;if(from>tdy)from=tdy;if(from<t.start)from=t.start;
+     histPush(t.measure);t.measure={date:from,s0:from>=tdy?taktSimRun(t,c,o).s0:addProd(from,0),end:o.end,ma:o.ma,hpe:o.hpe,savedAt:new Date().toISOString()};t.updatedAt=new Date().toISOString();taktPushStepV452(t);persist();window.renderTaktV433(id);return}
    const sim=taktSimRun(t,c,o);const k=t.projectId?kommBud(t.projectId,'',null):null;const kb=k&&k.budget?k.budget-(k.sum-c.total)-sim.hours:null;
    E('tsChartV446').innerHTML=taktSimChart(t,c,sim);if(E('tsHrsV467'))E('tsHrsV467').innerHTML=taktHrsChart(t,c,sim);window.__tkSimLastV448={id:t.id,o};
    const ok=sim.fin&&sim.fin<=sim.end;
@@ -25692,10 +25707,11 @@ document.addEventListener('DOMContentLoaded',()=>{
    const m=t.measure||null;const hpeDef=m?m.hpe:(c.effi.hpe5||c.effi.istHpe||c.hpe),maDef=m?m.ma:c.ma,endDef=m?m.end:t.end;
    return `<div class="tkRowV449 r3 tkSimV446" id="tkSimV446"><div class="rl"><b>3</b><span>Massnahmen<br>mit neuer Prognose</span></div><div class="rc"><div class="tkSimHeadV446"><h4 style="margin:0">Massnahmen ab heute</h4>${m?`<span class="tkMsrTagV446">⚑ gespeicherte Massnahme vom ${fmtD(m.date)}</span>`:'<span class="muted" style="font-size:12px">Werte ändern – Wirkung erscheint sofort im Diagramm</span>'}</div>
      <div class="tkSimGridV446"><div class="tkSimInV446">
+       <label>gilt ab<input id="tsFrom" type="date" value="${esc((m&&(m.s0||m.date))||todayKey())}" title="Ab wann die Massnahme gilt – für eine früher beschlossene Massnahme ein älteres Datum wählen"></label>
        <label>Endtermin<input id="tsEnd" type="date" value="${esc(endDef||'')}"></label>
        <label>Anzahl MA ab heute<input id="tsMa" type="text" inputmode="decimal" value="${esc(maDef)}"><small>Plan ${c.ma}${c.effi.n5?'':''}</small></label>
        <label>h pro Element ab heute<input id="tsHpe" type="text" inputmode="decimal" value="${esc(hpeDef)}"><small>Plan ${c.hpe} · Ist Ø ${c.effi.istHpe}${c.effi.hpe5?' · '+nLabV457(c.tempo.N)+' '+c.effi.hpe5:''}</small></label>
-       <div class="tkSimBtnV446"><button type="button" class="btn secondary small" onclick="E('tsEnd').value='${esc(t.end)}';E('tsMa').value='${esc(c.ma)}';E('tsHpe').value='${esc(c.effi.hpe5||c.effi.istHpe||c.hpe)}';taktSimV446('${esc(t.id)}')">Ausgangslage</button>${ed?`<button type="button" class="btn small" onclick="taktSimV446('${esc(t.id)}','save')">Massnahme speichern</button>${m?`<button type="button" class="btn secondary small" onclick="taktSimV446('${esc(t.id)}','reset')">Massnahme entfernen</button>`:''}`:''}</div>
+       <div class="tkSimBtnV446"><button type="button" class="btn secondary small" onclick="E('tsEnd').value='${esc(t.end)}';E('tsMa').value='${esc(c.ma)}';E('tsHpe').value='${esc(c.effi.hpe5||c.effi.istHpe||c.hpe)}';taktSimV446('${esc(t.id)}')">Ausgangslage</button>${ed?`<button type="button" class="btn small" onclick="taktSimV446('${esc(t.id)}','save')">Massnahme speichern</button>${m?`<button type="button" class="btn secondary small" onclick="taktSimV446('${esc(t.id)}','reset')">Massnahme entfernen</button>`:''}${(t.measureHist||[]).length?`<button type="button" class="btn secondary small" title="Verlauf: ${(t.measureHist||[]).map(x=>esc(fmtD(x.date)+' '+x.ma+' MA · '+x.hpe+' h · Ende '+fmtD(x.end))).join(' | ')}" onclick="taktSimV446('${esc(t.id)}','undo')">↶ Vorherige Massnahme (${esc(fmtD(t.measureHist[0].date))}: ${esc(t.measureHist[0].ma)} MA · ${esc(t.measureHist[0].hpe)} h · Ende ${esc(fmtD(t.measureHist[0].end))})</button>`:''}`:''}</div>
      </div><div><div class="tkKpiV433 tkSimResV446" id="tsResV446"></div></div></div></div></div>`;
  }
  function taktChart(t,c){ // kumuliert Soll (Linie) vs. Ist (Fläche)
@@ -33519,7 +33535,7 @@ try{
           changed++;
         }catch(e){
           if(!e.syncConflict)throw e;
-          const now=(await fetchRemoteEntities())[k];
+          const now=(await fetchKeyV469(k));
           conflicts.push({type,id,local:l?.data||null,remote:now?.data||null,remoteVersion:now?.version||0,remoteBy:now?.updated_by||'anderem Gerät',deletedLocal:!l,deletedRemote:!now});
         }
       }
@@ -34199,7 +34215,7 @@ ${safeTypeLines}
        if(c.type==='__state')continue;
        const localNow=localEntityMap()[c.key];
        if(!localNow||stableJson(localNow.data)!==stableJson(c.local)){stopped=`${c.type} · ${c.id}: lokaler Stand hat sich seit der Vorschau geändert.`;break}
-       const remoteNow=(await fetchRemoteEntities())[c.key];
+       const remoteNow=(await fetchKeyV469(c.key));
        if(!remoteNow){stopped=`${c.type} · ${c.id}: Cloud-Objekt fehlt inzwischen.`;break}
        if(Number(remoteNow.version||0)!==c.remoteVersion||stableJson(remoteNow.data)!==c.remoteHash){stopped=`${c.type} · ${c.id}: Cloud-Stand hat sich seit der Vorschau geändert.`;break}
        if(!canWriteCloudEntity(c.type,'save')){stopped=`${c.type} · ${c.id}: aktuelle Rolle erlaubt den Schreibvorgang nicht.`;break}
@@ -36469,7 +36485,7 @@ ${safeTypeLines}
        if(rh!==s.rh||rh!==bh)throw new Error(s.k+': Cloud hat sich parallel geändert; nichts überschrieben.');
        if(!canWriteCloudEntity(l.type,'save'))throw new Error('Keine Cloud-Schreibberechtigung für '+l.type+'.');
        await rpcEntitySave(l.type,l.id,l.data,Number(r?.version||base?.version||0),false);
-       const fresh=(await fetchRemoteEntities())[s.k], current=localEntityMap()[s.k], currentHash=current?stableJson(current.data):null;
+       const fresh=(await fetchKeyV469(s.k)), current=localEntityMap()[s.k], currentHash=current?stableJson(current.data):null;
        if(!fresh||currentHash!==s.lh||stableJson(fresh.data)!==s.lh)throw new Error(s.k+': Cloud-Verifikation fehlgeschlagen; Sync-Basis bleibt für dieses Objekt unverändert.');
        const nb=loadSyncBase();nb[s.k]={version:Number(fresh.version||0),hash:s.lh};saveSyncBase(nb);done++;
        setSyncStatus('syncing',`V270 ${done}/${a.changed.length} Änderung(en) verifiziert…`);
@@ -36781,7 +36797,7 @@ ${safeTypeLines}
  }
  async function syncOneProject(id,preferLocal=false){
    if(!cloudReady()||!authSession||!cloudMember)return false;
-   const k=projectKey(id), remote=(await fetchRemoteEntities())[k], local=projectLocal(id), base=loadSyncBase()[k];
+   const k=projectKey(id), remote=(await fetchKeyV469(k)), local=projectLocal(id), base=loadSyncBase()[k];
    const lh=local?stableJson(local.data):null, rh=remote?stableJson(remote.data):null, bh=base?.hash??null;
 
    if(lh===rh){
@@ -36793,7 +36809,7 @@ ${safeTypeLines}
    if(local && (preferLocal || lh!==bh) && rh===bh){
      if(!canWriteCloudEntity('projects','save'))throw new Error('Keine Cloud-Schreibberechtigung für Projekte.');
      await rpcEntitySave('projects',String(id),local.data,Number(remote?.version||base?.version||0),false);
-     const fresh=(await fetchRemoteEntities())[k];
+     const fresh=(await fetchKeyV469(k));
      if(!fresh||stableJson(fresh.data)!==lh)throw new Error('Projektfreigabe wurde von der Cloud nicht bestätigt.');
      const nb=loadSyncBase();nb[k]={version:Number(fresh.version||0),hash:lh};saveSyncBase(nb);
      return true;
@@ -36959,7 +36975,8 @@ ${safeTypeLines}
    try{
      if((st.packages||[]).length<347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' (Minimum 347).');
      const key=userKeyV286(); if(!key)return false;
-     const remote=await fetchRemoteEntities(),r=remote['permissionSets|'+key];
+     if(!showStatus&&Date.now()-(window.__permPullV469||0)<60000)return false;window.__permPullV469=Date.now(); /* V469: höchstens 1×/min */
+     const remote=await fetchEntityRowV469('permissionSets',key),r=remote['permissionSets|'+key];
      if(!r?.data){
        if(showStatus)setSyncStatus('err','V286 Rechte fehlen in Cloud · '+key);
        return false;
@@ -37021,7 +37038,7 @@ ${safeTypeLines}
      if(!data)throw new Error('Berechtigungssatz fehlt.');
      const remote=await fetchRemoteEntities(),r=remote['permissionSets|'+key];
      await rpcEntitySave('permissionSets',String(key),JSON.parse(JSON.stringify(data)),Number(r?.version||0),false);
-     const fresh=(await fetchRemoteEntities())['permissionSets|'+key];
+     const fresh=(await fetchKeyV469('permissionSets|'+key));
      if(!fresh||stableJson(fresh.data)!==stableJson(data))throw new Error('Cloud-Verifikation fehlgeschlagen.');
      setSyncStatus('ok','V286 Berechtigungen Cloud-verifiziert');
    }catch(e){
@@ -37039,7 +37056,7 @@ ${safeTypeLines}
  // Einzige Versionsanzeige.
  const setVersionV286=()=>{
    const v=document.getElementById('currentBuildV234');
-   if(v)v.textContent='Aktuelle Version: V468';
+   if(v)v.textContent='Aktuelle Version: V470';
  };
  document.addEventListener('DOMContentLoaded',setVersionV286);
  setVersionV286();
@@ -37179,9 +37196,9 @@ ${safeTypeLines}
    guard347V289();
    if(!cloudReady()||!authSession||!cloudMember)throw new Error('Cloud nicht bereit.');
    const ek='permissionSets|'+key;
-   const before=(await fetchRemoteEntities())[ek];
+   const before=(await fetchKeyV469(ek));
    await rpcEntitySave('permissionSets',String(key),JSON.parse(JSON.stringify(data)),Number(before?.version||0),false);
-   const after=(await fetchRemoteEntities())[ek];
+   const after=(await fetchKeyV469(ek));
    if(!after)throw new Error(ek+' wurde nicht angelegt.');
    if(stableJson(after.data)!==stableJson(data))throw new Error('Cloud-Verifikation stimmt nicht mit lokaler Freigabe überein.');
    return after;
@@ -37275,9 +37292,9 @@ ${safeTypeLines}
      localStorage.setItem(KEY,JSON.stringify(st));
 
      const ek='permissionSets|'+key;
-     const before=(await fetchRemoteEntities())[ek];
+     const before=(await fetchKeyV469(ek));
      await rpcEntitySave('permissionSets',key,JSON.parse(JSON.stringify(data)),Number(before?.version||0),false);
-     const after=(await fetchRemoteEntities())[ek];
+     const after=(await fetchKeyV469(ek));
 
      if(!after)throw new Error(ek+' wurde nach Save nicht gefunden.');
      if(stableJson(after.data)!==stableJson(data))throw new Error('Cloud-Verifikation weicht vom Editor ab.');
@@ -37561,9 +37578,9 @@ ${safeTypeLines}
        if(!canAdmin())throw new Error('Administrator erforderlich.');
        if(!cloudReady()||!authSession||!cloudMember)throw new Error('Cloud nicht bereit.');
        const ek='permissionSets|'+targetKey;
-       const before=(await fetchRemoteEntities())[ek];
+       const before=(await fetchKeyV469(ek));
        await rpcEntitySave('permissionSets',targetKey,JSON.parse(JSON.stringify(p)),Number(before?.version||0),false);
-       const after=(await fetchRemoteEntities())[ek];
+       const after=(await fetchKeyV469(ek));
        if(!after)throw new Error(ek+' wurde nach dem Speichern nicht gefunden.');
        if(stableJson(after.data)!==stableJson(p))throw new Error('Cloud-Verifikation weicht von der Freigabe ab.');
        setSyncStatus('ok','V293 Rechte Cloud-verifiziert · '+targetKey+' · Verwaltung '+(p.manage?'JA':'NEIN'));
@@ -37748,7 +37765,8 @@ ${safeTypeLines}
    try{
      if((st.packages||[]).length<347)throw new Error('Package-Sicherheitsgrenze: '+(st.packages||[]).length+' (Minimum 347).');
      const key=ownKeyV297();if(!key)return false;
-     const row=(await fetchRemoteEntities())['permissionSets|'+key];
+     if(!showError&&Date.now()-(window.__permPull297V469||0)<60000)return false;window.__permPull297V469=Date.now(); /* V469: höchstens 1×/min */
+     const row=(await fetchEntityRowV469('permissionSets',key))['permissionSets|'+key];
      if(!row){
        // Missing permission data is not a connectivity error.
        if(showError)setSyncStatus('ok','Cloud aktuell · für '+key+' noch keine Rechte publiziert');
@@ -37794,9 +37812,9 @@ ${safeTypeLines}
      if(key.startsWith('cloud:')){
        if(!cloudReady()||!authSession||!cloudMember)throw new Error('Cloud nicht bereit.');
        const entityKey='permissionSets|'+key;
-       const before=(await fetchRemoteEntities())[entityKey];
+       const before=(await fetchKeyV469(entityKey));
        await rpcEntitySave('permissionSets',key,JSON.parse(JSON.stringify(p)),Number(before?.version||0),false);
-       const after=(await fetchRemoteEntities())[entityKey];
+       const after=(await fetchKeyV469(entityKey));
        if(!after)throw new Error(entityKey+' wurde nicht angelegt.');
        if(stableJson(after.data)!==stableJson(p))throw new Error('Cloud-Verifikation der Berechtigungen fehlgeschlagen.');
        setSyncStatus('ok','V297 Rechte Cloud-verifiziert · '+key+' · Verwaltung '+(p.manage?'JA':'NEIN'));
@@ -38207,7 +38225,7 @@ ${safeTypeLines}
  function wakeV304(){
    const now=Date.now();if(now-lastWakeV304<5000)return;lastWakeV304=now;
    if(!cloudReady()||!authSession||!cloudMember)return;
-   setTimeout(()=>window.pullEntitySync(false),250);
+   setTimeout(()=>{window.cloudLightCheckV469?window.cloudLightCheckV469():window.pullEntitySync(false)},250); /* V469: leichter Check statt Voll-Abgleich */
    setTimeout(()=>window.pullOwnPermissionsV297?.(false),700);
  }
  window.addEventListener('focus',wakeV304);
@@ -38279,7 +38297,7 @@ ${safeTypeLines}
        const remote=await fetchRemoteEntities(),r=remote[key],b=loadSyncBase()[key];
        const expected=Number(r?.version||b?.version||0);
        await rpcEntitySave('materialPinsV552',id,tomb,expected,false);
-       const verify=(await fetchRemoteEntities())[key];
+       const verify=(await fetchKeyV469(key));
        if(!verify||!verify.data?.deletedAt)throw new Error('Cloud hat die Pin-Löschmarkierung nicht bestätigt.');
 
        const nb=loadSyncBase();nb[key]={version:Number(verify.version||0),hash:stableJson(verify.data)};saveSyncBase(nb);
@@ -38287,7 +38305,7 @@ ${safeTypeLines}
        // Physical cleanup is optional. Server-side delete rights may be stricter than pin edit rights.
        try{
          await rpcEntityDelete('materialPinsV552',id,Number(verify.version||0),false);
-         const gone=(await fetchRemoteEntities())[key];
+         const gone=(await fetchKeyV469(key));
          if(!gone)delete nb[key];
          saveSyncBase(nb);
        }catch(_cleanup){}
@@ -38341,7 +38359,7 @@ ${safeTypeLines}
          const remote=await fetchRemoteEntities(),r=remote[key],b=loadSyncBase()[key];
          const expected=Number(r?.version||b?.version||0);
          await rpcEntitySave('materialPinsV552',id,JSON.parse(JSON.stringify(p)),expected,false);
-         const fresh=(await fetchRemoteEntities())[key];
+         const fresh=(await fetchKeyV469(key));
          if(fresh&&fresh.data?.deletedAt){
            const nb=loadSyncBase();nb[key]={version:Number(fresh.version||0),hash:stableJson(fresh.data)};saveSyncBase(nb);
            setSyncStatus('ok','V306 Pin gelöscht · Cloud synchron');
@@ -38446,7 +38464,7 @@ ${safeTypeLines}
          const remote=await fetchRemoteEntities(),r=remote[key],b=loadSyncBase()[key];
          const expected=Number(r?.version||b?.version||0);
          await rpcEntitySave('materialPinsV552',id,JSON.parse(JSON.stringify(p)),expected,false);
-         const fresh=(await fetchRemoteEntities())[key];
+         const fresh=(await fetchKeyV469(key));
          if(fresh?.data?.deletedAt){
            const nb=loadSyncBase();nb[key]={version:Number(fresh.version||0),hash:stableJson(fresh.data)};saveSyncBase(nb);
            setSyncStatus('ok','V307 Pin gelöscht · Cloud bestätigt');
@@ -38544,7 +38562,7 @@ ${safeTypeLines}
          try{
            const key='materialPinsV552|'+id,remote=await fetchRemoteEntities(),r=remote[key],b=loadSyncBase()[key];
            await rpcEntitySave('materialPinsV552',id,tomb,Number(r?.version||b?.version||0),false);
-           const fresh=(await fetchRemoteEntities())[key];
+           const fresh=(await fetchKeyV469(key));
            if(fresh?.data?.deletedAt){
              const nb=loadSyncBase();nb[key]={version:Number(fresh.version||0),hash:stableJson(fresh.data)};saveSyncBase(nb);
            }
@@ -39198,6 +39216,8 @@ ${safeTypeLines}
  const MIN_V317=347;
  const PENDING_V317='kuenzli_package_pending_v317';
  let flightV317=false,timerV317=null,lastV317=0;
+ /* V469: CPU-Schonung Supabase – Abgleich nur noch bei echten Änderungen, ohne Pakete/übersprungene Typen doppelt zu laden */
+ let pkgSeenV469='';
 
  function readPendingV317(){try{const a=JSON.parse(localStorage.getItem(PENDING_V317)||'[]');return Array.isArray(a)?a.map(String):[]}catch(_){return []}}
  function writePendingV317(a){localStorage.setItem(PENDING_V317,JSON.stringify([...new Set(a.map(String))]))}
@@ -39215,7 +39235,7 @@ ${safeTypeLines}
    cloudCfg=loadCloudConfig();
    if(!cloudCfg?.url||!cloudCfg?.anonKey||!authSession?.access_token)throw new Error('Cloud-Sitzung/Konfiguration nicht verfügbar.');
    const root=String(cloudCfg.url).replace(/\/+$/,''),h={'apikey':cloudCfg.anonKey,'Authorization':'Bearer '+String(authSession.access_token),'Content-Type':'application/json'};
-   const u=root+'/rest/v1/warehouse_entities?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&entity_type=eq.packages&select=entity_id,data,version&order=entity_id.asc';
+   const u=root+'/rest/v1/warehouse_entities?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&entity_type=eq.packages&select=entity_id,data,version,updated_at&order=entity_id.asc';
    const r=await fetch(u,{method:'GET',headers:h}),txt=await r.text();
    if(!r.ok)throw new Error('HTTP '+r.status+' · '+txt.slice(0,220));
    let rows;try{rows=txt?JSON.parse(txt):[]}catch(_){throw new Error('Ungültige Cloud-JSON-Antwort.')}
@@ -39223,6 +39243,7 @@ ${safeTypeLines}
    const ids=rows.map(x=>String(x?.entity_id??''));
    if(ids.some(x=>!x)||new Set(ids).size!==rows.length)throw new Error('Schutzstopp: Cloud-Package-IDs fehlen oder sind doppelt.');
    if(rows.some(x=>!x?.data||typeof x.data!=='object'||Array.isArray(x.data)))throw new Error('Schutzstopp: ungültige Package-Daten in Cloud.');
+   rows.forEach(x=>{if(x.updated_at&&String(x.updated_at)>pkgSeenV469)pkgSeenV469=String(x.updated_at)});
    return rows;
  }
  function rmapV317(rows){const m={};rows.forEach(x=>m[String(x.entity_id)]=x);return m}
@@ -39273,7 +39294,7 @@ ${safeTypeLines}
      // Never replace local while any local package is still pending.
      if(pending.size)throw new Error('Schutzstopp: '+pending.size+' lokale Package-Änderung(en) noch nicht Cloud-verifiziert.');
 
-     rows=await rowsV317();
+     if(uploaded)rows=await rowsV317();
      if(rows.length<localArr.length)throw new Error('Schutzstopp: Cloud hat '+rows.length+', lokal '+localArr.length+' Packages.');
      const freshLocal=localV317().m;
      const want=rows.map(x=>{const id=String(x.entity_id);return pkgConflicts.has(id)&&freshLocal[id]?freshLocal[id]:x.data});
@@ -39462,7 +39483,7 @@ ${safeTypeLines}
  const MAX_AUTO_V357=40;
  let lastV357=null;
  async function othersV357(manual=false){
-   const remote=await fetchRemoteEntities(),local=localEntityMap(),base=loadSyncBase();
+   const remote=await fetchRemoteEntities([...SKIP_V357]),local=localEntityMap(),base=loadSyncBase();
    const keys=new Set([...Object.keys(remote),...Object.keys(local)]);
    const push=[],pull=[],conflicts=[],ident=[],tombPush=[];
    let pinTombs={};try{pinTombs=JSON.parse(localStorage.getItem('kuenzli_material_pin_tombstones_v308')||'{}')||{}}catch(_e){}
@@ -39513,7 +39534,7 @@ ${safeTypeLines}
      const nb=loadSyncBase();nb[k]={version:Number(r.version||0),hash:stableJson(r.data)};saveSyncBase(nb);noteBaseV383(k,nb[k].hash,r.data);pulled++;
    }
    if(pulled){try{loadPlatformStore?.();refresh?.();renderProjectCards?.();renderPlatformProjectOverview?.();refreshPermissionVisibility?.()}catch(_e){}}
-   try{let mx='';Object.values(remote).forEach(x=>{if(x?.updated_at&&String(x.updated_at)>mx)mx=String(x.updated_at)});if(mx)localStorage.setItem('kuenzli_cloud_seen_v359',mx)}catch(_e){}
+   try{let mx=pkgSeenV469||'';Object.values(remote).forEach(x=>{if(x?.updated_at&&String(x.updated_at)>mx)mx=String(x.updated_at)});if(mx)localStorage.setItem('kuenzli_cloud_seen_v359',mx)}catch(_e){}
    return {pushed,pulled,conflicts:conflicts.length,conflictKeys:conflicts,denied,later,failed,failedKeys,remaining,remoteSnapshot:remote};
  }
  window.cloudSyncStateV357=()=>lastV357;
@@ -39621,10 +39642,11 @@ ${safeTypeLines}
    pollFlightV359=true;
    try{
      if(authExpiryMs()<Date.now()+60000&&!await ensureFreshSession())return;
-     const u=String(cloudCfg.url).replace(/\/+$/,'')+'/rest/v1/warehouse_entities?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&updated_at=gt.'+encodeURIComponent(since)+'&select=entity_type,entity_id,updated_at&order=updated_at.desc&limit=3';
+     const skip=[...SKIP_V357].filter(x=>x!=='packages').map(encodeURIComponent).join(',');
+     const u=String(cloudCfg.url).replace(/\/+$/,'')+'/rest/v1/warehouse_entities?warehouse_id=eq.'+encodeURIComponent(cloudCfg.warehouseId)+'&updated_at=gt.'+encodeURIComponent(since)+(skip?'&entity_type=not.in.('+skip+')':'')+'&select=updated_at&order=updated_at.desc&limit=1';
      const r=await fetch(u,{headers:cloudHeaders()});if(!r.ok)return;
      const rows=await r.json();
-     if(Array.isArray(rows)&&rows.length)await syncV317(true);
+     if(Array.isArray(rows)&&rows.length){if(Date.now()-lastV317<15000){clearTimeout(againTimerV364);againTimerV364=setTimeout(()=>syncV317(false),15000-(Date.now()-lastV317))}else await syncV317(true)}
    }catch(_e){}finally{pollFlightV359=false}
  }
  setInterval(changePollV359,8000);
@@ -39650,7 +39672,7 @@ ${safeTypeLines}
  window.scheduleCloudPushV214=function(){scheduleV317(700)};
  window.pushEntitySync=async function(manual=false){return syncV317(manual)};
  window.pullEntitySync=async function(manual=false){return syncV317(manual)};
- window.checkCloudForUpdates=async function(){return syncV317(false)};
+ window.checkCloudForUpdates=async function(){return window.cloudLightCheckV469?window.cloudLightCheckV469():syncV317(false)};
  window.startCloudPolling=function(){};
  try{
    queueCloudSync=window.queueCloudSync;scheduleCloudPushV214=window.scheduleCloudPushV214;
@@ -39660,9 +39682,13 @@ ${safeTypeLines}
  // Existing A-156/A-157 may already have been removed locally by V316.
  // We deliberately do not recreate guessed records. Their reserved IDs remain reserved.
  window.addEventListener('load',()=>setTimeout(()=>{snapV317=snapNowV317();syncV317(false)},8000));
- window.addEventListener('focus',()=>setTimeout(()=>syncV317(false),650));
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>syncV317(false),650)});
- setInterval(()=>{if(!document.hidden)syncV317(false)},60000); /* V357: 60 s statt 12 s – schont mobile Daten */
+ /* V469: Fokus/Sichtbarkeit nur noch leichter Änderungs-Check (vorher jedes Mal die ganze Tabelle);
+    lokale Änderungen laufen ohnehin über queueCloudSync. Voller Sicherheits-Abgleich alle 10 Minuten. */
+ let lastLightV469=0;const lightV469=()=>{try{if(readPendingV317().length)return syncV317(false);if(Date.now()-lastLightV469<3000)return;lastLightV469=Date.now();return window.changePollV359?.()}catch(_e){}};
+ window.addEventListener('focus',()=>setTimeout(lightV469,650));
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(lightV469,650)});
+ setInterval(()=>{if(!document.hidden&&Date.now()-lastV317>600000)syncV317(false)},60000);
+ window.cloudLightCheckV469=lightV469;
 })();
 </script>
 
@@ -39703,7 +39729,7 @@ ${safeTypeLines}
    if(typeof syncV317==='function'){
      window.pushEntitySync=async function(manual=false){return syncV317(manual)};
      window.pullEntitySync=async function(manual=false){return syncV317(manual)};
-     window.checkCloudForUpdates=async function(){return syncV317(false)};
+     window.checkCloudForUpdates=async function(){return window.cloudLightCheckV469?window.cloudLightCheckV469():syncV317(false)};
      window.queueCloudSync=function(){
        capturePackagePendingV318();
        if(!cloudCfg?.autoSync)return;
@@ -39902,7 +39928,7 @@ body.v319ModalLock{
  };
  try{openProduction=window.openProduction}catch(_){}
  window.addEventListener('load',()=>setTimeout(()=>{renderProductionMaterialsV321();syncCloud(false)},8500));
- window.addEventListener('focus',()=>setTimeout(()=>syncCloud(false),1200));
+ let lastFocusV469=0;window.addEventListener('focus',()=>{if(Date.now()-lastFocusV469<60000)return;lastFocusV469=Date.now();setTimeout(()=>syncCloud(false),1200)}); /* V469 */
 })();
 </script>
 
@@ -40093,7 +40119,7 @@ body.v319ModalLock{
  window.syncProductionTextFieldsV324=sync;
  const prev=window.openProduction;window.openProduction=function(){let r=prev.apply(this,arguments);setTimeout(()=>{install();render();sync(false)},120);return r};try{openProduction=window.openProduction}catch(_e){}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
- window.addEventListener('focus',()=>setTimeout(()=>sync(false),1300));
+ let lastFocusV469=0;window.addEventListener('focus',()=>{if(Date.now()-lastFocusV469<60000)return;lastFocusV469=Date.now();setTimeout(()=>sync(false),1300)}); /* V469 */
 })();
 </script>
 
@@ -40926,7 +40952,7 @@ body.v319ModalLock{
        const b=loadSyncBase();b[key]={version:Number(r.version||0),hash:localHash};saveSyncBase(b);return;
      }
      await rpcEntitySave('materialPinsV552',String(p.id),JSON.parse(JSON.stringify(p)),Number(r?.version||0),false);
-     const fresh=(await fetchRemoteEntities())[key];
+     const fresh=(await fetchKeyV469(key));
      if(fresh&&stableJson(fresh.data)===localHash){
        const b=loadSyncBase();b[key]={version:Number(fresh.version||0),hash:localHash};saveSyncBase(b);
      }
